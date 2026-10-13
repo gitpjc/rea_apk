@@ -1,6 +1,7 @@
 
 # Paul exclusions
 extracted/
+*.apk
 
 
 # Compiled class file

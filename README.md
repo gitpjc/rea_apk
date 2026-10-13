@@ -1,5 +1,12 @@
 # rea_apk
 
+## Pay Store `iAMP` App
+
+[iAMP](https://play.google.com/store/apps/details?id=com.mooer.iamp)  
+
+Current version: `1.6.1 `(Last update: 26 Jun 20026)
+Required OS: Android 7.0 and up    
+
 ## Codex Prompts
 
 Can REA: https://github.com/morluto/rea/ be used to reverse engineer an Android APK?
