@@ -1,0 +1,403 @@
+{
+  "schema_version": 1,
+  "evidenceType": "read-only phone screenshot observations correlated with retained Windows preset snapshot",
+  "firmware": "V1.1.9",
+  "wireIndex": 4,
+  "baselineUnchangedDuringInspection": "reported by capture operator; no parameter writes during this label inspection",
+  "sourceSnapshot": {
+    "file": "windows-v119-restored.json",
+    "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110",
+    "detailPayloadSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+  },
+  "screenshots": [
+    {
+      "file": "phone-od-baseline.png",
+      "sha256": "16e19423d17afb506ee60c2a68102e5f24fb8132298dcddbd742fe5936ce99f6",
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-amp-baseline.png",
+      "sha256": "a1304c6c7fa9b6f3570c1dbf851e54090977357cfc01c6086ae5d6495d4c2a09",
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-amp-lower-baseline.png",
+      "sha256": "352cb400a6d9065c421789117eaa207c655d1226b23fc5a5b1418a8312f9a5da",
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-delay-baseline.png",
+      "sha256": "9f198fda1f47c3317b268be5f9577a8e830ac8426428d597346a79c327471f1a",
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-reverb-baseline.png",
+      "sha256": "810f8883e4b71d5daece729d8b0db6aedb53b560b51dc038958297716d2c51cc",
+      "visuallyInspected": true
+    }
+  ],
+  "effects": [
+    {
+      "position": 2,
+      "typeCode": 1,
+      "modelValue": 3,
+      "valueCount": 5,
+      "observedValues": [
+        1,
+        3,
+        39,
+        100,
+        100
+      ],
+      "category": "OD",
+      "modelLabel": "808",
+      "sourceScreenshots": [
+        "phone-od-baseline.png"
+      ],
+      "parameterCorrespondences": [
+        {
+          "label": "Gain",
+          "displayValue": 39,
+          "valueIndex": 2,
+          "displayUnit": null,
+          "rawValue": 39,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Tone",
+          "displayValue": 100,
+          "valueIndex": 3,
+          "rawValue": 100,
+          "displayUnit": null,
+          "basis": "controlled phone Tone100->97->100; changed payload Value3 only; complete observed Windows baseline restored",
+          "status": "phone_controlled_mapping_verified",
+          "controlledChangeVerified": true,
+          "phoneWriteObserved": true,
+          "windowsWriteVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false,
+          "sourceFixture": "f15-observed-808-tone.json"
+        },
+        {
+          "label": "Vol",
+          "displayValue": 100,
+          "valueIndex": 4,
+          "rawValue": 100,
+          "displayUnit": null,
+          "basis": "elimination after controlled Tone index3; remaining displayed100 matches Value4",
+          "status": "inferred_by_elimination",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        }
+      ],
+      "ambiguousParameters": [],
+      "unknownValueIndices": [
+        0
+      ],
+      "enabledFlagIdentified": false,
+      "wholeModelWriteVerified": false
+    },
+    {
+      "position": 3,
+      "typeCode": 2,
+      "modelValue": 31,
+      "valueCount": 9,
+      "observedValues": [
+        1,
+        31,
+        100,
+        35,
+        43,
+        40,
+        45,
+        75,
+        1
+      ],
+      "category": "Amp",
+      "modelLabel": "PLX 100",
+      "sourceScreenshots": [
+        "phone-amp-baseline.png",
+        "phone-amp-lower-baseline.png"
+      ],
+      "parameterCorrespondences": [
+        {
+          "label": "Gain",
+          "displayValue": 100,
+          "valueIndex": 2,
+          "displayUnit": null,
+          "rawValue": 100,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Bass",
+          "displayValue": 35,
+          "valueIndex": 3,
+          "displayUnit": null,
+          "rawValue": 35,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Mid",
+          "displayValue": 43,
+          "valueIndex": 4,
+          "displayUnit": null,
+          "rawValue": 43,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Treble",
+          "displayValue": 40,
+          "valueIndex": 5,
+          "displayUnit": null,
+          "rawValue": 40,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Presence",
+          "displayValue": 45,
+          "valueIndex": 6,
+          "displayUnit": null,
+          "rawValue": 45,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Master",
+          "displayValue": 75,
+          "valueIndex": 7,
+          "displayUnit": null,
+          "rawValue": 75,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        }
+      ],
+      "ambiguousParameters": [],
+      "unknownValueIndices": [
+        0,
+        8
+      ],
+      "enabledFlagIdentified": false,
+      "wholeModelWriteVerified": false
+    },
+    {
+      "position": 4,
+      "typeCode": 7,
+      "modelValue": 1,
+      "valueCount": 8,
+      "observedValues": [
+        1,
+        1,
+        17,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "category": "Delay",
+      "modelLabel": "Analog",
+      "sourceScreenshots": [
+        "phone-delay-baseline.png"
+      ],
+      "parameterCorrespondences": [
+        {
+          "label": "Level",
+          "displayValue": 17,
+          "valueIndex": 2,
+          "displayUnit": null,
+          "rawValue": 17,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Feedback",
+          "displayValue": 25,
+          "valueIndex": 3,
+          "displayUnit": null,
+          "rawValue": 25,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Time",
+          "displayValue": 500,
+          "valueIndex": 4,
+          "displayUnit": "ms",
+          "rawValue": 500,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        }
+      ],
+      "ambiguousParameters": [],
+      "unknownValueIndices": [
+        0,
+        5,
+        6,
+        7
+      ],
+      "enabledFlagIdentified": false,
+      "wholeModelWriteVerified": false
+    },
+    {
+      "position": 5,
+      "typeCode": 8,
+      "modelValue": 1,
+      "valueCount": 10,
+      "observedValues": [
+        1,
+        1,
+        20,
+        24,
+        35,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "category": "Reverb",
+      "modelLabel": "Hall",
+      "sourceScreenshots": [
+        "phone-reverb-baseline.png"
+      ],
+      "parameterCorrespondences": [
+        {
+          "label": "Pre Delay",
+          "displayValue": 20,
+          "valueIndex": 2,
+          "displayUnit": "ms",
+          "rawValue": 20,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Level",
+          "displayValue": 24,
+          "valueIndex": 3,
+          "displayUnit": null,
+          "rawValue": 24,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        },
+        {
+          "label": "Decay",
+          "displayValue": 35,
+          "valueIndex": 4,
+          "displayUnit": null,
+          "rawValue": 35,
+          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
+          "status": "inferred_baseline_correspondence",
+          "controlledChangeVerified": false,
+          "scaleVerified": false,
+          "rangeVerified": false,
+          "writeVerified": false
+        }
+      ],
+      "ambiguousParameters": [
+        {
+          "label": "Tone",
+          "displayValue": 0,
+          "valueIndex": null,
+          "candidateValueIndices": [
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "status": "unresolved_equal_values",
+          "writeVerified": false
+        }
+      ],
+      "unknownValueIndices": [
+        0
+      ],
+      "enabledFlagIdentified": false,
+      "wholeModelWriteVerified": false
+    }
+  ],
+  "limitations": [
+    "One baseline and one model per category in this fixture; no general catalog is established.",
+    "Unique matching values support correspondence but do not replace single-parameter controlled changes.",
+    "Displayed ms labels are observed; full encoding scale, ranges and nonlinear behavior remain unverified.",
+    "Unknown flag and trailing values remain unlabeled; no enabled-state meaning is claimed.",
+    "No parameter writes or model changes were performed during this label inspection.",
+    "808 Tone Value3 has a separate controlled phone mapping; Vol Value4 remains inference by elimination, not an independently controlled Vol mapping.",
+    "Hall Tone wire offset remains unresolved among equal trailing zeros."
+  ],
+  "controlledFollowup": {
+    "fixture": "f15-observed-808-tone.json",
+    "logcatSha256": "d80f8a60fe515b08263e124b944d421b7cfbd6aabed54c0107882d0cc0452efc",
+    "screenshots": [
+      {
+        "file": "phone-tone-before.png",
+        "sha256": "3ca22e3f41408eb734db9df1ab46f917a7b32b0f647d82295023158e02440596"
+      },
+      {
+        "file": "phone-tone-changed.png",
+        "sha256": "8587997b09e02549166bfb2c768affaf5b1d7860d22bd7eaa5b9829ac04b5d06"
+      },
+      {
+        "file": "phone-tone-restored.png",
+        "sha256": "7729600212f7c378942e073e02c01486f1461749b64fd0645912e335f913e5c1"
+      }
+    ],
+    "windowsToneWriteVerified": false
+  }
+}

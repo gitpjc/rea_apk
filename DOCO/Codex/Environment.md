@@ -32,7 +32,7 @@ source scripts/env.sh
 - Interfaces: USB Audio (`MI_00`) and HID (`MI_03`). Probe measured 65-byte input and output reports, no feature reports, usage page 1, usage 0. This establishes report metadata, not an application packet format or firmware version.
 - No named F15i/MOOER BLE advertisement was observed in the initial 15-second scan. This is a bounded negative observation, not proof that the amplifier lacks BLE.
 - Phone: model `M2012K11AG`, Android 13; USB ADB now works reliably. Prior Wi-Fi ports changed repeatedly and one connection went offline. The phone's iAMP app was stopped to release its BLE connection for Windows testing; it can be reopened when another reference capture is needed.
-- Amplifier firmware: independent Windows BLE information queries matched the phone's V1.1.2 report and returned all 80 preset names. Only the captured identity and preset-name queries have been sent by the Windows probe; no preset/settings changes, saves or maintenance commands are implemented. Baseline backup/recovery verification remains pending.
+- Amplifier firmware: initial independent Windows BLE information queries matched the phone's V1.1.2 report and returned all 80 preset names. Fresh `analysis/private/phone-reconnect-logcat.txt` reports V1.1.9 and British Lead Solo (phone slot 0D); independent Windows refresh is pending. No firmware update was performed by Codex. User-created vendor backup and private copy were hash-verified; `Backup-Baseline.md` records the recovery route. Restore remains untested.
 
 ## Emulator
 
@@ -100,3 +100,16 @@ Only `bash scripts/bootstrap.sh --configure-codex` applies the Codex-only REA se
 `bash scripts/check.sh` runs strict Codex registration doctor, APK hashes/signature inventory, bounded Flutter-token triage, a separate MCP-client Android inspection and Release solution build. It sends no amplifier commands. A failed Codex doctor fails the default check; optional provider diagnostics are retained in `analysis/generated/rea-doctor.json`. For a deliberately independent software check during registration repair, `SKIP_CODEX_DOCTOR=1 bash scripts/check.sh` explicitly skips that gate and labels it skipped; it does not establish registered-chat readiness. Actual hardware control, backup and current-chat tool availability remain separate plan tasks.
 
 Validation on 13 October 2026: strict `bash scripts/check.sh` passed after the coordinator refreshed the Codex registration for portable Node. All five APK signatures verified; separate MCP smoke discovered 170 tools and inspected the phone base APK; Release build completed with zero warnings/errors. Final bootstrap repeat passed; invoking the .NET helper separately reused the retained 10.0.401 archive after checking the official Microsoft SHA-512, without another SDK download. Bash syntax checks and `git diff --check` passed.
+## Explicit hardware validation commands
+
+The default desktop launch and `--preview` do not execute control tests. The following opt-in command **does change the amplifier temporarily**. It requires the captured V1.1.9 slot-4 baseline and runs the actual UI handlers through preset 4 -> 5 -> 4 and threshold 25 -> 26 -> 25. A separate bounded cleanup connection verifies complete state/detail restoration. Stop further mutations if its report does not confirm restoration.
+
+```bash
+source scripts/env.sh
+# Disconnect the phone iAMP app first. Substitute the selected amp's BLE address.
+artifacts/Iamp.Desktop/Iamp.Desktop.exe \
+  --hardware-roundtrip-preview "$AMP_BLE_ADDRESS" \
+  analysis/private/desktop-ui-hardware.png
+```
+
+It writes the screenshot and `desktop-ui-hardware.roundtrip.json` privately. Exit 0 requires the UI workflow to pass and the original baseline to be restored exactly. This command was successfully run on 13 October 2026; it is a development validation tool, not a general preset-repair or backup-restore feature.

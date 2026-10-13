@@ -6,9 +6,23 @@ namespace Iamp.Protocol;
 public sealed record PresetEffectBlock(byte Position, byte TypeCode, IReadOnlyList<ushort> Values);
 public sealed record DecodedPreset(byte WireIndex, string Name, IReadOnlyList<PresetEffectBlock> Blocks, byte[] UnknownTrailer);
 
-/// <summary>Structural decoding verified against the captured F15i V1.1.2 preset response.</summary>
+/// <summary>Structural decoding verified against F15i V1.1.2 and V1.1.9 preset responses.</summary>
 public static class PresetDataParser
 {
+    /// <summary>Offline byte-preserving transformation of one already decoded parameter; sends nothing.</summary>
+    public static byte[] WithParameterValue(ReadOnlySpan<byte> payload, byte position, int parameterIndex, ushort value)
+    {
+        var decoded = Parse(payload);
+        if (position is < 1 or > 20) throw new ArgumentOutOfRangeException(nameof(position));
+        var block = decoded.Blocks[position - 1];
+        if (parameterIndex < 0 || parameterIndex >= block.Values.Count) throw new ArgumentOutOfRangeException(nameof(parameterIndex));
+        var offset = 22;
+        foreach (var previous in decoded.Blocks.Take(position - 1)) offset += 3 + previous.Values.Count * 2;
+        var result = payload.ToArray();
+        BinaryPrimitives.WriteUInt16LittleEndian(result.AsSpan(offset + 3 + parameterIndex * 2, 2), value);
+        return result;
+    }
+
     public static DecodedPreset Parse(ReadOnlySpan<byte> payload)
     {
         if (payload.Length < 24 || payload[0] != 0x22 || payload[1] is < 1 or > 80)

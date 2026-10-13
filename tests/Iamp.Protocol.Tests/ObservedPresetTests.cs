@@ -45,6 +45,24 @@ public class ObservedPresetTests
     }
 
     [Fact]
+    public void ReplacesOneParameterWithoutChangingOtherRecordsOrTrailer()
+    {
+        var original = Payload();
+        var replaced = PresetDataParser.WithParameterValue(original, 2, 3, 37);
+        var before = PresetDataParser.Parse(original);
+        var after = PresetDataParser.Parse(replaced);
+        Assert.Equal((ushort)37, after.Blocks[1].Values[3]);
+        for (var block = 0; block < before.Blocks.Count; block++)
+            for (var parameter = 0; parameter < before.Blocks[block].Values.Count; parameter++)
+                if (block != 1 || parameter != 3)
+                    Assert.Equal(before.Blocks[block].Values[parameter], after.Blocks[block].Values[parameter]);
+        Assert.Equal(before.UnknownTrailer, after.UnknownTrailer);
+        Assert.Equal(before.Name, after.Name);
+        Assert.Throws<ArgumentOutOfRangeException>(() => PresetDataParser.WithParameterValue(original, 0, 0, 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => PresetDataParser.WithParameterValue(original, 20, 0, 1));
+    }
+
+    [Fact]
     public void PreservesUnmappedTypeCodesAndTrailingFields()
     {
         var payload = Payload(); payload[23] = 240; payload[^1] = 93;

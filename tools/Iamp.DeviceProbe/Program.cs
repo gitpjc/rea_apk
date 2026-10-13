@@ -5,6 +5,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Iamp.Transport.Windows;
+using Iamp.Protocol;
 
 namespace Iamp.DeviceProbe;
 
@@ -44,10 +45,22 @@ internal static class Program
                 var current = await session.ReadCurrentPresetAsync(timeout.Token);
                 Print(new { operation = "current_preset_snapshot", session.DeviceName, identity, current });
             }
+            else if (args is ["threshold-roundtrip", var editTarget] && TryAddress(editTarget, out var editAddress))
+            {
+                await ThresholdRoundtripAsync(editAddress);
+            }
+            else if (args is ["selection-roundtrip", var selectionTarget] && TryAddress(selectionTarget, out var selectionAddress))
+            {
+                await SelectionRoundtripAsync(selectionAddress);
+            }
+            else if (args is ["tone-roundtrip", var toneTarget] && TryAddress(toneTarget, out var toneAddress))
+            {
+                await ToneRoundtripAsync(toneAddress);
+            }
             else
             {
-                Console.Error.WriteLine("Usage: Iamp.DeviceProbe usb | scan <1-60 seconds> | gatt <BLE address> | read-info <BLE address> | read-current <BLE address>");
-                Console.Error.WriteLine("read-info sends only captured identity/name queries; no preset/settings changes are implemented.");
+                Console.Error.WriteLine("Usage: Iamp.DeviceProbe usb | scan <1-60 seconds> | gatt <BLE address> | read-info <BLE address> | read-current <BLE address> | threshold-roundtrip <BLE address> | selection-roundtrip <BLE address>");
+                Console.Error.WriteLine("threshold-roundtrip performs the experimental V1.1.9 Noise Killer 25→26→25 test with read-back; no saving.");
                 return 2;
             }
             return 0;
@@ -67,6 +80,114 @@ internal static class Program
     }
 
     private static void Print(object value) => Console.WriteLine(JsonSerializer.Serialize(value, Json));
+
+    private static async Task ThresholdRoundtripAsync(ulong address)
+    {
+        CurrentPresetSnapshot baseline;
+        CurrentPresetSnapshot? changed = null;
+        CurrentPresetSnapshot? restored = null;
+        var attempted = false;
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+        try
+        {
+            await using var session = await F15ReadSession.ConnectAsync(address, deadline.Token);
+            baseline = await session.ReadCurrentPresetAsync(deadline.Token);
+            if (baseline.Blocks[0].Values.Count != 6 || baseline.Blocks[0].Values[2] != 25)
+                throw new InvalidOperationException("The controlled round trip requires the captured baseline threshold 25.");
+            NoiseKillerCommand.Create(baseline.Blocks[0], 26); // Validate before entering the restore path.
+            try
+            {
+                attempted = true;
+                changed = await session.SetNoiseKillerThresholdAsync(baseline, 26, deadline.Token);
+            }
+            finally
+            {
+                if (attempted)
+                {
+                    // A failed request may still have reached the amp. Use a fresh connection and deadline.
+                    await session.DisposeAsync();
+                    using var recoveryDeadline = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+                    await using var recovery = await F15ReadSession.ConnectAsync(address, recoveryDeadline.Token);
+                    var live = await recovery.ReadCurrentPresetAsync(recoveryDeadline.Token);
+                    if (live.WireIndex != baseline.WireIndex)
+                        throw new IOException("Preset changed externally; automatic threshold restoration stopped. Inspect the amplifier.");
+                    var liveBytes = Convert.FromHexString(live.RawDetailPayloadHex);
+                    var baselineBytes = Convert.FromHexString(baseline.RawDetailPayloadHex);
+                    liveBytes[29] = baselineBytes[29]; liveBytes[30] = baselineBytes[30];
+                    if (!liveBytes.SequenceEqual(baselineBytes))
+                        throw new IOException("Other parameters changed externally; automatic restoration stopped. Inspect the amplifier.");
+                    restored = await recovery.SetNoiseKillerThresholdAsync(live, 25, recoveryDeadline.Token);
+                    if (restored.RawDetailPayloadHex != baseline.RawDetailPayloadHex)
+                        throw new IOException("Baseline restoration could not be verified.");
+                }
+            }
+            Print(new { operation = "threshold_25_26_25", baseline, changed, restored, baselineRestored = true, saved = false });
+        }
+        catch (Exception ex)
+        {
+            Print(new { operation = "threshold_25_26_25", error = ex.Message, attempted, restored });
+            throw;
+        }
+    }
+
+    private static async Task SelectionRoundtripAsync(ulong address)
+    {
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+        await using var session = await F15ReadSession.ConnectAsync(address, deadline.Token);
+        var baseline = await session.ReadCurrentPresetAsync(deadline.Token);
+        if (baseline.WireIndex != 4) throw new InvalidOperationException("The controlled selection round trip must start at slot 4.");
+        PresetSelectionCommand.Create(Convert.FromHexString(baseline.RawStatePayloadHex), 5);
+        PresetSelectionCommand.RequireObservedPreset(baseline.WireIndex, Convert.FromHexString(baseline.RawDetailPayloadHex));
+        CurrentPresetSnapshot? changed = null;
+        CurrentPresetSnapshot? restored = null;
+        try
+        {
+            changed = await session.SelectObservedPresetAsync(baseline, 5, deadline.Token);
+        }
+        finally
+        {
+            await session.DisposeAsync();
+            using var restoreDeadline = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+            await using var recovery = await F15ReadSession.ConnectAsync(address, restoreDeadline.Token);
+            var live = await recovery.ReadCurrentPresetAsync(restoreDeadline.Token);
+            var liveState = Convert.FromHexString(live.RawStatePayloadHex);
+            var baselineState = Convert.FromHexString(baseline.RawStatePayloadHex);
+            liveState[1] = baselineState[1];
+            if (live.WireIndex is not (4 or 5) || !liveState.SequenceEqual(baselineState))
+                throw new IOException("External state changed during the test. Automatic recall stopped; restore the original preset manually.");
+            restored = await recovery.SelectObservedPresetAsync(live, checked((byte)baseline.WireIndex), restoreDeadline.Token);
+            var matches = restored.RawStatePayloadHex == baseline.RawStatePayloadHex && restored.RawDetailPayloadHex == baseline.RawDetailPayloadHex;
+            Print(new { operation = "preset_4_5_4", baseline, changed, restored, baselineRestored = matches, saved = false });
+            if (!matches) throw new IOException("Original preset values or global state did not match baseline after recall. Stop hardware tests.");
+        }
+    }
+
+    private static async Task ToneRoundtripAsync(ulong address)
+    {
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+        await using var session = await F15ReadSession.ConnectAsync(address, deadline.Token);
+        var baseline = await session.ReadCurrentPresetAsync(deadline.Token);
+        PresetSelectionCommand.RequireObservedPreset(baseline.WireIndex, Convert.FromHexString(baseline.RawDetailPayloadHex));
+        if (baseline.WireIndex != 4) throw new InvalidOperationException("808 tone test must start at the captured slot 4 baseline.");
+        Od808ToneCommand.Create(baseline.Blocks[1], 98);
+        CurrentPresetSnapshot? changed = null;
+        CurrentPresetSnapshot? restored = null;
+        try { changed = await session.Set808ToneAsync(baseline, 98, deadline.Token); }
+        finally
+        {
+            await session.DisposeAsync();
+            using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+            await using var recovery = await F15ReadSession.ConnectAsync(address, cleanup.Token);
+            var live = await recovery.ReadCurrentPresetAsync(cleanup.Token);
+            var normalized = PresetDataParser.WithParameterValue(Convert.FromHexString(live.RawDetailPayloadHex), 2, 3, 100);
+            if (live.RawStatePayloadHex != baseline.RawStatePayloadHex || Convert.ToHexString(normalized) != baseline.RawDetailPayloadHex)
+                throw new IOException("Other state changed; automatic tone restoration stopped. Inspect the amplifier.");
+            restored = await recovery.Set808ToneAsync(live, 100, cleanup.Token);
+            var matches = restored.RawDetailPayloadHex == baseline.RawDetailPayloadHex && restored.RawStatePayloadHex == baseline.RawStatePayloadHex;
+            Print(new { operation = "808_tone_100_98_100", baseline, changed, restored, baselineRestored = matches, saved = false });
+            if (!matches) throw new IOException("Full original tone-test baseline restoration was not verified. Stop hardware tests.");
+        }
+    }
 
     private static async Task ScanAsync(int seconds)
     {

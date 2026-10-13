@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "evidence_scope": "phone preset 4->5->4 round trip plus separate Windows API 4->5->4 round trip; full observed baseline restored",
+  "sources": {
+    "phone-preset-switch-logcat.txt": {
+      "sha256": "e2b972340bfed5fa8728d154758040e75d39da8179b4591ed4382316163b5a06"
+    },
+    "phone-preset-switch-bluetooth.txt": {
+      "sha256": "d9a512a4f6781153fea0759703dd2e960944322f5971ab7699f468d199be8036"
+    },
+    "phone-preset-switch-btsnoop.log": {
+      "sha256": "50e9953d6b1e1a4e2c458dac427f9824f12bda953f95ccaf5fd956895d0561e7"
+    },
+    "windows-v119-restored.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    },
+    "windows-preset-return.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    }
+  },
+  "captureSummary": {
+    "hciRecords": 2644,
+    "targetAttPdus": 436,
+    "applicationFrames": 134,
+    "crcValidFrames": 134,
+    "targetConnections": [
+      {
+        "record": 936,
+        "connection_handle": 2,
+        "event_subevent": 10
+      },
+      {
+        "record": 2210,
+        "connection_handle": 3,
+        "event_subevent": 10
+      }
+    ]
+  },
+  "firmware": "V1.1.9",
+  "checksum": {
+    "model": "CRC-16/GSM",
+    "coverage": "length bytes and payload",
+    "trailerEndian": "big"
+  },
+  "frames": [
+    {
+      "hex": "aa555c001204001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c0100460014000100180018001800010028003200320019010001000101140064000000014800010ee2",
+      "payloadHex": "1204001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c010046001400010018001800180001002800320032001901000100010114006400000001480001",
+      "length": 92,
+      "direction": "incoming",
+      "source": "phone-preset-switch-btsnoop.log",
+      "source_records": [
+        2426,
+        2427
+      ],
+      "crc16_gsm_valid": true,
+      "role": "initial state response"
+    },
+    {
+      "hex": "aa555c001305001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c0100460014000100180018001800010028003200320019010001000101140064000000014800010a51",
+      "payloadHex": "1305001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c010046001400010018001800180001002800320032001901000100010114006400000001480001",
+      "length": 92,
+      "direction": "outgoing",
+      "source": "phone-preset-switch-btsnoop.log",
+      "source_records": [
+        2498
+      ],
+      "log_source": "phone-preset-switch-logcat.txt",
+      "log_line_numbers": [
+        562
+      ],
+      "crc16_gsm_valid": true,
+      "role": "observed preset selection"
+    },
+    {
+      "hex": "aa550200210577e5",
+      "payloadHex": "2105",
+      "length": 2,
+      "direction": "outgoing",
+      "source": "phone-preset-switch-btsnoop.log",
+      "source_records": [
+        2501
+      ],
+      "log_source": "phone-preset-switch-logcat.txt",
+      "log_line_numbers": [
+        563
+      ],
+      "crc16_gsm_valid": true,
+      "role": "preset detail query"
+    },
+    {
+      "hex": "aa555c001304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c01004600140001001800180018000100280032003200190100010001011400640000000148000121eb",
+      "payloadHex": "1304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c010046001400010018001800180001002800320032001901000100010114006400000001480001",
+      "length": 92,
+      "direction": "outgoing",
+      "source": "phone-preset-switch-btsnoop.log",
+      "source_records": [
+        2630
+      ],
+      "log_source": "phone-preset-switch-logcat.txt",
+      "log_line_numbers": [
+        668
+      ],
+      "crc16_gsm_valid": true,
+      "role": "observed preset selection"
+    },
+    {
+      "hex": "aa550200210467c4",
+      "payloadHex": "2104",
+      "length": 2,
+      "direction": "outgoing",
+      "source": "phone-preset-switch-btsnoop.log",
+      "source_records": [
+        2633
+      ],
+      "log_source": "phone-preset-switch-logcat.txt",
+      "log_line_numbers": [
+        393,
+        669
+      ],
+      "crc16_gsm_valid": true,
+      "role": "preset detail query"
+    },
+    {
+      "hex": "aa5502001401cd01",
+      "payloadHex": "1401",
+      "length": 2,
+      "direction": "incoming",
+      "source": "phone-preset-switch-btsnoop.log",
+      "source_records": [
+        2503,
+        2635
+      ],
+      "crc16_gsm_valid": true,
+      "role": "candidate selection acknowledgement; byte01 semantics unknown"
+    }
+  ],
+  "selectionComparisons": [
+    {
+      "selectionRecords": [
+        2498
+      ],
+      "baselineStateRecords": [
+        2426,
+        2427
+      ],
+      "payloadLength": 92,
+      "targetWireIndex": 5,
+      "changedPayloadByteOffsets": [
+        0,
+        1
+      ],
+      "preservedBytesExcludingOpcodeAndIndex": true
+    },
+    {
+      "selectionRecords": [
+        2630
+      ],
+      "baselineStateRecords": [
+        2426,
+        2427
+      ],
+      "payloadLength": 92,
+      "targetWireIndex": 4,
+      "changedPayloadByteOffsets": [
+        0
+      ],
+      "preservedBytesExcludingOpcodeAndIndex": true
+    }
+  ],
+  "details": [
+    {
+      "source_records": [
+        2431,
+        2432,
+        2433
+      ],
+      "length": 160,
+      "payloadPrefixHex": "2204",
+      "payloadSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+      "crc16_gsm_valid": true
+    },
+    {
+      "source_records": [
+        2505,
+        2506,
+        2507
+      ],
+      "length": 144,
+      "payloadPrefixHex": "2205",
+      "payloadSha256": "56b8474e5064a7d6f20635a13fb5e725ed2d7f5e613b5ea88ab52ea496474714",
+      "crc16_gsm_valid": true
+    },
+    {
+      "source_records": [
+        2637,
+        2638,
+        2639
+      ],
+      "length": 160,
+      "payloadPrefixHex": "2204",
+      "payloadSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+      "crc16_gsm_valid": true
+    }
+  ],
+  "screenshots": [
+    {
+      "source": "phone-preset-ready.png",
+      "sha256": "a417e12eff6ad93ba4a6a1a297e4e375dfe75ddd3bc162f3b9d89ce7848743b9",
+      "displayLabel": "0D",
+      "presetName": "British Lead Solo",
+      "loadingSpinnerVisible": false
+    },
+    {
+      "source": "phone-preset-changed.png",
+      "sha256": "5423c3c41715d9d8c54bab3e9a98f6f25febda87617f9b13d6e09b8458d9aaba",
+      "displayLabel": "1A",
+      "presetName": "US 65 Deluxe Clean",
+      "loadingSpinnerVisible": false
+    },
+    {
+      "source": "phone-preset-restored.png",
+      "sha256": "c7a2ff1038821930d1a98f45bde1efbab69c14835f21efe1fee656b2330359b9",
+      "displayLabel": "0D",
+      "presetName": "British Lead Solo",
+      "loadingSpinnerVisible": true
+    }
+  ],
+  "restoration": {
+    "phoneReturnDetailMatchesInitial": true,
+    "windowsReturnedWireIndex": 4,
+    "windowsBaselineWireIndex": 4,
+    "fullStateExactlyRestored": true,
+    "fullDetailExactlyRestored": true,
+    "baselineStateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+    "returnedStateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+    "baselineDetailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+    "returnedDetailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+  },
+  "limitations": [
+    "Response1401 observed after outgoing13 and outgoing21; byte01 success/identifier meaning unproven.",
+    "Restored phone screenshot has a loading spinner; independent Windows state/detail read establishes restoration.",
+    "Only presets 4 and 5 observed; global bank mapping, save behavior, persistence and arbitrary state writes unproven.",
+    "Windows API selection was tested separately; desktop UI selection writes were not independently hardware tested."
+  ],
+  "windowsRoundtrip": {
+    "source": "windows-selection-roundtrip.json",
+    "sha256": "5fbbfe445e3f0fb6e9b9d0b44533161d5cb8be6e842a895585774c3903a88ba0",
+    "hashDefinition": "SHA-256 of decoded RawStatePayloadHex or RawDetailPayloadHex payload bytes, excluding framing",
+    "stages": [
+      {
+        "stage": "baseline",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+        "stateByteCount": 92,
+        "detailByteCount": 160
+      },
+      {
+        "stage": "changed",
+        "wireIndex": 5,
+        "stateSha256": "45df78d98026bc3422a28f13d58c80708cc9c2a9968b6d4738be74c4b0a92a00",
+        "detailSha256": "56b8474e5064a7d6f20635a13fb5e725ed2d7f5e613b5ea88ab52ea496474714",
+        "stateByteCount": 92,
+        "detailByteCount": 144
+      },
+      {
+        "stage": "restored",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+        "stateByteCount": 92,
+        "detailByteCount": 160
+      }
+    ],
+    "stateChangedByteOffsets": [
+      1
+    ],
+    "fullStateExactlyRestored": true,
+    "fullDetailExactlyRestored": true,
+    "saveCommandSent": false,
+    "desktopUiSelectionHardwareTested": false,
+    "powerCyclePersistenceTested": false
+  }
+}

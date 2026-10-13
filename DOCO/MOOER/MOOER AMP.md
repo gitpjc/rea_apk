@@ -9,6 +9,22 @@
 MOOER_iAMP_V1.6.1_2026.06.26   
 Mooer Studio For Future Series V1.1.9 Setup_win   
 
+## Mooer Studio Backups   
+
+The files are stored in this directory:    
+
+```bash
+C:\Users\Paul\Documents\Mooer Studio For Future Series\BackupFiles\F15i\
+```
+
+## iAMP Desktop App being developed   
+
+The app being developed is available here:   
+
+```bash
+D:\A_A_Codex\rea_apk\artifacts\Iamp.Desktop\Iamp.Desktop.exe
+```
+
 ## Presets
 
 Has 80 Presets: 20 Groups x 4 presets
@@ -33,3 +49,10 @@ I want to have these sounds:
 
 1 - Basic straight riff sound (I think preset 6b is a bit to ditored or bassy)
 2 - Lead sound with delay/Reverb
+
+## TODO
+
+Get Codex to add a version history in the app like I do for my Flutter apps.   
+
+
+

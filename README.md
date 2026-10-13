@@ -71,3 +71,12 @@ done < <(adb shell pm path com.mooer.iamp)
 
 ## Setting up REA (TODO)  
 
+## iAMP Desktop App
+
+The app being developed is available here:   
+
+```bash
+D:\A_A_Codex\rea_apk\artifacts\Iamp.Desktop\Iamp.Desktop.exe
+
+```
+

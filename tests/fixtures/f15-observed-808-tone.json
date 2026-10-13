@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "evidence_scope": "phone-controlled 808 Tone 100->97->100; retained Windows full-state/detail restoration read only",
+  "firmware": "V1.1.9",
+  "wireIndex": 4,
+  "model": {
+    "category": "OD",
+    "typeCode": 1,
+    "modelValue": 3,
+    "position": 2,
+    "label": "808"
+  },
+  "sources": {
+    "phone-tone-roundtrip-logcat.txt": {
+      "sha256": "d80f8a60fe515b08263e124b944d421b7cfbd6aabed54c0107882d0cc0452efc"
+    },
+    "phone-tone-bluetooth.txt": {
+      "sha256": "8e4db2bea2ce1a95283864ab8de2ac07ab29f31fd73902ff6e9117eb5a325301"
+    },
+    "phone-tone-btsnoop.log": {
+      "sha256": "bebe8be2e98c81ab384ddd5fc91d71854a739ddcbcc9007efee6963e3b0aeb81"
+    },
+    "windows-before-tone.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    },
+    "windows-after-phone-tone.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    }
+  },
+  "captureSummary": {
+    "hciRecords": 5443,
+    "targetAttPdus": 846,
+    "applicationFrames": 253,
+    "crcValidFrames": 253,
+    "coverage": "entire retained ring contains earlier sessions; curated edits are from the final attributed connection",
+    "toneConnectionEvent": 5027,
+    "toneConnectionHandle": 5
+  },
+  "checksum": {
+    "model": "CRC-16/GSM",
+    "coverage": "length bytes and payload",
+    "trailerEndian": "big"
+  },
+  "frames": [
+    {
+      "hex": "aa550e002502010a010003002700610064000cb5",
+      "payloadHex": "2502010a01000300270061006400",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-tone-btsnoop.log",
+      "source_records": [
+        5423
+      ],
+      "log_source": "phone-tone-roundtrip-logcat.txt",
+      "log_line_numbers": [
+        559
+      ],
+      "observedValues": [
+        1,
+        3,
+        39,
+        97,
+        100
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550e002502010a01000300270063006400e1dd",
+      "payloadHex": "2502010a01000300270063006400",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-tone-btsnoop.log",
+      "source_records": [
+        5431
+      ],
+      "log_source": "phone-tone-roundtrip-logcat.txt",
+      "log_line_numbers": [
+        574
+      ],
+      "observedValues": [
+        1,
+        3,
+        39,
+        99,
+        100
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550e002502010a01000300270064006400b0f0",
+      "payloadHex": "2502010a01000300270064006400",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-tone-btsnoop.log",
+      "source_records": [
+        5434
+      ],
+      "log_source": "phone-tone-roundtrip-logcat.txt",
+      "log_line_numbers": [
+        576
+      ],
+      "observedValues": [
+        1,
+        3,
+        39,
+        100,
+        100
+      ],
+      "crc16_gsm_valid": true
+    }
+  ],
+  "responseCandidate": {
+    "hex": "aa5502002601aef6",
+    "payloadHex": "2601",
+    "source_records": [
+      5426,
+      5436,
+      5438
+    ],
+    "crc16_gsm_valid": true,
+    "semantics": "unproven acknowledgement candidate; byte01 meaning unknown"
+  },
+  "screenshots": [
+    {
+      "file": "phone-tone-before.png",
+      "sha256": "3ca22e3f41408eb734db9df1ab46f917a7b32b0f647d82295023158e02440596",
+      "modelLabel": "808",
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-tone-changed.png",
+      "sha256": "8587997b09e02549166bfb2c768affaf5b1d7860d22bd7eaa5b9829ac04b5d06",
+      "modelLabel": "808",
+      "gain": 39,
+      "tone": 97,
+      "vol": 100,
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-tone-restored.png",
+      "sha256": "7729600212f7c378942e073e02c01486f1461749b64fd0645912e335f913e5c1",
+      "modelLabel": "808",
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "visuallyInspected": true
+    }
+  ],
+  "mapping": {
+    "toneValueIndex": 3,
+    "tonePayloadByteOffset": 10,
+    "toneEncoding": "little-endian unsigned16 at observed integer values",
+    "phoneControlledMappingVerified": true,
+    "windowsToneWriteVerified": false,
+    "volValueIndex": 4,
+    "volMappingStatus": "inferred by elimination; no independently varied Vol capture",
+    "unknownValueIndices": [
+      0
+    ],
+    "rangeVerified": false
+  },
+  "restoration": {
+    "wireIndexBefore": 4,
+    "wireIndexAfter": 4,
+    "fullStateExactlyRestored": true,
+    "fullDetailExactlyRestored": true,
+    "beforeStateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+    "afterStateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+    "beforeDetailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+    "afterDetailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+  },
+  "limitations": [
+    "No Windows Tone write or desktop Tone UI hardware test established by this phone capture.",
+    "Values97,99,100 observed on the wire; no complete permitted range established.",
+    "Reply2601 semantics unverified; two rapid restore writes can have ambiguous response pairing.",
+    "Vol index4 is inferred by elimination, not a controlled Vol mapping; unknown flag remains unlabeled.",
+    "No preset-save or power-cycle persistence test established."
+  ],
+  "windowsApiValidation": {
+    "source": "windows-808-tone-roundtrip.json",
+    "sourceSha256": "f1a5a4cfb98593e68c37118c42e6b80a768490d3559733d0646724373d03f51d",
+    "passed": true,
+    "baselineRestored": true,
+    "fullStateRestored": true,
+    "fullDetailRestored": true,
+    "toneValues": [
+      100,
+      98,
+      100
+    ]
+  },
+  "desktopValidation": {
+    "source": "desktop-ui-tone-oct14.roundtrip.json",
+    "sourceSha256": "c667ec7913c7569058af8802d5c7f9c00bd4d00b90f64b4fb7a3d602e250915c",
+    "passed": true,
+    "baselineRestored": true,
+    "fullStateRestored": true,
+    "fullDetailRestored": true,
+    "toneValues": [
+      100,
+      98,
+      100
+    ]
+  }
+}

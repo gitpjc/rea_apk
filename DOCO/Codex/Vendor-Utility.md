@@ -35,7 +35,7 @@ Observed resources include `platforms/qwindows.dll`, Qt image-format plugins, So
 
 `Firmware/F15i/firmware.xml` names F15i firmware V1.1.9 with files `F15i_EMMC_V1.1.9_20260227-1143.mr` and `F15i_FLASH_V1.1.9_20260227-1143.mr`, each 13,057,664 bytes. English release text describes an enhanced looper/drum interface with Drum Sync and real-time loop status. `Firmware/F40i/` separately contains V1.1.2 resources. These are **bundled release metadata**, not a measurement of connected-amplifier firmware, an update recommendation or a parsed firmware format. No firmware image was flashed or executed.
 
-The supplied manual, printed pp.64-65, documents USB firmware update, third-party IR import and whole-device backup/restore using MOOER Studio. This static pass corroborates that relevant resources exist, but does not complete Plan P0.5/P0.6: backup, recovery and actual workflow evaluation remain pending.
+The supplied manual, printed pp.64-65, documents USB firmware update, third-party IR import and whole-device backup/restore using MOOER Studio. This static pass corroborated relevant resources. Subsequently the user created the baseline backup and Codex verified matching source/private-copy hashes; `Backup-Baseline.md` records provenance and the documented recovery route, completing P0.5. No restore was performed; broader utility evaluation P0.6 remains open.
 
 ## Focused native analysis candidates
 
@@ -67,7 +67,8 @@ The stdlib script hashes installed files, parses PE headers/import DLLs, collect
 - [ ] Open the copied PE with a verified native analysis provider; locate references to the USB/Qt metadata candidates and follow actual serializer/parser paths.
 - [ ] Correlate observed functions with a controlled vendor-utility USB session, retaining timestamped request/reply evidence.
 - [ ] Establish read-only initialization and identity/state reads before considering writes.
-- [ ] Evaluate vendor backup and recovery route on actual hardware; record backup separately from restore validation.
+- [x] Record user-created vendor backup, matching source/private-copy hashes and manual-documented recovery route; see `Backup-Baseline.md`.
+- [ ] Validate vendor restore on hardware and complete the broader utility workflow evaluation separately.
 - [ ] Determine which mobile editing features, if any, the USB transport exposes. Maintenance support alone does not imply full editor support.
 
 No protocol command bytes, checksums, handshake or successful hardware workflow are claimed by this document. Local executable copies and inventory evidence are development inputs and must not be included in the desktop application's distributable package.

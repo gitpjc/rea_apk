@@ -1,6 +1,14 @@
 # F15i Li protocol evidence ledger
 
-Updated 13 October 2026. This is a partial reconstruction from one retained Android iAMP session, not a complete protocol specification. No packets were transmitted by this investigation.
+Updated 13 October 2026. This is a partial reconstruction. The initial V1.1.2 capture analysis below was offline; subsequent V1.1.9 phone captures and bounded Windows hardware tests established two restricted control operations. This is not a complete protocol specification.
+
+## Subsequent V1.1.9 control proofs
+
+- [Parameter-Editing.md](Parameter-Editing.md): payload `25` followed by a complete effect record changed the first-position Noise Killer threshold. Windows verified 25 -> 26 -> 25 and restored the complete preset-detail payload. The initial implementation supports only the captured model/configuration and values 25-28. Response `26 01` is a candidate acknowledgement; its semantic meaning remains unknown. Read-back establishes the actual result.
+- [Preset-Selection.md](Preset-Selection.md): a 92-byte state copy with discriminator `13` and the desired preset index recalled slots 4/5. Windows verified 4 -> 5 -> 4, preserving the other state fields and restoring both full state and preset-detail payloads exactly. Exact current-preset detail hashes guard against discarding unfamiliar edits. Response `14 01` semantics remain unknown.
+- No preset save, arbitrary global-state write, firmware update or backup-restore command has been established. All test changes must return to the recorded baseline and originally selected preset, with read-back verification.
+
+The following sections retain the initial capture's provenance and unresolved boundaries; their V1.1.2 measurements are historical rather than the current amplifier baseline.
 
 ## Sources and reproduction
 
@@ -63,7 +71,7 @@ iAMP logs report firmware `V1.1.2`, 80 presets, 10 GIR slots, 10 GNR slots, 70 d
 - [x] Reassemble captured notification frames and verify all 79 checksums.
 - [ ] Independently compare the candidate queries against controlled single-action captures and document response schemas.
 - [ ] Identify every parameter, index convention, error response, sequence/timing requirement and maximum frame size.
-- [ ] Map preset changes, effect edits, drum/looper control, imports and backups. No such command is validated by this document.
+- [ ] Complete mappings for preset changes, effect edits, drum/looper control, imports and backups. Only the two narrow V1.1.9 operations linked above have Windows control proofs.
 - [ ] Establish reconnect behavior, concurrent-client behavior, and compatibility across firmware versions.
 - [ ] Investigate USB separately: this Bluetooth capture establishes no USB control protocol.
 

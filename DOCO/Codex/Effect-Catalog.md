@@ -1,6 +1,19 @@
 # Effect catalog investigation
 
-13 October 2026. **No trusted wire parameter-ID/range/unit catalog was recovered from the bounded packaged-resource search.** The manual provides useful effect names and presentation ordering, but its serial numbers must not be used as protocol identifiers. This result leaves captured preset blocks uninterpreted until code or controlled runtime evidence supplies the mapping.
+13 October 2026. **No trusted wire parameter-ID/range/unit catalog was recovered from the bounded packaged-resource search.** The manual provides useful effect names and presentation ordering, but its serial numbers must not be used as protocol identifiers. Controlled runtime evidence and separately marked read-only baseline correspondences now establish limited mappings outside this negative resource-search result.
+
+## Confirmed runtime mappings
+
+| Captured configuration | Corroborated labels and fields | Evidence and limits |
+| --- | --- | --- |
+| Type 4, model value 2, six values | Dyna / Noise Killer; Values[2] Threshold, Values[3] Level | V1.1.9 phone screenshots and HCI changes; Windows threshold 25 -> 26 -> 25 with Level 50 and full restoration. Only values 25-28 and the captured first-position layout are exposed. [Parameter-Editing.md](Parameter-Editing.md). |
+| Type 1, model value 5, five values | OD / D-Drive; Values[2] Gain, Values[3] Tone, Values[4] Vol | Historical V1.1.2 phone screenshot/read comparison; presentation only. No D-Drive write or full range validation. [Preset-Format.md](Preset-Format.md). |
+| Type 1, model value 3, five values | OD / 808; Gain 39 uniquely matches Values[2]; Tone = Values[3] controlled; Vol = Values[4] inferred by elimination | V1.1.9 phone Tone 100 → 97 → 100 captured with complete observed Windows restoration. No Windows Tone write yet; Vol not independently varied; full ranges unverified. [808-Tone-Editing.md](808-Tone-Editing.md), [Runtime-Effect-Mappings.md](Runtime-Effect-Mappings.md). |
+| Type 2, model value 31, nine values | Amp / PLX 100; Gain 100, Bass 35, Mid 43, Treble 40, Presence 45, Master 75 uniquely match Values[2–7] | V1.1.9 baseline correlations, not controlled changes. Values[0] and trailing Values[8] remain unknown. [Runtime-Effect-Mappings.md](Runtime-Effect-Mappings.md). |
+| Type 7, model value 1, eight values | Delay / Analog; Level 17, Feedback 25, Time 500ms uniquely match Values[2–4] | UI suffix observed at one baseline point; scale/range, trailing fields and writes unverified. [Runtime-Effect-Mappings.md](Runtime-Effect-Mappings.md). |
+| Type 8, model value 1, ten values | Reverb / Hall; Pre Delay 20ms, Level 24, Decay 35 uniquely match Values[2–4] | Baseline correlations only. Tone 0 could be any Values[5–9]; no offset/scale/range or write verification. [Runtime-Effect-Mappings.md](Runtime-Effect-Mappings.md). |
+
+The newly observed screenshot labels are confirmed UI facts; unique-value wire correspondences remain inferences until controlled changes verify them. The curated `tests/fixtures/f15-effect-labels.json` stores image/readback digests and these distinctions. Other type/model/parameter interpretations remain bounded by their evidence. These observations do not establish a complete catalog, bypass flags or generalized parameter units.
 
 ## Sources and search coverage
 
@@ -72,7 +85,7 @@ These documented user-interface facts help define future experiments; they still
 ## Next evidence needed to interpret captured preset blocks
 
 1. Trace `package:flutter_iamp_app/device/future_series/f15i/` model/state and BLE helper candidates already retained by Flutter triage; recover actual lookup objects/serialization, with function/data references rather than string adjacency.
-2. Record a current-app screenshot of one selected model and all parameter labels/values; correlate the same preset state with a read-only capture. Do not assign IDs from the manual's serial numbers.
+2. Read-only screenshots now cover 808, PLX 100, Analog and Hall on the restored V1.1.9 baseline, with limits in [Runtime-Effect-Mappings.md](Runtime-Effect-Mappings.md). Extend this coverage to other models; do not assign IDs from the manual's serial numbers.
 3. Vary one reversible parameter at a time only after the established hardware-test gate; capture before/after bytes, acknowledgement and read-back. Separate effect enable/model/parameter fields and verify units, range, defaults and scale.
 4. Validate at least two different models in a category before generalizing layout. Unknown fields remain raw data; do not expose guessed sliders in the live editor.
 5. Record an independently confirmed catalog with evidence per category/model/parameter and firmware/app build. Keep this document's label candidates separate from that eventual wire schema.

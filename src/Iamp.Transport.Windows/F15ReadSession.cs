@@ -6,7 +6,7 @@ using Windows.Security.Cryptography;
 
 namespace Iamp.Transport.Windows;
 
-/// <summary>Experimental, allowlisted information queries corroborated by the captured phone session.</summary>
+/// <summary>Captured information queries and one restricted V1.1.9 live update. Callers serialize complete workflows.</summary>
 public sealed class F15ReadSession : IAsyncDisposable
 {
     private readonly BluetoothLEDevice device;
@@ -112,6 +112,89 @@ public sealed class F15ReadSession : IAsyncDisposable
         var after = await QueryAsync(new byte[] { 0x11 }, p => p.Length >= 2 && p[0] == 0x12, ct);
         if (after[1] != index) throw new IOException("The current preset changed during the read; refresh the snapshot.");
         return new CurrentPresetSnapshot(index, decoded.Name, Convert.ToHexString(state), Convert.ToHexString(detail), decoded.Blocks);
+    }
+
+    /// <summary>One observed live effect update, followed by complete current-preset read-back. Does not save.</summary>
+    public async Task<CurrentPresetSnapshot> SetNoiseKillerThresholdAsync(CurrentPresetSnapshot expected, ushort threshold, CancellationToken ct)
+    {
+        var identity = await ReadIdentityAsync(ct);
+        if (identity.Firmware != "V1.1.9") throw new NotSupportedException("Parameter editing is verified only on F15i V1.1.9.");
+        var before = await ReadCurrentPresetAsync(ct);
+        if (before.WireIndex != expected.WireIndex || before.RawDetailPayloadHex != expected.RawDetailPayloadHex)
+            throw new IOException("The amplifier preset changed since the snapshot. Read it again before editing.");
+        var block = before.Blocks[0];
+        var command = NoiseKillerCommand.Create(block, threshold);
+        if (block.Values[2] == threshold) return before;
+        await WriteObservedUpdateAsync(command, ct);
+        // ATT write success alone is not an application acknowledgement. Confirm every preset byte below.
+        var after = await ReadCurrentPresetAsync(ct);
+        var expectedDetail = PresetDataParser.WithParameterValue(Convert.FromHexString(before.RawDetailPayloadHex), 1, 2, threshold);
+        if (after.WireIndex != before.WireIndex || after.RawStatePayloadHex != before.RawStatePayloadHex ||
+            after.RawDetailPayloadHex != Convert.ToHexString(expectedDetail))
+            throw new IOException("Edit read-back differs from the requested change. Read the amplifier before another operation; nothing was saved.");
+        return after;
+    }
+
+    private async Task WriteObservedUpdateAsync(byte[] payload, CancellationToken ct)
+    {
+        await queue.WaitAsync(ct);
+        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        deadline.CancelAfter(TimeSpan.FromSeconds(15));
+        try
+        {
+            lock (gate)
+            {
+                ObjectDisposedException.ThrowIf(disposed, this);
+                if (faulted) throw new IOException("Reconnect before sending another command.");
+            }
+            var result = await write.WriteValueWithResultAsync(CryptographicBuffer.CreateFromByteArray(FrameCodec.Encode(payload)),
+                GattWriteOption.WriteWithResponse).AsTask(deadline.Token);
+            Require(result.Status, "Live parameter update");
+        }
+        catch { lock (gate) { faulted = true; decoder.Reset(); } throw; }
+        finally { queue.Release(); }
+    }
+
+    /// <summary>Restricted unsaved tone edit on the captured second-position 808 model, with full read-back.</summary>
+    public async Task<CurrentPresetSnapshot> Set808ToneAsync(CurrentPresetSnapshot expected, ushort tone, CancellationToken ct)
+    {
+        var identity = await ReadIdentityAsync(ct);
+        if (identity.Firmware != "V1.1.9") throw new NotSupportedException("808 tone editing is verified only on F15i V1.1.9.");
+        var before = await ReadCurrentPresetAsync(ct);
+        if (before.WireIndex != expected.WireIndex || before.RawDetailPayloadHex != expected.RawDetailPayloadHex ||
+            before.RawStatePayloadHex != expected.RawStatePayloadHex)
+            throw new IOException("The amplifier changed since the snapshot. Read it again before editing.");
+        var block = before.Blocks[1];
+        var request = Od808ToneCommand.Create(block, tone);
+        if (block.Values[3] == tone) return before;
+        await WriteObservedUpdateAsync(request, ct);
+        var after = await ReadCurrentPresetAsync(ct);
+        var expectedDetail = PresetDataParser.WithParameterValue(Convert.FromHexString(before.RawDetailPayloadHex), 2, 3, tone);
+        if (after.WireIndex != before.WireIndex || after.RawStatePayloadHex != before.RawStatePayloadHex ||
+            after.RawDetailPayloadHex != Convert.ToHexString(expectedDetail))
+            throw new IOException("808 tone read-back differs from the requested change. Read the amplifier before another operation; nothing was saved.");
+        return after;
+    }
+
+    /// <summary>Recall one of the two captured slots. Preserves all other whole-state fields; does not save presets.</summary>
+    public async Task<CurrentPresetSnapshot> SelectObservedPresetAsync(CurrentPresetSnapshot expected, byte targetIndex, CancellationToken ct)
+    {
+        var identity = await ReadIdentityAsync(ct);
+        if (identity.Firmware != "V1.1.9") throw new NotSupportedException("Preset selection is verified only on F15i V1.1.9.");
+        var before = await ReadCurrentPresetAsync(ct);
+        if (before.WireIndex != expected.WireIndex || before.RawDetailPayloadHex != expected.RawDetailPayloadHex ||
+            before.RawStatePayloadHex != expected.RawStatePayloadHex)
+            throw new IOException("The amplifier changed since the snapshot. Read it again before selecting a preset.");
+        var request = PresetSelectionCommand.Create(Convert.FromHexString(before.RawStatePayloadHex), targetIndex);
+        PresetSelectionCommand.RequireObservedPreset(before.WireIndex, Convert.FromHexString(before.RawDetailPayloadHex));
+        if (before.WireIndex == targetIndex) return before;
+        await WriteObservedUpdateAsync(request, ct);
+        var after = await ReadCurrentPresetAsync(ct);
+        request[0] = 0x12;
+        if (after.WireIndex != targetIndex || after.RawStatePayloadHex != Convert.ToHexString(request))
+            throw new IOException("Preset selection or preserved global state could not be confirmed. Read the amplifier before another operation.");
+        PresetSelectionCommand.RequireObservedPreset(after.WireIndex, Convert.FromHexString(after.RawDetailPayloadHex));
+        return after;
     }
 
     private async Task<byte[]> QueryAsync(byte[] request, Func<byte[], bool> match, CancellationToken ct)

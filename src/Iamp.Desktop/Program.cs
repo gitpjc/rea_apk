@@ -11,6 +11,21 @@ internal static class Program
     public static int Main(string[] args)
     {
         var app = new Application();
+        if (args.Length == 3 && args[0] == "--hardware-roundtrip-preview")
+        {
+            app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            var testWindow = new MainWindow();
+            _ = app.Dispatcher.InvokeAsync(async () =>
+            {
+                var exitCode=0;
+                try {await testWindow.RunHardwareRoundtripPreviewAsync(args[1],args[2]);}
+                catch(Exception ex) {Console.Error.WriteLine(ex);exitCode=2;}
+                try {RenderPreview(testWindow,args[2]);}
+                catch(Exception ex) {Console.Error.WriteLine(ex);exitCode=2;}
+                finally {testWindow.Close();app.Shutdown(exitCode);}
+            });
+            return app.Run();
+        }
         if (args.Length == 3 && args[0] == "--read-preview")
         {
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;

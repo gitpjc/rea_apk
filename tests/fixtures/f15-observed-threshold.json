@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "evidence_scope": "phone threshold round trip plus separately recorded Windows25->26->25 round trip; firmwareV1.1.9",
+  "sources": {
+    "logcat": {
+      "file": "phone-threshold-roundtrip-logcat.txt",
+      "sha256": "b7865a615222e17a741d53d76f03a17a6b88d40195643c16918d10cd9fde4fcf"
+    },
+    "bluetooth": {
+      "file": "phone-threshold-bluetooth.txt",
+      "sha256": "d5ee61a47cddabc145b3d41416b1c22ef79fd7052c36d70259faf11650b46e66"
+    },
+    "btsnoop": {
+      "file": "phone-threshold-btsnoop.log",
+      "sha256": "eba8fc5fd183a17bf34a59d6266decebfff247cecd780b1e24a92627cb19872a"
+    },
+    "restoredReadback": {
+      "file": "windows-v119-restored.json",
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    }
+  },
+  "captureSummary": {
+    "hciRecords": 1782,
+    "targetConnectionEvent": 936,
+    "targetAttPdus": 229,
+    "applicationFrames": 76,
+    "crcValidFrames": 76
+  },
+  "checksum": {
+    "model": "CRC-16/GSM",
+    "polynomial": "0x1021",
+    "init": "0x0000",
+    "reflected": false,
+    "xorout": "0xffff",
+    "coverage": "length bytes and payload",
+    "trailerEndian": "big"
+  },
+  "frames": [
+    {
+      "hex": "aa5510002501040c010002001b00320000000000ac64",
+      "payloadHex": "2501040c010002001b00320000000000",
+      "length": 16,
+      "direction": "outgoing",
+      "source": "phone-threshold-btsnoop.log",
+      "source_records": [
+        1717
+      ],
+      "log_source": "phone-threshold-roundtrip-logcat.txt",
+      "log_line_numbers": [
+        621
+      ],
+      "crc16_gsm_valid": true,
+      "observedRole": "threshold edit",
+      "observedBlock": {
+        "position": 1,
+        "typeCode": 4,
+        "valueByteCount": 12,
+        "values": [
+          1,
+          2,
+          27,
+          50,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "hex": "aa5510002501040c010002001c003200000000006b7c",
+      "payloadHex": "2501040c010002001c00320000000000",
+      "length": 16,
+      "direction": "outgoing",
+      "source": "phone-threshold-btsnoop.log",
+      "source_records": [
+        1720
+      ],
+      "log_source": "phone-threshold-roundtrip-logcat.txt",
+      "log_line_numbers": [
+        623
+      ],
+      "crc16_gsm_valid": true,
+      "observedRole": "threshold edit",
+      "observedBlock": {
+        "position": 1,
+        "typeCode": 4,
+        "valueByteCount": 12,
+        "values": [
+          1,
+          2,
+          28,
+          50,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "hex": "aa5510002501040c01000200190032000000000023c2",
+      "payloadHex": "2501040c010002001900320000000000",
+      "length": 16,
+      "direction": "outgoing",
+      "source": "phone-threshold-btsnoop.log",
+      "source_records": [
+        1779
+      ],
+      "log_source": "phone-threshold-roundtrip-logcat.txt",
+      "log_line_numbers": [
+        625
+      ],
+      "crc16_gsm_valid": true,
+      "observedRole": "restore threshold to25",
+      "observedBlock": {
+        "position": 1,
+        "typeCode": 4,
+        "valueByteCount": 12,
+        "values": [
+          1,
+          2,
+          25,
+          50,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "hex": "aa5502002601aef6",
+      "payloadHex": "2601",
+      "length": 2,
+      "direction": "incoming",
+      "source": "phone-threshold-btsnoop.log",
+      "source_records": [
+        1722,
+        1724,
+        1782
+      ],
+      "crc16_gsm_valid": true,
+      "observedRole": "response candidate; neither success nor persistence semantics established"
+    }
+  ],
+  "screenshots": [
+    {
+      "source": "phone-edit-before.png",
+      "sha256": "30c7ea25ccd1b5b584d237222b22511f3489dd6e61120679cec3c777474fb51d",
+      "threshold": 25,
+      "level": 50,
+      "modelLabel": "Noise Killer",
+      "categoryLabel": "Dyna",
+      "evidence": "visually inspected screenshot"
+    },
+    {
+      "source": "phone-edit-threshold3.png",
+      "sha256": "f5aef5db7b6d3d3659c3f2a22236b002dd2bbd7f595cecf093ddbd9525274a77",
+      "threshold": 28,
+      "level": 50,
+      "modelLabel": "Noise Killer",
+      "categoryLabel": "Dyna",
+      "evidence": "visually inspected screenshot"
+    },
+    {
+      "source": "phone-threshold-restored.png",
+      "sha256": "905a0de77418fd4eb5598579cbcfb7cec9e1b2f034c615964e63b14f0f11d17b",
+      "threshold": 25,
+      "level": 50,
+      "modelLabel": "Noise Killer",
+      "categoryLabel": "Dyna",
+      "evidence": "visually inspected screenshot"
+    }
+  ],
+  "restoredReadback": {
+    "firmware": "V1.1.9",
+    "wireIndex": 4,
+    "block": {
+      "Position": 1,
+      "TypeCode": 4,
+      "Values": [
+        1,
+        2,
+        25,
+        50,
+        0,
+        0
+      ]
+    }
+  },
+  "limitations": [
+    "Two identical responses follow both rapid edit writes; per-write response attribution is ambiguous.",
+    "The byte01 in response2601 is not an established success code.",
+    "Values0,4,5 are preserved observed fields without semantic labels.",
+    "No save command, power-cycle persistence, rejection response or desktop UI hardware interaction was tested."
+  ],
+  "windowsRoundtrip": {
+    "source": "windows-threshold-roundtrip.json",
+    "sha256": "9a54b59d6f9db4db72a4c249602746af7d6923172de10906c9c586af4e18933b",
+    "payloadHashDefinition": "SHA-256 of decoded RawDetailPayloadHex bytes, including the entire preset-detail payload",
+    "stages": [
+      {
+        "stage": "baseline",
+        "wireIndex": 4,
+        "threshold": 25,
+        "level": 50,
+        "presetDetailByteCount": 160,
+        "presetDetailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+      },
+      {
+        "stage": "changed",
+        "wireIndex": 4,
+        "threshold": 26,
+        "level": 50,
+        "presetDetailByteCount": 160,
+        "presetDetailSha256": "6d343ac67a0e9175632d00bbc4a89cf3342c170d32d4965e6367f0e9635a259c"
+      },
+      {
+        "stage": "restored",
+        "wireIndex": 4,
+        "threshold": 25,
+        "level": 50,
+        "presetDetailByteCount": 160,
+        "presetDetailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+      }
+    ],
+    "changedDetailByteOffsets": [
+      29
+    ],
+    "restoredDetailExactlyMatchesBaseline": true,
+    "phoneChanged26IndependentlyInspected": false,
+    "desktopUiHardwareTested": false,
+    "persistenceTested": false
+  }
+}
