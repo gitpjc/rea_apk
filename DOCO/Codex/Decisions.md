@@ -1,0 +1,63 @@
+# Implementation decisions and unresolved evidence
+
+Updated: 13 October 2026. Decisions below separate chosen engineering policy from observed artifact/manual facts and unverified hardware behavior. Task completion is tracked in `Plan.md`; acceptance is tracked in `Feature-Matrix.md`.
+
+## Decision record
+
+| ID | Status | Decision and rationale | Evidence / revisit trigger |
+| --- | --- | --- | --- |
+| D01 | Adopted | Build an independent Windows controller; amplifier performs audio processing. REA is an investigation tool, excluded from the shipped runtime. | Plan objective; revisit only if the user separately requests audio processing. |
+| D02 | Adopted for initial implementation | C# + WPF/XAML + .NET 10, asynchronous Windows BLE I/O; Windows x64 first. Separate protocol, Windows transport and desktop projects; DeviceProbe exercises the same read session. | Actual Windows identity and 80-name reads succeeded. Initial read-only WPF viewer is under construction; full editor, responsiveness and deployment acceptance remain pending. Flutter packaging does not provide reusable Dart source. |
+| D03 | Adopted | Demonstrate real state read and one reversible edit/restore before completing a full hardware editor. Use explicit simulator state for independent UI progress. | Plan P2/P3 gates. Mock screens cannot establish compatibility. |
+| D04 | Adopted for initial reads | Use Windows BLE GATT service FFF0, notifications FFF2 and writes FFF3, discovering actual handles each connection. Retain separate transport boundaries for future USB work. | Android capture and Windows GATT discovery agree; Windows identity and preset-name queries succeeded. Native vendor analysis establishes shared AA55/CRC framing and USB chunking, but USB initialization and actual hardware control remain unverified. See `Protocol.md`, `Native-Findings.md`, ignored `analysis/generated/amp-gatt.json` and private `analysis/private/windows-read-info.json`. |
+| D05 | Adopted | Initial release is an offline preset/effect/mixer editor; cloud/account/media features get separate scope. | Plan section 4; Feature-Matrix F01-F11 define MVP. Offline editing must not depend on vendor login. |
+| D06 | Adopted | Use versioned local JSON; distinguish it from vendor preset/backup formats. Preserve pending, acknowledged and saved state separately. | Plan P4.5-6/P5.7; vendor formats and persistence protocol unverified. |
+| D07 | Adopted | Read before writes; back up first; use low output levels for audio tests; restore reversible experiments; never fuzz unknown hardware commands. Save/transfer retries require proven semantics. | Plan P0.5/P3.3/P4.4; manual p.65 recommends backup before updates. Firmware updates and reset remain deferred. |
+| D08 | Adopted | Record artifact identity/provenance and evidence limits; do not merge primary APK with phone splits as if identical. | Plan input inventory; `analysis/generated/*badging.txt`, `*signing.txt`, `apk-inventory.json` provide independently inspectable evidence. Package/version equality alone does not prove byte identity. |
+| D09 | Adopted | Pin actual published REA package and use its advertised tool schemas, retaining complete results. Main-branch documentation may exceed release functionality. | `.tools/rea/package.json` pins `rea-agents` 6.4.0; actual MCP catalog has 170 tools without Flutter/Dart AOT operations. Native vendor Ghidra and capture-based reconstruction succeeded; full Dart recovery remains open. |
+| D10 | Adopted | Keep diagnostics, captures, APKs and downloaded tools outside distributable runtime artifacts. Redact account/device-sensitive data in shared fixtures/logs. | Plan P7.6; evidence supports development, not redistribution of the original application. |
+
+## Findings and boundaries
+
+| Finding | Type / source | What it establishes | What it does not establish |
+| --- | --- | --- | --- |
+| Primary APK reports package `com.mooer.iamp`, version 1.6.1/code 42. | Static badging: `analysis/generated/MOOER_iAMP_V1.6.1_2026.06.26.badging.txt`. | Declared identity of that supplied artifact. | Installed-phone identity, signature agreement or live behavior. |
+| APK includes Flutter assets and `libapp.so`/`libflutter.so`. | ZIP inventory in Plan; `analysis/generated/apk-inventory.json`. | Flutter packaging; Dart AOT/native analysis is relevant. | Complete Dart recovery, location of each protocol function or working Windows transport. |
+| REA package is pinned to 6.4.0. | Local package manifest. | Reproducible package dependency selection. | Live Codex MCP availability, provider readiness or every tool described by upstream main. |
+| Flutter/Dart AOT operations are absent from the installed REA release. | CLI attempts plus `analysis/generated/rea-mcp-catalog.json`: actual connected MCP catalog contains 170 tools, with no Flutter/Dart AOT tools. | These operations cannot be used in the installed 6.4.0 release. | Absence of other native/AOT routes or impossibility of protocol reconstruction from captures. |
+| Saved Dart AOT CLI attempt returned command-not-found. | `analysis/generated/dart-aot.json`. | That command is absent in selected CLI; no decompilation was produced by it. | Absence of other native/AOT routes; route through actual advertised tools or a separately verified analysis engine. |
+| Authorized phone USB ADB and app-specific runtime capture succeeded. | Coordinator's retained phone identity/runtime evidence and `Protocol.md` capture sources. | Actual phone/app access and a retained Android BLE session are available. | An emulator substituting for Bluetooth hardware, or comprehensive action coverage. |
+| Bluetooth connection and USB maintenance are documented. | Manual printed pp.38-39,64-65; text extraction of app/PC sections. | Intended user workflows. | Exact wire protocol or independent desktop compatibility. |
+| REA Android inspection succeeded. | Coordinator retained Evidence ID `ev_96a1e60d7c71e56ad0b11537736a34911c86260a439eef531812ce1e1ee98ead`; `analysis/generated/android-package.json`. | A successful Android static-inspection route is available. | Complete Dart analysis or live phone/amp control. |
+| Primary APK version code 42 and phone split set code 43 both identify 1.6.1 and share publisher certificate SHA-256 `f07ffbe874f48f2e5a23fec3336799b0e96171ade2b7249e1f2407282af61ee1`. | Coordinator verified `analysis/generated/*signing.txt` and `*badging.txt`; split set also includes source stamp. | Different builds with shared publisher identity; comparison must preserve this distinction. | Byte identity or identical behavior between builds. |
+| Windows enumerates amp VID 34DB/PID 000B with Audio MI00 and HID MI03; Intel Wireless Bluetooth is present. | Coordinator reviewed `analysis/generated/connected-devices.txt`. | Candidate USB interfaces and a local Bluetooth adapter exist. | HID control framing, BLE reachability, correct initialization or support for all mobile features. |
+| .NET SDK 10.0.401 is installed; protocol checks and Windows read probe succeed. | `analysis/generated/dotnet-info.txt`; five .NET protocol tests and five Node capture tests passed; private `windows-read-info.json`. | Real Windows GATT integration can read firmware V1.1.2, capabilities 80/10/10/70/10 and all 80 preset names. | Effect editing, preset selection/save, battery semantics, reconnect reliability or release packaging. |
+| Retained Android capture contains 233 target ATT PDUs and 79 complete AA55 frames with valid CRC. | `Protocol.md`, generated `protocol-capture.json`, sanitized fixture and tests. | Initial-session FFF0/FFF2/FFF3 transport, fragmentation and CRC-16/GSM envelope are established. | Every action, firmware version, error response or reconnect sequence. |
+| Native vendor utility analysis corroborates AA55 framing and CRC, and exposes USB chunking. | `Native-Findings.md`; REA/Ghidra 12.1.4 evidence IDs and 71-record local evidence export. | Independent static framing evidence and device-info parser; C1 is update-mode restart and must not be mistaken for a read. | A working USB session or equivalent mobile/USB command sets. |
+
+## Blockers, risks and next evidence
+
+| ID / severity | Current status | Next concrete action / closure criterion | Affected tasks |
+| --- | --- | --- | --- |
+| B01 / resolved for initial BLE reads | BLE endpoint, framing, notification subscription and Windows information reads are established. USB initialization remains open. | Continue per-command validation; retain USB as separate unfinished work. This closure does not complete editor feasibility or all P3 tasks. | P2.2, P2.5-8, P3 |
+| B02 / resolved | Phone USB ADB is authorized and installed app identity/runtime evidence recorded. | Recheck device identity when reconnecting; Wi-Fi pairing is not required for current USB workflow. | P2.4, P2.6 |
+| B03 / resolved for retained initial session | Android HCI capture decoded: 233 attributed ATT PDUs, 79 CRC-valid application frames and sanitized fixtures. | Capture controlled single actions for editing, panel changes and reconnect. Existing coverage is one session, not the full protocol. | P2.6-9 |
+| B04 / known tooling limitation | Actual 170-tool MCP catalog confirms no Flutter/Dart AOT operations in installed REA 6.4.0. Native Ghidra analysis and capture reconstruction work. | Use supported routes; do not repeat absent commands or mark full Dart recovery complete. | P1.8-9, P2.3 |
+| B05 / high | Backup/recovery has not been recorded. | Evaluate installed/vendor MOOER Studio without firmware updates; create baseline backup and record restore documentation. Treat restoration as unproven until a separately planned hardware round trip. | P0.5-6, P6.6 |
+| B06 / versions recorded; feature reconciliation open | Actual amp reports V1.1.2; phone iAMP 1.6.1/code 43 differs from primary APK code 42 and the 2025 manual baseline. Installed vendor utility bundles newer firmware metadata. | Validate each adopted feature against actual V1.1.2 behavior; bundled firmware is not installed firmware and is not an update instruction. | P0.2, P0.7, P7.2 |
+| B07 / medium | Numerical catalogs and limits are incomplete. | Verify slot mapping, effect constraints, input gain lower bound, mixer conversions and library counts; capture values before defining encoders. | P4.2-3, P5.4-6 |
+| B08 / medium | Windows discovery and read probe work; lifecycle and deployment acceptance remain open. | Test contention, disconnect, cancellation, sleep/resume and clean installation. Code now poisons failed sessions and bounds whole queries; these safeguards still need lifecycle hardware tests. | P3.1-6, P7.3/5/8 |
+| B09 / medium | Cloud/AI and file transfer scope can overshadow offline editor. | Finish offline feasibility first; make independent supported-access/format decisions with explicit acceptance before expanding scope. | P6.6-8 |
+
+## Evidence gates after initial stack/transport selection
+
+- [x] Successful retained REA Android APK analysis tied to artifact identity and actual installed schema; Flutter packaging established, full Dart recovery remains unavailable.
+- [x] Record actual amplifier firmware and authorized phone app version; correlate Windows GATT endpoints with captured phone session.
+- [ ] Complete recorded Windows build/architecture, adapter/driver and deployment/lifecycle acceptance baseline.
+- [ ] Vendor utility baseline and backup/recovery record.
+- [x] Verified BLE endpoint/notification initialization, bounded frame codec and Windows identity/capability/80-name reads.
+- [ ] Captured reversible parameter command, acknowledgement/read-back and restore result.
+- [ ] Preset selection and panel-change/reconnect behavior on Windows.
+- [ ] Measured UI responsiveness/device latency and deployment feasibility on the test PC.
+
+D02/D04 are resolved for the initial Windows read-only implementation on 13 October 2026. The measured device reports V1.1.2 and 80 preset, 10 GIR, 10 GNR, 70 drum and 10 looper entries; the probe retrieved all 80 names through Windows BLE. The initial WPF snapshot viewer remains distinct from a live editor. Backup/recovery, a reversible edit/restore, preset selection/save, lifecycle tests and deployment acceptance remain release gates.

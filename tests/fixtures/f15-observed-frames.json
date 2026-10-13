@@ -1,0 +1,543 @@
+{
+  "schema_version": 1,
+  "evidence_type": "passive Android application log; no command safety classification",
+  "checksum_candidates": [
+    {
+      "model": "GSM",
+      "polynomial": "0x1021",
+      "init": "0x0",
+      "reflected": false,
+      "xorout": "0xffff",
+      "start_offset": 2,
+      "trailer_endian": "big",
+      "matched": 17
+    }
+  ],
+  "frames": [
+    {
+      "hex": "aa55020001013187",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        187
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "0101",
+      "payloadHex": "0101",
+      "length_field_le": 2,
+      "length": 2,
+      "total_bytes": 8,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          386
+        ]
+      ],
+      "source_records": [
+        386
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa55010003f8ac",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        188
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "03",
+      "payloadHex": "03",
+      "length_field_le": 1,
+      "length": 1,
+      "total_bytes": 7,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          390
+        ]
+      ],
+      "source_records": [
+        390
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa5503002901289f21",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        189
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "290128",
+      "payloadHex": "290128",
+      "length_field_le": 3,
+      "length": 3,
+      "total_bytes": 9,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          394
+        ]
+      ],
+      "source_records": [
+        394
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa55030053010135a3",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        190
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "530101",
+      "payloadHex": "530101",
+      "length_field_le": 3,
+      "length": 3,
+      "total_bytes": 9,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          398
+        ]
+      ],
+      "source_records": [
+        398
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550600650101000a005003",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        191
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "650101000a00",
+      "payloadHex": "650101000a00",
+      "length_field_le": 6,
+      "length": 6,
+      "total_bytes": 12,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          403
+        ]
+      ],
+      "source_records": [
+        403
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550100915b57",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        192,
+        583,
+        587,
+        591,
+        593,
+        596,
+        601,
+        605,
+        608,
+        611,
+        614,
+        619,
+        621,
+        625,
+        627,
+        631,
+        635,
+        637,
+        650,
+        652,
+        655,
+        659,
+        662,
+        665
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "91",
+      "payloadHex": "91",
+      "length_field_le": 1,
+      "length": 1,
+      "total_bytes": 7,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          407
+        ],
+        [
+          612
+        ],
+        [
+          671
+        ],
+        [
+          675
+        ],
+        [
+          733
+        ],
+        [
+          741
+        ],
+        [
+          801
+        ],
+        [
+          805
+        ],
+        [
+          1125
+        ],
+        [
+          1228
+        ],
+        [
+          1362
+        ],
+        [
+          1367
+        ],
+        [
+          1615
+        ],
+        [
+          1673
+        ],
+        [
+          1733
+        ],
+        [
+          1835
+        ],
+        [
+          1839
+        ],
+        [
+          1843
+        ],
+        [
+          1979
+        ],
+        [
+          2033
+        ],
+        [
+          2091
+        ]
+      ],
+      "source_records": [
+        407,
+        612,
+        671,
+        675,
+        733,
+        741,
+        801,
+        805,
+        1125,
+        1228,
+        1362,
+        1367,
+        1615,
+        1673,
+        1733,
+        1835,
+        1839,
+        1843,
+        1979,
+        2033,
+        2091
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550100a9ec0c",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        193
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "a9",
+      "payloadHex": "a9",
+      "length_field_le": 1,
+      "length": 1,
+      "total_bytes": 7,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          411
+        ]
+      ],
+      "source_records": [
+        411
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa5502004a01e0b1",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        194
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "4a01",
+      "payloadHex": "4a01",
+      "length_field_le": 2,
+      "length": 2,
+      "total_bytes": 8,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          415
+        ]
+      ],
+      "source_records": [
+        415
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550300292950eff1",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        280
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "292950",
+      "payloadHex": "292950",
+      "length_field_le": 3,
+      "length": 3,
+      "total_bytes": 9,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          452
+        ]
+      ],
+      "source_records": [
+        452
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550600650201000a00bed1",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        283
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "650201000a00",
+      "payloadHex": "650201000a00",
+      "length_field_le": 6,
+      "length": 6,
+      "total_bytes": 12,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          499
+        ]
+      ],
+      "source_records": [
+        499
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550600650301000f00eb75",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        408
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "650301000f00",
+      "payloadHex": "650301000f00",
+      "length_field_le": 6,
+      "length": 6,
+      "total_bytes": 12,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          525
+        ]
+      ],
+      "source_records": [
+        525
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa550600650310001e00b624",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        410
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "650310001e00",
+      "payloadHex": "650310001e00",
+      "length_field_le": 6,
+      "length": 6,
+      "total_bytes": 12,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          541
+        ]
+      ],
+      "source_records": [
+        541
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa55060065031f002d00320c",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        412
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "65031f002d00",
+      "payloadHex": "65031f002d00",
+      "length_field_le": 6,
+      "length": 6,
+      "total_bytes": 12,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          557
+        ]
+      ],
+      "source_records": [
+        557
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa55060065032e003c005813",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        414
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "65032e003c00",
+      "payloadHex": "65032e003c00",
+      "length_field_le": 6,
+      "length": 6,
+      "total_bytes": 12,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          573
+        ]
+      ],
+      "source_records": [
+        573
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa55060065033d0046003ffa",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        416
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "65033d004600",
+      "payloadHex": "65033d004600",
+      "length_field_le": 6,
+      "length": 6,
+      "total_bytes": 12,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          589
+        ]
+      ],
+      "source_records": [
+        589
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa55010011cadf",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        418
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "11",
+      "payloadHex": "11",
+      "length_field_le": 1,
+      "length": 1,
+      "total_bytes": 7,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          601
+        ]
+      ],
+      "source_records": [
+        601
+      ],
+      "crc16_gsm_valid": true
+    },
+    {
+      "hex": "aa55020021103571",
+      "source": "iamp-logcat.txt",
+      "line_numbers": [
+        419
+      ],
+      "semantics": "unknown",
+      "direction": "outgoing",
+      "payload_hex": "2110",
+      "payloadHex": "2110",
+      "length_field_le": 2,
+      "length": 2,
+      "total_bytes": 8,
+      "length_consistent": true,
+      "btsnoop_write_records": [
+        [
+          606
+        ]
+      ],
+      "source_records": [
+        606
+      ],
+      "crc16_gsm_valid": true
+    }
+  ],
+  "responses": [
+    {
+      "hex": "aa55100002410156312e312e320005500a0a460af221",
+      "payloadHex": "02410156312e312e320005500a0a460a",
+      "length": 16,
+      "direction": "incoming",
+      "source": "phone-btsnoop.log",
+      "source_records": [
+        389
+      ],
+      "semantics": "identity/capability response candidate; firmware ASCII corroborated by app log",
+      "crc16_gsm_valid": true
+    }
+  ]
+}

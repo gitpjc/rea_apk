@@ -1,0 +1,248 @@
+{
+  "description": "Retained initial F15i V1.1.2 state/preset replies. Generic device name and matching factory preset only; no addresses/accounts/timestamps.",
+  "sourceCaptureSha256": "b87933b64f3bf7fac4ce9f70967462a6430e23b6c765574f92cf0c9e9d08911b",
+  "sourceLogSha256": "b10011b2822d2e005bfe78d698b1a2b52b6804c16590cfcb40aac826e59bcaf1",
+  "state": {
+    "frameHex": "aa555c001210001818181809ff46313569463135690000000000000000000000000048004800480001484800305e00000a01003c0100ff003c0100460014000100180018001800010028003200320019010001000101140064000000000001015ec3",
+    "records": [
+      604,
+      605
+    ],
+    "payloadLength": 92,
+    "observedPresetIndex": 16,
+    "deviceNameOffset": 9,
+    "deviceNameBytes": 20
+  },
+  "detail": {
+    "frameHex": "aa55b600221043616c69204d4b33204c6561640000000000000001010a0100050000004900630002021201002300280024002a002f00300039000100030922010001002400500008002000040111002000ee0209002500fc080a005e0070173e00040710010001000d0019005b010000000000000508140100010000000f003700160000000000000000000600000700000800000900000a00000b00000c00000d00000e00000f000010000011000012000013000014000000003473",
+    "records": [
+      609,
+      610,
+      611
+    ],
+    "payloadLength": 182,
+    "presetIndex": 16,
+    "name": "Cali MK3 Lead",
+    "nameOffset": 2,
+    "nameBytes": 20,
+    "blocks": [
+      {
+        "payloadOffset": 22,
+        "sequence": 1,
+        "type": 1,
+        "parameterBytes": 10,
+        "parameters": [
+          1,
+          5,
+          0,
+          73,
+          99
+        ]
+      },
+      {
+        "payloadOffset": 35,
+        "sequence": 2,
+        "type": 2,
+        "parameterBytes": 18,
+        "parameters": [
+          1,
+          35,
+          40,
+          36,
+          42,
+          47,
+          48,
+          57,
+          1
+        ]
+      },
+      {
+        "payloadOffset": 56,
+        "sequence": 3,
+        "type": 9,
+        "parameterBytes": 34,
+        "parameters": [
+          1,
+          1,
+          36,
+          80,
+          8,
+          32,
+          260,
+          17,
+          32,
+          750,
+          9,
+          37,
+          2300,
+          10,
+          94,
+          6000,
+          62
+        ]
+      },
+      {
+        "payloadOffset": 93,
+        "sequence": 4,
+        "type": 7,
+        "parameterBytes": 16,
+        "parameters": [
+          1,
+          1,
+          13,
+          25,
+          347,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "payloadOffset": 112,
+        "sequence": 5,
+        "type": 8,
+        "parameterBytes": 20,
+        "parameters": [
+          1,
+          1,
+          0,
+          15,
+          55,
+          22,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "payloadOffset": 135,
+        "sequence": 6,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 138,
+        "sequence": 7,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 141,
+        "sequence": 8,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 144,
+        "sequence": 9,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 147,
+        "sequence": 10,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 150,
+        "sequence": 11,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 153,
+        "sequence": 12,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 156,
+        "sequence": 13,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 159,
+        "sequence": 14,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 162,
+        "sequence": 15,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 165,
+        "sequence": 16,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 168,
+        "sequence": 17,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 171,
+        "sequence": 18,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 174,
+        "sequence": 19,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      },
+      {
+        "payloadOffset": 177,
+        "sequence": 20,
+        "type": 0,
+        "parameterBytes": 0,
+        "parameters": []
+      }
+    ],
+    "trailingPayloadHex": "0000",
+    "logLines": [
+      423,
+      427,
+      431,
+      435,
+      439,
+      443,
+      447,
+      451,
+      455,
+      459,
+      463,
+      467,
+      471,
+      475,
+      479,
+      483,
+      487,
+      491,
+      495,
+      499
+    ]
+  }
+}

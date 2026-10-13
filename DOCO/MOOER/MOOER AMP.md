@@ -13,13 +13,17 @@ Mooer Studio For Future Series V1.1.9 Setup_win
 
 Has 80 Presets: 20 Groups x 4 presets
 
-6B - Rock N Roll
+0D British Lead Solo - Volume: 6
+  - Very close to Schenker sound for Lead + Riffs
+  - Maybe a bit bassy?
+
+6B Rock N Roll
   - Straight riff sound, no reverb
   
-3D - Cali MK3 Lead
+3D Cali MK3 Lead
   - Good lead with Reverb
   
-5C - Ballad Sonic
+5C Ballad Sonic
   - Nice clean Chorus
 
 

@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Iamp.Desktop/Iamp.Desktop.csproj" />
+    <Project Path="src/Iamp.Protocol/Iamp.Protocol.csproj" />
+    <Project Path="src/Iamp.Transport.Windows/Iamp.Transport.Windows.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Iamp.Protocol.Tests/Iamp.Protocol.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Iamp.DeviceProbe/Iamp.DeviceProbe.csproj" />
+  </Folder>
+</Solution>

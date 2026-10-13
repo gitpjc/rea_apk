@@ -1,6 +1,5 @@
 
 # Paul exclusions
-extracted/
 *.apk
 
 
@@ -28,3 +27,17 @@ extracted/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Local analysis tools, captures and build output
+.tools/
+analysis/private/
+analysis/generated/
+tmp/
+**/bin/
+**/obj/
+artifacts/
+.vs/
+
+# Interpreter caches from optional analysis helpers
+__pycache__/
+*.py[cod]

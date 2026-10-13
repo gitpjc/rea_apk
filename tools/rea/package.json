@@ -1,0 +1,5 @@
+{
+  "name": "iamp-analysis-tools",
+  "private": true,
+  "dependencies": { "rea-agents": "6.4.0" }
+}
