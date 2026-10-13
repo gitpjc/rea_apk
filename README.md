@@ -23,6 +23,7 @@ For your Windows environment, the documented requirements are a **full JDK 17+**
 
 ## Documentation References
 
+[REA: Reverse Engineer Anything](https://github.com/morluto/rea)     
 [What you can analyze](https://github.com/morluto/rea#what-you-can-analyze)    
 [Static Android APK analysis](https://github.com/morluto/rea/blob/main/docs/android-analysis.md)         
 
