@@ -16,7 +16,7 @@ public sealed partial class MainWindow
         Bind(libraryShortcut,Key.D1,()=>NavigateToHistory(false));
         Bind(historyShortcut,Key.D2,()=>NavigateToHistory(true));
         Bind(searchShortcut,Key.F,()=>{NavigateToHistory(false);search.BringIntoView();search.Focus();search.SelectAll();});
-        libraryNavigation.ToolTip="Amplifier library · Ctrl+1";historyNavigation.ToolTip="Version History · Ctrl+2";
+        libraryNavigation.ToolTip="Amplifier Settings · Ctrl+1";historyNavigation.ToolTip="Version History · Ctrl+2";
         search.ToolTip="Search preset names or indices · Ctrl+F";
         System.Windows.Automation.AutomationProperties.SetName(search,"Search preset names or indices");
         System.Windows.Automation.AutomationProperties.SetName(devices,"Discovered amplifiers");

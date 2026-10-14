@@ -53,7 +53,7 @@ public sealed partial class MainWindow : Window
     public MainWindow(bool preview = false)
     {
         this.preview = preview;
-        Title = "iAMP Desktop · Amplifier library"; Width = Math.Min(1280,SystemParameters.WorkArea.Width); Height = Math.Min(900,SystemParameters.WorkArea.Height); MinWidth = 620; MinHeight = 320;
+        Title = "iAMP Desktop · Amplifier Settings"; Width = Math.Min(1280,SystemParameters.WorkArea.Width); Height = Math.Min(900,SystemParameters.WorkArea.Height); MinWidth = 620; MinHeight = 320;
         Background = BackgroundBrush; Foreground = Brushes.White; FontFamily = new FontFamily("Segoe UI"); FontSize = 14;
         var root = new Grid(); root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(212) });
         root.ColumnDefinitions.Add(new ColumnDefinition()); Content = root;
@@ -61,11 +61,12 @@ public sealed partial class MainWindow : Window
         var scroll = libraryScroll;
         Grid.SetColumn(scroll, 1); root.Children.Add(scroll);
         Grid.SetColumn(historyScroll,1);root.Children.Add(historyScroll);
+        Grid.SetColumn(informationScroll,1);root.Children.Add(informationScroll);
         var page = new StackPanel { Margin = new Thickness(32, 20, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
-        var titles = new StackPanel(); titles.Children.Add(Text("Amplifier library", 30));
-        titles.Children.Add(Text("Read your amplifier’s information and browse its presets.", 14, MutedBrush, new Thickness(0,7,0,0)));
+        var titles = new StackPanel(); titles.Children.Add(Text("Amplifier Settings", 30));
+        titles.Children.Add(Text("Choose presets and adjust your amplifier’s effects.", 14, MutedBrush, new Thickness(0,7,0,0)));
         header.Children.Add(titles);
         var badge = new Border { Background = Brush("#18304D"), CornerRadius = new CornerRadius(6), Padding = new Thickness(13,7,13,7), VerticalAlignment = VerticalAlignment.Top,
             Child = sourceBadge }; Grid.SetColumn(badge,1); header.Children.Add(badge); page.Children.Add(header);
@@ -74,7 +75,13 @@ public sealed partial class MainWindow : Window
         var values = new[] { Card("FIRMWARE", firmware, "Reported by amplifier"), Card("PRESET SLOTS", presetCount, "Names read from your amp"),
             Card("GIR / GNR SLOTS", libraryCount, "Capture library capacity"), Card("DRUMS / LOOPER", rhythmCount, "Patterns and file slots") };
         for (var i=0;i<values.Length;i++) { values[i].Margin=new Thickness(0,0,12,12); cardGrid.Children.Add(values[i]); }
-        page.Children.Add(cardGrid);
+        var informationPage=new StackPanel {Margin=new Thickness(32,20,32,24)};
+        informationPage.Children.Add(Text("Amplifier Information",30));
+        informationPage.Children.Add(Text("Firmware and capacities from the latest amplifier read. Connect or refresh from Amplifier Settings.",14,MutedBrush,new Thickness(0,7,0,12)));
+        var informationStatus=Text("",13,MutedBrush);
+        informationStatus.SetBinding(TextBlock.TextProperty,new Binding("Text") {Source=snapshot});informationPage.Children.Add(informationStatus);
+        informationPage.Children.Add(cardGrid);informationScroll.Content=informationPage;
+        informationPage.SizeChanged+=(_,_)=>cardGrid.Columns=informationPage.ActualWidth<380?1:informationPage.ActualWidth<760?2:4;
         var currentPanel=new StackPanel();
         currentPanel.Children.Add(Text("CURRENT PRESET",10,BlueBrush));
         currentPreset.Margin=new Thickness(0,8,0,0);currentPanel.Children.Add(currentPreset);
@@ -167,7 +174,6 @@ public sealed partial class MainWindow : Window
             var available=Math.Max(120,page.ActualWidth);
             var compact=available<620;
             devices.Width=Math.Min(360,Math.Max(120,available-36));search.Width=Math.Min(280,available);
-            cardGrid.Columns=available<380?1:available<760?2:4;
             Grid.SetRow(badge,compact?1:0);Grid.SetColumn(badge,compact?0:1);Grid.SetColumnSpan(badge,compact?2:1);
             badge.HorizontalAlignment=compact?HorizontalAlignment.Left:HorizontalAlignment.Right;
             badge.Margin=new Thickness(0,compact?10:0,0,0);
@@ -181,7 +187,7 @@ public sealed partial class MainWindow : Window
 
         };
         library.Children.Add(Text("Preset banks match iAMP: 0A–0D, 1A–1D … 19A–19D. A blue check on the left marks the active amplifier preset.",12,MutedBrush,new Thickness(0,10,0,0)));
-        page.Children.Insert(3,library);
+        page.Children.Insert(2,library);
         page.Children.Add(Text("V1.1.9: preset recall across 0A–19D and five bounded live controls. Saving remains restricted to 0D British Lead Solo with Threshold 25 or 26 and every other original value unchanged. Broader saving, renaming and effect editing remain unavailable.",13,MutedBrush,new Thickness(0,24,0,0)));
         InitializeAdditionalEditors();InitializeSnapshotArchive();InitializeDiagnostics();InitializeComparison();StyleInputs(); cancel.IsEnabled=false;
         search.Padding=new Thickness(9,7,34,7);
@@ -222,7 +228,7 @@ public sealed partial class MainWindow : Window
         side.Children.Add(Text("iAMP",36)); side.Children.Add(Text("DESKTOP COMPANION",10,MutedBrush,new Thickness(0,2,0,0)));
         side.Children.Add(Text($"Version {DesktopVersion.Current}",12,MutedBrush,new Thickness(0,7,0,26)));
         ConfigureNavigation();
-        side.Children.Add(libraryNavigation);side.Children.Add(historyNavigation);
+        side.Children.Add(libraryNavigation);side.Children.Add(informationNavigation);side.Children.Add(historyNavigation);
         side.Children.Add(Text("F15i Li",17,Brush("#D5DCE8"),new Thickness(14,30,0,5)));
         side.Children.Add(Text("Bluetooth connection",12,MutedBrush,new Thickness(14,0,0,0)));
         side.Children.Add(Text("Snapshot viewer",12,MutedBrush,new Thickness(14,22,0,0)));
@@ -385,9 +391,10 @@ public sealed partial class MainWindow : Window
         effectChain.Children.Clear();effectButtons.Clear();effectDetails.Children.Clear();
         foreach(var block in blocks.Where(b=>b.TypeCode!=0)) {
             var effect=EffectPresentation.From(block);var button=Button(effect.Category);
-            button.MinWidth=100;button.Margin=new Thickness(0,0,10,8);button.Background=Brush(effect.Color);button.Foreground=Brush("#15171B");
+            button.Content=EffectButtonContent(effect);
+            button.MinWidth=100;button.Margin=new Thickness(0,0,10,8);button.Background=Brush("#292D33");button.Foreground=Brushes.White;
             button.BorderThickness=new Thickness(0,0,0,3);button.BorderBrush=Brushes.Transparent;
-            button.ToolTip=$"View {effect.Category} details";button.Click+=(_,_)=>SelectEffect(effect);
+            button.ToolTip=$"View {effect.Category} details · {effect.Enabled switch {true=>"Enabled",false=>"Disabled",_=>"State unknown"}}";button.Click+=(_,_)=>SelectEffect(effect);
             effectButtons.Add((button,effect));effectChain.Children.Add(button);
         }
         if(effectButtons.Count>0)SelectEffect(effectButtons[0].Effect);
@@ -401,7 +408,8 @@ public sealed partial class MainWindow : Window
         if(applyTone.Parent is Panel oldToneApplyParent)oldToneApplyParent.Children.Remove(applyTone);
         DetachAdditionalEditorControls();
         foreach(var item in effectButtons)item.Button.BorderBrush=ReferenceEquals(item.Effect,effect)?Brushes.White:Brushes.Transparent;
-        effectDetails.Children.Clear();effectDetails.Children.Add(Text(effect.Title,22,Brush(effect.Color)));
+        effectDetails.Children.Clear();effectDetails.Children.Add(Text(effect.Title,22,effect.Enabled==false?MutedBrush:Brush(effect.Color)));
+        AddEffectPowerControl(effect);
         if(effect.Parameters.Count==0) {effectDetails.Children.Add(Text("Parameter details not available in this version.",13,MutedBrush,new Thickness(0,8,0,0)));return;}
         var values=new WrapPanel { Margin=new Thickness(0,8,0,0) };
         foreach(var parameter in effect.Parameters) {
@@ -453,6 +461,7 @@ public sealed partial class MainWindow : Window
         UpdateAdditionalEditorStates();
         UpdateSnapshotArchiveState();
         UpdateSaveState();
+        UpdateEffectPowerState();
     }
     private PresetEffectBlock? Editable808Tone()
     {

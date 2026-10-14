@@ -200,6 +200,28 @@ public sealed class F15ReadSession : IAsyncDisposable
         return after;
     }
 
+    public Task<CurrentPresetSnapshot> SetEffectEnabledAsync(CurrentPresetSnapshot expected, byte position, bool enabled, CancellationToken ct)
+        => RunWorkflowAsync(async token => {
+            var identity=await ReadIdentityCoreAsync(token);
+            if(identity.Firmware!="V1.1.9")throw new NotSupportedException("Effect on/off is verified only on F15i V1.1.9.");
+            if(position is <1 or >20)throw new ArgumentOutOfRangeException(nameof(position));
+            var before=await ReadCurrentPresetCoreAsync(token);
+            if(before.RawStatePayloadHex!=expected.RawStatePayloadHex || before.RawDetailPayloadHex!=expected.RawDetailPayloadHex || before.WireIndex!=expected.WireIndex)
+                throw new IOException("The amplifier changed since the snapshot; refresh before switching effects.");
+            var block=before.Blocks[position-1];
+            var request=EffectBypassCommand.Create(block,enabled);
+            if((block.Values[0]==1)==enabled)return before;
+            await WriteObservedUpdateAsync(request,token);
+            var after=await ReadCurrentPresetCoreAsync(token);
+            var expectedDetail=Convert.FromHexString(before.RawDetailPayloadHex);
+            var expectedValues=EffectBypassCommand.ExpectedValues(block,enabled);
+            for(var i=0;i<expectedValues.Length;i++)
+                if(expectedValues[i]!=block.Values[i])expectedDetail=PresetDataParser.WithParameterValue(expectedDetail,position,i,expectedValues[i]);
+            if(after.RawStatePayloadHex!=before.RawStatePayloadHex || after.RawDetailPayloadHex!=Convert.ToHexString(expectedDetail) || after.WireIndex!=before.WireIndex)
+                throw new IOException("Effect on/off readback differs from the verified change. Refresh before another action; nothing was saved.");
+            return after;
+        },ct);
+
     /// <summary>Recall one of the two captured slots. Preserves all other whole-state fields; does not save presets.</summary>
     public Task<CurrentPresetSnapshot> SelectObservedPresetAsync(CurrentPresetSnapshot expected, byte targetIndex, CancellationToken ct)
         => RunWorkflowAsync(token => SelectPresetCoreAsync(expected, targetIndex, true, token), ct);

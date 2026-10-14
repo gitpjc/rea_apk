@@ -4,7 +4,27 @@ Updated 14 October 2026. The full editor is not complete.
 
 Scope update, 14 October: the user explicitly excluded all Phase 6 work unless separately instructed. No Phase 6 investigation, implementation or hardware test is authorized by a general request to continue. Remaining core MVP, connection reliability and release verification work stays in scope. That scope restriction remains in effect for subsequent versions.
 
-## Latest: inline preset dropdown in 1.6.3
+## Latest: separate amplifier information in 1.8.0
+
+Version 1.8.0 moves Firmware, Preset Slots, GIR/GNR Slots and Drums/Looper cards to a dedicated Amplifier Information screen. Its sidebar item sits directly below Amplifier Settings, the renamed Amplifier library screen. Information uses the same existing values and snapshot/connection status; navigation sends no amplifier commands and preserves selected presets, snapshots, pending inputs and connection state. Cards adapt to smaller widths. Existing Settings/History/search shortcuts retain their actions. Focused offline checks cover menu order/labels, screen visibility, information cards/status, state preservation and responsive bounds; no full-suite rerun, screenshots or device access. Phase 6 remains excluded.
+
+## Earlier: simplified disabled status in 1.7.3
+
+Version 1.7.3 simplifies disabled effect status to “Disabled”, removing the redundant “bypassed” wording. Enabled status and Enable/Disable controls are unchanged. Focused offline effect UI checks verify exact status text alongside existing icon alignment/color and action guards; no full suite, screenshots or device access.
+
+## Earlier: centered effect labels in 1.7.2
+
+Version 1.7.2 centers all effect category labels beneath their icons, fixing the visibly offset OD label. Unknown-state captions are centered too. Focused offline UI checks compare each label/icon center for all five effects and preserve the existing color/action/offline guards. No full-suite rerun, screenshots or device access; Phase 6 remains excluded.
+
+## Earlier: cleaner effect buttons in 1.7.1
+
+Version 1.7.1 removes redundant On/Off text beneath supported effect icons. Category names and enabled category colors/disabled grey icons remain. The effect details panel retains confirmed status and Enable/Disable controls; unknown models still identify their unknown state. Focused offline UI checks cover all five icon/category labels, absence of On/Off text, grey versus category colors, preserved action labels and offline write blocking. No full-suite rerun, screenshots or device access; Phase 6 remains excluded.
+
+## Earlier: effect bypass and mobile icons in 1.7.0
+
+Version 1.7.0 adds grey bypassed-effect indicators, matching mobile category icons and Enable/Disable effect controls for the five verified models (Noise Killer, OD808, PLX 100, Analog Delay and Hall Reverb). Thirteen focused protocol tests and offline icon/state/write-guard UI checks passed. Actual Windows handlers toggled and restored each effect individually; final independent readback matched every original state/detail byte. Noise Killer remains disabled; the other four remain enabled. Amp readback also mirrors an observed linked flag, now included in the strict expected-byte check after an initial guard failure and independently verified restoration. Nothing was saved and no tone parameters changed. The user reported phone iAMP stable afterward. Future mobile-screen stability checks must not be requested unless the user asks. No screenshots or phone-setting changes. Phase 6 remains excluded. See [Effect-Bypass.md](Effect-Bypass.md).
+
+## Earlier: inline preset dropdown in 1.6.3
 
 Version 1.6.3 places the compact preset dropdown on the same row as the Presets heading/count, between the heading and search. The dropdown is capped at 440 pixels. Search wraps below at smaller widths, and very narrow layouts also wrap the dropdown to keep controls usable. Focused offline checks cover header geometry at window widths 1280, 1050, 800 and 620, dropdown checkmark placement, selected-field contents, filtering, clearing and focus. The full suite was not rerun for this layout-only change. No screenshots or amplifier/phone access; Phase 6 remains excluded.
 

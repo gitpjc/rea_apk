@@ -6,37 +6,41 @@ namespace Iamp.Desktop;
 
 public sealed partial class MainWindow
 {
-    private readonly Button libraryNavigation=Button("Amplifier library"),historyNavigation=Button("Version History");
+    private readonly Button libraryNavigation=Button("Amplifier Settings"),informationNavigation=Button("Amplifier Information"),historyNavigation=Button("Version History");
+    private readonly ScrollViewer informationScroll=new() {VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Visibility=Visibility.Collapsed};
     private readonly ScrollViewer historyScroll=new() {VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Visibility=Visibility.Collapsed};
     private IReadOnlyList<VersionHistoryEntry> versionEntries=Array.Empty<VersionHistoryEntry>();
 
     private void ConfigureNavigation()
     {
-        foreach(var button in new[]{libraryNavigation,historyNavigation}) {
+        foreach(var button in new[]{libraryNavigation,informationNavigation,historyNavigation}) {
             button.HorizontalContentAlignment=HorizontalAlignment.Left;
             button.HorizontalAlignment=HorizontalAlignment.Stretch;
             button.Padding=new Thickness(14,12,14,12);button.Margin=new Thickness(0,0,0,5);
         }
         libraryNavigation.Click+=(_,_)=>NavigateToHistory(false);
+        informationNavigation.Click+=(_,_)=>NavigateToPage(informationScroll);
         historyNavigation.Click+=(_,_)=>NavigateToHistory(true);
-        SetNavigationColors(false);
+        SetNavigationColors(libraryScroll);
     }
 
-    private void SetNavigationColors(bool history)
+    private void SetNavigationColors(ScrollViewer selected)
     {
-        libraryNavigation.Background=history?System.Windows.Media.Brushes.Transparent:Brush("#203B5C");
-        libraryNavigation.Foreground=history?MutedBrush:BlueBrush;
-        historyNavigation.Background=history?Brush("#203B5C"):System.Windows.Media.Brushes.Transparent;
-        historyNavigation.Foreground=history?BlueBrush:MutedBrush;
+        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(historyNavigation,historyScroll)}) {
+            button.Background=page==selected?Brush("#203B5C"):System.Windows.Media.Brushes.Transparent;
+            button.Foreground=page==selected?BlueBrush:MutedBrush;
+        }
     }
 
     private void NavigateToHistory(bool history)
+        =>NavigateToPage(history?historyScroll:libraryScroll);
+
+    private void NavigateToPage(ScrollViewer selected)
     {
-        if(history && historyScroll.Content is null)BuildVersionHistory();
-        libraryScroll.Visibility=history?Visibility.Collapsed:Visibility.Visible;
-        historyScroll.Visibility=history?Visibility.Visible:Visibility.Collapsed;
-        SetNavigationColors(history);
-        Title=history?"iAMP Desktop · Version History":"iAMP Desktop · Amplifier library";
+        if(selected==historyScroll && historyScroll.Content is null)BuildVersionHistory();
+        foreach(var page in new[]{libraryScroll,informationScroll,historyScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
+        SetNavigationColors(selected);
+        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":"Amplifier Settings");
     }
 
     private void BuildVersionHistory()

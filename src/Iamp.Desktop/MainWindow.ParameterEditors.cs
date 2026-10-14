@@ -57,6 +57,7 @@ public sealed partial class MainWindow
     private PresetEffectBlock? EditableBlock(PendingParameterEditor editor)=>editor.Position==1?EditableNoiseKiller():Editable808Tone();
     private void UpdateAdditionalEditorStates()
     {
+        UpdateEffectPowerState();
         foreach(var editor in AdditionalEditors) {
             var block=EditableBlock(editor);
             var supported=!preview && editSnapshotValid && snapshotAddress.HasValue && snapshotFirmware=="V1.1.9" && block is not null;

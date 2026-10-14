@@ -93,6 +93,6 @@ public sealed partial class MainWindow
                 status.Text="Amplifier connection lost · Reconnect to refresh the preset.";
             }
         }
-        finally {if(pollCancellation==timeout)pollCancellation=null;polling=false;}
+        finally {if(pollCancellation==timeout)pollCancellation=null;polling=false;UpdateEffectPowerState();}
     }
 }

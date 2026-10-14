@@ -7,7 +7,8 @@ internal sealed record EffectPresentation(string Category, string Color, string 
     IReadOnlyList<ReadOnlyParameter> Parameters, PresetEffectBlock Source)
 {
     // Model/parameter labels are restricted to retained phone screenshots matched to Windows reads.
-    // Unresolved fields, including enabled-state and coincident zero/equal-value parameters, are omitted.
+    internal bool? Enabled=>EffectBypassCommand.TryGetEnabled(Source,out var enabled)?enabled:null;
+    // Unresolved model fields and coincident zero/equal-value parameters are omitted.
     internal static EffectPresentation From(PresetEffectBlock block)
     {
         var (category, color) = block.TypeCode switch {
