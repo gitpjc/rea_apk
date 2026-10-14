@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "evidence_scope": "one human-approved unchanged same-slot phone save; no Windows save command or changed-value/power-cycle persistence test",
+  "operationReported": {
+    "source": "coordinator report of explicit human approval and execution",
+    "initialSaveTapCount": 1,
+    "doneConfirmationCount": 1,
+    "approvedDestinationDisplay": "0D",
+    "approvedWireIndex": 4,
+    "approvedUnchangedName": "British Lead Solo",
+    "otherSlotOrRenameAuthorized": false
+  },
+  "sources": {
+    "phone-save-approved-logcat.txt": {
+      "sha256": "356aaedc222d936c4cf9dc31a35fbd6a5807b7a4a6847fcba40d33ea0189929b"
+    },
+    "phone-save-approved-bluetooth.txt": {
+      "sha256": "913cc5f5fa9a9eb4b2e792edc364503a712b53c572ecda40b8d3dfcec9eabfbd"
+    },
+    "phone-save-approved-btsnoop.log": {
+      "sha256": "6d188d6dbd8a2bc1d7e646c806b5fcd8e16d887a4bb360b0b916787569ee92cb"
+    },
+    "windows-save-baseline.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    },
+    "windows-save-approved-after.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    }
+  },
+  "captureSummary": {
+    "hciRecords": 3346,
+    "targetAttPdus": 762,
+    "applicationFrames": 196,
+    "crcValidFrames": 196,
+    "scope": "entire retained ring includes prior sessions; focused save sequence below",
+    "saveConnectionEvent": 2937,
+    "saveConnectionHandle": 5
+  },
+  "checksum": {
+    "model": "CRC-16/GSM",
+    "coverage": "length bytes and payload",
+    "trailerEndian": "big"
+  },
+  "frames": [
+    {
+      "hex": "aa5516002f0442726974697368204c65616420536f6c6f0000008bd8",
+      "payloadHex": "2f0442726974697368204c65616420536f6c6f000000",
+      "length": 22,
+      "direction": "outgoing",
+      "source": "phone-save-approved-btsnoop.log",
+      "source_records": [
+        3279
+      ],
+      "crc16_gsm_valid": true,
+      "role": "save-associated slot/name request",
+      "log_source": "phone-save-approved-logcat.txt",
+      "log_occurrences": [
+        {
+          "line": 564,
+          "phoneTime": "10:43:41.811"
+        }
+      ]
+    },
+    {
+      "hex": "aa55020030010723",
+      "payloadHex": "3001",
+      "length": 2,
+      "direction": "incoming",
+      "source": "phone-save-approved-btsnoop.log",
+      "source_records": [
+        3282
+      ],
+      "crc16_gsm_valid": true,
+      "role": "candidate save acknowledgement; byte01 meaning unknown"
+    },
+    {
+      "hex": "aa555c001304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c01004600140001001800180018000100280032003200190100010001011400640000000148000121eb",
+      "payloadHex": "1304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c010046001400010018001800180001002800320032001901000100010114006400000001480001",
+      "length": 92,
+      "direction": "outgoing",
+      "source": "phone-save-approved-btsnoop.log",
+      "source_records": [
+        3283
+      ],
+      "crc16_gsm_valid": true,
+      "role": "same-slot whole-state selection/refresh request",
+      "log_source": "phone-save-approved-logcat.txt",
+      "log_occurrences": [
+        {
+          "line": 570,
+          "phoneTime": "10:43:41.991"
+        }
+      ]
+    },
+    {
+      "hex": "aa550200210467c4",
+      "payloadHex": "2104",
+      "length": 2,
+      "direction": "outgoing",
+      "source": "phone-save-approved-btsnoop.log",
+      "source_records": [
+        3286
+      ],
+      "crc16_gsm_valid": true,
+      "role": "preset-detail query",
+      "log_source": "phone-save-approved-logcat.txt",
+      "log_occurrences": [
+        {
+          "line": 419,
+          "phoneTime": "10:42:42.112"
+        },
+        {
+          "line": 571,
+          "phoneTime": "10:43:42.081"
+        }
+      ]
+    },
+    {
+      "hex": "aa5502001401cd01",
+      "payloadHex": "1401",
+      "length": 2,
+      "direction": "incoming",
+      "source": "phone-save-approved-btsnoop.log",
+      "source_records": [
+        3288
+      ],
+      "crc16_gsm_valid": true,
+      "role": "candidate selection acknowledgement; byte01 meaning unknown"
+    }
+  ],
+  "observedSaveEnvelope": {
+    "discriminator": "2f",
+    "payloadByteCount": 22,
+    "wireIndex": 4,
+    "nameByteCount": 20,
+    "nameAscii": "British Lead Solo",
+    "nameBytesHex": "42726974697368204c65616420536f6c6f000000",
+    "zeroPaddingBytes": 3,
+    "limits": "one unchanged ASCII name at one slot; no general text encoding, truncation, other-slot behavior or changed-parameter storage established"
+  },
+  "phoneSaveLocationLog": {
+    "source": "phone-save-approved-logcat.txt",
+    "line": 561,
+    "observedWireIndex": 4,
+    "observedName": "British Lead Solo"
+  },
+  "returnedDetail": {
+    "direction": "incoming",
+    "source": "phone-save-approved-btsnoop.log",
+    "source_records": [
+      3290,
+      3291,
+      3292
+    ],
+    "payloadPrefixHex": "2204",
+    "payloadByteCount": 160,
+    "frameSha256": "81116b7cdc432a69dcfc2326420bb0535474ff24b4742790e3aae612fde7f452",
+    "payloadSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+    "crc16_gsm_valid": true,
+    "exactlyMatchesBaselineDetail": true,
+    "rawPrivateDetailOmitted": false,
+    "frameHex": "aa55a000220442726974697368204c65616420536f6c6f00000001040c01000200190032000000000002010a0100030027006400640003021201001f00640023002b0028002d004b0001000407100100010011001900f40100000000000005081401000100140018002300000000000000000000000600000700000800000900000a00000b00000c00000d00000e00000f000010000011000012000013000014000000001e65",
+    "rawDetailScope": "Stock British Lead Solo preset; device identifiers, raw logs and other captures remain omitted. Retained to exercise exact-byte save guards offline."
+  },
+  "stateFollowup": {
+    "changedPayloadOffsetsAgainstBaseline": [
+      0
+    ],
+    "observation": "only opcode12->13 changed; current index4 and other90 bytes preserved"
+  },
+  "screenshots": [
+    {
+      "source": "phone-save-approved-dialog-stable.png",
+      "sha256": "caf517bb1f0d9a81bae98a83b22c55cd272fd5b1d59705b7fafd671259145be6",
+      "visuallyInspected": true,
+      "observedTitle": "SAVE",
+      "observedName": "British Lead Solo",
+      "observedDestination": "0D British Lead Solo",
+      "buttons": [
+        "Cancel",
+        "Done"
+      ],
+      "limit": "default target directly observed for this one current preset; not a general default rule"
+    },
+    {
+      "source": "phone-save-approved-after-done.png",
+      "sha256": "91e5084d6cf29bf48e8e088401e6789d9d1979d057d8613d2eff65d528081e8b",
+      "visuallyInspected": true,
+      "savePanelStillVisible": true,
+      "limit": "may be transitional; does not independently prove dialog dismissal or UI save success"
+    }
+  ],
+  "independentWindowsReadback": {
+    "before": {
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "name": "British Lead Solo",
+      "blockCount": 20,
+      "stateByteCount": 92,
+      "detailByteCount": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+    },
+    "after": {
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "name": "British Lead Solo",
+      "blockCount": 20,
+      "stateByteCount": 92,
+      "detailByteCount": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+    },
+    "fullStateExactlyUnchanged": true,
+    "fullDetailExactlyUnchanged": true,
+    "sameName": true,
+    "sameWireIndex": true
+  },
+  "limitations": [
+    "Save-associated request2F and response30 observed; response3001 byte01 success/persistence meaning unproven.",
+    "The request carries slot/name only; no effect-block payload was observed in2F itself. Unchanged-content test cannot establish changed-parameter saving.",
+    "Other-slot overwrite, renaming, non-ASCII names, cancellation semantics, retries and error responses not tested.",
+    "Independent readback establishes unchanged observed state/detail, not changed-value storage or power-cycle persistence.",
+    "No Windows save command implementation or additional hardware action was performed by this offline analysis."
+  ]
+}

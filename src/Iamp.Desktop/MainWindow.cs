@@ -19,6 +19,7 @@ public sealed partial class MainWindow : Window
     private readonly TextBlock status = Text("Ready to scan", 14), snapshot = Text("No snapshot yet · Disconnected", 13, MutedBrush);
     private readonly TextBlock firmware = Text("—", 28), presetCount = Text("—", 28), libraryCount = Text("—", 28), rhythmCount = Text("—", 28);
     private readonly TextBlock currentPreset = Text("Read the amplifier to see its current preset.", 20);
+    private readonly TextBlock sourceBadge = Text("EXPERIMENTAL EDIT",11,BlueBrush);
     private readonly WrapPanel effectChain = new();
     private readonly StackPanel effectDetails = new();
     private readonly TextBox thresholdInput = new() { Width=90, MaxLength=2 };
@@ -45,6 +46,7 @@ public sealed partial class MainWindow : Window
     private DateTimeOffset? snapshotTime;
     private bool lastReadSucceeded;
     private readonly bool preview;
+    private readonly ScrollViewer libraryScroll=new() {VerticalScrollBarVisibility=ScrollBarVisibility.Auto};
 
     public MainWindow(bool preview = false)
     {
@@ -54,15 +56,16 @@ public sealed partial class MainWindow : Window
         var root = new Grid(); root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(212) });
         root.ColumnDefinitions.Add(new ColumnDefinition()); Content = root;
         root.Children.Add(BuildSidebar());
-        var scroll = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+        var scroll = libraryScroll;
         Grid.SetColumn(scroll, 1); root.Children.Add(scroll);
+        Grid.SetColumn(historyScroll,1);root.Children.Add(historyScroll);
         var page = new StackPanel { Margin = new Thickness(32, 20, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         var titles = new StackPanel(); titles.Children.Add(Text("Amplifier library", 30));
         titles.Children.Add(Text("Read your amplifier’s information and browse its presets.", 14, MutedBrush, new Thickness(0,7,0,0)));
         header.Children.Add(titles);
         var badge = new Border { Background = Brush("#18304D"), CornerRadius = new CornerRadius(6), Padding = new Thickness(13,7,13,7), VerticalAlignment = VerticalAlignment.Top,
-            Child = Text("EXPERIMENTAL EDIT", 11, BlueBrush) }; Grid.SetColumn(badge,1); header.Children.Add(badge); page.Children.Add(header);
+            Child = sourceBadge }; Grid.SetColumn(badge,1); header.Children.Add(badge); page.Children.Add(header);
         page.Children.Add(BuildConnection());
         var cardGrid = new Grid { Margin = new Thickness(0,14,0,0) };
         for (var i=0;i<4;i++) cardGrid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -73,10 +76,13 @@ public sealed partial class MainWindow : Window
         var currentPanel=new StackPanel();
         currentPanel.Children.Add(Text("CURRENT PRESET",10,BlueBrush));
         currentPreset.Margin=new Thickness(0,8,0,0);currentPanel.Children.Add(currentPreset);
+        savePreset.Margin=new Thickness(0,12,0,0);savePreset.HorizontalAlignment=HorizontalAlignment.Left;
+        savePreset.Click+=async(_,_)=>await SavePresetAsync();currentPanel.Children.Add(savePreset);
+        currentPanel.Children.Add(saveMessage);
         page.Children.Add(new Border { Background=Brush("#1D2B3C"),CornerRadius=new CornerRadius(8),Padding=new Thickness(14),
             Margin=new Thickness(0,10,0,0),Child=currentPanel });
         var effects=new StackPanel();effects.Children.Add(Text("Preset effects",18));
-        effects.Children.Add(Text("Select an effect to view its snapshot. Supported Noise Killer Threshold and OD808 Tone values can be applied explicitly.",12,MutedBrush,new Thickness(0,5,0,12)));
+        effects.Children.Add(Text("Select an effect to view its snapshot. Supported Noise Killer and OD808 values can be applied explicitly.",12,MutedBrush,new Thickness(0,5,0,12)));
         effects.Children.Add(effectChain);effectDetails.Margin=new Thickness(0,15,0,0);effects.Children.Add(effectDetails);
         effectDetails.Children.Add(Text("Read the amplifier to see its preset effects.",13,MutedBrush));
         page.Children.Add(new Border { Background=PanelBrush,CornerRadius=new CornerRadius(8),Padding=new Thickness(14),Margin=new Thickness(0,10,0,0),Child=effects });
@@ -89,8 +95,18 @@ public sealed partial class MainWindow : Window
         selectionActions.Children.Add(selectPreset);selectionMessage.Margin=new Thickness(12,8,0,0);selectionActions.Children.Add(selectionMessage);
         library.Children.Add(selectionActions);
         library.Children.Add(Text("Explicit selection recalls the saved preset; unsaved changes may be discarded. Available only between the two captured configurations at indices 4 and 5 on V1.1.9, while the preset matches its original snapshot. A changed configuration disables selection. Browsing rows changes nothing.",12,MutedBrush,new Thickness(0,8,0,0)));
-        var view = new GridView(); view.Columns.Add(new GridViewColumn { Header = "INDEX", Width = 100, DisplayMemberBinding = new Binding("WireIndex") });
+        var indexTemplate = (DataTemplate)XamlReader.Parse("""
+            <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                <TextBlock Text="{Binding WireIndex}" TextAlignment="Right" HorizontalAlignment="Stretch" Margin="0,0,20,0" />
+            </DataTemplate>
+            """);
+        var view = new GridView(); view.Columns.Add(new GridViewColumn { Header = "INDEX", Width = 64, CellTemplate = indexTemplate });
         view.Columns.Add(new GridViewColumn { Header = "PRESET NAME", Width = 650, DisplayMemberBinding = new Binding("Name") }); presets.View = view;
+        // GridView cell presenters inherit this alignment; otherwise a templated
+        // TextBlock is measured at its text width and cannot right-align the column.
+        var rowStyle = new Style(typeof(ListViewItem));
+        rowStyle.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty,HorizontalAlignment.Stretch));
+        presets.ItemContainerStyle=rowStyle;
         presets.Height = 315; presets.Margin = new Thickness(0,16,0,0); library.Children.Add(presets);
         var headerStyle = new Style(typeof(GridViewColumnHeader));
         headerStyle.Setters.Add(new Setter(Control.BackgroundProperty,Brush("#2C323C")));
@@ -105,10 +121,14 @@ public sealed partial class MainWindow : Window
             </ControlTemplate>
             """)));
         view.ColumnHeaderContainerStyle=headerStyle;
+        var indexHeaderStyle = new Style(typeof(GridViewColumnHeader),headerStyle);
+        indexHeaderStyle.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty,HorizontalAlignment.Center));
+        indexHeaderStyle.Setters.Add(new Setter(Control.PaddingProperty,new Thickness(0,9,0,9)));
+        view.Columns[0].HeaderContainerStyle=indexHeaderStyle;
         library.Children.Add(Text("Preset indices are shown as reported by the amplifier.",12,MutedBrush,new Thickness(0,10,0,0)));
         page.Children.Add(library);
-        page.Children.Add(Text("Experimental V1.1.9 support: Noise Killer Threshold 25–28, OD808 Tone 97–100 and explicit preset recall between indices 4 and 5. Other effect editing and saving are unavailable.",13,MutedBrush,new Thickness(0,24,0,0)));
-        StyleInputs(); cancel.IsEnabled=false;
+        page.Children.Add(Text("Experimental V1.1.9 support: five bounded live controls and captured preset recall. Saving is restricted to British Lead Solo at index 4 with Threshold 25 or 26 and every other value unchanged. Other-slot saving, renaming and broader editing remain unavailable.",13,MutedBrush,new Thickness(0,24,0,0)));
+        InitializeAdditionalEditors();InitializeSnapshotArchive();StyleInputs(); cancel.IsEnabled=false;
         scan.Click += async (_,_) => await ScanAsync(); read.Click += async (_,_) => await ReadAsync(); cancel.Click += (_,_) => operation?.Cancel();
         search.TextChanged += (_,_) => Filter();
         thresholdInput.TextChanged += (_,_) => UpdateThresholdState();
@@ -129,8 +149,10 @@ public sealed partial class MainWindow : Window
     private UIElement BuildSidebar()
     {
         var side = new StackPanel { Margin = new Thickness(22,28,18,20) };
-        side.Children.Add(Text("iAMP",36)); side.Children.Add(Text("DESKTOP COMPANION",10,MutedBrush,new Thickness(0,2,0,37)));
-        side.Children.Add(new Border { Background=Brush("#203B5C"), CornerRadius=new CornerRadius(7), Padding=new Thickness(14,12,14,12), Child=Text("Amplifier library",14,BlueBrush) });
+        side.Children.Add(Text("iAMP",36)); side.Children.Add(Text("DESKTOP COMPANION",10,MutedBrush,new Thickness(0,2,0,0)));
+        side.Children.Add(Text($"Version {DesktopVersion.Current}",12,MutedBrush,new Thickness(0,7,0,26)));
+        ConfigureNavigation();
+        side.Children.Add(libraryNavigation);side.Children.Add(historyNavigation);
         side.Children.Add(Text("F15i Li",17,Brush("#D5DCE8"),new Thickness(14,30,0,5)));
         side.Children.Add(Text("Bluetooth connection",12,MutedBrush,new Thickness(14,0,0,0)));
         side.Children.Add(Text("Snapshot viewer",12,MutedBrush,new Thickness(14,22,0,0)));
@@ -149,6 +171,8 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(new Expander {Header="Manual Bluetooth address",Foreground=MutedBrush,Margin=new Thickness(0,8,0,0),Content=manual});
         var actions = new WrapPanel { Margin=new Thickness(0,12,0,0) }; read.Background=BlueBrush; read.Foreground=Brush("#101C2B");
         actions.Children.Add(read); cancel.Margin=new Thickness(10,0,0,0); actions.Children.Add(cancel);
+        exportSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(exportSnapshot);
+        openSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(openSnapshot);
         status.Margin=new Thickness(17,8,0,0); actions.Children.Add(status); panel.Children.Add(actions);
         snapshot.Margin=new Thickness(0,8,0,0); panel.Children.Add(snapshot);
         return new Border { Background=PanelBrush, CornerRadius=new CornerRadius(10), Padding=new Thickness(18), Margin=new Thickness(0,20,0,0), Child=panel };
@@ -161,7 +185,7 @@ public sealed partial class MainWindow : Window
     }
     private void StyleInputs()
     {
-        foreach(var box in new[]{address,search,thresholdInput,toneInput}) { box.Background=Brush("#15191F");box.Foreground=Brushes.White;box.BorderBrush=Brush("#46505E");box.Padding=new Thickness(9,7,9,7);box.CaretBrush=Brushes.White; }
+        foreach(var box in new[]{address,search,thresholdInput,toneInput}.Concat(AdditionalEditors.Select(e=>e.Input))) { box.Background=Brush("#15191F");box.Foreground=Brushes.White;box.BorderBrush=Brush("#46505E");box.Padding=new Thickness(9,7,9,7);box.CaretBrush=Brushes.White; }
         devices.Padding=new Thickness(7); devices.Foreground=Brush("#15171B");
     }
     private void Begin(string message)
@@ -209,6 +233,7 @@ public sealed partial class MainWindow : Window
             if(!liveEditUnsaved)originalSnapshotDetail=current.RawDetailPayloadHex;
             liveEditUnsaved=current.RawDetailPayloadHex!=originalSnapshotDetail;
             currentSnapshot=current;snapshotAddress=selected;snapshotFirmware=identity.Firmware;editSnapshotValid=true;
+            localSnapshotSource=false;sourceBadge.Text="EXPERIMENTAL EDIT";
             SetEffects(current.Blocks);
             snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();status.Text="Read complete";lastReadSucceeded=true;
         }
@@ -222,8 +247,11 @@ public sealed partial class MainWindow : Window
         await ReadAsync();
         return lastReadSucceeded;
     }
-    private string SnapshotLabel()=>snapshotTime is {} time ? $"Snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · Disconnected{(liveEditUnsaved?" · Live edit verified; save unsupported":"")}" : "No snapshot · Disconnected";
+    private string SnapshotLabel()=>snapshotTime is {} time ? localSnapshotSource?
+        $"Local snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · Offline · No amplifier changes":
+        $"Snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · Disconnected{(liveEditUnsaved?" · Live edit verified; not saved":"")}" : "No snapshot · Disconnected";
     private static string ReadError(Exception error)=>error switch {
+        TransferStateChangedException => "The amplifier reported a transfer-state change. This session was stopped; reconnect only when the amplifier is stable.",
         TimeoutException => "No response. Disconnect the phone app and try reading again.",
         FormatException => "This amplifier’s response is not supported by this version.",
         _ => "Could not read the amplifier. Check Bluetooth, the address and the phone app connection."
@@ -244,6 +272,15 @@ public sealed partial class MainWindow : Window
         Filter(); status.Text="PREVIEW · Demo data";status.Foreground=BlueBrush;snapshot.Text="Layout preview · Demo data · No amplifier connected";
         scan.IsEnabled=read.IsEnabled=devices.IsEnabled=address.IsEnabled=false;
     }
+
+    internal void PreparePresetListPreview()
+    {
+        if(!preview)throw new InvalidOperationException("Preset layout preview requires demo mode.");
+        names=new[]{new PresetName(1,"Demo · Clean tone"),new PresetName(2,"Demo · Warm rhythm"),
+            new PresetName(9,"Demo · Lead tone"),new PresetName(10,"Demo · Ambient space"),
+            new PresetName(11,"Demo · Bright clean"),new PresetName(80,"Demo · Vintage drive")};
+        Filter();
+    }
     private void SetEffects(IReadOnlyList<PresetEffectBlock> blocks)
     {
         effectChain.Children.Clear();effectButtons.Clear();effectDetails.Children.Clear();
@@ -263,6 +300,7 @@ public sealed partial class MainWindow : Window
         if(applyThreshold.Parent is Panel oldApplyParent)oldApplyParent.Children.Remove(applyThreshold);
         if(toneInput.Parent is Panel oldToneParent)oldToneParent.Children.Remove(toneInput);
         if(applyTone.Parent is Panel oldToneApplyParent)oldToneApplyParent.Children.Remove(applyTone);
+        DetachAdditionalEditorControls();
         foreach(var item in effectButtons)item.Button.BorderBrush=ReferenceEquals(item.Effect,effect)?Brushes.White:Brushes.Transparent;
         effectDetails.Children.Clear();effectDetails.Children.Add(Text(effect.Title,22,Brush(effect.Color)));
         if(effect.Parameters.Count==0) {effectDetails.Children.Add(Text("Parameter details not available in this version.",13,MutedBrush,new Thickness(0,8,0,0)));return;}
@@ -286,12 +324,13 @@ public sealed partial class MainWindow : Window
             effectDetails.Children.Add(actions);toneMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(toneMessage);
             UpdateToneState();
         }
+        AddAdditionalEditors(effect.Source);
     }
     private PresetEffectBlock? EditableNoiseKiller()
     {
         if(currentSnapshot?.Blocks.FirstOrDefault() is not {} block || block.Position!=1 || block.TypeCode!=4 ||
             block.Values.Count!=6 || block.Values[0]!=1 || block.Values[1]!=2 || block.Values[2] is <25 or >28 ||
-            block.Values[3]!=50 || block.Values[4]!=0 || block.Values[5]!=0) return null;
+            block.Values[3] is <47 or >50 || block.Values[4]!=0 || block.Values[5]!=0) return null;
         return block;
     }
     private void InvalidateEditTarget()
@@ -309,9 +348,12 @@ public sealed partial class MainWindow : Window
         thresholdMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
             !supported?"Read a supported V1.1.9 preset before applying a threshold.":
             !TryPendingThreshold(out value)?"Enter a whole number from 25 to 28.":
-            value==block!.Values[2]?"Matches confirmed snapshot · Level stays at 50.":$"Pending {value} · Confirmed {block.Values[2]} · Apply reconnects and checks the preset. Nothing is saved.";
+            value==block!.Values[2]?$"Matches confirmed snapshot · Level stays at {block.Values[3]}.":$"Pending {value} · Confirmed {block.Values[2]} · Apply reconnects and checks the preset. Nothing is saved.";
         UpdatePresetSelectionState();
         UpdateToneState();
+        UpdateAdditionalEditorStates();
+        UpdateSnapshotArchiveState();
+        UpdateSaveState();
     }
     private PresetEffectBlock? Editable808Tone()
     {
@@ -319,8 +361,8 @@ public sealed partial class MainWindow : Window
         return IsSupported808ToneBlock(block)?block:null;
     }
     private static bool IsSupported808ToneBlock(PresetEffectBlock? block)=>block is not null && block.Position==2 && block.TypeCode==1 &&
-        block.Values.Count==5 && block.Values[0]==1 && block.Values[1]==3 && block.Values[2]==39 &&
-        block.Values[3] is >=97 and <=100 && block.Values[4]==100;
+        block.Values.Count==5 && block.Values[0]==1 && block.Values[1]==3 && block.Values[2] is >=36 and <=39 &&
+        block.Values[3] is >=97 and <=100 && block.Values[4] is >=97 and <=100;
     private bool TryPendingTone(out ushort value)=>ushort.TryParse(toneInput.Text,NumberStyles.None,CultureInfo.InvariantCulture,out value) && value is >=97 and <=100;
     private void UpdateToneState()
     {
@@ -330,7 +372,7 @@ public sealed partial class MainWindow : Window
         applyTone.IsEnabled=supported && operation is null && TryPendingTone(out var value) && value!=block!.Values[3];
         toneMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
             !supported?"Read a supported V1.1.9 OD808 preset before applying Tone.":!TryPendingTone(out value)?"Enter a whole number from 97 to 100.":
-            value==block!.Values[3]?"Matches confirmed snapshot · Gain stays at 39 and Vol at 100.":
+            value==block!.Values[3]?$"Matches confirmed snapshot · Gain stays at {block.Values[2]} and Vol at {block.Values[4]}.":
             $"Pending {value} · Confirmed {block.Values[3]} · Apply reconnects and checks the preset. Nothing is saved.";
     }
     private async Task ApplyToneAsync()
@@ -347,7 +389,7 @@ public sealed partial class MainWindow : Window
             currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
             var toneEffect=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==2 && item.Effect.Source.TypeCode==1).Effect;
             if(toneEffect is not null)SelectEffect(toneEffect);
-            snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · OD808 Tone {value} · Save unsupported":
+            snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · OD808 Tone {value}":
                 $"OD808 Tone {value} verified · Matches original snapshot · Nothing saved";
             lastMutationSucceeded=true;
         }
@@ -363,7 +405,7 @@ public sealed partial class MainWindow : Window
             snapshotFirmware=="V1.1.9" && capturedConfiguration && currentSnapshot?.WireIndex is 4 or 5 && selected?.WireIndex is 4 or 5;
         selectPreset.IsEnabled=supported && selected!.WireIndex!=currentSnapshot!.WireIndex;
         selectionMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
-            liveEditUnsaved?"Unavailable while the preset differs from its original snapshot; saving is unsupported.":
+            liveEditUnsaved?"Unavailable while live edits differ from the last read or saved snapshot.":
             !editSnapshotValid||snapshotFirmware!="V1.1.9"||currentSnapshot?.WireIndex is not (4 or 5)?"Read a V1.1.9 snapshot at index 4 or 5 first.":
             !capturedConfiguration?"Preset differs from the captured configuration · Selection disabled.":
             selected?.WireIndex is not (4 or 5)?"Choose index 4 or 5 in the list.":
@@ -419,7 +461,7 @@ public sealed partial class MainWindow : Window
                 confirmed=await session.SetNoiseKillerThresholdAsync(expected,value,operation.Token);
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
             currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
-            snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · Threshold {value} · Save unsupported":
+            snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · Threshold {value}":
                 $"Threshold {value} verified · Matches original snapshot · Nothing saved";
             lastMutationSucceeded=true;
         }
@@ -435,11 +477,11 @@ public sealed partial class MainWindow : Window
     private static TextBlock Text(string text,double size,Brush? color=null,Thickness? margin=null)=>new(){Text=text,FontSize=size,Foreground=color??Brushes.White,Margin=margin??new Thickness(0),TextWrapping=TextWrapping.Wrap};
     private static Button Button(string text)
     {
-        var button=new Button{Content=text,Padding=new Thickness(14,8,14,8),Background=Brush("#343B46"),Foreground=Brushes.White,BorderThickness=new Thickness(0),Cursor=System.Windows.Input.Cursors.Hand};
+        var button=new Button{Content=text,Padding=new Thickness(14,8,14,8),Background=Brush("#343B46"),Foreground=Brushes.White,BorderThickness=new Thickness(0),Cursor=System.Windows.Input.Cursors.Hand,HorizontalContentAlignment=HorizontalAlignment.Center};
         button.Template=(ControlTemplate)XamlReader.Parse("""
             <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" TargetType="Button">
               <Border x:Name="Surface" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
               </Border>
               <ControlTemplate.Triggers>
                 <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Surface" Property="Opacity" Value="0.45"/></Trigger>

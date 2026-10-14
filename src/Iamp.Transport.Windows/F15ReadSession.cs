@@ -13,7 +13,7 @@ public sealed class F15ReadSession : IAsyncDisposable
     private readonly GattDeviceService service;
     private readonly GattCharacteristic notify;
     private readonly GattCharacteristic write;
-    private readonly FrameStreamDecoder decoder = new();
+    private readonly NotificationSessionGuard notifications = new();
     private readonly SemaphoreSlim queue = new(1, 1);
     private readonly object gate = new();
     private Func<byte[], bool>? predicate;
@@ -34,8 +34,15 @@ public sealed class F15ReadSession : IAsyncDisposable
 
     public static async Task<F15ReadSession> ConnectAsync(ulong address, CancellationToken ct)
     {
-        var device = await BluetoothLEDevice.FromBluetoothAddressAsync(address).AsTask(ct)
-            ?? throw new IOException("Windows could not open the selected amplifier.");
+        var device = await BluetoothLEDevice.FromBluetoothAddressAsync(address).AsTask(ct);
+        if (device is null)
+        {
+            // A known address may not yet exist in Windows' discovery cache after startup.
+            // This retries opening only, before any service subscription or application write.
+            await F15DeviceDiscovery.WaitForAdvertisementAsync(address, ct);
+            device = await BluetoothLEDevice.FromBluetoothAddressAsync(address).AsTask(ct);
+        }
+        if (device is null) throw new IOException("Windows could not open the selected amplifier after discovery.");
         GattDeviceService? chosen = null;
         F15ReadSession? session = null;
         try
@@ -60,6 +67,7 @@ public sealed class F15ReadSession : IAsyncDisposable
                 GattClientCharacteristicConfigurationDescriptorValue.Notify).AsTask(ct), "Notification subscription");
             if (device.ConnectionStatus != BluetoothConnectionStatus.Connected)
                 throw new IOException("The amplifier disconnected during session initialization.");
+            lock(session.gate)session.notifications.ThrowIfInvalid();
             return session;
         }
         catch
@@ -115,25 +123,17 @@ public sealed class F15ReadSession : IAsyncDisposable
     }
 
     /// <summary>One observed live effect update, followed by complete current-preset read-back. Does not save.</summary>
-    public async Task<CurrentPresetSnapshot> SetNoiseKillerThresholdAsync(CurrentPresetSnapshot expected, ushort threshold, CancellationToken ct)
-    {
-        var identity = await ReadIdentityAsync(ct);
-        if (identity.Firmware != "V1.1.9") throw new NotSupportedException("Parameter editing is verified only on F15i V1.1.9.");
-        var before = await ReadCurrentPresetAsync(ct);
-        if (before.WireIndex != expected.WireIndex || before.RawDetailPayloadHex != expected.RawDetailPayloadHex)
-            throw new IOException("The amplifier preset changed since the snapshot. Read it again before editing.");
-        var block = before.Blocks[0];
-        var command = NoiseKillerCommand.Create(block, threshold);
-        if (block.Values[2] == threshold) return before;
-        await WriteObservedUpdateAsync(command, ct);
-        // ATT write success alone is not an application acknowledgement. Confirm every preset byte below.
-        var after = await ReadCurrentPresetAsync(ct);
-        var expectedDetail = PresetDataParser.WithParameterValue(Convert.FromHexString(before.RawDetailPayloadHex), 1, 2, threshold);
-        if (after.WireIndex != before.WireIndex || after.RawStatePayloadHex != before.RawStatePayloadHex ||
-            after.RawDetailPayloadHex != Convert.ToHexString(expectedDetail))
-            throw new IOException("Edit read-back differs from the requested change. Read the amplifier before another operation; nothing was saved.");
-        return after;
-    }
+    public Task<CurrentPresetSnapshot> SetNoiseKillerThresholdAsync(CurrentPresetSnapshot expected, ushort threshold, CancellationToken ct)
+        => SetObservedParameterAsync(expected, ObservedParameter.NoiseThreshold, threshold, ct);
+
+    public Task<CurrentPresetSnapshot> SetNoiseKillerLevelAsync(CurrentPresetSnapshot expected, ushort level, CancellationToken ct)
+        => SetObservedParameterAsync(expected, ObservedParameter.NoiseLevel, level, ct);
+
+    public Task<CurrentPresetSnapshot> Set808GainAsync(CurrentPresetSnapshot expected, ushort gain, CancellationToken ct)
+        => SetObservedParameterAsync(expected, ObservedParameter.OdGain, gain, ct);
+
+    public Task<CurrentPresetSnapshot> Set808VolumeAsync(CurrentPresetSnapshot expected, ushort volume, CancellationToken ct)
+        => SetObservedParameterAsync(expected, ObservedParameter.OdVolume, volume, ct);
 
     private async Task WriteObservedUpdateAsync(byte[] payload, CancellationToken ct)
     {
@@ -142,37 +142,47 @@ public sealed class F15ReadSession : IAsyncDisposable
         deadline.CancelAfter(TimeSpan.FromSeconds(15));
         try
         {
+            Task<GattWriteResult> writeTask;
             lock (gate)
             {
                 ObjectDisposedException.ThrowIf(disposed, this);
+                notifications.ThrowIfInvalid();
                 if (faulted) throw new IOException("Reconnect before sending another command.");
+                pendingCancellation=deadline;
+                // Hold the same gate used by notifications through write initiation.
+                writeTask=write.WriteValueWithResultAsync(CryptographicBuffer.CreateFromByteArray(FrameCodec.Encode(payload)),
+                    GattWriteOption.WriteWithResponse).AsTask(deadline.Token);
             }
-            var result = await write.WriteValueWithResultAsync(CryptographicBuffer.CreateFromByteArray(FrameCodec.Encode(payload)),
-                GattWriteOption.WriteWithResponse).AsTask(deadline.Token);
+            var result = await writeTask;
+            lock(gate)notifications.ThrowIfInvalid();
             Require(result.Status, "Live parameter update");
         }
-        catch { lock (gate) { faulted = true; decoder.Reset(); } throw; }
-        finally { queue.Release(); }
+        catch { lock (gate) { faulted = true; notifications.ResetDecoder(); notifications.ThrowIfInvalid(); } throw; }
+        finally { lock(gate)pendingCancellation=null;queue.Release(); }
     }
 
     /// <summary>Restricted unsaved tone edit on the captured second-position 808 model, with full read-back.</summary>
-    public async Task<CurrentPresetSnapshot> Set808ToneAsync(CurrentPresetSnapshot expected, ushort tone, CancellationToken ct)
+    public Task<CurrentPresetSnapshot> Set808ToneAsync(CurrentPresetSnapshot expected, ushort tone, CancellationToken ct)
+        => SetObservedParameterAsync(expected, ObservedParameter.OdTone, tone, ct);
+
+    private async Task<CurrentPresetSnapshot> SetObservedParameterAsync(CurrentPresetSnapshot expected, ObservedParameter parameter, ushort value, CancellationToken ct)
     {
         var identity = await ReadIdentityAsync(ct);
-        if (identity.Firmware != "V1.1.9") throw new NotSupportedException("808 tone editing is verified only on F15i V1.1.9.");
+        if (identity.Firmware != "V1.1.9") throw new NotSupportedException("Parameter editing is verified only on F15i V1.1.9.");
         var before = await ReadCurrentPresetAsync(ct);
         if (before.WireIndex != expected.WireIndex || before.RawDetailPayloadHex != expected.RawDetailPayloadHex ||
             before.RawStatePayloadHex != expected.RawStatePayloadHex)
             throw new IOException("The amplifier changed since the snapshot. Read it again before editing.");
-        var block = before.Blocks[1];
-        var request = Od808ToneCommand.Create(block, tone);
-        if (block.Values[3] == tone) return before;
+        var definition = ObservedParameterCommands.Definition(parameter);
+        var block = before.Blocks[definition.Position - 1];
+        var request = ObservedParameterCommands.Create(block, parameter, value);
+        if (block.Values[definition.ValueIndex] == value) return before;
         await WriteObservedUpdateAsync(request, ct);
         var after = await ReadCurrentPresetAsync(ct);
-        var expectedDetail = PresetDataParser.WithParameterValue(Convert.FromHexString(before.RawDetailPayloadHex), 2, 3, tone);
+        var expectedDetail = PresetDataParser.WithParameterValue(Convert.FromHexString(before.RawDetailPayloadHex), definition.Position, definition.ValueIndex, value);
         if (after.WireIndex != before.WireIndex || after.RawStatePayloadHex != before.RawStatePayloadHex ||
             after.RawDetailPayloadHex != Convert.ToHexString(expectedDetail))
-            throw new IOException("808 tone read-back differs from the requested change. Read the amplifier before another operation; nothing was saved.");
+            throw new IOException("Parameter read-back differs from the requested change. Read the amplifier before another operation; nothing was saved.");
         return after;
     }
 
@@ -197,6 +207,31 @@ public sealed class F15ReadSession : IAsyncDisposable
         return after;
     }
 
+    /// <summary>Explicit same-slot save for the demonstrated slot-4 Threshold 25/26 profiles.
+    /// A response is followed by same-slot recall and full verification. Never replay on failure.</summary>
+    public async Task<CurrentPresetSnapshot> SaveObservedThresholdAsync(CurrentPresetSnapshot expected,CancellationToken ct)
+    {
+        var identity=await ReadIdentityAsync(ct);
+        var before=await ReadCurrentPresetAsync(ct);
+        if(before.WireIndex!=expected.WireIndex || before.RawStatePayloadHex!=expected.RawStatePayloadHex || before.RawDetailPayloadHex!=expected.RawDetailPayloadHex)
+            throw new IOException("The amplifier changed since the snapshot. Nothing was sent to save; read it again.");
+        var state=Convert.FromHexString(before.RawStatePayloadHex);
+        var request=ObservedPresetSaveCommand.CreateForObservedThreshold(identity.Firmware,state,Convert.FromHexString(before.RawDetailPayloadHex));
+        var response=await QueryAsync(request,p=>p.Length>=1 && p[0]==0x30,ct);
+        if(!response.AsSpan().SequenceEqual(new byte[]{0x30,0x01}))
+            throw new IOException("Save response is not the observed 30 01. Stored outcome is unknown; do not retry automatically.");
+        // Match the phone's post-save same-slot recall. This checks the stored
+        // content without broadening selection to another destination.
+        state[0]=0x13;
+        var recall=await QueryAsync(state,p=>p.Length>=1 && p[0]==0x14,ct);
+        if(!recall.AsSpan().SequenceEqual(new byte[]{0x14,0x01}))
+            throw new IOException("Post-save recall response differs. Stored outcome is unknown; read the amplifier.");
+        var after=await ReadCurrentPresetAsync(ct);
+        if(after.WireIndex!=before.WireIndex || after.RawStatePayloadHex!=before.RawStatePayloadHex || after.RawDetailPayloadHex!=before.RawDetailPayloadHex)
+            throw new IOException("Saved preset did not match the complete expected readback. Do not repeat the save; inspect the actual preset.");
+        return after;
+    }
+
     private async Task<byte[]> QueryAsync(byte[] request, Func<byte[], bool> match, CancellationToken ct)
     {
         await queue.WaitAsync(ct);
@@ -206,23 +241,29 @@ public sealed class F15ReadSession : IAsyncDisposable
         try
         {
             var completion = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
-            lock (gate)
-            {
-                ObjectDisposedException.ThrowIf(disposed, this);
-                if (faulted) throw new IOException("The information session failed; reconnect before another request.");
-                predicate = match; pending = completion; pendingCancellation = requestDeadline;
-            }
             try
             {
-                var result = await write.WriteValueWithResultAsync(CryptographicBuffer.CreateFromByteArray(FrameCodec.Encode(request)),
-                    GattWriteOption.WriteWithResponse).AsTask(requestToken);
+                Task<GattWriteResult> writeTask;
+                lock (gate)
+                {
+                    ObjectDisposedException.ThrowIf(disposed, this);
+                    notifications.ThrowIfInvalid();
+                    if (faulted) throw new IOException("The information session failed; reconnect before another request.");
+                    predicate = match; pending = completion; pendingCancellation = requestDeadline;
+                    writeTask=write.WriteValueWithResultAsync(CryptographicBuffer.CreateFromByteArray(FrameCodec.Encode(request)),
+                        GattWriteOption.WriteWithResponse).AsTask(requestToken);
+                }
+                var result = await writeTask;
+                lock(gate)notifications.ThrowIfInvalid();
                 Require(result.Status, "Information request");
                 // No automatic replay: ambiguous/time-out writes require a new session.
-                return await completion.Task.WaitAsync(requestToken);
+                var response=await completion.Task.WaitAsync(requestToken);
+                lock(gate)notifications.ThrowIfInvalid();
+                return response;
             }
             catch
             {
-                lock (gate) { faulted = true; decoder.Reset(); }
+                lock (gate) { faulted = true; notifications.ResetDecoder(); notifications.ThrowIfInvalid(); }
                 throw;
             }
         }
@@ -236,9 +277,18 @@ public sealed class F15ReadSession : IAsyncDisposable
     private void OnValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
     {
         CryptographicBuffer.CopyToByteArray(args.CharacteristicValue, out var bytes);
-        lock (gate)
-            foreach (var frame in decoder.Push(bytes))
+        lock (gate) {
+            IReadOnlyList<ProtocolFrame> frames;
+            try {frames=notifications.ProcessNotification(bytes);}
+            catch(IOException ex) {
+                faulted=true;
+                pending?.TrySetException(ex);
+                pendingCancellation?.Cancel();
+                return;
+            }
+            foreach (var frame in frames)
                 if (predicate?.Invoke(frame.Payload) == true) pending?.TrySetResult(frame.Payload);
+        }
     }
 
     private void OnConnectionStatusChanged(BluetoothLEDevice sender, object args)
@@ -247,7 +297,7 @@ public sealed class F15ReadSession : IAsyncDisposable
         lock (gate)
         {
             faulted = true;
-            decoder.Reset();
+            notifications.ResetDecoder();
             pending?.TrySetException(new IOException("The amplifier disconnected during the information request."));
             pendingCancellation?.Cancel();
         }

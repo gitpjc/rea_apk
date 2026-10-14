@@ -61,12 +61,17 @@
           "valueIndex": 2,
           "displayUnit": null,
           "rawValue": 39,
-          "basis": "unique matching scalar in this captured block; same-model baseline correlation",
-          "status": "inferred_baseline_correspondence",
-          "controlledChangeVerified": false,
+          "basis": "controlled phone Gain change/restoration with exact occurrence provenance and complete final Windows baseline equality",
+          "status": "phone_controlled_mapping_verified",
+          "controlledChangeVerified": true,
           "scaleVerified": false,
           "rangeVerified": false,
-          "writeVerified": false
+          "writeVerified": true,
+          "phoneWriteObserved": true,
+          "windowsWriteVerified": true,
+          "sourceFixture": "f15-observed-expanded-controls.json",
+          "desktopUiWriteVerified": true,
+          "validationReport": "Expanded-Controls.md"
         },
         {
           "label": "Tone",
@@ -78,11 +83,13 @@
           "status": "phone_controlled_mapping_verified",
           "controlledChangeVerified": true,
           "phoneWriteObserved": true,
-          "windowsWriteVerified": false,
+          "windowsWriteVerified": true,
           "scaleVerified": false,
           "rangeVerified": false,
-          "writeVerified": false,
-          "sourceFixture": "f15-observed-808-tone.json"
+          "writeVerified": true,
+          "sourceFixture": "f15-observed-808-tone.json",
+          "desktopUiWriteVerified": true,
+          "validationReport": "808-Tone-Editing.md"
         },
         {
           "label": "Vol",
@@ -90,12 +97,17 @@
           "valueIndex": 4,
           "rawValue": 100,
           "displayUnit": null,
-          "basis": "elimination after controlled Tone index3; remaining displayed100 matches Value4",
-          "status": "inferred_by_elimination",
-          "controlledChangeVerified": false,
+          "basis": "controlled phone Vol change/restoration with exact occurrence provenance and complete final Windows baseline equality",
+          "status": "phone_controlled_mapping_verified",
+          "controlledChangeVerified": true,
           "scaleVerified": false,
           "rangeVerified": false,
-          "writeVerified": false
+          "writeVerified": true,
+          "phoneWriteObserved": true,
+          "windowsWriteVerified": true,
+          "sourceFixture": "f15-observed-expanded-controls.json",
+          "desktopUiWriteVerified": true,
+          "validationReport": "Expanded-Controls.md"
         }
       ],
       "ambiguousParameters": [],
@@ -378,8 +390,8 @@
     "Displayed ms labels are observed; full encoding scale, ranges and nonlinear behavior remain unverified.",
     "Unknown flag and trailing values remain unlabeled; no enabled-state meaning is claimed.",
     "No parameter writes or model changes were performed during this label inspection.",
-    "808 Tone Value3 has a separate controlled phone mapping; Vol Value4 remains inference by elimination, not an independently controlled Vol mapping.",
-    "Hall Tone wire offset remains unresolved among equal trailing zeros."
+    "Hall Tone wire offset remains unresolved among equal trailing zeros.",
+    "808 Gain/Tone/Vol now have controlled phone mappings plus separate bounded Windows/API/UI proof; full device ranges remain unverified."
   ],
   "controlledFollowup": {
     "fixture": "f15-observed-808-tone.json",
@@ -398,6 +410,55 @@
         "sha256": "7729600212f7c378942e073e02c01486f1461749b64fd0645912e335f913e5c1"
       }
     ],
-    "windowsToneWriteVerified": false
+    "windowsToneWriteVerified": true
+  },
+  "expandedControlledFollowup": {
+    "fixture": "f15-observed-expanded-controls.json",
+    "logcatSha256": "93dea6b148a62f693c7a0bb5d9158f889a1c0ba93e6fef03a6ef15f4ea77edca",
+    "screenshots": [
+      {
+        "file": "phone-controls-connected.png",
+        "sha256": "720d95d6c299385973373e4dd6de286bf7ebf850a574f5d0b4de2f5076d88d01"
+      },
+      {
+        "file": "phone-level-changed.png",
+        "sha256": "60a0af5686e94d17aac5cc57754fb436be2baf0e0b44fdb835c6e192a510f9a7"
+      },
+      {
+        "file": "phone-level-restored.png",
+        "sha256": "0896c08918215003d496ddeb6c9443774c54065cf270aae70134f25653ce6a92"
+      },
+      {
+        "file": "phone-gain-before.png",
+        "sha256": "6aa7a6ca25cde28775a152a3f72055bcb10a3392ea3ab9e7ebdb2c6406d4b898"
+      },
+      {
+        "file": "phone-gain-changed.png",
+        "sha256": "77069857a5f8e7edbd2affd80c50c286ff20e73dd8bf5bf8732d42657b3f426c"
+      },
+      {
+        "file": "phone-gain-restored.png",
+        "sha256": "77ce4b7ef05f5f04b9a09d9adef383fb569190d8956d0f2b5fcc6a37f19a836f"
+      },
+      {
+        "file": "phone-volume-changed.png",
+        "sha256": "c27ae148bc490a9927f996b1b3efda5467fc3ec4ee15ce56a60a598555bb0b67"
+      },
+      {
+        "file": "phone-volume-restored.png",
+        "sha256": "dbbeb465171a0d8f1da641cf7f495d86355f78f4a204562d1e962c8a31acecb1"
+      }
+    ],
+    "noiseKillerLevel": {
+      "position": 1,
+      "typeCode": 4,
+      "modelValue": 2,
+      "valueIndex": 3,
+      "phoneControlledMappingVerified": true,
+      "windowsWriteVerified": true,
+      "desktopUiWriteVerified": true
+    },
+    "windowsWriteVerified": true,
+    "desktopUiWriteVerified": true
   }
 }

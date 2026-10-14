@@ -11,6 +11,25 @@ source scripts/env.sh
 
 ## Verified tooling
 
+Version History/navigation and details layout preview (offline only):
+
+```bash
+dotnet run --project src/Iamp.Desktop -c Release -- \
+  --version-history-preview analysis/private/version-history.png
+```
+
+This also renders `version-history.details.png`, checks packaged history against the current build version, and verifies library pending input, selection and scroll position survive navigation. Semantic version changes are made in `Directory.Build.props`; add matching latest-first records to `assets/version_history.json` using the example schema. Documentation-only changes do not require a version bump.
+
+Offline local snapshot UI regression and image output (no Bluetooth operations):
+
+```bash
+dotnet run --project src/Iamp.Desktop -c Release -- \
+  --snapshot-preview tests/fixtures/f15-snapshot-v1.example.json \
+  analysis/private/desktop-local-snapshot.png
+```
+
+This exercises the actual Open/Export handlers, verifies disabled hardware controls, rejects a malformed file while preserving the prior snapshot, and compares exported raw bytes and metadata. The fixture timestamp is synthetic test data.
+
 | Component | Selected version/location | Status |
 | --- | --- | --- |
 | Windows | x64, build 26200 reported by ADB; Windows 11 | Running |
@@ -91,7 +110,7 @@ Portable Node **24.19.0** with npm **11.17.0** is now installed under `.tools/no
 
 The archive and official checksum list are retained under `.tools/downloads/`. The bootstrap copies the committed `tools/rea/package.json` and `package-lock.json` only when absent, checks existing files for equality, uses `npm ci` for a missing REA installation, and verifies existing dependency versions against the lock. Existing archive hashes and runtime versions are checked; this is a reproducibility check, not a security audit of every installed byte.
 
-JADX 0.7.1 is downloaded only when absent from the official GitHub release and checked against the JADX SHA-256 in the REA integration section. Existing full JDK 17+ and Android SDK tools are required; set `JAVA_HOME`, `ANDROID_SDK_ROOT`, `ANDROID_BUILD_TOOLS` and `IAMP_PYTHON` before sourcing `scripts/env.sh` to override this PC's paths. Python 3.11+ handles ZIP extraction if needed; the setup does not install a global Python runtime.
+JADX 0.7.1 is downloaded only when absent from the official GitHub release and checked against the JADX SHA-256 in the REA integration section. Existing full JDK 17+ and Android SDK tools are required; set `JAVA_HOME`, `ANDROID_SDK_ROOT`, `ANDROID_BUILD_TOOLS` and `IAMP_PYTHON` before sourcing `scripts/env.sh` to override this PC's paths. Setup uses Git Bash's existing `unzip` and does not install Python. Existing bundled Python is reserved for specialized offline analysis when it offers a clear advantage.
 
 .NET follows the SDK version in `global.json` (10.0.401). The download helper verifies the official Microsoft release-metadata SHA-512 and reuses a matching retained SDK archive instead of redownloading. An existing mismatching archive or installed version stops setup for review. The already installed SDK was reused during these checks; no second large SDK download occurred.
 
@@ -102,7 +121,7 @@ Only `bash scripts/bootstrap.sh --configure-codex` applies the Codex-only REA se
 Validation on 13 October 2026: strict `bash scripts/check.sh` passed after the coordinator refreshed the Codex registration for portable Node. All five APK signatures verified; separate MCP smoke discovered 170 tools and inspected the phone base APK; Release build completed with zero warnings/errors. Final bootstrap repeat passed; invoking the .NET helper separately reused the retained 10.0.401 archive after checking the official Microsoft SHA-512, without another SDK download. Bash syntax checks and `git diff --check` passed.
 ## Explicit hardware validation commands
 
-The default desktop launch and `--preview` do not execute control tests. The following opt-in command **does change the amplifier temporarily**. It requires the captured V1.1.9 slot-4 baseline and runs the actual UI handlers through preset 4 -> 5 -> 4 and threshold 25 -> 26 -> 25. A separate bounded cleanup connection verifies complete state/detail restoration. Stop further mutations if its report does not confirm restoration.
+The default desktop launch and `--preview` do not execute control tests. The following opt-in command **does change the amplifier temporarily**. It requires the captured V1.1.9 slot-4 baseline and runs actual UI handlers through preset 4 -> 5 -> 4, Threshold 25 -> 26 -> 25, Level 50 -> 48 -> 50, 808 Gain 39 -> 37 -> 39, Tone 100 -> 98 -> 100 and Volume 100 -> 98 -> 100. It also changes all five parameters together and restores them. A separate bounded cleanup connection verifies complete state/detail restoration. Stop further mutations if its report does not confirm restoration.
 
 ```bash
 source scripts/env.sh
@@ -112,4 +131,4 @@ artifacts/Iamp.Desktop/Iamp.Desktop.exe \
   analysis/private/desktop-ui-hardware.png
 ```
 
-It writes the screenshot and `desktop-ui-hardware.roundtrip.json` privately. Exit 0 requires the UI workflow to pass and the original baseline to be restored exactly. This command was successfully run on 13 October 2026; it is a development validation tool, not a general preset-repair or backup-restore feature.
+It writes the screenshot and matching `.roundtrip.json` privately. Exit 0 requires the UI workflow to pass and the original baseline to be restored exactly. The initial test passed on 13 October; the expanded five-control test passed on 14 October in `desktop-five-controls-hardware.roundtrip.json`. It is a development validation tool, not a general preset-repair or backup-restore feature.

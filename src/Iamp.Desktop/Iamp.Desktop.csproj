@@ -8,4 +8,7 @@
     <AssemblyName>Iamp.Desktop</AssemblyName>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../Iamp.Transport.Windows/Iamp.Transport.Windows.csproj" /></ItemGroup>
+  <ItemGroup>
+    <Content Include="../../assets/version_history.json" Link="assets/version_history.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -20,6 +20,9 @@
     <None Include="../fixtures/f15-observed-frames.json" Link="fixtures/f15-observed-frames.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-observed-preset.json" Link="fixtures/f15-observed-preset.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-observed-selection.json" Link="fixtures/f15-observed-selection.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-observed-save.json" Link="fixtures/f15-observed-save.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-snapshot-v1.example.json" Link="fixtures/f15-snapshot-v1.example.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-observed-transfer-status.json" Link="fixtures/f15-observed-transfer-status.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

@@ -38,8 +38,27 @@ routine project tooling. The Windows application must not require Python.
 Do not install Python on this computer without my explicit permission. You may use Python libraries built into Codex if there is a clear advantage to using it in that way for this project.    
 
 
+## Code Changes
 
+Whenever you make any code changes please do this:
 
+- Bump the version number of this application appropriately in any code or configuration files where this version number is being used.  
+
+### Version Numbering
+
+Use the Semantic Versioning numbering standard for all version numbering  
+
+[Semantic Versioning](https://semver.org/)    
+
+Reason:    
+
+- This is the version numbering standard I always use.   
+
+### Version History file
+
+Every time you make any change write the relevant details to the assets/version_history.json file.    
+
+Refer to assets/version_history_example.json file for the format required
 
 
 

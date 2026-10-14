@@ -1,0 +1,28 @@
+{
+  "sourceSha256": "f0176ec3722fdad743925dcf702330a1a9cd1e8262493db59cce08423001c906",
+  "statuses": [
+    {
+      "hex": "aa5502009b00d686",
+      "payloadHex": "9b00",
+      "records": [
+        7185
+      ],
+      "crcValid": true
+    },
+    {
+      "hex": "aa5502009b01c6a7",
+      "payloadHex": "9b01",
+      "records": [
+        7192
+      ],
+      "crcValid": true
+    }
+  ],
+  "ack": {
+    "hex": "aa5502001401cd01",
+    "payloadHex": "1401",
+    "records": [
+      2650
+    ]
+  }
+}

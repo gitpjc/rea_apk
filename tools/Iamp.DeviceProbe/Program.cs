@@ -49,6 +49,11 @@ internal static class Program
             {
                 await ThresholdRoundtripAsync(editAddress);
             }
+            else if (args is ["persistence-threshold-step", var stepTarget, var stepValue, var baselinePath] &&
+                TryAddress(stepTarget,out var stepAddress) && ushort.TryParse(stepValue,out var threshold) && threshold is 25 or 26)
+            {
+                await PersistenceThresholdStepAsync(stepAddress,threshold,baselinePath);
+            }
             else if (args is ["selection-roundtrip", var selectionTarget] && TryAddress(selectionTarget, out var selectionAddress))
             {
                 await SelectionRoundtripAsync(selectionAddress);
@@ -56,6 +61,10 @@ internal static class Program
             else if (args is ["tone-roundtrip", var toneTarget] && TryAddress(toneTarget, out var toneAddress))
             {
                 await ToneRoundtripAsync(toneAddress);
+            }
+            else if (args is ["controls-roundtrip", var controlsTarget] && TryAddress(controlsTarget, out var controlsAddress))
+            {
+                await ControlsRoundtripAsync(controlsAddress);
             }
             else
             {
@@ -80,6 +89,32 @@ internal static class Program
     }
 
     private static void Print(object value) => Console.WriteLine(JsonSerializer.Serialize(value, Json));
+
+    // Explicit single live edit for the approved phone-save experiment. No save
+    // packet is sent here. The complete recorded baseline must match except for
+    // the one approved threshold field, including during restorative cleanup.
+    private static async Task PersistenceThresholdStepAsync(ulong address,ushort value,string baselinePath)
+    {
+        using var document=JsonDocument.Parse(File.ReadAllText(baselinePath));
+        var root=document.RootElement;
+        var baselineState=Convert.FromHexString(root.GetProperty("current").GetProperty("RawStatePayloadHex").GetString()!);
+        var baselineDetail=Convert.FromHexString(root.GetProperty("current").GetProperty("RawDetailPayloadHex").GetString()!);
+        var firmware=root.GetProperty("identity").GetProperty("Firmware").GetString()!;
+        _=ObservedPresetSaveCommand.CreateUnchanged(firmware,baselineState,baselineDetail);
+        using var deadline=new CancellationTokenSource(TimeSpan.FromSeconds(60));
+        await using var session=await F15ReadSession.ConnectAsync(address,deadline.Token);
+        var identity=await session.ReadIdentityAsync(deadline.Token);
+        var current=await session.ReadCurrentPresetAsync(deadline.Token);
+        var currentDetail=Convert.FromHexString(current.RawDetailPayloadHex);
+        var normalized=PresetDataParser.WithParameterValue(currentDetail,1,2,25);
+        var previous=current.Blocks.Single(b=>b.Position==1).Values[2];
+        if(identity.Firmware!=firmware || current.RawStatePayloadHex!=Convert.ToHexString(baselineState) ||
+            !normalized.AsSpan().SequenceEqual(baselineDetail) || previous is not (25 or 26))
+            throw new InvalidOperationException("Complete state/detail differs beyond the approved threshold; no edit performed.");
+        if(previous==value)throw new InvalidOperationException("Threshold already matches; no edit performed.");
+        var changed=await session.SetNoiseKillerThresholdAsync(current,value,deadline.Token);
+        Print(new {operation="approved_persistence_live_threshold_step",identity,current=changed,previousThreshold=previous,requestedThreshold=value,saved=false});
+    }
 
     private static async Task ThresholdRoundtripAsync(ulong address)
     {
@@ -186,6 +221,59 @@ internal static class Program
             var matches = restored.RawDetailPayloadHex == baseline.RawDetailPayloadHex && restored.RawStatePayloadHex == baseline.RawStatePayloadHex;
             Print(new { operation = "808_tone_100_98_100", baseline, changed, restored, baselineRestored = matches, saved = false });
             if (!matches) throw new IOException("Full original tone-test baseline restoration was not verified. Stop hardware tests.");
+        }
+    }
+
+    private static async Task ControlsRoundtripAsync(ulong address)
+    {
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(90));
+        await using var session = await F15ReadSession.ConnectAsync(address, deadline.Token);
+        var baseline = await session.ReadCurrentPresetAsync(deadline.Token);
+        if (baseline.WireIndex != 4) throw new InvalidOperationException("Combined-control test requires captured preset 4.");
+        PresetSelectionCommand.RequireObservedPreset(4, Convert.FromHexString(baseline.RawDetailPayloadHex));
+        var live = baseline;
+        var steps = new List<CurrentPresetSnapshot>();
+        CurrentPresetSnapshot? restored = null;
+        async Task Step(Func<CurrentPresetSnapshot, Task<CurrentPresetSnapshot>> apply)
+        {
+            live = await apply(live);
+            steps.Add(live);
+        }
+        try
+        {
+            await Step(s => session.SetNoiseKillerLevelAsync(s, 48, deadline.Token));
+            await Step(s => session.SetNoiseKillerThresholdAsync(s, 26, deadline.Token));
+            await Step(s => session.SetNoiseKillerThresholdAsync(s, 25, deadline.Token));
+            await Step(s => session.SetNoiseKillerLevelAsync(s, 50, deadline.Token));
+            await Step(s => session.Set808GainAsync(s, 37, deadline.Token));
+            await Step(s => session.Set808ToneAsync(s, 98, deadline.Token));
+            await Step(s => session.Set808VolumeAsync(s, 98, deadline.Token));
+            await Step(s => session.Set808GainAsync(s, 39, deadline.Token));
+            await Step(s => session.Set808ToneAsync(s, 100, deadline.Token));
+            await Step(s => session.Set808VolumeAsync(s, 100, deadline.Token));
+        }
+        finally
+        {
+            await session.DisposeAsync();
+            using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(90));
+            await using var recovery = await F15ReadSession.ConnectAsync(address, cleanup.Token);
+            var actual = await recovery.ReadCurrentPresetAsync(cleanup.Token);
+            ObservedParameterCommands.Create(actual.Blocks[0], ObservedParameter.NoiseThreshold, 25);
+            ObservedParameterCommands.Create(actual.Blocks[1], ObservedParameter.OdTone, 100);
+            var normalized = Convert.FromHexString(actual.RawDetailPayloadHex);
+            foreach (var (position, index, value) in new (byte, int, ushort)[] { (1,2,25),(1,3,50),(2,2,39),(2,3,100),(2,4,100) })
+                normalized = PresetDataParser.WithParameterValue(normalized, position, index, value);
+            if (actual.RawStatePayloadHex != baseline.RawStatePayloadHex || Convert.ToHexString(normalized) != baseline.RawDetailPayloadHex)
+                throw new IOException("Other state changed during controls test. Automatic restoration stopped; inspect the amplifier.");
+            actual = await recovery.SetNoiseKillerThresholdAsync(actual, 25, cleanup.Token);
+            actual = await recovery.SetNoiseKillerLevelAsync(actual, 50, cleanup.Token);
+            actual = await recovery.Set808GainAsync(actual, 39, cleanup.Token);
+            actual = await recovery.Set808ToneAsync(actual, 100, cleanup.Token);
+            actual = await recovery.Set808VolumeAsync(actual, 100, cleanup.Token);
+            restored = await recovery.ReadCurrentPresetAsync(cleanup.Token);
+            var matches = restored.RawStatePayloadHex == baseline.RawStatePayloadHex && restored.RawDetailPayloadHex == baseline.RawDetailPayloadHex;
+            Print(new { operation = "five_parameter_combined_roundtrip", baseline, steps, restored, baselineRestored = matches, saved = false });
+            if (!matches) throw new IOException("Complete controls-test baseline restoration was not verified. Stop hardware tests.");
         }
     }
 

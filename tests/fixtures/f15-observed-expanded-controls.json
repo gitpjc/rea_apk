@@ -1,0 +1,757 @@
+{
+  "schema_version": 1,
+  "evidence_scope": "phone-controlled Noise Killer Level/808 Gain/Vol plus separate Windows API and actual desktop UI five-control round trips, full baseline restored",
+  "firmware": "V1.1.9",
+  "wireIndex": 4,
+  "sources": {
+    "phone-controls-roundtrip-logcat.txt": {
+      "sha256": "93dea6b148a62f693c7a0bb5d9158f889a1c0ba93e6fef03a6ef15f4ea77edca"
+    },
+    "phone-controls-bluetooth.txt": {
+      "sha256": "611182609ab382fe8e87818d867ad8eff13bbccada95e62cdd78334603eb5ff7"
+    },
+    "phone-controls-btsnoop.log": {
+      "sha256": "d2e60ef9feb958ee076e4aa9ee5808eb7c46dab271499de7f0832ba053d16e33"
+    },
+    "windows-controls-baseline.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    },
+    "windows-controls-restored.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    }
+  },
+  "captureSummary": {
+    "hciRecords": 1312,
+    "targetAttPdus": 392,
+    "applicationFrames": 106,
+    "crcValidFrames": 106,
+    "targetConnections": [
+      {
+        "record": 434,
+        "connection_handle": 2,
+        "event_subevent": 10
+      },
+      {
+        "record": 929,
+        "connection_handle": 3,
+        "event_subevent": 10
+      }
+    ],
+    "curatedConnectionEvent": 929,
+    "curatedConnectionHandle": 3
+  },
+  "checksum": {
+    "model": "CRC-16/GSM",
+    "coverage": "length bytes and payload",
+    "trailerEndian": "big"
+  },
+  "frames": [
+    {
+      "hex": "aa5510002501040c0100020019002f00000000007705",
+      "payloadHex": "2501040c0100020019002f0000000000",
+      "length": 16,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1215
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 555,
+      "phone_log_time": "10:11:51.412",
+      "crc16_gsm_valid": true,
+      "experiment": "Noise Killer Level",
+      "position": 1,
+      "typeCode": 4,
+      "valueByteCount": 12,
+      "observedValues": [
+        1,
+        2,
+        25,
+        47,
+        0,
+        0
+      ],
+      "changedValueIndex": 3,
+      "observedValue": 47,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    },
+    {
+      "hex": "aa5510002501040c010002001900310000000000ed22",
+      "payloadHex": "2501040c010002001900310000000000",
+      "length": 16,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1219
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 557,
+      "phone_log_time": "10:12:00.771",
+      "crc16_gsm_valid": true,
+      "experiment": "Noise Killer Level",
+      "position": 1,
+      "typeCode": 4,
+      "valueByteCount": 12,
+      "observedValues": [
+        1,
+        2,
+        25,
+        49,
+        0,
+        0
+      ],
+      "changedValueIndex": 3,
+      "observedValue": 49,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    },
+    {
+      "hex": "aa5510002501040c01000200190032000000000023c2",
+      "payloadHex": "2501040c010002001900320000000000",
+      "length": 16,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1222
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 559,
+      "phone_log_time": "10:12:00.861",
+      "crc16_gsm_valid": true,
+      "experiment": "Noise Killer Level",
+      "position": 1,
+      "typeCode": 4,
+      "valueByteCount": 12,
+      "observedValues": [
+        1,
+        2,
+        25,
+        50,
+        0,
+        0
+      ],
+      "changedValueIndex": 3,
+      "observedValue": 50,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    },
+    {
+      "hex": "aa550e002502010a010003002400640064007e10",
+      "payloadHex": "2502010a01000300240064006400",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1230
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 565,
+      "phone_log_time": "10:12:20.991",
+      "crc16_gsm_valid": true,
+      "experiment": "808 Gain",
+      "position": 2,
+      "typeCode": 1,
+      "valueByteCount": 10,
+      "observedValues": [
+        1,
+        3,
+        36,
+        100,
+        100
+      ],
+      "changedValueIndex": 2,
+      "observedValue": 36,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    },
+    {
+      "hex": "aa550e002502010a01000300260064006400f550",
+      "payloadHex": "2502010a01000300260064006400",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1235
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 568,
+      "phone_log_time": "10:12:30.385",
+      "crc16_gsm_valid": true,
+      "experiment": "808 Gain",
+      "position": 2,
+      "typeCode": 1,
+      "valueByteCount": 10,
+      "observedValues": [
+        1,
+        3,
+        38,
+        100,
+        100
+      ],
+      "changedValueIndex": 2,
+      "observedValue": 38,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    },
+    {
+      "hex": "aa550e002502010a01000300270064006400b0f0",
+      "payloadHex": "2502010a01000300270064006400",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1238
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 569,
+      "phone_log_time": "10:12:30.471",
+      "crc16_gsm_valid": true,
+      "experiment": "808 Gain",
+      "position": 2,
+      "typeCode": 1,
+      "valueByteCount": 10,
+      "observedValues": [
+        1,
+        3,
+        39,
+        100,
+        100
+      ],
+      "changedValueIndex": 2,
+      "observedValue": 39,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    },
+    {
+      "hex": "aa550e002502010a010003002700640061004f05",
+      "payloadHex": "2502010a01000300270064006100",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1243
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 571,
+      "phone_log_time": "10:12:41.122",
+      "crc16_gsm_valid": true,
+      "experiment": "808 Vol",
+      "position": 2,
+      "typeCode": 1,
+      "valueByteCount": 10,
+      "observedValues": [
+        1,
+        3,
+        39,
+        100,
+        97
+      ],
+      "changedValueIndex": 4,
+      "observedValue": 97,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    },
+    {
+      "hex": "aa550e002502010a010003002700640063002967",
+      "payloadHex": "2502010a01000300270064006300",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1305
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 576,
+      "phone_log_time": "10:12:51.501",
+      "crc16_gsm_valid": true,
+      "experiment": "808 Vol",
+      "position": 2,
+      "typeCode": 1,
+      "valueByteCount": 10,
+      "observedValues": [
+        1,
+        3,
+        39,
+        100,
+        99
+      ],
+      "changedValueIndex": 4,
+      "observedValue": 99,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    },
+    {
+      "hex": "aa550e002502010a01000300270064006400b0f0",
+      "payloadHex": "2502010a01000300270064006400",
+      "length": 14,
+      "direction": "outgoing",
+      "source": "phone-controls-btsnoop.log",
+      "source_records": [
+        1308
+      ],
+      "log_source": "phone-controls-roundtrip-logcat.txt",
+      "log_line_number": 578,
+      "phone_log_time": "10:12:51.592",
+      "crc16_gsm_valid": true,
+      "experiment": "808 Vol",
+      "position": 2,
+      "typeCode": 1,
+      "valueByteCount": 10,
+      "observedValues": [
+        1,
+        3,
+        39,
+        100,
+        100
+      ],
+      "changedValueIndex": 4,
+      "observedValue": 100,
+      "interpretationBasis": "single-control screenshot sequence plus chronological log/HCI occurrence; identical restoration bytes distinguished by occurrence"
+    }
+  ],
+  "responseCandidate": {
+    "hex": "aa5502002601aef6",
+    "payloadHex": "2601",
+    "source_records": [
+      1218,
+      1224,
+      1226,
+      1234,
+      1240,
+      1242,
+      1246,
+      1310,
+      1312
+    ],
+    "crc16_gsm_valid": true,
+    "semantics": "unproven acknowledgement candidate; no success-code assumption or guaranteed pairing"
+  },
+  "screenshots": [
+    {
+      "file": "phone-controls-connected.png",
+      "sha256": "720d95d6c299385973373e4dd6de286bf7ebf850a574f5d0b4de2f5076d88d01",
+      "model": "Noise Killer",
+      "observedLabels": {
+        "Threshold": 25,
+        "Level": 50
+      },
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-level-changed.png",
+      "sha256": "60a0af5686e94d17aac5cc57754fb436be2baf0e0b44fdb835c6e192a510f9a7",
+      "model": "Noise Killer",
+      "observedLabels": {
+        "Threshold": 25,
+        "Level": 47
+      },
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-level-restored.png",
+      "sha256": "0896c08918215003d496ddeb6c9443774c54065cf270aae70134f25653ce6a92",
+      "model": "Noise Killer",
+      "observedLabels": {
+        "Threshold": 25,
+        "Level": 50
+      },
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-gain-before.png",
+      "sha256": "6aa7a6ca25cde28775a152a3f72055bcb10a3392ea3ab9e7ebdb2c6406d4b898",
+      "model": "808",
+      "observedLabels": {
+        "Gain": 39,
+        "Tone": 100,
+        "Vol": 100
+      },
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-gain-changed.png",
+      "sha256": "77069857a5f8e7edbd2affd80c50c286ff20e73dd8bf5bf8732d42657b3f426c",
+      "model": "808",
+      "observedLabels": {
+        "Gain": 36,
+        "Tone": 100,
+        "Vol": 100
+      },
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-gain-restored.png",
+      "sha256": "77ce4b7ef05f5f04b9a09d9adef383fb569190d8956d0f2b5fcc6a37f19a836f",
+      "model": "808",
+      "observedLabels": {
+        "Gain": 39,
+        "Tone": 100,
+        "Vol": 100
+      },
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-volume-changed.png",
+      "sha256": "c27ae148bc490a9927f996b1b3efda5467fc3ec4ee15ce56a60a598555bb0b67",
+      "model": "808",
+      "observedLabels": {
+        "Gain": 39,
+        "Tone": 100,
+        "Vol": 97
+      },
+      "visuallyInspected": true
+    },
+    {
+      "file": "phone-volume-restored.png",
+      "sha256": "dbbeb465171a0d8f1da641cf7f495d86355f78f4a204562d1e962c8a31acecb1",
+      "model": "808",
+      "observedLabels": {
+        "Gain": 39,
+        "Tone": 100,
+        "Vol": 100
+      },
+      "visuallyInspected": true
+    }
+  ],
+  "controlledMappings": [
+    {
+      "effect": "Noise Killer",
+      "typeCode": 4,
+      "modelValue": 2,
+      "position": 1,
+      "label": "Level",
+      "valueIndex": 3,
+      "observedWireValues": [
+        47,
+        49,
+        50
+      ],
+      "proposedExperimentRange": [
+        47,
+        50
+      ],
+      "phoneControlledMappingVerified": true,
+      "windowsWriteVerified": true,
+      "desktopUiWriteVerified": true,
+      "fullRangeVerified": false,
+      "windowsApiObservedValues": [
+        48,
+        50
+      ],
+      "allObservedNearbyValues": [
+        47,
+        48,
+        49,
+        50
+      ]
+    },
+    {
+      "effect": "808",
+      "typeCode": 1,
+      "modelValue": 3,
+      "position": 2,
+      "label": "Gain",
+      "valueIndex": 2,
+      "observedWireValues": [
+        36,
+        38,
+        39
+      ],
+      "proposedExperimentRange": [
+        36,
+        39
+      ],
+      "phoneControlledMappingVerified": true,
+      "windowsWriteVerified": true,
+      "desktopUiWriteVerified": true,
+      "fullRangeVerified": false,
+      "windowsApiObservedValues": [
+        37,
+        39
+      ],
+      "allObservedNearbyValues": [
+        36,
+        37,
+        38,
+        39
+      ]
+    },
+    {
+      "effect": "808",
+      "typeCode": 1,
+      "modelValue": 3,
+      "position": 2,
+      "label": "Vol",
+      "valueIndex": 4,
+      "observedWireValues": [
+        97,
+        99,
+        100
+      ],
+      "proposedExperimentRange": [
+        97,
+        100
+      ],
+      "phoneControlledMappingVerified": true,
+      "windowsWriteVerified": true,
+      "desktopUiWriteVerified": true,
+      "fullRangeVerified": false,
+      "windowsApiObservedValues": [
+        98,
+        100
+      ],
+      "allObservedNearbyValues": [
+        97,
+        98,
+        99,
+        100
+      ]
+    }
+  ],
+  "restoration": {
+    "wireIndexBefore": 4,
+    "wireIndexAfter": 4,
+    "fullStateExactlyRestored": true,
+    "fullDetailExactlyRestored": true,
+    "beforeStateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+    "afterStateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+    "beforeDetailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+    "afterDetailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+  },
+  "limitations": [
+    "Gain and Vol restoration frames have identical bytes; source occurrence ordinals and log lines establish distinct chronological restores.",
+    "Three phone experiments restore their displayed values individually; only the final combined state/detail restoration has independent Windows readback.",
+    "Nearby experiment intervals are implementation restrictions, not full allowed device ranges;48/37/98 are not observed in this phone capture.",
+    "Reply2601 semantics,unknown flags,ranges,other models and save/power-cycle persistence remain unproven.",
+    "Windows API and actual desktop UI proofs are separate retained records, not additional phone HCI frame evidence."
+  ],
+  "windowsApiValidation": {
+    "source": "windows-controls-combined-roundtrip.json",
+    "sha256": "c431e05dce8cfb66e14acb9f01ab7f93c4b76b7b74ac485d43febee46d063387",
+    "reportedPassed": null,
+    "reportedFailure": null,
+    "baselineRestored": true,
+    "fullStateExactlyRestored": true,
+    "fullDetailExactlyRestored": true,
+    "saveCommandSent": false,
+    "snapshots": [
+      {
+        "sourcePath": "baseline",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "steps.0",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "39580512654467feed19aeff29ca0e2993951b1ce9b8413ed99f70ea033951a6",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 48,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "steps.1",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "d2616f8fa55fa74d1734070d910e49e1a27d1be95dd6314fb845a9a9a87a429e",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 26,
+          "level": 48,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "steps.2",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "39580512654467feed19aeff29ca0e2993951b1ce9b8413ed99f70ea033951a6",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 48,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "steps.3",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "steps.4",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "9f618f8d908b0f32f6befdea99380b3028f4f798df39a5db8680252a0c0f5bef",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 37,
+          "tone": 100,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "steps.5",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "f2a20d575fd965c5ba6c45e4b8d29d16e971f51b0407d740354e580bf192aea0",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 37,
+          "tone": 98,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "steps.6",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "fc82a2eeafc99faecf96b7fbf208212d228c64c8eaebb406a7eabba485abae0b",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 37,
+          "tone": 98,
+          "vol": 98
+        }
+      },
+      {
+        "sourcePath": "steps.7",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "1a4213c6f5134aeb8ab37bf55ef689b16386c425a3fd5a47bbe3972e67dc785f",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 39,
+          "tone": 98,
+          "vol": 98
+        }
+      },
+      {
+        "sourcePath": "steps.8",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "30d0ee27f3d44b506d38c4f9e80cae3f41de2dad76093ca8606a51314358e3d3",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 39,
+          "tone": 100,
+          "vol": 98
+        }
+      },
+      {
+        "sourcePath": "steps.9",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "restored",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      }
+    ],
+    "limits": "single captured model/preset/firmware and bounded nearby values; no full-range or persistence claim"
+  },
+  "desktopUiValidation": {
+    "source": "desktop-five-controls-hardware.roundtrip.json",
+    "sha256": "54ae20925ca0dc697f3cde078489b3046ae5540629c38707a4430ed978736974",
+    "reportedPassed": true,
+    "reportedFailure": null,
+    "baselineRestored": true,
+    "fullStateExactlyRestored": true,
+    "fullDetailExactlyRestored": true,
+    "saveCommandSent": null,
+    "snapshots": [
+      {
+        "sourcePath": "baseline",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      },
+      {
+        "sourcePath": "final",
+        "wireIndex": 4,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+        "stateByteCount": 92,
+        "detailByteCount": 160,
+        "controls": {
+          "threshold": 25,
+          "level": 50,
+          "gain": 39,
+          "tone": 100,
+          "vol": 100
+        }
+      }
+    ],
+    "limits": "single captured model/preset/firmware and bounded nearby values; no full-range or persistence claim"
+  }
+}

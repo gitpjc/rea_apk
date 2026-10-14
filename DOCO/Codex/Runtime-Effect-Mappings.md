@@ -1,8 +1,8 @@
 # Runtime effect labels and bounded field correspondences
 
-13 October 2026. Five phone screenshots were independently inspected and correlated with the retained Windows preset-4 snapshot on firmware **V1.1.9**. This label inspection performed no parameter writes, model changes or hardware operations. The capture operator reported that the baseline was unchanged while switching the selected effect view.
+Original baseline inspection: 13 October 2026. Updated 14 October 2026 with separate controlled Level/Gain/Vol evidence. Five original screenshots were independently inspected and correlated with the retained Windows preset-4 snapshot on firmware **V1.1.9**. That original label inspection performed no parameter writes or model changes. Subsequent controlled experiments are identified separately below.
 
-The phone visibly identifies the selected preset as **0D British Lead Solo**. The retained Windows snapshot identifies wire index **4**. This document preserves observed labels and unique baseline value correspondences. A subsequent controlled phone test resolves **808 Tone = Values[3]**, with evidence in [808-Tone-Editing.md](808-Tone-Editing.md); Vol remains inferred by elimination and Hall Tone remains unresolved. This is not a complete effect catalog.
+The phone visibly identifies the selected preset as **0D British Lead Solo**, wire index **4** in the Windows snapshot. Controlled phone experiments now establish **808 Gain/Tone/Vol = Values[2]/[3]/[4]** and **Noise Killer Level = Values[3]**, with restoration evidence in [Expanded-Controls.md](Expanded-Controls.md) and [808-Tone-Editing.md](808-Tone-Editing.md). Hall Tone remains unresolved. This is not a complete effect catalog.
 
 ## Evidence and confidence
 
@@ -26,11 +26,15 @@ Source: `analysis/private/phone-od-baseline.png`. The screenshot displays model 
 
 | Label | Displayed value | Supported correspondence | Confidence |
 | --- | --- | --- | --- |
-| Gain | 39 | Values[2] = 39 | Unique baseline value; inferred, not controlled |
+| Gain | 39 at baseline; 36 during controlled test | Values[2] | Controlled phone change; [Expanded-Controls.md](Expanded-Controls.md) |
 | Tone | 100 at baseline; 97 during later controlled test | Values[3] | Controlled phone change; [808-Tone-Editing.md](808-Tone-Editing.md) |
-| Vol | 100 | Values[4] | Inferred by elimination after resolving Tone; not independently varied |
+| Vol | 100 at baseline; 97 during controlled test | Values[4] | Now independently controlled on the phone; [Expanded-Controls.md](Expanded-Controls.md) |
 
-The initial baseline alone could not resolve Tone versus Vol, because both were 100. The later controlled Tone capture resolves Values[3]; Vol's remaining Values[4] association is inference by elimination. No Vol write has been independently controlled. Values[0] is unlabeled; no enabled-state meaning is established.
+The initial baseline could not resolve Tone versus Vol because both were 100. The later Tone capture resolved Values[3], and the 14 October Vol capture independently validates Values[4]. Gain's earlier baseline inference is also now controlled. Separate Windows API and desktop-handler tests now validate the bounded Gain/Tone/Vol edits, including combined dirty-state changes and full baseline restoration; details are in [Expanded-Controls.md](Expanded-Controls.md). Values[0] remains unlabeled.
+
+## Dyna / Noise Killer follow-up
+
+The position-1/type-4/model-2 block `[1,2,25,50,0,0]` now has controlled phone mappings for Threshold **Values[2]** and Level **Values[3]**. Level **50 → 47 → 50** preserves Threshold 25 and the remaining fields. [Expanded-Controls.md](Expanded-Controls.md) retains exact occurrences and independent final restoration. Other flag/trailing-field meanings remain unknown.
 
 ## Amp / PLX 100
 
@@ -90,9 +94,10 @@ The displayed `ms` suffix belongs to Pre Delay only. Decay 35 does not establish
 - [x] Correlate the four selected models with the preserved baseline's numeric blocks.
 - [x] Retain unique baseline correspondences separately from equal-value ambiguities.
 - [x] Resolve 808 Tone through a single-parameter phone capture and complete observed restoration.
-- [ ] Independently vary 808 Vol to validate its inferred offset.
+- [x] Independently vary 808 Vol and Gain to validate their offsets, with complete observed restoration.
+- [x] Independently vary Noise Killer Level and restore baseline.
 - [ ] Resolve Hall Tone among the trailing zeros through a single-parameter capture and exact restoration.
 - [ ] Independently validate each new parameter offset, encoding, limits and restoration before enabling writes.
 - [ ] Compare additional models before generalizing any category layout.
 
-The curated fixture now marks 808 Tone `controlledChangeVerified: true` for the phone mapping, with the separate controlled fixture linked. Windows Tone writes remain unverified at this stage, and other new mappings remain baseline inferences. Scale/range limits remain unverified. These distinctions must survive future UI/catalog implementation; unknown fields and ambiguous labels remain unavailable for editing.
+808 Gain/Tone/Vol and Noise Killer Level have controlled phone mappings and separate bounded Windows/API/desktop-handler proofs, including complete baseline restoration. [Expanded-Controls.md](Expanded-Controls.md) preserves the separate provenance and nearby values; [808-Tone-Editing.md](808-Tone-Editing.md) retains the earlier Tone proof. Amp/Delay/Reverb associations remain baseline inferences, and full scales/ranges remain unverified. These distinctions must survive future catalog implementation; unknown fields and ambiguous labels remain unavailable for editing.

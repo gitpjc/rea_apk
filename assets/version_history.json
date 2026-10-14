@@ -1,0 +1,20 @@
+[
+  {
+    "version": "1.2.1",
+    "changedAt": "2026-10-14T13:09:43+11:00",
+    "summary": "Stop Windows sessions when the amplifier reports transfer-state changes.",
+    "details": "Added a defensive check for the status notifications observed during the mobile transfer-screen loop. A notification invalidates the current Windows session, stops pending operations and prevents subsequent commands in that session, even if another status notification follows. Coalesced notifications are checked before accepting a response. No write or save is automatically replayed. Read-only handoff checks through the probe and desktop app, including with USB connected, preserved every original preset and global-state byte without reproducing the loop. The original trigger remains unresolved; this guard does not claim to fix the amplifier or mobile app."
+  },
+  {
+    "version": "1.2.0",
+    "changedAt": "2026-10-14T12:15:59+11:00",
+    "summary": "Added a restricted same-slot preset save workflow.",
+    "details": "Added Save current preset with explicit overwrite confirmation for British Lead Solo at index 4 on firmware V1.1.9. Saving is limited to the original captured configuration with Noise Killer Threshold 25 or 26; all other values and the name must remain unchanged. The app checks a fresh complete snapshot, sends the observed same-slot save request once, recalls the same slot and verifies every value. The approved Windows handler test saved 26, saved original 25 back, and independently verified every original byte after recall. An interrupted or unconfirmed save disables further edits until a fresh read and is never replayed automatically. Local snapshot files cannot enable saving. A mobile transfer-screen loop was observed after testing and cleared by restarting the amplifier with USB unplugged; its cause remains under investigation. Broader saving, renaming and power-cycle persistence remain in development."
+  },
+  {
+    "version": "1.1.0",
+    "changedAt": "2026-10-14T12:02:30+11:00",
+    "summary": "Added version history and the current desktop version.",
+    "details": "Added Version History to the left navigation and displayed the current application version beneath DESKTOP COMPANION. The history page lists versions, local dates and summaries; selecting an entry opens its full details. Returning to Amplifier library preserves the current snapshot, pending inputs and scroll position. Version history is included with the published Windows application. Application build metadata and the sidebar version now use one shared semantic version."
+  }
+]

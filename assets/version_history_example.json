@@ -1,0 +1,14 @@
+[
+  {
+    "version": "1.0.1",
+    "changedAt": "2026-09-21T20:05:00+10:00",
+    "summary": "Enabled the browser preview database.",
+    "details": "Configured Drift's SQLite WebAssembly and worker assets so the web target can be used reliably for in-app visual previews. Windows and Android remain the primary application targets."
+  },
+  {
+    "version": "1.0.0",
+    "changedAt": "2026-09-21T12:00:00+10:00",
+    "summary": "Initial Web Launcher release.",
+    "details": "Added the Windows and Android website launcher, app and category management, persisted light and dark themes, Windows window-size preservation, Drift SQLite persistence, ZIP-based JSON backup and restore, web preview target, and version history."
+  }
+]

@@ -1,0 +1,642 @@
+{
+  "schema_version": 1,
+  "evidence_scope": "approved phone same-slot Threshold26 save and recall retention, restorative Threshold25 save, final guarded Windows recall and fresh original verification",
+  "firmware": "V1.1.9",
+  "wireIndex": 4,
+  "unchangedName": "British Lead Solo",
+  "sources": {
+    "persistence-baseline.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    },
+    "persistence-live26.json": {
+      "sha256": "28808b24fa05a8ba4e62cbc615439f8730d0456bc8f20f9e495e1408a5b5da29"
+    },
+    "persistence-after-save26.json": {
+      "sha256": "ea9184108e34daed200783bb02b8a67787b3a849e990a8681b974240e156a031"
+    },
+    "persistence-recalled26.json": {
+      "sha256": "ea9184108e34daed200783bb02b8a67787b3a849e990a8681b974240e156a031"
+    },
+    "persistence-restored25-live.json": {
+      "sha256": "e941d7ab38acfa3db9d253879035e6bcbd9a5316a55803242033bcfed07c77a3"
+    },
+    "persistence-after-save25.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    },
+    "persistence-final-original.json": {
+      "sha256": "a93f4bf58d7f7c50ad88d8d23ff69fce48620b62eda577de8606603141524110"
+    },
+    "persistence-final-recall25.json": {
+      "sha256": "5fbbfe445e3f0fb6e9b9d0b44533161d5cb8be6e842a895585774c3903a88ba0"
+    },
+    "persistence-save26-logcat.txt": {
+      "sha256": "6a5d849e65b49c0a30da36fdc0291236c0770dc17556fc07f8ce49492baa9651"
+    },
+    "persistence-save26-bluetooth.txt": {
+      "sha256": "4975ac0fe0373a5aedd244324361b6aae8b31289b722779ee4e570feadd1d896"
+    },
+    "persistence-save26-btsnoop.log": {
+      "sha256": "cd2333f8c91c84bf255c60f7f3e73ffff00866340487f33c63737e7ec7a5dee4"
+    },
+    "persistence-recall26-logcat.txt": {
+      "sha256": "3463d2730b9d5c812051eaa7702515db05712fd7ec33cf5959d36d1b68f2c090"
+    },
+    "persistence-restore25-logcat.txt": {
+      "sha256": "fc10c30d58b6562d981afac436a0f3e2cbac98aac1f26924d2b9d402339f0ea6"
+    },
+    "persistence-restore25-bluetooth.txt": {
+      "sha256": "9e6939ddaa6fb049e6b6ee0a3374f0e3316e94d4247960572cb2e0f1cad3c458"
+    },
+    "persistence-restore25-btsnoop.log": {
+      "sha256": "681fd3f30554102cc071081a36abde217e9d158efac2c4f80056f9435e723667"
+    }
+  },
+  "captureSummaries": [
+    {
+      "stage": "save26",
+      "records": 4192,
+      "targetAttPdus": 951,
+      "applicationFrames": 243,
+      "crcValidFrames": 243,
+      "coverage": "rolling retained history; focused stage sequences must not be counted as distinct saves by byte deduplication"
+    },
+    {
+      "stage": "restore25",
+      "records": 5820,
+      "targetAttPdus": 1341,
+      "applicationFrames": 344,
+      "crcValidFrames": 344,
+      "coverage": "rolling retained history; focused stage sequences must not be counted as distinct saves by byte deduplication"
+    }
+  ],
+  "checksum": {
+    "model": "CRC-16/GSM",
+    "coverage": "length bytes and payload",
+    "trailerEndian": "big"
+  },
+  "saveStages": [
+    {
+      "thresholdAtSave": 26,
+      "appPid": 27217,
+      "logSource": "persistence-save26-logcat.txt",
+      "captureSource": "persistence-save26-btsnoop.log",
+      "connectionEvent": 3778,
+      "orderDefinition": "logical save sequence; records retain all contributing HCI fragments including interleaving",
+      "sequence": [
+        {
+          "direction": "outgoing",
+          "source": "persistence-save26-btsnoop.log",
+          "records": [
+            4172
+          ],
+          "opcode": "2f",
+          "payloadBytes": 22,
+          "crc16_gsm_valid": true,
+          "hex": "aa5516002f0442726974697368204c65616420536f6c6f0000008bd8",
+          "payloadHex": "2f0442726974697368204c65616420536f6c6f000000",
+          "logOccurrences": [
+            {
+              "hex": "aa5516002f0442726974697368204c65616420536f6c6f0000008bd8",
+              "line": 558,
+              "phoneTime": "11:04:52.041"
+            }
+          ]
+        },
+        {
+          "direction": "incoming",
+          "source": "persistence-save26-btsnoop.log",
+          "records": [
+            4175
+          ],
+          "opcode": "30",
+          "payloadBytes": 2,
+          "crc16_gsm_valid": true,
+          "hex": "aa55020030010723",
+          "payloadHex": "3001"
+        },
+        {
+          "direction": "outgoing",
+          "source": "persistence-save26-btsnoop.log",
+          "records": [
+            4176
+          ],
+          "opcode": "13",
+          "payloadBytes": 92,
+          "crc16_gsm_valid": true,
+          "hex": "aa555c001304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c01004600140001001800180018000100280032003200190100010001011400640000000148000121eb",
+          "payloadHex": "1304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c010046001400010018001800180001002800320032001901000100010114006400000001480001",
+          "logOccurrences": [
+            {
+              "hex": "aa555c001304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c01004600140001001800180018000100280032003200190100010001011400640000000148000121eb",
+              "line": 564,
+              "phoneTime": "11:04:52.251"
+            }
+          ]
+        },
+        {
+          "direction": "outgoing",
+          "source": "persistence-save26-btsnoop.log",
+          "records": [
+            4179
+          ],
+          "opcode": "21",
+          "payloadBytes": 2,
+          "crc16_gsm_valid": true,
+          "hex": "aa550200210467c4",
+          "payloadHex": "2104",
+          "logOccurrences": [
+            {
+              "hex": "aa550200210467c4",
+              "line": 565,
+              "phoneTime": "11:04:52.341"
+            }
+          ]
+        },
+        {
+          "direction": "incoming",
+          "source": "persistence-save26-btsnoop.log",
+          "records": [
+            4181
+          ],
+          "opcode": "14",
+          "payloadBytes": 2,
+          "crc16_gsm_valid": true,
+          "hex": "aa5502001401cd01",
+          "payloadHex": "1401"
+        },
+        {
+          "direction": "incoming",
+          "source": "persistence-save26-btsnoop.log",
+          "records": [
+            4183,
+            4186,
+            4188
+          ],
+          "opcode": "22",
+          "payloadBytes": 160,
+          "crc16_gsm_valid": true,
+          "payloadPrefixHex": "2204",
+          "payloadSha256": "6d343ac67a0e9175632d00bbc4a89cf3342c170d32d4965e6367f0e9635a259c",
+          "frameSha256": "dbaf9eb19ea107b8fc9626ccffa2e8ba105dbb7580279d65f230c17d593b3a3e",
+          "rawPrivatePresetOmitted": true,
+          "observedThreshold": 26
+        }
+      ],
+      "saveEnvelopeEqualsUnchangedReference": true,
+      "responseMeaning": "3001 observed before same-slot refresh; byte01 success/error and durable-storage semantics unproven"
+    },
+    {
+      "thresholdAtSave": 25,
+      "appPid": 31559,
+      "logSource": "persistence-restore25-logcat.txt",
+      "captureSource": "persistence-restore25-btsnoop.log",
+      "connectionEvent": 5465,
+      "orderDefinition": "logical save sequence; records retain all contributing HCI fragments including interleaving",
+      "sequence": [
+        {
+          "direction": "outgoing",
+          "source": "persistence-restore25-btsnoop.log",
+          "records": [
+            5749
+          ],
+          "opcode": "2f",
+          "payloadBytes": 22,
+          "crc16_gsm_valid": true,
+          "hex": "aa5516002f0442726974697368204c65616420536f6c6f0000008bd8",
+          "payloadHex": "2f0442726974697368204c65616420536f6c6f000000",
+          "logOccurrences": [
+            {
+              "hex": "aa5516002f0442726974697368204c65616420536f6c6f0000008bd8",
+              "line": 555,
+              "phoneTime": "11:59:55.762"
+            }
+          ]
+        },
+        {
+          "direction": "incoming",
+          "source": "persistence-restore25-btsnoop.log",
+          "records": [
+            5752
+          ],
+          "opcode": "30",
+          "payloadBytes": 2,
+          "crc16_gsm_valid": true,
+          "hex": "aa55020030010723",
+          "payloadHex": "3001"
+        },
+        {
+          "direction": "outgoing",
+          "source": "persistence-restore25-btsnoop.log",
+          "records": [
+            5753
+          ],
+          "opcode": "13",
+          "payloadBytes": 92,
+          "crc16_gsm_valid": true,
+          "hex": "aa555c001304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c01004600140001001800180018000100280032003200190100010001011400640000000148000121eb",
+          "payloadHex": "1304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c010046001400010018001800180001002800320032001901000100010114006400000001480001",
+          "logOccurrences": [
+            {
+              "hex": "aa555c001304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c01004600140001001800180018000100280032003200190100010001011400640000000148000121eb",
+              "line": 561,
+              "phoneTime": "11:59:56.002"
+            }
+          ]
+        },
+        {
+          "direction": "incoming",
+          "source": "persistence-restore25-btsnoop.log",
+          "records": [
+            5756
+          ],
+          "opcode": "14",
+          "payloadBytes": 2,
+          "crc16_gsm_valid": true,
+          "hex": "aa5502001401cd01",
+          "payloadHex": "1401"
+        },
+        {
+          "direction": "outgoing",
+          "source": "persistence-restore25-btsnoop.log",
+          "records": [
+            5757
+          ],
+          "opcode": "21",
+          "payloadBytes": 2,
+          "crc16_gsm_valid": true,
+          "hex": "aa550200210467c4",
+          "payloadHex": "2104",
+          "logOccurrences": [
+            {
+              "hex": "aa550200210467c4",
+              "line": 562,
+              "phoneTime": "11:59:56.092"
+            }
+          ]
+        },
+        {
+          "direction": "incoming",
+          "source": "persistence-restore25-btsnoop.log",
+          "records": [
+            5760,
+            5761,
+            5762
+          ],
+          "opcode": "22",
+          "payloadBytes": 160,
+          "crc16_gsm_valid": true,
+          "payloadPrefixHex": "2204",
+          "payloadSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+          "frameSha256": "81116b7cdc432a69dcfc2326420bb0535474ff24b4742790e3aae612fde7f452",
+          "rawPrivatePresetOmitted": true,
+          "observedThreshold": 25
+        }
+      ],
+      "saveEnvelopeEqualsUnchangedReference": true,
+      "responseMeaning": "3001 observed before same-slot refresh; byte01 success/error and durable-storage semantics unproven"
+    }
+  ],
+  "phoneEditedRecall": {
+    "appPid": 27500,
+    "connectionEvent": 4219,
+    "logSource": "persistence-recall26-logcat.txt",
+    "sequence": [
+      {
+        "targetWireIndex": 5,
+        "sequence": [
+          {
+            "direction": "outgoing",
+            "source": "persistence-restore25-btsnoop.log",
+            "records": [
+              4563
+            ],
+            "opcode": "13",
+            "payloadBytes": 92,
+            "crc16_gsm_valid": true,
+            "hex": "aa555c001305001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c0100460014000100180018001800010028003200320019010001000101140064000000014800010a51",
+            "payloadHex": "1305001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c010046001400010018001800180001002800320032001901000100010114006400000001480001",
+            "logOccurrences": [
+              {
+                "hex": "aa555c001305001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c0100460014000100180018001800010028003200320019010001000101140064000000014800010a51",
+                "line": 560,
+                "phoneTime": "11:06:57.411"
+              }
+            ]
+          },
+          {
+            "direction": "incoming",
+            "source": "persistence-restore25-btsnoop.log",
+            "records": [
+              4566
+            ],
+            "opcode": "14",
+            "payloadBytes": 2,
+            "crc16_gsm_valid": true,
+            "hex": "aa5502001401cd01",
+            "payloadHex": "1401"
+          },
+          {
+            "direction": "outgoing",
+            "source": "persistence-restore25-btsnoop.log",
+            "records": [
+              4567
+            ],
+            "opcode": "21",
+            "payloadBytes": 2,
+            "crc16_gsm_valid": true,
+            "hex": "aa550200210577e5",
+            "payloadHex": "2105",
+            "logOccurrences": [
+              {
+                "hex": "aa550200210577e5",
+                "line": 561,
+                "phoneTime": "11:06:57.501"
+              }
+            ]
+          },
+          {
+            "direction": "incoming",
+            "source": "persistence-restore25-btsnoop.log",
+            "records": [
+              4570,
+              4571,
+              4572
+            ],
+            "opcode": "22",
+            "payloadBytes": 144,
+            "crc16_gsm_valid": true,
+            "payloadPrefixHex": "2205",
+            "payloadSha256": "56b8474e5064a7d6f20635a13fb5e725ed2d7f5e613b5ea88ab52ea496474714",
+            "frameSha256": "98b4ffe9a63f044ef89821e83e18053947e6f5d49dac1b7c2dd880ec065d4c14",
+            "rawPrivatePresetOmitted": true
+          }
+        ]
+      },
+      {
+        "targetWireIndex": 4,
+        "sequence": [
+          {
+            "direction": "outgoing",
+            "source": "persistence-restore25-btsnoop.log",
+            "records": [
+              4635
+            ],
+            "opcode": "13",
+            "payloadBytes": 92,
+            "crc16_gsm_valid": true,
+            "hex": "aa555c001304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c01004600140001001800180018000100280032003200190100010001011400640000000148000121eb",
+            "payloadHex": "1304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c010046001400010018001800180001002800320032001901000100010114006400000001480001",
+            "logOccurrences": [
+              {
+                "hex": "aa555c001304001818181809ff463135694631356900000000000000000000000000480048004800014848003c6400000a01003c0100ff003c01004600140001001800180018000100280032003200190100010001011400640000000148000121eb",
+                "line": 663,
+                "phoneTime": "11:07:59.781"
+              }
+            ]
+          },
+          {
+            "direction": "outgoing",
+            "source": "persistence-restore25-btsnoop.log",
+            "records": [
+              4638
+            ],
+            "opcode": "21",
+            "payloadBytes": 2,
+            "crc16_gsm_valid": true,
+            "hex": "aa550200210467c4",
+            "payloadHex": "2104",
+            "logOccurrences": [
+              {
+                "hex": "aa550200210467c4",
+                "line": 664,
+                "phoneTime": "11:07:59.872"
+              }
+            ]
+          },
+          {
+            "direction": "incoming",
+            "source": "persistence-restore25-btsnoop.log",
+            "records": [
+              4640
+            ],
+            "opcode": "14",
+            "payloadBytes": 2,
+            "crc16_gsm_valid": true,
+            "hex": "aa5502001401cd01",
+            "payloadHex": "1401"
+          },
+          {
+            "direction": "incoming",
+            "source": "persistence-restore25-btsnoop.log",
+            "records": [
+              4642,
+              4643,
+              4644
+            ],
+            "opcode": "22",
+            "payloadBytes": 160,
+            "crc16_gsm_valid": true,
+            "payloadPrefixHex": "2204",
+            "payloadSha256": "6d343ac67a0e9175632d00bbc4a89cf3342c170d32d4965e6367f0e9635a259c",
+            "frameSha256": "dbaf9eb19ea107b8fc9626ccffa2e8ba105dbb7580279d65f230c17d593b3a3e",
+            "rawPrivatePresetOmitted": true,
+            "observedThreshold": 26
+          }
+        ]
+      }
+    ],
+    "returnedThreshold": 26,
+    "returnedDetailExactlyMatchesEditedSnapshot": true
+  },
+  "windowsReadbacks": [
+    {
+      "source": "persistence-baseline.json",
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "blockCount": 20,
+      "threshold": 25,
+      "level": 50,
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "stateBytes": 92,
+      "detailBytes": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+      "stateExactlyOriginal": true,
+      "detailExactlyOriginal": true,
+      "detailExactlyEdited26": false
+    },
+    {
+      "source": "persistence-live26.json",
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "blockCount": 20,
+      "threshold": 26,
+      "level": 50,
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "stateBytes": 92,
+      "detailBytes": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "6d343ac67a0e9175632d00bbc4a89cf3342c170d32d4965e6367f0e9635a259c",
+      "stateExactlyOriginal": true,
+      "detailExactlyOriginal": false,
+      "detailExactlyEdited26": true
+    },
+    {
+      "source": "persistence-after-save26.json",
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "blockCount": 20,
+      "threshold": 26,
+      "level": 50,
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "stateBytes": 92,
+      "detailBytes": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "6d343ac67a0e9175632d00bbc4a89cf3342c170d32d4965e6367f0e9635a259c",
+      "stateExactlyOriginal": true,
+      "detailExactlyOriginal": false,
+      "detailExactlyEdited26": true
+    },
+    {
+      "source": "persistence-recalled26.json",
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "blockCount": 20,
+      "threshold": 26,
+      "level": 50,
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "stateBytes": 92,
+      "detailBytes": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "6d343ac67a0e9175632d00bbc4a89cf3342c170d32d4965e6367f0e9635a259c",
+      "stateExactlyOriginal": true,
+      "detailExactlyOriginal": false,
+      "detailExactlyEdited26": true
+    },
+    {
+      "source": "persistence-restored25-live.json",
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "blockCount": 20,
+      "threshold": 25,
+      "level": 50,
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "stateBytes": 92,
+      "detailBytes": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+      "stateExactlyOriginal": true,
+      "detailExactlyOriginal": true,
+      "detailExactlyEdited26": false
+    },
+    {
+      "source": "persistence-after-save25.json",
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "blockCount": 20,
+      "threshold": 25,
+      "level": 50,
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "stateBytes": 92,
+      "detailBytes": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+      "stateExactlyOriginal": true,
+      "detailExactlyOriginal": true,
+      "detailExactlyEdited26": false
+    },
+    {
+      "source": "persistence-final-original.json",
+      "firmware": "V1.1.9",
+      "wireIndex": 4,
+      "blockCount": 20,
+      "threshold": 25,
+      "level": 50,
+      "gain": 39,
+      "tone": 100,
+      "vol": 100,
+      "stateBytes": 92,
+      "detailBytes": 160,
+      "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+      "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce",
+      "stateExactlyOriginal": true,
+      "detailExactlyOriginal": true,
+      "detailExactlyEdited26": false
+    }
+  ],
+  "finalOriginalRecall": {
+    "source": "persistence-final-recall25.json",
+    "method": "existing guarded Windows 4->5->4 selection, after exact original profile restored; not the proposed phone recall",
+    "proposalDeviation": "Proposed step6 specified phone5->4; actual final original-value check used existing Windows selection-roundtrip without loosening its exact-original-profile guard.",
+    "stages": [
+      {
+        "stage": "baseline",
+        "wireIndex": 4,
+        "blockCount": 20,
+        "threshold": 25,
+        "level": 50,
+        "gain": 39,
+        "tone": 100,
+        "vol": 100,
+        "stateBytes": 92,
+        "detailBytes": 160,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+      },
+      {
+        "stage": "changed",
+        "wireIndex": 5,
+        "blockCount": 20,
+        "threshold": null,
+        "level": null,
+        "gain": null,
+        "tone": null,
+        "vol": null,
+        "stateBytes": 92,
+        "detailBytes": 144,
+        "stateSha256": "45df78d98026bc3422a28f13d58c80708cc9c2a9968b6d4738be74c4b0a92a00",
+        "detailSha256": "56b8474e5064a7d6f20635a13fb5e725ed2d7f5e613b5ea88ab52ea496474714"
+      },
+      {
+        "stage": "restored",
+        "wireIndex": 4,
+        "blockCount": 20,
+        "threshold": 25,
+        "level": 50,
+        "gain": 39,
+        "tone": 100,
+        "vol": 100,
+        "stateBytes": 92,
+        "detailBytes": 160,
+        "stateSha256": "bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5",
+        "detailSha256": "644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce"
+      }
+    ],
+    "baselineRestoredReported": true,
+    "windowsSaveSent": false,
+    "restoredFullStateExactlyOriginal": true,
+    "restoredFullDetailExactlyOriginal": true
+  },
+  "editedSnapshotChangedDetailOffsets": [
+    29
+  ],
+  "limitations": [
+    "Observed edited26 survives phone5->4 recall after phone save; this establishes bounded recall retention, not power-cycle durability.",
+    "Save26 and restorative save25 requests are identical slot/name envelopes; threshold comes from separate prior live state and subsequent detail/readback.",
+    "Response3001 cannot alone establish success,error enumeration,flash completion or persistence semantics.",
+    "No unsaved-recall negative control establishes whether2F is necessary versus retained live state; no causal durability claim.",
+    "Other-slot saving,renaming,other models/parameters,fullranges,powercycles,error/retry semantics and Windows save transport/UI remain untested."
+  ]
+}
