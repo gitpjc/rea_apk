@@ -52,7 +52,7 @@ I want to have these sounds:
 
 ## TODO
 
-Add add another filter so that I can search for Presets that are using a specific effect. I want that filter to be a dropdown that has a list of all the effects available in the iAMP app that I can choose from.
+Add another filter so that I can search for Presets that are using a specific effect. I want that filter to be a dropdown that has a list of all the effects available in the iAMP app that I can choose from.
 Do you understand what I want?
 
 **DONE**    
