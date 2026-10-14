@@ -1,0 +1,19 @@
+# Physical power-off and reconnect check
+
+14 October 2026; version 1.5.3, F15i Li firmware V1.1.9. The user approved the read-only power-off/reconnect test, disconnected phone iAMP and closed MOOER Studio.
+
+The new explicit DeviceProbe command `read-disconnect-check ADDRESS NEW-BASELINE.json` records a full identity/current-preset baseline, then sends identity queries at two-second intervals until the first failure or a 90-second overall deadline. It does not retry after failure. A passing result requires a real Windows Disconnected callback and a subsequent API call blocked without another transport command. The final helper validates the exact original stock profile before announcing readiness; its use of the save-command factory is offline validation only and the returned bytes are never transmitted. Existing baseline files are refused.
+
+The first physical power-off ended the probe with ObjectDisposedException while unwinding the disconnected session. This was a failed test, not a successful cleanup result. After the user's first restart, a fresh complete read matched every original state/detail byte. No restoration write was needed.
+
+`SessionCleanup` now tolerates expected already-closed native resources and unsubscribe failures, always attempts both service/device releases and still propagates unexpected errors. Teardown unsubscribing is bounded to three seconds; late task failures are observed. The transport ignores notification callbacks after disposal and tolerates a closed connection-status object. Five offline cases cover disposed/cancelled unsubscribe, already-closed resources and unexpected failures without skipping releases.
+
+After the fix, the user repeated power-off. Windows reported a physical disconnect, the probe received IOException, cleanup returned normally, and a follow-up identity request was blocked. Started command count remained **23 → 23**, proving no additional transport request for that follow-up. All recorded command categories were read-only, and zero transfer-status events occurred. The probe returned passed=true.
+
+After the user's second restart, the actual desktop Read handler completed six read-only commands in a new session. Its exported snapshot and another fresh DeviceProbe read matched the complete pre-test baseline: original index **4 / British Lead Solo**, Threshold **25**, Level **50**, and all other state/detail fields. State/detail SHA-256 remain `bc565805361362423342fdd441fac9fdb6b2cdb1b2b55f9617a30fa7f12ed5c5` / `644dee6d3ad07f3e5c2f6ed7670e37220b28d71892b2605763c820b5e19c30ce`. No parameter updates, preset recall/save or phone setting changes were performed. Windows connections were closed and the user was told phone iAMP could reconnect.
+
+Private evidence: `analysis/private/version-153-before.json`, initial `version-153-disconnect.json` (error, failed attempt), `version-153-repeat-before.json`, `version-153-repeat-disconnect.json` (passed), `version-153-reconnected.png` with adjacent diagnostics/snapshot, `version-153-final.json` and `version-153-verification.json` (passed). The initial and repeat baselines also match completely.
+
+Final software checks passed: 129 .NET/five Node tests, zero build warnings/errors, source/package history checks and offline history/snapshot/comparison/diagnostics regressions. The physical closed-object cleanup path and reconnect were exercised before adding the final cancelled-native-operation case; that additional variant has offline coverage, not a separate hardware injection. The final package is published to the usual folder with binary/history comparisons.
+
+Remaining scope: global Windows Bluetooth toggle, sleep/resume, other physical failures, interrupted mutation/save recovery and the original mobile transfer-screen cause remain open. No new mobile handoff observation was requested for this version. Passing this power-loss case does not complete P3.5 or justify expanding persistent writes.

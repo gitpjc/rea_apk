@@ -20,6 +20,10 @@ This is some documentation about this Mobile application
 [What you can analyze](https://github.com/morluto/rea#what-you-can-analyze)    
 [Static Android APK analysis](https://github.com/morluto/rea/blob/main/docs/android-analysis.md)
 
+## Security Issue
+
+- Codex may take screenshots of its own application window including the preview browser.  
+- Codex must never take screenshots of my computer screen or any other windows (besides the Codex application window) without my explicit permission.   
 
 ## Command usage
 

@@ -86,8 +86,8 @@ public sealed partial class MainWindow
             await ApplyToneAsync();RequireUiTone(98);
             await ApplyAdditionalUiValueAsync(volumeEditor,98);
             RequireUiMutation(4,26);RequireUiTone(98);
-            if(EditableNoiseKiller()?.Values[3]!=48 || Editable808Tone()?.Values[2]!=37 || Editable808Tone()?.Values[4]!=98 || !liveEditUnsaved || selectPreset.IsEnabled)
-                throw new InvalidOperationException("Combined changed values or dirty-state selection gate were not preserved.");
+            if(EditableNoiseKiller()?.Values[3]!=48 || Editable808Tone()?.Values[2]!=37 || Editable808Tone()?.Values[4]!=98 || !liveEditUnsaved || !selectionMessage.Text.Contains("confirmation",StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Combined changed values or dirty-state recall confirmation were not preserved.");
             SelectEffect(effectButtons.Single(item=>item.Effect.Source.Position==1).Effect);
             thresholdInput.Text="25";
             if(!applyThreshold.IsEnabled)throw new InvalidOperationException("Threshold Apply is disabled during combined restoration.");
@@ -142,7 +142,7 @@ public sealed partial class MainWindow
                     RequireExactBaseline(verified,baseline);
                     baselineRestored=true;currentSnapshot=verified;originalSnapshotDetail=baseline.RawDetailPayloadHex;
                     liveEditUnsaved=false;editSnapshotValid=true;snapshotTime=DateTimeOffset.Now;
-                    currentPreset.Text=$"Index {verified.WireIndex} · {verified.Name}";SetEffects(verified.Blocks);
+                    currentPreset.Text=$"{verified.SlotLabel} · {verified.Name}";SetEffects(verified.Blocks);
                 }
                 catch(Exception cleanupError) {
                     editSnapshotValid=false;

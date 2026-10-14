@@ -11,6 +11,22 @@ internal static class Program
     public static int Main(string[] args)
     {
         var app = new Application();
+        if(args.Length==3 && args[0] is "--preset-browser-check" or "--connection-sync-check" or "--scan-connect-check") {
+            app.ShutdownMode=ShutdownMode.OnExplicitShutdown;
+            var browserWindow=new MainWindow();
+            _=app.Dispatcher.InvokeAsync(async()=> {
+                var code=0;
+                try {
+                    if(args[0]=="--preset-browser-check")await browserWindow.RunPresetBrowserCheckAsync(args[1],args[2]);
+                    else if(args[0]=="--connection-sync-check")await browserWindow.RunConnectionSyncCheckAsync(args[1],args[2]);
+                    else await browserWindow.RunScanConnectCheckAsync(args[1],args[2]);
+                    RenderPreview(browserWindow,args[2]);
+                }
+                catch(Exception ex){Console.Error.WriteLine(ex);code=2;}
+                finally {await browserWindow.ReleasePreviewConnectionAsync();browserWindow.Close();app.Shutdown(code);}
+            });
+            return app.Run();
+        }
         if(args.Length==2 && args[0]=="--layout-preview") {
             try {
                 foreach(var (width,height) in new[]{(1366,768),(911,512),(683,384),(1920,1080)}) {

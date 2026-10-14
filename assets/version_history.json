@@ -1,5 +1,35 @@
 [
   {
+    "version": "1.6.3",
+    "changedAt": "2026-10-14T19:10:00+11:00",
+    "summary": "Moved the preset dropdown into the section header.",
+    "details": "Version 1.6.3 places the compact preset dropdown on the same row as the Presets heading/count, between the heading and search. The dropdown is capped at 440 pixels. Search wraps below at smaller widths, and very narrow layouts also wrap the dropdown to keep controls usable. Focused offline checks cover header geometry at window widths 1280, 1050, 800 and 620, dropdown checkmark placement, selected-field contents, filtering, clearing and focus. The full suite was not rerun for this layout-only change. No screenshots or amplifier/phone access; Phase 6 remains excluded."
+  },
+  {
+    "version": "1.6.2",
+    "changedAt": "2026-10-14T19:00:00+11:00",
+    "summary": "Refined the preset checkmark and added search clearing.",
+    "details": "Version 1.6.2 shows the active blue checkmark only inside the open preset dropdown; the selected-item field shows bank/name without a checkmark. Search now has a right-side × button that appears only when text is present, clears the filter and returns focus to the input. Focused offline UI checks cover popup check color/position, absence of a check in the selected field while open/closed, empty/text/whitespace visibility, clearing/restoring all presets, no-match filtering and focus. The full test suite was not rerun for these isolated UI changes. No screenshots, phone or amplifier access, or Phase 6 work."
+  },
+  {
+    "version": "1.6.1",
+    "changedAt": "2026-10-14T18:40:00+11:00",
+    "summary": "Replaced the preset table with a compact dropdown.",
+    "details": "Moved Firmware, Preset Slots, GIR/GNR Slots and Drums/Looper information above Presets. Presets now use a compact dropdown with bank labels and device-reported names. A checkmark in #4385ff appears to the left of the active amplifier preset; other rows reserve the same space for alignment. Choosing a dropdown entry uses the existing guarded recall workflow and unsaved-discard confirmation. Escape cancels browsing and declined or failed recalls restore the displayed active selection. The dropdown is disabled during operations. Search remains available. No amplifier commands or parameter ranges were added, and no Phase 6 work was performed. Validation passed: 137 .NET and five Node tests, zero build warnings/errors, four responsive layout sizes, local snapshot guards, version history preservation and actual offline dropdown popup rendering. Exactly one active checkmark was verified in the left column with color #4385ff. No phone or amplifier access was performed."
+  },
+  {
+    "version": "1.6.0",
+    "changedAt": "2026-10-14T17:30:00+11:00",
+    "summary": "Added mobile-style preset banks and automatic current-preset synchronization.",
+    "details": "Presets now display amplifier labels 0A–0D through 19A–19D with their device-reported names. Scanning a single amplifier or selecting one connects and loads the library/current preset automatically. The connection remains open until Disconnect, with current-preset refresh every three seconds. Connect is disabled without a valid target. Clicking a row or pressing Enter recalls that preset with fresh-state and complete global-state readback checks. Current rows are highlighted, bank labels are searchable and pending inputs are preserved if the amplifier changes externally. Known live unsaved edits and pending input require explicit discard confirmation. Phase 6 remains excluded. See the updated implementation plan, user guide and Preset-Browser evidence document. Hardware validation on V1.1.9 passed all 79 alternative recalls with original 0D restored after each, automatic timer synchronization, pending-input protection and automatic scan/connect. Final independent readback matched every original state/detail byte. The user reconnected phone iAMP and reported a stable normal effects screen; the earlier loop cause remains unresolved. No parameters or saved presets were changed. Unsaved edits require discard confirmation with No as default. All 137 .NET and five Node tests and offline UI regressions pass. Saving remains limited to the previously supported 0D profile."
+  },
+  {
+    "version": "1.5.3",
+    "changedAt": "2026-10-14T15:10:00+11:00",
+    "summary": "Fixed Bluetooth cleanup after amplifier power-off.",
+    "details": "A real power-off test exposed an already-disposed Bluetooth object during session teardown. Cleanup now tolerates expected closed/cancelled native operations, always attempts to release both device resources and ignores callbacks after disposal. Five offline cleanup cases pass. A bounded read-only probe verifies the exact original baseline before power-off and requires a real disconnect notification. The repeat hardware test completed cleanup and blocked a subsequent request without sending another command. After restart, the desktop read and an independent read matched every original state and preset byte, including index 4 and Threshold 25. No parameter edits, preset recalls or saves were sent. Broader Bluetooth-toggle/sleep cases and the original mobile transfer-screen trigger remain unresolved. Documentation scope update: all Phase 6 advanced-function work is deferred unless explicitly instructed by the user."
+  },
+  {
     "version": "1.5.2",
     "changedAt": "2026-10-14T14:45:00+11:00",
     "summary": "Prevented interleaving of complete amplifier workflows.",

@@ -37,7 +37,9 @@ public sealed partial class MainWindow : Window
     private bool lastMutationSucceeded;
     private readonly List<(Button Button, EffectPresentation Effect)> effectButtons = new();
     private readonly TextBox search = new() { Width = 280 };
-    private readonly ListView presets = new() { Background = PanelBrush, BorderThickness = new Thickness(0), Foreground = Brushes.White };
+    private readonly Button clearSearch = Button("×");
+    private readonly ComboBox presets = new() { Background = PanelBrush, Foreground = Brushes.White, HorizontalContentAlignment = HorizontalAlignment.Stretch, MaxDropDownHeight = 360 };
+    private bool cancelPresetDropdown;
     private readonly TextBlock count = Text("0 presets", 13, MutedBrush);
     private readonly Button selectPreset = Button("Select preset on amp");
     private readonly TextBlock selectionMessage = Text("Read a supported amplifier before selecting a preset.",12,MutedBrush);
@@ -87,45 +89,80 @@ public sealed partial class MainWindow : Window
         effectDetails.Children.Add(Text("Read the amplifier to see its preset effects.",13,MutedBrush));
         page.Children.Add(new Border { Background=PanelBrush,CornerRadius=new CornerRadius(8),Padding=new Thickness(14),Margin=new Thickness(0,10,0,0),Child=effects });
         var library = new StackPanel { Margin = new Thickness(0,27,0,0) };
-        var bar = new Grid(); bar.ColumnDefinitions.Add(new ColumnDefinition()); bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
+        var bar = new Grid(); bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        bar.ColumnDefinitions.Add(new ColumnDefinition());bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
         var label = new StackPanel(); label.Children.Add(Text("Presets", 22)); label.Children.Add(count); bar.Children.Add(label);
-        var searchPanel = new StackPanel(); searchPanel.Children.Add(Text("Search names or index", 12, MutedBrush));
-        searchPanel.Children.Add(search); Grid.SetColumn(searchPanel,1); bar.Children.Add(searchPanel); library.Children.Add(bar);
+        var searchPanel = new StackPanel(); searchPanel.Children.Add(Text("Search name or preset", 12, MutedBrush));
+        var searchField = new Grid(); searchField.Children.Add(search);
+        clearSearch.Width=24;clearSearch.Height=26;clearSearch.Padding=new Thickness(0);
+        clearSearch.Margin=new Thickness(0,0,6,0);clearSearch.HorizontalAlignment=HorizontalAlignment.Right;
+        clearSearch.VerticalAlignment=VerticalAlignment.Center;clearSearch.Background=Brushes.Transparent;
+        clearSearch.Visibility=Visibility.Collapsed;clearSearch.ToolTip="Clear preset search";
+        System.Windows.Automation.AutomationProperties.SetName(clearSearch,"Clear preset search");
+        clearSearch.Click+=(_,_)=> {search.Clear();search.Focus();};searchField.Children.Add(clearSearch);
+        searchPanel.Children.Add(searchField); Grid.SetColumn(searchPanel,2); bar.Children.Add(searchPanel); library.Children.Add(bar);
         var selectionActions=new WrapPanel {Margin=new Thickness(0,12,0,0)};
         selectionActions.Children.Add(selectPreset);selectionMessage.Margin=new Thickness(12,8,0,0);selectionActions.Children.Add(selectionMessage);
         library.Children.Add(selectionActions);
-        library.Children.Add(Text("Explicit selection recalls the saved preset; unsaved changes may be discarded. Available only between the two captured configurations at indices 4 and 5 on V1.1.9, while the preset matches its original snapshot. A changed configuration disables selection. Browsing rows changes nothing.",12,MutedBrush,new Thickness(0,8,0,0)));
-        var indexTemplate = (DataTemplate)XamlReader.Parse("""
-            <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-                <TextBlock Text="{Binding WireIndex}" TextAlignment="Right" HorizontalAlignment="Stretch" Margin="0,0,20,0" />
+        library.Children.Add(Text("Choose a preset from the dropdown to recall it. Recall replaces the live preset without saving; unsaved changes may be discarded.",12,MutedBrush,new Thickness(0,8,0,0)));
+        presets.ItemTemplate = (DataTemplate)XamlReader.Parse("""
+            <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+              <Grid Margin="2,5"><Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <TextBlock x:Name="CurrentTick" Text="✓" Foreground="#4385ff" FontSize="17" FontWeight="Bold" Visibility="Hidden" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding SlotLabel}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+              </Grid>
+              <DataTemplate.Triggers><DataTrigger Binding="{Binding IsCurrent}" Value="True"><Setter TargetName="CurrentTick" Property="Visibility" Value="Visible"/></DataTrigger></DataTemplate.Triggers>
             </DataTemplate>
             """);
-        var view = new GridView(); view.Columns.Add(new GridViewColumn { Header = "INDEX", Width = 64, CellTemplate = indexTemplate });
-        view.Columns.Add(new GridViewColumn { Header = "PRESET NAME", Width = 650, DisplayMemberBinding = new Binding("Name") }); presets.View = view;
-        // GridView cell presenters inherit this alignment; otherwise a templated
-        // TextBlock is measured at its text width and cannot right-align the column.
-        var rowStyle = new Style(typeof(ListViewItem));
+        presets.Template = (ControlTemplate)XamlReader.Parse("""
+            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" TargetType="ComboBox">
+              <Grid>
+                <ToggleButton x:Name="DropdownToggle" Focusable="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press">
+                  <ToggleButton.Template><ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Surface" Background="#20242B" BorderBrush="#46505E" BorderThickness="1" CornerRadius="5" Padding="10,5">
+                      <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="24"/></Grid.ColumnDefinitions><TextBlock Grid.Column="1" Text="▾" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/></Grid>
+                    </Border>
+                    <ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="BorderBrush" Value="#4385ff"/></Trigger></ControlTemplate.Triggers>
+                  </ControlTemplate></ToggleButton.Template>
+                </ToggleButton>
+                <ContentPresenter x:Name="SelectedPresetPresenter" Margin="12,2,36,2" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                  <ContentPresenter.ContentTemplate>
+                    <DataTemplate>
+                      <Grid Margin="2,5"><Grid.ColumnDefinitions><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding SlotLabel}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                      </Grid>
+                    </DataTemplate>
+                  </ContentPresenter.ContentTemplate>
+                </ContentPresenter>
+                <Popup x:Name="PART_Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
+                  <Border Background="#20242B" BorderBrush="#46505E" BorderThickness="1" MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/></ScrollViewer>
+                  </Border>
+                </Popup>
+              </Grid>
+              <ControlTemplate.Triggers>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="DropdownToggle" Property="BorderBrush" Value="#4385ff"/></Trigger>
+                <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.55"/></Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+            """);
+        var rowStyle = new Style(typeof(ComboBoxItem));
         rowStyle.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty,HorizontalAlignment.Stretch));
-        presets.ItemContainerStyle=rowStyle;
-        presets.Height = 315; presets.Margin = new Thickness(0,16,0,0); library.Children.Add(presets);
-        var headerStyle = new Style(typeof(GridViewColumnHeader));
-        headerStyle.Setters.Add(new Setter(Control.BackgroundProperty,Brush("#2C323C")));
-        headerStyle.Setters.Add(new Setter(Control.ForegroundProperty,MutedBrush));
-        headerStyle.Setters.Add(new Setter(Control.PaddingProperty,new Thickness(10,9,10,9)));
-        headerStyle.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty,HorizontalAlignment.Left));
-        headerStyle.Setters.Add(new Setter(Control.TemplateProperty,(ControlTemplate)XamlReader.Parse("""
-            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" TargetType="GridViewColumnHeader">
-              <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
-              </Border>
+        rowStyle.Setters.Add(new Setter(Control.ForegroundProperty,Brushes.White));
+        rowStyle.Setters.Add(new Setter(Control.TemplateProperty,(ControlTemplate)XamlReader.Parse("""
+            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" TargetType="ComboBoxItem">
+              <Border x:Name="Row" Background="Transparent" Padding="10,2"><ContentPresenter HorizontalAlignment="Stretch"/></Border>
+              <ControlTemplate.Triggers><Trigger Property="IsHighlighted" Value="True"><Setter TargetName="Row" Property="Background" Value="#34485F"/></Trigger></ControlTemplate.Triggers>
             </ControlTemplate>
             """)));
-        view.ColumnHeaderContainerStyle=headerStyle;
-        var indexHeaderStyle = new Style(typeof(GridViewColumnHeader),headerStyle);
-        indexHeaderStyle.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty,HorizontalAlignment.Center));
-        indexHeaderStyle.Setters.Add(new Setter(Control.PaddingProperty,new Thickness(0,9,0,9)));
-        view.Columns[0].HeaderContainerStyle=indexHeaderStyle;
+        presets.ItemContainerStyle=rowStyle;
+        presets.MinHeight=42;presets.Width=440;presets.HorizontalAlignment=HorizontalAlignment.Left;
+        presets.VerticalAlignment=VerticalAlignment.Center;presets.Margin=new Thickness(16,0,20,0);
+        Grid.SetColumn(presets,1);bar.Children.Add(presets);
+        System.Windows.Automation.AutomationProperties.SetName(presets,"Choose amplifier preset");
         page.SizeChanged+=(_,_)=> {
             var available=Math.Max(120,page.ActualWidth);
             var compact=available<620;
@@ -134,17 +171,22 @@ public sealed partial class MainWindow : Window
             Grid.SetRow(badge,compact?1:0);Grid.SetColumn(badge,compact?0:1);Grid.SetColumnSpan(badge,compact?2:1);
             badge.HorizontalAlignment=compact?HorizontalAlignment.Left:HorizontalAlignment.Right;
             badge.Margin=new Thickness(0,compact?10:0,0,0);
-            Grid.SetRow(searchPanel,compact?1:0);Grid.SetColumn(searchPanel,compact?0:1);Grid.SetColumnSpan(searchPanel,compact?2:1);
-            searchPanel.Margin=new Thickness(0,compact?10:0,0,0);
-            searchPanel.HorizontalAlignment=compact?HorizontalAlignment.Left:HorizontalAlignment.Right;
-            view.Columns[1].Width=Math.Max(180,available-100);
+            var wrapSearch=available<760;var wrapPreset=available<420;
+            Grid.SetRow(presets,wrapPreset?1:0);Grid.SetColumn(presets,wrapPreset?0:1);Grid.SetColumnSpan(presets,wrapPreset?3:1);
+            presets.Margin=new Thickness(wrapPreset?0:16,wrapPreset?10:0,wrapSearch?0:20,0);
+            presets.Width=Math.Min(440,Math.Max(120,available-(wrapPreset?0:Math.Max(100,label.ActualWidth)+16)-(wrapSearch?0:300)));
+            Grid.SetRow(searchPanel,wrapPreset?2:wrapSearch?1:0);Grid.SetColumn(searchPanel,wrapSearch?0:2);Grid.SetColumnSpan(searchPanel,wrapSearch?3:1);
+            searchPanel.Margin=new Thickness(0,wrapSearch?10:0,0,0);
+            searchPanel.HorizontalAlignment=wrapSearch?HorizontalAlignment.Left:HorizontalAlignment.Right;
+
         };
-        library.Children.Add(Text("Preset indices are shown as reported by the amplifier.",12,MutedBrush,new Thickness(0,10,0,0)));
-        page.Children.Add(library);
-        page.Children.Add(Text("Experimental V1.1.9 support: five bounded live controls and captured preset recall. Saving is restricted to British Lead Solo at index 4 with Threshold 25 or 26 and every other value unchanged. Other-slot saving, renaming and broader editing remain unavailable.",13,MutedBrush,new Thickness(0,24,0,0)));
+        library.Children.Add(Text("Preset banks match iAMP: 0A–0D, 1A–1D … 19A–19D. A blue check on the left marks the active amplifier preset.",12,MutedBrush,new Thickness(0,10,0,0)));
+        page.Children.Insert(3,library);
+        page.Children.Add(Text("V1.1.9: preset recall across 0A–19D and five bounded live controls. Saving remains restricted to 0D British Lead Solo with Threshold 25 or 26 and every other original value unchanged. Broader saving, renaming and effect editing remain unavailable.",13,MutedBrush,new Thickness(0,24,0,0)));
         InitializeAdditionalEditors();InitializeSnapshotArchive();InitializeDiagnostics();InitializeComparison();StyleInputs(); cancel.IsEnabled=false;
+        search.Padding=new Thickness(9,7,34,7);
         scan.Click += async (_,_) => await ScanAsync(); read.Click += async (_,_) => await ReadAsync(); cancel.Click += (_,_) => operation?.Cancel();
-        search.TextChanged += (_,_) => Filter();
+        search.TextChanged += (_,_) => {clearSearch.Visibility=search.Text.Length>0?Visibility.Visible:Visibility.Collapsed;Filter();};
         thresholdInput.TextChanged += (_,_) => UpdateThresholdState();
         applyThreshold.Click += async (_,_) => await ApplyThresholdAsync();
         toneInput.TextChanged += (_,_) => UpdateToneState();
@@ -155,7 +197,20 @@ public sealed partial class MainWindow : Window
         devices.SelectionChanged += (_,_) => InvalidateEditTarget();
         System.Windows.Automation.AutomationProperties.SetName(thresholdInput,"Pending Noise Killer threshold, 25 to 28");
         System.Windows.Automation.AutomationProperties.SetName(toneInput,"Pending OD808 Tone, 97 to 100");
-        InitializeKeyboardNavigation();
+        InitializeKeyboardNavigation();InitializeConnection();
+        presets.DropDownOpened+=(_,_)=>cancelPresetDropdown=false;
+        presets.DropDownClosed+=async(_,_)=> {
+            if(!cancelPresetDropdown)await RecallDropdownSelectionAsync();
+            else ResetDropdownToCurrent();
+        };
+        presets.PreviewKeyDown+=(_,e)=> {
+            if(e.Key==System.Windows.Input.Key.Escape && presets.IsDropDownOpen)cancelPresetDropdown=true;
+        };
+        presets.KeyUp+=async(_,e)=> {
+            if(!presets.IsDropDownOpen && e.Key is System.Windows.Input.Key.Enter or System.Windows.Input.Key.Up or System.Windows.Input.Key.Down) {
+                e.Handled=true;await RecallDropdownSelectionAsync();
+            }
+        };
         Closed += (_,_) => operation?.Cancel();
         if (preview) SetDemo();
         UpdatePresetSelectionState();
@@ -181,13 +236,14 @@ public sealed partial class MainWindow : Window
     {
         var panel = new StackPanel();
         panel.Children.Add(Text("Connect your amplifier",18));
-        panel.Children.Add(Text("Turn on the amp and disconnect the iAMP phone app before reading.",13,MutedBrush,new Thickness(0,4,0,10)));
+        panel.Children.Add(Text("Turn on the amp and disconnect phone iAMP before connecting. Use one control app at a time.",13,MutedBrush,new Thickness(0,4,0,10)));
         var row = new WrapPanel(); row.Children.Add(devices); scan.Margin=new Thickness(12,0,0,0); row.Children.Add(scan); panel.Children.Add(row);
         var manual = new WrapPanel { Margin=new Thickness(0,7,0,0) }; manual.Children.Add(Text("Bluetooth address",12,MutedBrush,new Thickness(0,8,12,0)));
         manual.Children.Add(address); address.ToolTip="12 hexadecimal digits, with optional colons or hyphens";
         manual.Children.Add(Text("Optional · overrides selection",12,MutedBrush,new Thickness(12,8,0,0)));
         panel.Children.Add(new Expander {Header="Manual Bluetooth address",Foreground=MutedBrush,Margin=new Thickness(0,8,0,0),Content=manual});
         var actions = new WrapPanel { Margin=new Thickness(0,12,0,0) }; read.Background=BlueBrush; read.Foreground=Brush("#101C2B");
+        actions.Children.Add(disconnect);
         actions.Children.Add(read); cancel.Margin=new Thickness(10,0,0,0); actions.Children.Add(cancel);
         exportSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(exportSnapshot);
         openSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(openSnapshot);
@@ -213,27 +269,29 @@ public sealed partial class MainWindow : Window
         operation=new CancellationTokenSource(TimeSpan.FromSeconds(75)); scan.IsEnabled=read.IsEnabled=devices.IsEnabled=address.IsEnabled=false;
         cancel.IsEnabled=true; status.Text=message; status.Foreground=BlueBrush;
         UpdateDiagnosticsState();
-        UpdateComparisonState();
+        UpdateComparisonState();UpdateConnectionControls();
         UpdateThresholdState();
     }
     private void End()
     {
         operation?.Dispose(); operation=null; scan.IsEnabled=read.IsEnabled=devices.IsEnabled=address.IsEnabled=!preview;cancel.IsEnabled=false;
         UpdateDiagnosticsState();
-        UpdateComparisonState();
+        UpdateComparisonState();UpdateConnectionControls();
         UpdateThresholdState();
     }
     private async Task ScanAsync()
     {
         Begin("Scanning Bluetooth…");
-        try { var found=await F15DeviceDiscovery.ScanAsync(operation!.Token); devices.ItemsSource=found; if(found.Count>0)devices.SelectedIndex=0;
+        try { await ReleaseConnectionAsync();editSnapshotValid=false;var found=await F15DeviceDiscovery.ScanAsync(operation!.Token); devices.ItemsSource=found; if(found.Count>0)devices.SelectedIndex=0;
             status.Text=found.Count>0?$"Found {found.Count} amplifier(s)":"No amplifier found. Scan again or enter an address."; }
         catch(OperationCanceledException){status.Text="Scan cancelled";}
         catch(Exception ex){status.Text=$"Scan failed: {ex.Message}";}
         finally { status.Foreground=MutedBrush; End(); }
+        if(!preview && devices.Items.Count==1 && string.IsNullOrWhiteSpace(address.Text))await ReadAsync();
     }
     private async Task ReadAsync()
     {
+        if(operation is not null || preview)return;
         lastReadSucceeded=false;
         editSnapshotValid=false;UpdateThresholdState();
         var input=address.Text.Replace(":","").Replace("-","").Replace(" ","");
@@ -244,36 +302,41 @@ public sealed partial class MainWindow : Window
         else {status.Text="Select an amplifier or enter its Bluetooth address.";return;}
         Begin("Connecting…"); snapshot.Text=names.Count>0?"Previous snapshot · Reading new data…":"Reading amplifier…";
         try {
+            await ReleaseConnectionAsync();
             F15Identity identity; IReadOnlyList<PresetName> loaded; CurrentPresetSnapshot current;
-            await using(var session=await F15ReadSession.ConnectAsync(selected,operation!.Token,diagnostics)) {
+            {
+                var session=await F15ReadSession.ConnectAsync(selected,operation!.Token,diagnostics);
+                if(closing){await session.DisposeAsync();throw new OperationCanceledException();}
+                connectedSession=session;connectedAddress=selected;
                 status.Text="Reading amplifier information…"; identity=await session.ReadIdentityAsync(operation.Token);
                 status.Text="Reading preset names…"; loaded=await session.ReadPresetNamesAsync(operation.Token);
                 status.Text="Reading current preset…";current=await session.ReadCurrentPresetAsync(operation.Token);
             }
             firmware.Text=identity.Firmware;presetCount.Text=identity.PresetSlots.ToString();libraryCount.Text=$"{identity.GirSlots} / {identity.GnrSlots}";
             rhythmCount.Text=$"{identity.DrumPatterns} / {identity.LooperFiles}"; names=loaded;Filter();
-            currentPreset.Text=$"Index {current.WireIndex} · {current.Name}";
+            currentPreset.Text=$"{current.SlotLabel} · {current.Name}";
             liveEditUnsaved=liveEditUnsaved && snapshotAddress==selected && currentSnapshot?.WireIndex==current.WireIndex;
             if(!liveEditUnsaved)originalSnapshotDetail=current.RawDetailPayloadHex;
             liveEditUnsaved=current.RawDetailPayloadHex!=originalSnapshotDetail;
             currentSnapshot=current;snapshotAddress=selected;snapshotFirmware=identity.Firmware;editSnapshotValid=true;
             localSnapshotSource=false;sourceBadge.Text="EXPERIMENTAL EDIT";
             SetEffects(current.Blocks);
-            snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();status.Text="Read complete";lastReadSucceeded=true;
+            snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();Filter();status.Text="Connected · Presets loaded";lastReadSucceeded=true;refreshTimer.Start();
         }
         catch(OperationCanceledException){status.Text="Read cancelled";snapshot.Text=SnapshotLabel();}
         catch(Exception ex){status.Text=ReadError(ex);snapshot.Text=SnapshotLabel();}
-        finally {status.Foreground=MutedBrush;End();}
+        finally {if(!lastReadSucceeded)await ReleaseConnectionAsync();status.Foreground=MutedBrush;End();}
     }
     internal async Task<bool> ReadSnapshotPreviewAsync(string bluetoothAddress)
     {
         address.Text=bluetoothAddress;
         await ReadAsync();
+        await ReleaseConnectionAsync();snapshot.Text=SnapshotLabel();
         return lastReadSucceeded;
     }
     private string SnapshotLabel()=>snapshotTime is {} time ? localSnapshotSource?
         $"Local snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · Offline · No amplifier changes":
-        $"Snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · Disconnected{(liveEditUnsaved?" · Live edit verified; not saved":"")}" : "No snapshot · Disconnected";
+        $"Snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · {(connectedSession is null?"Disconnected":"Connected")}{(liveEditUnsaved?" · Live edit verified; not saved":"")}" : "No snapshot · Disconnected";
     private static string ReadError(Exception error)=>error switch {
         TransferStateChangedException => "The amplifier reported a transfer-state change. This session was stopped; reconnect only when the amplifier is stable.",
         TimeoutException => "No response. Disconnect the phone app and try reading again.",
@@ -282,13 +345,25 @@ public sealed partial class MainWindow : Window
     };
     private void Filter()
     {
-        var term=search.Text.Trim();var filtered=names.Where(p=>p.Name.Contains(term,StringComparison.OrdinalIgnoreCase)||p.WireIndex.ToString().Contains(term)).ToArray();
-        presets.ItemsSource=filtered;count.Text=$"{filtered.Length} of {names.Count} presets";
+        var selectedIndex=(presets.SelectedItem as PresetName)?.WireIndex;
+        var term=search.Text.Trim();var filtered=names.Where(p=>p.Name.Contains(term,StringComparison.OrdinalIgnoreCase)||p.SlotLabel.Contains(term,StringComparison.OrdinalIgnoreCase)||p.WireIndex.ToString().Contains(term)).Select(p=>p with {IsCurrent=p.WireIndex==currentSnapshot?.WireIndex}).ToArray();
+        presets.ItemsSource=filtered;presets.SelectedItem=filtered.FirstOrDefault(p=>p.WireIndex==(selectedIndex??currentSnapshot?.WireIndex));count.Text=$"{filtered.Length} of {names.Count} presets";
+    }
+    private void ResetDropdownToCurrent()
+    {
+        presets.SelectedItem=presets.Items.OfType<PresetName>().FirstOrDefault(p=>p.WireIndex==currentSnapshot?.WireIndex);
+    }
+    private async Task RecallDropdownSelectionAsync()
+    {
+        if(preview)return;
+        await SelectPresetAsync();
+        // A declined or failed recall must not present the requested slot as active.
+        ResetDropdownToCurrent();
     }
     private void SetDemo()
     {
         firmware.Text="Demo";presetCount.Text="80";libraryCount.Text="10 / 10";rhythmCount.Text="70 / 10";
-        currentPreset.Text="Index 3 · Demo · Lead tone";
+        currentPreset.Text="0C · Demo · Lead tone";
         SetEffects(new[] { new PresetEffectBlock(1,4,new ushort[]{1,2,25,50,0,0}),new PresetEffectBlock(2,2,Array.Empty<ushort>()),
             new PresetEffectBlock(3,9,Array.Empty<ushort>()),new PresetEffectBlock(4,7,Array.Empty<ushort>()),new PresetEffectBlock(5,8,Array.Empty<ushort>()) });
         names=new[]{new PresetName(1,"Demo · Clean tone"),new PresetName(2,"Demo · Warm rhythm"),new PresetName(3,"Demo · Lead tone"),
@@ -407,10 +482,9 @@ public sealed partial class MainWindow : Window
         Begin("Checking amplifier before applying OD808 Tone…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))
-                confirmed=await session.Set808ToneAsync(expected,value,operation.Token);
+            confirmed=await UseSessionAsync(target,session=>session.Set808ToneAsync(expected,value,operation!.Token));
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
-            currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
+            currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffects(confirmed.Blocks);
             var toneEffect=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==2 && item.Effect.Source.TypeCode==1).Effect;
             if(toneEffect is not null)SelectEffect(toneEffect);
             snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · OD808 Tone {value}":
@@ -424,16 +498,16 @@ public sealed partial class MainWindow : Window
     private void UpdatePresetSelectionState()
     {
         var selected=presets.SelectedItem as PresetName;
-        var capturedConfiguration=IsCapturedPresetConfiguration(currentSnapshot);
-        var supported=!preview && operation is null && editSnapshotValid && !liveEditUnsaved && snapshotAddress.HasValue &&
-            snapshotFirmware=="V1.1.9" && capturedConfiguration && currentSnapshot?.WireIndex is 4 or 5 && selected?.WireIndex is 4 or 5;
+        presets.IsEnabled=operation is null && names.Count>0;
+
+        var supported=!preview && operation is null && editSnapshotValid && snapshotAddress.HasValue &&
+            snapshotFirmware=="V1.1.9" && currentSnapshot?.WireIndex is >=1 and <=80 && selected?.WireIndex is >=1 and <=80;
         selectPreset.IsEnabled=supported && selected!.WireIndex!=currentSnapshot!.WireIndex;
         selectionMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
-            liveEditUnsaved?"Unavailable while live edits differ from the last read or saved snapshot.":
-            !editSnapshotValid||snapshotFirmware!="V1.1.9"||currentSnapshot?.WireIndex is not (4 or 5)?"Read a V1.1.9 snapshot at index 4 or 5 first.":
-            !capturedConfiguration?"Preset differs from the captured configuration · Selection disabled.":
-            selected?.WireIndex is not (4 or 5)?"Choose index 4 or 5 in the list.":
-            selected.WireIndex==currentSnapshot.WireIndex?"Already the current preset.":$"Pending recall · Index {selected.WireIndex} · Nothing is saved.";
+            liveEditUnsaved?"Recall will discard live unsaved edits only after confirmation.":
+            !editSnapshotValid||snapshotFirmware!="V1.1.9"?"Connect to load the presets first.":
+            selected is null?"Choose a preset from the dropdown.":
+            selected.WireIndex==currentSnapshot!.WireIndex?"Already the current preset.":$"Recall {selected.SlotLabel} · Nothing is saved.";
     }
     private static bool IsCapturedPresetConfiguration(CurrentPresetSnapshot? current)
     {
@@ -448,19 +522,19 @@ public sealed partial class MainWindow : Window
     private async Task SelectPresetAsync()
     {
         lastMutationSucceeded=false;
-        if(preview || operation is not null || !editSnapshotValid || liveEditUnsaved || snapshotFirmware!="V1.1.9" ||
-            snapshotAddress is not {} target || currentSnapshot is not {} expected || expected.WireIndex is not (4 or 5) ||
-            presets.SelectedItem is not PresetName selected || selected.WireIndex is not (4 or 5) || selected.WireIndex==expected.WireIndex ||
-            !IsCapturedPresetConfiguration(expected)) return;
+        if(preview || operation is not null || !editSnapshotValid || snapshotFirmware!="V1.1.9" ||
+            snapshotAddress is not {} target || currentSnapshot is not {} expected ||
+            presets.SelectedItem is not PresetName selected || selected.WireIndex==expected.WireIndex) return;
+        if((liveEditUnsaved || HasPendingInputs()) && MessageBox.Show(this,"Discard live unsaved edits and pending inputs, and recall the selected preset?","Recall preset",MessageBoxButton.YesNo,MessageBoxImage.Question,MessageBoxResult.No)!=MessageBoxResult.Yes)return;
         Begin("Checking amplifier before explicit preset recall…");
         snapshot.Text="Previous snapshot · Connecting for explicit preset recall…";
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))
-                confirmed=await session.SelectObservedPresetAsync(expected,(byte)selected.WireIndex,operation.Token);
+            confirmed=await UseSessionAsync(target,session=>session.SelectPresetAsync(expected,(byte)selected.WireIndex,operation!.Token));
+            if(confirmed.Name!=selected.Name)throw new System.IO.IOException("Preset name differs from the loaded list.");
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=false;originalSnapshotDetail=confirmed.RawDetailPayloadHex;snapshotTime=DateTimeOffset.Now;
-            currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
-            snapshot.Text=SnapshotLabel();status.Text=$"Preset recall verified · Index {confirmed.WireIndex} · Nothing saved";
+            currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffects(confirmed.Blocks);
+            Filter();snapshot.Text=SnapshotLabel();status.Text=$"Preset recall verified · {confirmed.SlotLabel} · Nothing saved";
             lastMutationSucceeded=true;
         }
         catch(OperationCanceledException) {
@@ -481,10 +555,9 @@ public sealed partial class MainWindow : Window
         snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))
-                confirmed=await session.SetNoiseKillerThresholdAsync(expected,value,operation.Token);
+            confirmed=await UseSessionAsync(target,session=>session.SetNoiseKillerThresholdAsync(expected,value,operation!.Token));
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
-            currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
+            currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffects(confirmed.Blocks);
             snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · Threshold {value}":
                 $"Threshold {value} verified · Matches original snapshot · Nothing saved";
             lastMutationSucceeded=true;

@@ -29,7 +29,7 @@ public sealed partial class MainWindow
     {
         if(!exportSnapshot.IsEnabled || currentSnapshot is not {} current)return;
         var dialog=new SaveFileDialog {Filter=SnapshotFilter,DefaultExt=".iamp-snapshot.json",AddExtension=true,OverwritePrompt=true,
-            FileName=$"preset-{current.WireIndex:000}.iamp-snapshot.json",Title="Export local snapshot"};
+            FileName=$"preset-{current.SlotLabel}.iamp-snapshot.json",Title="Export local snapshot"};
         if(dialog.ShowDialog(this)!=true)return;
         await ExportSnapshotToPathAsync(dialog.FileName);
     }
@@ -105,6 +105,7 @@ public sealed partial class MainWindow
     {
         if(preview || operation is not null)return false;
         Begin("Opening local snapshot…");
+        await ReleaseConnectionAsync();
         try {
             if(new FileInfo(path).Length>MaximumSnapshotFileBytes)throw new FormatException("Snapshot exceeds the 64 KiB local budget.");
             // A second size check and bounded buffer prevent growth between FileInfo and reading from bypassing the budget.
@@ -132,7 +133,7 @@ public sealed partial class MainWindow
             sourceBadge.Text="LOCAL SNAPSHOT";firmware.Text=decoded.Firmware;
             presetCount.Text=libraryCount.Text=rhythmCount.Text="—";
             names=new[]{new PresetName(loaded.WireIndex,loaded.Name)};Filter();
-            currentPreset.Text=$"Index {loaded.WireIndex} · {loaded.Name}";SetEffects(loaded.Blocks);
+            currentPreset.Text=$"{loaded.SlotLabel} · {loaded.Name}";SetEffects(loaded.Blocks);
             snapshot.Text=SnapshotLabel();status.Text="LOCAL SNAPSHOT · OFFLINE · Read the amplifier before editing · No amplifier changes";
             return true;
         }

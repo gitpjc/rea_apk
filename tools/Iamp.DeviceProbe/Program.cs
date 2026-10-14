@@ -68,6 +68,10 @@ internal static class Program
                     diagnostics = JsonSerializer.Deserialize<JsonElement>(journal.Export(version)) });
                 if (!passed) return 1;
             }
+            else if (args is ["read-disconnect-check", var disconnectTarget, var disconnectBaselinePath] && TryAddress(disconnectTarget, out var disconnectAddress))
+            {
+                if (!await ReadDisconnectCheckAsync(disconnectAddress, disconnectBaselinePath)) return 1;
+            }
             else if (args is ["threshold-roundtrip", var editTarget] && TryAddress(editTarget, out var editAddress))
             {
                 await ThresholdRoundtripAsync(editAddress);
@@ -91,7 +95,7 @@ internal static class Program
             }
             else
             {
-                Console.Error.WriteLine("Usage: Iamp.DeviceProbe usb | scan <1-60 seconds> | gatt <BLE address> | read-info <BLE address> | read-current <BLE address> | read-concurrent <BLE address> | threshold-roundtrip <BLE address> | selection-roundtrip <BLE address>");
+                Console.Error.WriteLine("Usage: Iamp.DeviceProbe usb | scan <1-60 seconds> | gatt <BLE address> | read-info <BLE address> | read-current <BLE address> | read-concurrent <BLE address> | read-disconnect-check <BLE address> <new-baseline.json> | threshold-roundtrip <BLE address> | selection-roundtrip <BLE address>");
                 Console.Error.WriteLine("threshold-roundtrip performs the experimental V1.1.9 Noise Killer 25→26→25 test with read-back; no saving.");
                 return 2;
             }
@@ -102,6 +106,56 @@ internal static class Program
             Print(new { error = ex.GetType().Name, message = ex.Message });
             return 1;
         }
+    }
+
+    // Explicit physical-disconnect QA. Only identity/current-preset queries; never mutation or retry after failure.
+    private static async Task<bool> ReadDisconnectCheckAsync(ulong address, string baselinePath)
+    {
+        if (File.Exists(baselinePath)) throw new IOException("Use a new baseline path; existing evidence is preserved.");
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(90));
+        var journal = new DiagnosticJournal();
+        var version = typeof(Program).Assembly.GetName().Version!.ToString(3);
+        int Started()
+        {
+            using var document = JsonDocument.Parse(journal.Export(version));
+            return document.RootElement.GetProperty("events").EnumerateArray().Count(e =>
+                e.GetProperty("outcome").GetString() == "Started" && e.GetProperty("operation").GetString() != "Connection");
+        }
+        string? failureType = null; var blocked = false; var startedAtFailure = 0; var startedAfterBlocked = 0;
+        await using (var session = await F15ReadSession.ConnectAsync(address, deadline.Token, journal))
+        {
+            var identity = await session.ReadIdentityAsync(deadline.Token);
+            var current = await session.ReadCurrentPresetAsync(deadline.Token);
+            // Exact original profile validation only. Returned save bytes are never sent.
+            _ = ObservedPresetSaveCommand.CreateUnchanged(identity.Firmware,
+                Convert.FromHexString(current.RawStatePayloadHex), Convert.FromHexString(current.RawDetailPayloadHex));
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(baselinePath))!);
+            await File.WriteAllTextAsync(baselinePath, JsonSerializer.Serialize(new { identity, current }, Json), deadline.Token);
+            Console.Error.WriteLine("BASELINE RECORDED. Ready for the user to switch the amplifier off. Read-only monitoring for up to 90 seconds.");
+            try
+            {
+                while (true)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(2), deadline.Token);
+                    await session.ReadIdentityAsync(deadline.Token);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or OperationCanceledException or ObjectDisposedException)
+            {
+                failureType = ex.GetType().Name;
+                startedAtFailure = Started();
+                try { await session.ReadIdentityAsync(CancellationToken.None); }
+                catch (Exception stopped) when (stopped is IOException or OperationCanceledException or ObjectDisposedException) { blocked = true; }
+                startedAfterBlocked = Started();
+            }
+        }
+        var diagnostics = JsonSerializer.Deserialize<JsonElement>(journal.Export(version));
+        var disconnected = diagnostics.GetProperty("events").EnumerateArray().Any(e =>
+            e.GetProperty("operation").GetString() == "Connection" && e.GetProperty("outcome").GetString() == "Disconnected");
+        var passed = disconnected && blocked && startedAfterBlocked == startedAtFailure;
+        Print(new { operation = "read_only_disconnect_check", passed, physicalDisconnectReported = disconnected,
+            failureType, subsequentRequestBlocked = blocked, startedAtFailure, startedAfterBlocked, diagnostics });
+        return passed;
     }
 
     private static bool TryAddress(string text, out ulong address)

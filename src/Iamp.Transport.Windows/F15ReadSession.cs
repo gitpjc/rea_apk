@@ -202,9 +202,12 @@ public sealed class F15ReadSession : IAsyncDisposable
 
     /// <summary>Recall one of the two captured slots. Preserves all other whole-state fields; does not save presets.</summary>
     public Task<CurrentPresetSnapshot> SelectObservedPresetAsync(CurrentPresetSnapshot expected, byte targetIndex, CancellationToken ct)
-        => RunWorkflowAsync(token => SelectObservedPresetCoreAsync(expected, targetIndex, token), ct);
+        => RunWorkflowAsync(token => SelectPresetCoreAsync(expected, targetIndex, true, token), ct);
 
-    private async Task<CurrentPresetSnapshot> SelectObservedPresetCoreAsync(CurrentPresetSnapshot expected, byte targetIndex, CancellationToken ct)
+    public Task<CurrentPresetSnapshot> SelectPresetAsync(CurrentPresetSnapshot expected, byte targetIndex, CancellationToken ct)
+        => RunWorkflowAsync(token => SelectPresetCoreAsync(expected, targetIndex, false, token), ct);
+
+    private async Task<CurrentPresetSnapshot> SelectPresetCoreAsync(CurrentPresetSnapshot expected, byte targetIndex, bool observedOnly, CancellationToken ct)
     {
         var identity = await ReadIdentityCoreAsync(ct);
         if (identity.Firmware != "V1.1.9") throw new NotSupportedException("Preset selection is verified only on F15i V1.1.9.");
@@ -212,15 +215,17 @@ public sealed class F15ReadSession : IAsyncDisposable
         if (before.WireIndex != expected.WireIndex || before.RawDetailPayloadHex != expected.RawDetailPayloadHex ||
             before.RawStatePayloadHex != expected.RawStatePayloadHex)
             throw new IOException("The amplifier changed since the snapshot. Read it again before selecting a preset.");
-        var request = PresetSelectionCommand.Create(Convert.FromHexString(before.RawStatePayloadHex), targetIndex);
-        PresetSelectionCommand.RequireObservedPreset(before.WireIndex, Convert.FromHexString(before.RawDetailPayloadHex));
+        if (identity.PresetSlots != 80) throw new NotSupportedException("Preset recall requires the observed 80-slot capacity.");
+        var request = observedOnly ? PresetSelectionCommand.Create(Convert.FromHexString(before.RawStatePayloadHex), targetIndex) :
+            PresetSelectionCommand.CreateForAnySlot(Convert.FromHexString(before.RawStatePayloadHex), targetIndex);
+        if (observedOnly) PresetSelectionCommand.RequireObservedPreset(before.WireIndex, Convert.FromHexString(before.RawDetailPayloadHex));
         if (before.WireIndex == targetIndex) return before;
         await WriteObservedUpdateAsync(request, ct);
         var after = await ReadCurrentPresetCoreAsync(ct);
         request[0] = 0x12;
         if (after.WireIndex != targetIndex || after.RawStatePayloadHex != Convert.ToHexString(request))
             throw new IOException("Preset selection or preserved global state could not be confirmed. Read the amplifier before another operation.");
-        PresetSelectionCommand.RequireObservedPreset(after.WireIndex, Convert.FromHexString(after.RawDetailPayloadHex));
+        if (observedOnly) PresetSelectionCommand.RequireObservedPreset(after.WireIndex, Convert.FromHexString(after.RawDetailPayloadHex));
         return after;
     }
 
@@ -266,13 +271,16 @@ public sealed class F15ReadSession : IAsyncDisposable
 
     private void OnValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
     {
+        if (Volatile.Read(ref disposed) != 0) return;
         CryptographicBuffer.CopyToByteArray(args.CharacteristicValue, out var bytes);
         commands.Receive(bytes);
     }
 
     private void OnConnectionStatusChanged(BluetoothLEDevice sender, object args)
     {
-        if (sender.ConnectionStatus != BluetoothConnectionStatus.Disconnected) return;
+        if (Volatile.Read(ref disposed) != 0) return;
+        try { if (sender.ConnectionStatus != BluetoothConnectionStatus.Disconnected) return; }
+        catch (ObjectDisposedException) { return; }
         diagnostics?.Record(DiagnosticOperation.Connection, DiagnosticOutcome.Disconnected);
         commands.Fail(new IOException("The amplifier disconnected during the command session. Reconnect before another operation."));
     }
@@ -291,18 +299,23 @@ public sealed class F15ReadSession : IAsyncDisposable
         commands.Dispose();
         notify.ValueChanged -= OnValueChanged;
         device.ConnectionStatusChanged -= OnConnectionStatusChanged;
-        try
+        await SessionCleanup.CloseAsync(async () =>
         {
             await notify.WriteClientCharacteristicConfigurationDescriptorAsync(
-                GattClientCharacteristicConfigurationDescriptorValue.None).AsTask().WaitAsync(TimeSpan.FromSeconds(3));
-        }
-        catch (Exception ex) when (ex is TimeoutException or IOException or System.Runtime.InteropServices.COMException) { }
-        finally { service.Dispose(); device.Dispose(); }
+                GattClientCharacteristicConfigurationDescriptorValue.None).AsTask();
+        }, () => service.Dispose(), () => device.Dispose());
     }
 }
 
 public sealed record F15Identity(byte ModeCode, byte FirmwareType, string Firmware, int PresetSlots,
     int GirSlots, int GnrSlots, int DrumPatterns, int LooperFiles, string RawPayloadHex);
-public sealed record PresetName(int WireIndex, string Name);
+public sealed record PresetName(int WireIndex, string Name)
+{
+    public string SlotLabel => PresetAddress.FromWireIndex(WireIndex).Label;
+    public bool IsCurrent {get;init;}
+}
 public sealed record CurrentPresetSnapshot(int WireIndex, string Name, string RawStatePayloadHex, string RawDetailPayloadHex,
-    IReadOnlyList<PresetEffectBlock> Blocks);
+    IReadOnlyList<PresetEffectBlock> Blocks)
+{
+    public string SlotLabel => PresetAddress.FromWireIndex(WireIndex).Label;
+}

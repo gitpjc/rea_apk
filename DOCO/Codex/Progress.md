@@ -2,6 +2,30 @@
 
 Updated 14 October 2026. The full editor is not complete.
 
+Scope update, 14 October: the user explicitly excluded all Phase 6 work unless separately instructed. No Phase 6 investigation, implementation or hardware test is authorized by a general request to continue. Remaining core MVP, connection reliability and release verification work stays in scope. That scope restriction remains in effect for subsequent versions.
+
+## Latest: inline preset dropdown in 1.6.3
+
+Version 1.6.3 places the compact preset dropdown on the same row as the Presets heading/count, between the heading and search. The dropdown is capped at 440 pixels. Search wraps below at smaller widths, and very narrow layouts also wrap the dropdown to keep controls usable. Focused offline checks cover header geometry at window widths 1280, 1050, 800 and 620, dropdown checkmark placement, selected-field contents, filtering, clearing and focus. The full suite was not rerun for this layout-only change. No screenshots or amplifier/phone access; Phase 6 remains excluded.
+
+## Earlier: preset checkmark and search clearing in 1.6.2
+
+Version 1.6.2 shows the active blue checkmark only inside the open preset dropdown; the selected-item field shows bank/name without a checkmark. Search now has a right-side × button that appears only when text is present, clears the filter and returns focus to the input. Focused offline UI checks cover popup check color/position, absence of a check in the selected field while open/closed, empty/text/whitespace visibility, clearing/restoring all presets, no-match filtering and focus. The full test suite was not rerun for these isolated UI changes. No screenshots, phone or amplifier access, or Phase 6 work.
+
+## Earlier: compact preset dropdown in 1.6.1
+
+Version 1.6.1 moves the four amplifier information cards above Presets and replaces the fixed-height table with a compact dropdown. Each entry shows its bank label/name, with a #4385ff checkmark to the left of the active amplifier preset. Existing guarded recall and unsaved-discard confirmation remain in use; Escape cancels browsing. Offline rendering verified the real popup, exactly one active checkmark and its color/left position. All 137 .NET/five Node tests and responsive, snapshot and history checks passed. No phone or amplifier commands were sent; Phase 6 remains excluded.
+
+## Earlier: mobile-style preset browser and retained connection in 1.6.0
+
+Version 1.6.0 adds mobile-style 0A–19D preset labels, device-reported names, current-row highlighting and click/Enter recall across all 80 slots. Scan/select automatically connects and loads the library; the retained connection refreshes current state every three seconds. All 79 alternatives were recalled through Windows handlers and original 0D was restored after each, with complete raw payload equality. Automatic refresh, pending-input preservation and automatic scan/connect passed hardware checks; final independent readback matched every original byte. The user then reconnected phone iAMP and reported a stable normal effects screen. No parameter edits or saves were sent. All 137 .NET and five Node tests pass with zero build warnings/errors; offline snapshot/history/comparison/diagnostics/layout/save guards pass. Saving and parameter ranges remain restricted, the mobile loop cause remains unresolved, and Phase 6 remains excluded. See [Preset-Browser.md](Preset-Browser.md).
+
+## Earlier: physical power-off exposed cleanup bug; fix verified in 1.5.3
+
+The approved read-only power-off test first failed with ObjectDisposedException while closing the disconnected session. A fresh read after restart still matched the complete original baseline. Added shared teardown handling for closed/cancelled native operations with guaranteed attempts to release both resources, plus late-callback guards. The repeat power-off test passed: Windows reported Disconnected, cleanup finished, and the follow-up identity call was blocked without another transport request (23→23). After restart the actual desktop Read and an independent fresh read matched every original state/detail byte, index 4 and Threshold 25. No edits, recalls, saves or phone setting changes occurred. See `Physical-Disconnect-Test.md` and P3.5g.
+
+All 129 .NET/five Node tests pass with zero warnings/errors. Five cleanup cases cover expected and unexpected failures; the final cancelled-native-operation variant was tested offline after the successful physical run. Local history/snapshot/comparison/diagnostics regressions pass. Version 1.5.3 is published to the usual folder with binary/history verification. Connections are closed and phone iAMP may reconnect. Broader Bluetooth/sleep/interrupted-mutation cases and the mobile loop cause remain unresolved.
+
 ## Latest: complete workflow serialization in 1.5.2
 
 Each Windows session now serializes whole public read/edit/recall/save workflows around the existing command dispatcher. Private nested read methods avoid re-entrant queue deadlock. Queued cancellation is isolated, while active failure stops later workflows. Eight new offline concurrency cases pass; all 124 .NET/five Node tests pass with zero build warnings/errors.

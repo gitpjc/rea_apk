@@ -26,7 +26,7 @@ public sealed partial class MainWindow
         var supported=!preview && !localSnapshotSource && editSnapshotValid && snapshotAddress.HasValue && SupportedSaveSnapshot();
         savePreset.IsEnabled=supported && liveEditUnsaved && operation is null;
         saveMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
-            !supported?"Save supports index 4 / British Lead Solo, Threshold 25 or 26, with all other original values unchanged.":
+            !supported?"Save supports 0D British Lead Solo, Threshold 25 or 26, with all other original values unchanged.":
             !liveEditUnsaved?"No new live edits to save. Matching the read snapshot alone does not prove storage.":
             "Save overwrites the current slot only after confirmation, then recalls it and checks every value.";
     }
@@ -36,17 +36,16 @@ public sealed partial class MainWindow
         lastSaveSucceeded=false;UpdateSaveState();
         if(!savePreset.IsEnabled || currentSnapshot is not {} expected || snapshotAddress is not {} target)return;
         if(!confirmedTest && MessageBox.Show(this,
-            $"Save British Lead Solo to its existing slot 0D (index 4)?\n\nNoise Killer Threshold: {expected.Blocks[0].Values[2]}\nAll other original values and the name remain unchanged.\n\nThis overwrites the saved value in that slot.",
+            $"Save British Lead Solo to its existing slot 0D?\n\nNoise Killer Threshold: {expected.Blocks[0].Values[2]}\nAll other original values and the name remain unchanged.\n\nThis overwrites the saved value in that slot.",
             "Confirm preset save",MessageBoxButton.YesNo,MessageBoxImage.Question,MessageBoxResult.No)!=MessageBoxResult.Yes)return;
         Begin("Checking amplifier before same-slot save…");
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))
-                confirmed=await session.SaveObservedThresholdAsync(expected,operation.Token);
+            confirmed=await UseSessionAsync(target,session=>session.SaveObservedThresholdAsync(expected,operation!.Token));
             currentSnapshot=confirmed;originalSnapshotDetail=confirmed.RawDetailPayloadHex;
             liveEditUnsaved=false;editSnapshotValid=true;snapshotTime=DateTimeOffset.Now;
-            currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
-            snapshot.Text=SnapshotLabel();status.Text="Same-slot save and recall verified · Index 4 · British Lead Solo";
+            currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffects(confirmed.Blocks);
+            snapshot.Text=SnapshotLabel();status.Text="Same-slot save and recall verified · 0D · British Lead Solo";
             lastSaveSucceeded=true;
         }
         catch(Exception ex) {
@@ -89,7 +88,7 @@ public sealed partial class MainWindow
         Begin("Offline busy-state check");RequireDisabled();End();
         if(!savePreset.IsEnabled)throw new InvalidOperationException("Supported synthetic Save did not recover after busy state.");
         sourceBadge.Text="OFFLINE SAVE PREVIEW";firmware.Text=version;
-        currentPreset.Text="Index 4 · British Lead Solo";SetEffects(currentSnapshot!.Blocks);
+        currentPreset.Text="0D · British Lead Solo";SetEffects(currentSnapshot!.Blocks);
         snapshot.Text="Synthetic Threshold 26 edit · No device connected";
         status.Text="Offline save guard checks passed · No amplifier commands";
         Console.WriteLine("Offline save UI QA passed: supported edit enabled; unsupported content, firmware, local snapshots, invalid targets and busy states disabled.");

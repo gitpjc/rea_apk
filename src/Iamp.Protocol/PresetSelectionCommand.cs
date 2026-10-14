@@ -3,6 +3,14 @@ namespace Iamp.Protocol;
 /// <summary>Whole-state selection packet observed for the two captured V1.1.9 slots.</summary>
 public static class PresetSelectionCommand
 {
+    public static byte[] CreateForAnySlot(ReadOnlySpan<byte> currentState, byte targetIndex)
+    {
+        CurrentPresetReadGuard.ValidateState(currentState);
+        _ = PresetAddress.FromWireIndex(targetIndex);
+        var request = currentState.ToArray(); request[0] = 0x13; request[1] = targetIndex;
+        return request;
+    }
+
     public static void RequireObservedPreset(int index, ReadOnlySpan<byte> detail)
     {
         var hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(detail));

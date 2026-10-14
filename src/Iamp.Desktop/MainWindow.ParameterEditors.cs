@@ -76,9 +76,9 @@ public sealed partial class MainWindow
         Begin($"Checking amplifier before applying {editor.Label}…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))confirmed=await editor.Write(session,expected,value,operation.Token);
+            confirmed=await UseSessionAsync(target,session=>editor.Write(session,expected,value,operation!.Token));
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
-            currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
+            currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffects(confirmed.Blocks);
             var selected=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==editor.Position).Effect;
             if(selected is not null)SelectEffect(selected);
             snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · {editor.Label} {value}":

@@ -2,7 +2,7 @@
 
 Updated 14 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
 
-Current published version: **1.5.2**. The connection code keeps each complete read/edit/save workflow together; concurrent read-only hardware checks preserved all original amplifier values. The window adapts to smaller work areas, with wrapping controls/cards and a scrollable sidebar. **Ctrl+1** opens Amplifier library, **Ctrl+2** opens Version History and **Ctrl+F** focuses preset search. Tab/Shift+Tab move between controls; keyboard-focused buttons have a blue border. These shortcuts do not operate the amplifier. See [Desktop-Usability.md](Desktop-Usability.md).
+Current release: **1.6.3**. The compact preset dropdown sits beside the Presets heading/count, with search on the right; controls wrap at smaller widths. The four information cards appear above Presets. Choose presets from the compact dropdown; a blue checkmark (#4385ff) on the left identifies the active amplifier preset inside the open list only. The selected-item field shows its bank label and name without a check. The search field shows a right-side × only when it contains text; click it to clear the filter. Presets use amplifier labels **0A–19D** and their actual names. Scan/select loads the library and current preset automatically; the live connection refreshes current state every three seconds. **Ctrl+1** opens Amplifier library, **Ctrl+2** opens Version History and **Ctrl+F** focuses search. See [Preset-Browser.md](Preset-Browser.md).
 
 **Compare snapshot** and **Export diagnostics** remain available. Supported editing ranges are unchanged. Developers can run `bash scripts/build-desktop.sh` without a connected phone or amplifier; see [Build-and-Release.md](Build-and-Release.md).
 
@@ -14,10 +14,10 @@ If a connection problem occurs, choose **Export diagnostics** before closing the
 
 1. Open `artifacts/Iamp.Desktop/Iamp.Desktop.exe`. Keep all accompanying files together; the published Windows x64 build does not require a separate .NET installation.
 2. Switch on the amplifier and disconnect the Android iAMP app from it.
-3. Choose **Scan Bluetooth**, select the amplifier, then **Read amplifier**. Alternatively, expand **Manual Bluetooth address** and enter its address.
-4. Browse/search the 80 preset names and select effect cards to inspect supported details.
+3. Choose **Scan Bluetooth**. If one amplifier is found it connects automatically; otherwise select the amplifier. Alternatively, enter a valid **Manual Bluetooth address** and choose **Connect amplifier**.
+4. Browse/search all 80 bank-labelled presets. Choose an entry from the dropdown to recall it; the active preset has a blue checkmark on its left. Escape closes the dropdown without recalling a browsed entry. Select effect cards to inspect supported details.
 
-Control uses Windows Bluetooth LE. USB charging or the vendor utility's USB connection is a separate connection. A successful read produces a timestamped snapshot and releases Bluetooth. The displayed **Disconnected** status after an operation is intentional: each read or edit reconnects when needed.
+Control uses Windows Bluetooth LE. USB charging or the vendor utility's USB connection is a separate connection. A successful connection stays open and shows Connected. Current state refreshes every three seconds; **Refresh amplifier** performs an explicit reread. Choose **Disconnect** before reconnecting phone iAMP. Disconnection retains the displayed snapshot but disables edits. Use one control app at a time. Connect is disabled until a valid target is available.
 
 ## Supported controls
 
@@ -33,37 +33,37 @@ The current build at `artifacts/Iamp.Desktop` supports the five intervals below 
 | 808 Gain | Explicit Apply, values 36–39; API/UI hardware verified |
 | 808 Tone | Explicit Apply, values 97–100; API/UI hardware verified, including supported combinations |
 | 808 Volume | Explicit Apply, values 97–100; API/UI hardware verified |
-| Preset selection | Explicit selection between captured index 4 / British Lead Solo and index 5 / US 65 Deluxe Clean configurations |
+| Preset selection | Dropdown recall for all 80 presets, 0A–19D, with a left-side blue checkmark on the active preset |
 | Other effect parameters | Corroborated fields are displayed read-only; unsupported fields are omitted |
 | Local snapshots | Export/open `.iamp-snapshot.json` files for offline inspection |
-| Save current preset | Same-slot save at index 4 / British Lead Solo, Threshold 25 or 26 only, all other original values unchanged |
-| Arbitrary recall, other-slot save, rename, mixer, chain editing, applying imports | Still in development |
+| Save current preset | Same-slot save at 0D / British Lead Solo, Threshold 25 or 26 only, all other original values unchanged |
+| Other-slot save, rename, mixer, chain editing, applying imports | Still in development |
 
-Hardware writes are currently validated only on firmware **V1.1.9** and the captured first-position Noise Killer / second-position 808 models. The five intervals can vary together in the shared API; other fields must still match the supported layout. These are nearby experimental integer intervals, not documented full device ranges or physical units. Configuration checks disable unfamiliar layouts. Preset recall additionally requires the exact captured original slot-4/5 state; restoring only some changed values does not satisfy that guard.
+Hardware writes are currently validated only on firmware **V1.1.9** and the captured first-position Noise Killer / second-position 808 models. The five intervals can vary together in the shared API; other fields must still match the supported layout. These are nearby experimental integer intervals, not documented full device ranges or physical units. Configuration checks disable unfamiliar layouts. All-slot recall uses fresh complete snapshot checks and post-recall global-state/detail verification. It does not broaden the supported parameter or saving ranges.
 
 ## Apply a supported parameter
 
-Select **Dyna / Noise Killer** or **OD / 808**, enter a supported whole-number value, then click its Apply button. Typing changes a pending value only. The app reconnects, checks the actual preset against its snapshot, writes the captured command and independently reads the result. Values on screen update only when that result is confirmed.
+Select **Dyna / Noise Killer** or **OD / 808**, enter a supported whole-number value, then click its Apply button. Typing changes a pending value only. The app uses its live connection, checks the actual preset against its snapshot, writes the captured command and independently reads the result. Values on screen update only when that result is confirmed.
 
-Apply controls make **live, unsaved edits**. Returning all changed values to their original snapshot values clears the snapshot-difference indicator. Preset selection stays disabled while that difference remains. Matching a read snapshot alone does not prove that the preset is saved.
+Apply controls make **live, unsaved edits**. Returning all changed values to their original snapshot values clears the snapshot-difference indicator. Recalling another preset with known live unsaved edits or pending input asks whether to discard them; No is the default. If an external change conflicts with typed input, the app preserves that input, stops automatic refresh and disables editing until you explicitly refresh. Matching a read snapshot alone does not prove that the preset is saved.
 
 ## Save the supported preset
 
-Version **1.2.0** adds **Save current preset** in the current-preset panel. It enables only for a live edit to index **4 / British Lead Solo** on firmware **V1.1.9**, with Noise Killer Threshold **25 or 26** and every other original value unchanged. Apply the supported Threshold change first; then choose Save and review the unchanged name, destination **0D / index 4** and Threshold in the overwrite confirmation. **No** is the default choice.
+The supported save workflow provides **Save current preset** in the current-preset panel. It enables only for a live edit to **0D / British Lead Solo** on firmware **V1.1.9**, with Noise Killer Threshold **25 or 26** and every other original value unchanged. Apply the supported Threshold change first; then choose Save and review the unchanged name, destination **0D / index 4** and Threshold in the overwrite confirmation. **No** is the default choice.
 
-On confirmation, the app checks a fresh complete snapshot, sends the observed save once, recalls the same slot and verifies the full state/detail. The Windows test saved 26, saved original 25 back and independently verified every original byte after recall. Other saved values, renaming, other destinations and power-cycle persistence are not validated. The existing recall controls remain restricted to their original captured configurations; saving Threshold 26 does not expand those recall guards.
+On confirmation, the app checks a fresh complete snapshot, sends the observed save once, recalls the same slot and verifies the full state/detail. The Windows test saved 26, saved original 25 back and independently verified every original byte after recall. Other saved values, renaming, other destinations and power-cycle persistence are not validated. All-slot recall is available with explicit handling of unsaved edits; saving remains restricted to this supported 0D profile.
 
-An unconfirmed save may have changed storage. The app disables further writes and does not automatically repeat it. Read the amplifier to inspect its actual state before another action. Local snapshot files cannot enable saving.
+An unconfirmed save may have changed storage. The app disables further writes and does not automatically repeat it. Reconnect or refresh the amplifier to inspect its actual state before another action. Local snapshot files cannot enable saving.
 
-If an edit is interrupted or not confirmed, its outcome may be unknown. Click **Read amplifier** before another edit and inspect the actual values; the app does not automatically replay an ambiguous write.
+If an edit is interrupted or not confirmed, its outcome may be unknown. Click **Connect amplifier** (or **Refresh amplifier** when connected) before another edit and inspect the actual values; the app does not automatically replay an ambiguous write.
 
-If reading fails with service discovery **Unreachable** while Android iAMP is connected, disconnect/close iAMP and retry **Read amplifier**. That contention case was reproduced and the subsequent Windows read succeeded; broader automatic recovery is still being tested. After PC restart, scanning may be needed before a manually entered address can be opened. A bounded exact-address scan fallback handles null address lookup before commands; it does not retry ambiguous writes or verify identity from an advertisement alone.
+If reading fails with service discovery **Unreachable** while Android iAMP is connected, disconnect/close iAMP and retry **Connect amplifier** (or **Refresh amplifier** when connected). That contention case was reproduced and the subsequent Windows read succeeded; broader automatic recovery is still being tested. After PC restart, scanning may be needed before a manually entered address can be opened. A bounded exact-address scan fallback handles null address lookup before commands; it does not retry ambiguous writes or verify identity from an advertisement alone.
 
 ## Save and open local snapshots
 
-After reading the amplifier, choose **Export snapshot** to preserve the displayed preset and its raw state in a `.iamp-snapshot.json` file on this PC. Choose **Open snapshot** to inspect an exported file without connecting to the amplifier. Exporting records the last confirmed snapshot; pending typed values are not included.
+After reading the amplifier, choose **Export snapshot** to preserve the displayed preset and its raw state in a `.iamp-snapshot.json` file on this PC. Choose **Open snapshot** to inspect an exported file offline; opening it releases the live connection. Exporting records the last confirmed snapshot; pending typed values are not included.
 
-An opened file is marked **LOCAL SNAPSHOT / OFFLINE** and all amplifier editing controls are disabled until a fresh **Read amplifier** succeeds. Only that snapshot's preset is listed; capacity counts are unknown. Files are versioned and integrity-checked, with a 64 KiB limit. Invalid files leave the previous displayed snapshot intact. These files cannot currently be applied to the amplifier and are separate from MOOER Studio backups.
+An opened file is marked **LOCAL SNAPSHOT / OFFLINE** and all amplifier editing controls are disabled until a fresh **Connect amplifier** (or **Refresh amplifier** when connected) succeeds. Only that snapshot's preset is listed; capacity counts are unknown. Files are versioned and integrity-checked, with a 64 KiB limit. Invalid files leave the previous displayed snapshot intact. These files cannot currently be applied to the amplifier and are separate from MOOER Studio backups.
 
 ## Backups and testing
 
@@ -74,6 +74,8 @@ Version **1.2.1** stops a Windows connection session if the amp reports the stat
 Use the vendor MOOER Studio utility for whole-device backups; the verified development baseline and documented recovery route are in [Backup-Baseline.md](Backup-Baseline.md). The desktop app does not restore vendor backups.
 
 Development tests record the original state, restore every changed parameter and the originally selected preset, then compare complete state/detail payloads. The opt-in hardware test command in [Environment.md](Environment.md) performs temporary changes; normal app startup and preview commands do not run that test.
+
+All 80 slots were recalled in the 1.6.0 Windows check, with original 0D restored and all original bytes verified after each test. Phone iAMP was stable when the user reconnected afterward. This does not resolve the earlier loop cause. Phase 6 advanced functions remain excluded unless separately requested.
 
 ## Build from source
 
