@@ -1,0 +1,49 @@
+{
+  "source": "Authorized ADB-operated iAMP phone controls, 14 October 2026",
+  "sourceSha256": "38482b709b698f50dd4cfc03f7ed4e4068fe9cc0cb24e94dff96d48196ed9132",
+  "firmware": "V1.1.9",
+  "frames": [
+    {
+      "parameter": "Level",
+      "value": 16,
+      "phoneTime": "10-14 22:20:18.071",
+      "hex": "AA551400250407100100010010001900F401000000000000D9E6"
+    },
+    {
+      "parameter": "Level",
+      "value": 17,
+      "phoneTime": "10-14 22:22:08.771",
+      "hex": "AA551400250407100100010011001900F401000000000000DA93"
+    },
+    {
+      "parameter": "Feedback",
+      "value": 24,
+      "phoneTime": "10-14 22:20:49.962",
+      "hex": "AA551400250407100100010011001800F401000000000000B5D6"
+    },
+    {
+      "parameter": "Feedback",
+      "value": 25,
+      "phoneTime": "10-14 22:22:08.771",
+      "hex": "AA551400250407100100010011001900F401000000000000DA93"
+    },
+    {
+      "parameter": "Time",
+      "value": 499,
+      "phoneTime": "10-14 22:21:43.121",
+      "hex": "AA551400250407100100010011001900F3010000000000001D8B"
+    },
+    {
+      "parameter": "Time",
+      "value": 500,
+      "phoneTime": "10-14 22:22:08.771",
+      "hex": "AA551400250407100100010011001900F401000000000000DA93"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "combinedThreeControls": true,
+    "baselineRestored": true,
+    "saved": false
+  }
+}

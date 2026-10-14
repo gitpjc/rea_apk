@@ -24,3 +24,9 @@ artifacts/Iamp.Desktop/Iamp.Desktop.exe --layout-preview analysis/private/layout
 This writes connection and preset-view PNGs for each size, using demo data only. It makes no hardware calls. Source release evidence is under `analysis/private/version-150-layout`. Compact and normal renders were visually inspected. All 116 .NET/five Node tests pass with zero Release build warnings/errors; existing offline history, snapshot, comparison and diagnostics checks pass. Published executable and Desktop/Transport/Protocol DLLs match tested staging and packaged history matches source.
 
 This increment changes desktop presentation/navigation only. It does not expand hardware-control ranges or resolve the mobile transfer-screen incident.
+
+Additional offline geometry checks confirm all six Amp inputs/actions remain within the horizontal viewport and scrollable content at 1920×1080, 1366×768, 911×512, 683×384 and 620×320 logical pixels. No screenshots or hardware commands were used for those checks; physical DPI/Narrator acceptance remains open.
+
+## Parameter sliders — 1.21.0
+
+All 18 verified parameter controls now expose a responsive integer slider alongside numeric entry and explicit Apply. Sliders change pending input only, with one-step arrows, ten-step Page Up/Page Down and Home/End. Labels expose parameter/range to accessibility tools. Offline WPF interaction checks cover every target, invalid numeric entry, no device work on slider movement, pending guards, disabled states and five viewport sizes. Every actual Windows slider/Apply path passes a one-step change and immediate original restoration, followed by independent full original readback. See `Parameter-Sliders.md`.

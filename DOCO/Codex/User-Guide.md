@@ -2,7 +2,13 @@
 
 Updated 14 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
 
-Current release: **1.8.0**. Use **Amplifier Settings** to connect, select presets and edit effects. **Amplifier Information**, directly below it, shows firmware and the three capacity cards from the latest read. Navigation preserves pending inputs and the connection. Disabled effects show the simple status label **Disabled**. Effect category names are centered beneath their icons. Supported effects now show mobile category icons, with grey icons when bypassed; redundant On/Off text is omitted from effect buttons. Select an effect and choose **Enable effect** or **Disable effect** to make a verified live change; nothing is saved automatically. The compact preset dropdown sits beside the Presets heading/count, with search on the right; controls wrap at smaller widths. The four information cards appear on the separate Amplifier Information screen. Choose presets from the compact dropdown; a blue checkmark (#4385ff) on the left identifies the active amplifier preset inside the open list only. The selected-item field shows its bank label and name without a check. The search field shows a right-side × only when it contains text; click it to clear the filter. Presets use amplifier labels **0A–19D** and their actual names. Scan/select loads the library and current preset automatically; the live connection refreshes current state every three seconds. **Ctrl+1** opens Amplifier Settings, **Ctrl+2** opens Version History and **Ctrl+F** focuses search. See [Preset-Browser.md](Preset-Browser.md).
+Current release: **1.21.1**. All 18 currently supported parameters now have verified mobile ranges on their captured V1.1.9 model profiles. Most use **0–100**; Hall Pre Delay uses **0–200 ms** and Analog Delay Time uses **40–2500 ms**.
+
+Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
+
+The compact preset dropdown sits beside Presets, with search on the right and responsive wrapping. Entries show amplifier labels **0A–19D** and actual names. A blue left-side checkmark (**#4385ff**) identifies the active preset inside the open list; the selected-item field has no check. Search shows a right-side × only when it contains text. See [Preset-Browser.md](Preset-Browser.md).
+
+Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable effect** / **Disable effect** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History and Ctrl+F focuses search.
 
 **Compare snapshot** and **Export diagnostics** remain available. Supported editing ranges are unchanged. Developers can run `bash scripts/build-desktop.sh` without a connected phone or amplifier; see [Build-and-Release.md](Build-and-Release.md).
 
@@ -23,16 +29,29 @@ Control uses Windows Bluetooth LE. USB charging or the vendor utility's USB conn
 
 The sidebar displays the current desktop application version beneath **DESKTOP COMPANION**. Choose **Version History** to see dated release summaries, then select an entry to open its full details. Choose **Amplifier Settings** to return to your existing snapshot and pending inputs. History is loaded from the accompanying `assets/version_history.json` file; keep it with the published application.
 
-The current build at `artifacts/Iamp.Desktop` supports the five intervals below in combination through explicit desktop Apply controls. API and actual UI-handler hardware tests passed individual edits and all five values changed together, followed by complete original-state restoration. Published executable and Desktop/Transport/Protocol DLL hashes match the tested staging build.
+The current build supports the verified Noise Killer/OD808/PLX 100/Hall Reverb/Analog Delay ranges below through explicit Apply controls. Device writes use a fresh full-snapshot check and complete readback. All tested changes were restored through an independent connection. Other models and ranges remain unavailable.
 
 | Feature | Current support |
 | --- | --- |
 | Information | Firmware, capacity counts, preset names and current-preset details |
-| Noise Killer Threshold | Explicit Apply, values 25–28, matching first-position configuration |
-| Noise Killer Level | Explicit Apply, values 47–50; API/UI hardware verified |
-| 808 Gain | Explicit Apply, values 36–39; API/UI hardware verified |
-| 808 Tone | Explicit Apply, values 97–100; API/UI hardware verified, including supported combinations |
-| 808 Volume | Explicit Apply, values 97–100; API/UI hardware verified |
+| Noise Killer Threshold | Explicit Apply, values 0–100, matching verified first-position configuration |
+| Noise Killer Level | Explicit Apply, values 0–100; may be combined with Threshold 0–100 |
+| 808 Gain | Explicit Apply, values 0–100; verified OD808 profile only |
+| 808 Tone | Explicit Apply, values 0–100; all three OD808 values may coexist |
+| PLX 100 Bass | Explicit Apply, values 0–100; all six supported Amp values may coexist |
+| Hall Reverb Pre Delay | Explicit Apply, values 0–200 ms |
+| Hall Reverb Level | Explicit Apply, values 0–100 |
+| Hall Reverb Decay | Explicit Apply, values 0–100; no time unit inferred |
+| Hall Reverb Tone | Explicit Apply, values 0–100; all four supported Hall values may coexist |
+| Analog Delay Level | Explicit Apply, values 0–100 |
+| Analog Delay Feedback | Explicit Apply, values 0–100 |
+| Analog Delay Time | Explicit Apply, values 40–2500 ms; all three supported Delay values may coexist |
+| PLX 100 Gain | Explicit Apply, values 0–100; all six supported Amp values may coexist |
+| PLX 100 Master | Explicit Apply, values 0–100; all six supported Amp values may coexist |
+| PLX 100 Treble | Explicit Apply, values 0–100; all six supported Amp values may coexist |
+| PLX 100 Presence | Explicit Apply, values 0–100; all six supported Amp values may coexist |
+| PLX 100 Mid | Explicit Apply, values 0–100; all six supported Amp values may coexist |
+| 808 Volume | Explicit Apply, values 0–100; verified OD808 profile only |
 | Preset selection | Dropdown recall for all 80 presets, 0A–19D, with a left-side blue checkmark on the active preset |
 | Effect on/off | Noise Killer, OD808, PLX 100, Analog Delay and Hall Reverb on V1.1.9; grey bypassed icons and Enable/Disable controls |
 | Other effect parameters | Corroborated fields are displayed read-only; unsupported fields are omitted |
@@ -40,11 +59,15 @@ The current build at `artifacts/Iamp.Desktop` supports the five intervals below 
 | Save current preset | Same-slot save at 0D / British Lead Solo, Threshold 25 or 26 only, all other original values unchanged |
 | Other-slot save, rename, mixer, chain editing, applying imports | Still in development |
 
-Hardware writes are currently validated only on firmware **V1.1.9** and the captured first-position Noise Killer / second-position 808 models. The five intervals can vary together in the shared API; other fields must still match the supported layout. These are nearby experimental integer intervals, not documented full device ranges or physical units. Configuration checks disable unfamiliar layouts. All-slot recall uses fresh complete snapshot checks and post-recall global-state/detail verification. It does not broaden the supported parameter or saving ranges.
+Hardware writes are validated on **V1.1.9** for the captured Noise Killer, OD808, PLX 100, Analog Delay and Hall Reverb profiles and the table’s supported ranges. All listed limits match the observed mobile sliders for those captured profiles. Physical units are shown only where established. Fresh snapshot/layout checks reject unfamiliar configurations, and all-slot recall does not broaden parameter or saving support.
 
 ## Apply a supported parameter
 
-Select **Dyna / Noise Killer** or **OD / 808**, enter a supported whole-number value, then click its Apply button. Typing changes a pending value only. The app uses its live connection, checks the actual preset against its snapshot, writes the captured command and independently reads the result. Values on screen update only when that result is confirmed.
+Pending values remain while you browse other effect cards or apply another parameter. Hidden pending values still protect against accidental recall or effect toggling. An unchanged amplifier refresh retains them; loading another preset/import or refreshing changed hardware data starts from that new snapshot.
+
+Use the slider or type a whole number to choose a pending value. Arrow keys adjust a focused slider by one; Page Up/Page Down adjust by ten, and Home/End select its limits. Slider and number entry stay synchronized. Moving a slider sends nothing to the amplifier; choose **Apply** to make the checked live edit. The confirmed value remains separate until readback succeeds. Disabled effects, offline/preview snapshots, busy operations and unsupported configurations cannot be edited.
+
+Select a supported effect, enter a supported whole-number value, then click its Apply button. Typing changes a pending value only. The app uses its live connection, checks the actual preset against its snapshot, writes the captured command and independently reads the result. Values on screen update only when that result is confirmed.
 
 Apply controls make **live, unsaved edits**. Returning all changed values to their original snapshot values clears the snapshot-difference indicator. Recalling another preset with known live unsaved edits or pending input asks whether to discard them; No is the default. If an external change conflicts with typed input, the app preserves that input, stops automatic refresh and disables editing until you explicitly refresh. Matching a read snapshot alone does not prove that the preset is saved.
 

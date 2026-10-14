@@ -1,0 +1,36 @@
+{
+  "source": "Phone iAMP log capture, 14 October 2026; user Bass adjustment and restoration",
+  "sourceSha256": "4defd9d256838ea2b653d6d61636de708d6c076267cb8ba522eff057f87ea66e",
+  "firmware": "V1.1.9",
+  "supportedValues": [
+    34,
+    35
+  ],
+  "frames": [
+    {
+      "phoneTime": "10-14 21:27:47.832",
+      "value": 35,
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "phoneTime": "10-14 21:27:48.071",
+      "value": 34,
+      "hex": "AA5516002503021201001F00640022002B0028002D004B00010022F1"
+    },
+    {
+      "phoneTime": "10-14 21:27:52.937",
+      "value": 35,
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "phoneTime": "10-14 21:27:54.701",
+      "value": 35,
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "baselineRestored": true,
+    "saved": false
+  }
+}

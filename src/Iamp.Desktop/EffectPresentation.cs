@@ -38,7 +38,7 @@ internal sealed record EffectPresentation(string Category, string Color, string 
         if (block.TypeCode == 8 && block.Values.Count == 10 && block.Values[1] == 1)
             return new(category,color,"Hall Reverb",new[] {
                 new ReadOnlyParameter("Pre-delay (ms)",block.Values[2]),new ReadOnlyParameter("Level",block.Values[3]),
-                new ReadOnlyParameter("Decay",block.Values[4]) },block);
+                new ReadOnlyParameter("Decay",block.Values[4]),new ReadOnlyParameter("Tone",block.Values[5]) },block);
         return new(category,color,category,Array.Empty<ReadOnlyParameter>(),block);
     }
 }

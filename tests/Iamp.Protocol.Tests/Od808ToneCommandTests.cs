@@ -17,7 +17,7 @@ public sealed class Od808ToneCommandTests
     public void RejectsOtherLayoutsAndUnverifiedValues()
     {
         Assert.Throws<NotSupportedException>(() => Od808ToneCommand.Create(Baseline with { Position = 1 }, 99));
-        Assert.Throws<NotSupportedException>(() => Od808ToneCommand.Create(Baseline with { Values = new ushort[] { 1, 3, 40, 100, 100 } }, 99));
-        Assert.Throws<ArgumentOutOfRangeException>(() => Od808ToneCommand.Create(Baseline, 96));
+        Assert.Throws<NotSupportedException>(() => Od808ToneCommand.Create(Baseline with { Values = new ushort[] { 1, 3, 101, 100, 100 } }, 99));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Od808ToneCommand.Create(Baseline, 101));
     }
 }

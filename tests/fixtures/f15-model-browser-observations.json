@@ -1,0 +1,359 @@
+{
+  "source": "Authorized read-only ADB iAMP model browsing, 14 October 2026",
+  "firmware": "V1.1.9",
+  "completeCatalog": false,
+  "evidence": [
+    {
+      "file": "analysis/private/adb-dyna-model-list.png",
+      "sha256": "71196561ad16bccd495494945b49d7b16f2dde6ac92059f427c09d96d7ddaf68"
+    },
+    {
+      "file": "analysis/private/adb-od-model-list.png",
+      "sha256": "e8b98551320248b3139215d6cfe8739db94aee5db2c716ef07b077c5be81db2f"
+    },
+    {
+      "file": "analysis/private/adb-amp-model-list-first.png",
+      "sha256": "ed929da0d437369841fe56f3e041a6deee931e8a58beb6df53ce0253d9874a16"
+    },
+    {
+      "file": "analysis/private/adb-amp-model-list-second.png",
+      "sha256": "23988da3f4611e0f0d8b96d5056a54922cd62c0083f9499bd1b68aa13149b983"
+    },
+    {
+      "file": "analysis/private/adb-amp-model-list-third.png",
+      "sha256": "1b76fcbdc8b499fabd4fff657ac9e4ee0731a3c32c5eaae5c67cf9cc99841ca2"
+    },
+    {
+      "file": "analysis/private/adb-amp-model-list-fourth.png",
+      "sha256": "62e3effef8cd925e588a23c814683ecd62f214044a4475f36159256921df5215"
+    },
+    {
+      "file": "analysis/private/adb-delay-model-list.png",
+      "sha256": "e0f52e383a18160d800614e5de029dad05131a1dc4d595f67df4b82ebb391f86"
+    },
+    {
+      "file": "analysis/private/adb-reverb-model-list.png",
+      "sha256": "db10b8ab79d5195f16b0149ed305d56538dba5c611cf789f580657abb12fa136"
+    }
+  ],
+  "categories": {
+    "Dyna": [
+      {
+        "displayOrdinal": 1,
+        "name": "Red Comp"
+      },
+      {
+        "displayOrdinal": 2,
+        "name": "Yellow Comp"
+      },
+      {
+        "displayOrdinal": 3,
+        "name": "Noise Killer"
+      },
+      {
+        "displayOrdinal": 4,
+        "name": "Intel Reducer"
+      }
+    ],
+    "OD": [
+      {
+        "displayOrdinal": 1,
+        "name": "Pure Boost"
+      },
+      {
+        "displayOrdinal": 2,
+        "name": "Flex Boost"
+      },
+      {
+        "displayOrdinal": 3,
+        "name": "Tube DR"
+      },
+      {
+        "displayOrdinal": 4,
+        "name": "808"
+      },
+      {
+        "displayOrdinal": 5,
+        "name": "Gold Clon"
+      },
+      {
+        "displayOrdinal": 6,
+        "name": "D-Drive"
+      },
+      {
+        "displayOrdinal": 7,
+        "name": "Jimmy OD"
+      },
+      {
+        "displayOrdinal": 8,
+        "name": "Full DR"
+      },
+      {
+        "displayOrdinal": 9,
+        "name": "Beebee Pre"
+      },
+      {
+        "displayOrdinal": 10,
+        "name": "Beebee+"
+      },
+      {
+        "displayOrdinal": 11,
+        "name": "Black Rat"
+      }
+    ],
+    "Amp": [
+      {
+        "displayOrdinal": 1,
+        "name": "65 US DLX"
+      },
+      {
+        "displayOrdinal": 2,
+        "name": "65 US TW"
+      },
+      {
+        "displayOrdinal": 3,
+        "name": "59 US Bass"
+      },
+      {
+        "displayOrdinal": 4,
+        "name": "US Sonic"
+      },
+      {
+        "displayOrdinal": 5,
+        "name": "US Blues CL"
+      },
+      {
+        "displayOrdinal": 6,
+        "name": "US Blues OD"
+      },
+      {
+        "displayOrdinal": 7,
+        "name": "E650 CL"
+      },
+      {
+        "displayOrdinal": 8,
+        "name": "Powerbell CL"
+      },
+      {
+        "displayOrdinal": 9,
+        "name": "Blacknight CL"
+      },
+      {
+        "displayOrdinal": 10,
+        "name": "Mark III CL"
+      },
+      {
+        "displayOrdinal": 11,
+        "name": "Mark V CL"
+      },
+      {
+        "displayOrdinal": 12,
+        "name": "Tri Rec CL"
+      },
+      {
+        "displayOrdinal": 13,
+        "name": "Rockvrb CL"
+      },
+      {
+        "displayOrdinal": 14,
+        "name": "Dr Zee 18 JR"
+      },
+      {
+        "displayOrdinal": 15,
+        "name": "Dr Zee Reck"
+      },
+      {
+        "displayOrdinal": 16,
+        "name": "Jet 100H CL"
+      },
+      {
+        "displayOrdinal": 17,
+        "name": "Jazz 120"
+      },
+      {
+        "displayOrdinal": 18,
+        "name": "UK 30 CL"
+      },
+      {
+        "displayOrdinal": 19,
+        "name": "UK 30 OD"
+      },
+      {
+        "displayOrdinal": 20,
+        "name": "HWT 103"
+      },
+      {
+        "displayOrdinal": 21,
+        "name": "PV 5050 CL"
+      },
+      {
+        "displayOrdinal": 22,
+        "name": "Regal Tone CL"
+      },
+      {
+        "displayOrdinal": 23,
+        "name": "Regal Tone OD1"
+      },
+      {
+        "displayOrdinal": 24,
+        "name": "Carol CL"
+      },
+      {
+        "displayOrdinal": 25,
+        "name": "Cardeff"
+      },
+      {
+        "displayOrdinal": 26,
+        "name": "EV 5050 CL"
+      },
+      {
+        "displayOrdinal": 27,
+        "name": "HT Club CL"
+      },
+      {
+        "displayOrdinal": 28,
+        "name": "Hugen CL"
+      },
+      {
+        "displayOrdinal": 29,
+        "name": "Koche OD"
+      },
+      {
+        "displayOrdinal": 30,
+        "name": "J800"
+      },
+      {
+        "displayOrdinal": 31,
+        "name": "J900"
+      },
+      {
+        "displayOrdinal": 32,
+        "name": "PLX 100"
+      }
+    ],
+    "Delay": [
+      {
+        "displayOrdinal": 1,
+        "name": "Digital"
+      },
+      {
+        "displayOrdinal": 2,
+        "name": "Analog"
+      },
+      {
+        "displayOrdinal": 3,
+        "name": "Real Echo"
+      },
+      {
+        "displayOrdinal": 4,
+        "name": "Tape"
+      },
+      {
+        "displayOrdinal": 5,
+        "name": "Mod"
+      },
+      {
+        "displayOrdinal": 6,
+        "name": "Reverse"
+      },
+      {
+        "displayOrdinal": 7,
+        "name": "PingPong"
+      },
+      {
+        "displayOrdinal": 8,
+        "name": "Crystal"
+      },
+      {
+        "displayOrdinal": 9,
+        "name": "Rainbow"
+      },
+      {
+        "displayOrdinal": 10,
+        "name": "Vintage Delay"
+      },
+      {
+        "displayOrdinal": 11,
+        "name": "Galaxy Delay"
+      }
+    ],
+    "Reverb": [
+      {
+        "displayOrdinal": 1,
+        "name": "Room"
+      },
+      {
+        "displayOrdinal": 2,
+        "name": "Hall"
+      },
+      {
+        "displayOrdinal": 3,
+        "name": "Plate"
+      },
+      {
+        "displayOrdinal": 4,
+        "name": "Spring"
+      },
+      {
+        "displayOrdinal": 5,
+        "name": "Mod"
+      },
+      {
+        "displayOrdinal": 6,
+        "name": "Shimmer",
+        "greyedInPhone": true
+      },
+      {
+        "displayOrdinal": 7,
+        "name": "Fl-Reverb"
+      },
+      {
+        "displayOrdinal": 8,
+        "name": "Reverse Reverb"
+      },
+      {
+        "displayOrdinal": 9,
+        "name": "Dist Reverb"
+      }
+    ]
+  },
+  "knownCorrespondences": [
+    {
+      "category": "Dyna",
+      "name": "Noise Killer",
+      "displayOrdinal": 3,
+      "typeCode": 4,
+      "wireModel": 2
+    },
+    {
+      "category": "OD",
+      "name": "808",
+      "displayOrdinal": 4,
+      "typeCode": 1,
+      "wireModel": 3
+    },
+    {
+      "category": "Amp",
+      "name": "PLX 100",
+      "displayOrdinal": 32,
+      "typeCode": 2,
+      "wireModel": 31
+    },
+    {
+      "category": "Delay",
+      "name": "Analog",
+      "displayOrdinal": 2,
+      "typeCode": 7,
+      "wireModel": 1
+    },
+    {
+      "category": "Reverb",
+      "name": "Hall",
+      "displayOrdinal": 2,
+      "typeCode": 8,
+      "wireModel": 1
+    }
+  ],
+  "unknown": "No model was selected; no alternate-model command, default parameters, range or availability is established. Do not infer a general wire ID formula from these five correspondences.",
+  "fullIndependentBaselineUnchanged": true
+}

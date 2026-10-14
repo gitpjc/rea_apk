@@ -1,0 +1,38 @@
+{
+  "source": "Phone iAMP controlled Mid change and restoration, 14 October 2026",
+  "sourceSha256": "9643fbb4bb0562b4dd053134b18eb2d4dbb3446305fbdf1112dfa72d100a12ce",
+  "firmware": "V1.1.9",
+  "supportedValues": [
+    42,
+    43
+  ],
+  "frames": [
+    {
+      "phoneTime": "10-14 21:34:06.342",
+      "value": 42,
+      "hex": "AA5516002503021201001F00640023002A0028002D004B0001004EC1"
+    },
+    {
+      "phoneTime": "10-14 21:34:08.171",
+      "value": 43,
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "phoneTime": "10-14 21:34:09.132",
+      "value": 43,
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "combinedBassMid": true,
+    "baselineRestored": true,
+    "saved": false
+  },
+  "adbPhone": {
+    "passed": true,
+    "baselineRestored": true,
+    "saved": false,
+    "phoneSettingRestored": true
+  }
+}

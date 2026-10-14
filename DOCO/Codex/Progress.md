@@ -4,7 +4,63 @@ Updated 14 October 2026. The full editor is not complete.
 
 Scope update, 14 October: the user explicitly excluded all Phase 6 work unless separately instructed. No Phase 6 investigation, implementation or hardware test is authorized by a general request to continue. Remaining core MVP, connection reliability and release verification work stays in scope. That scope restriction remains in effect for subsequent versions.
 
-## Latest: separate amplifier information in 1.8.0
+## Latest: pending input preservation in 1.21.1
+
+Version 1.21.1 preserves valid and invalid pending parameter inputs while browsing effect cards, after applying another parameter and across an unchanged amplifier refresh. Hidden pending inputs retain conflict/recall/effect-power guards. New presets, imports and changed refresh snapshots initialize fresh controls. Focused offline checks cover all 18 controls and five viewport sizes. Actual Windows navigation, Threshold/Gain Apply-and-restore and unchanged full refresh pass, with complete original state/detail independently restored. Nothing saved; Phase 6 remains excluded.
+
+## Earlier: parameter sliders in 1.21.0
+
+Version 1.21.0 adds integer sliders for all 18 supported parameters, synchronized with numeric entry. Sliders set pending values; only Apply writes to the amp. Keyboard increments, accessible labels and existing busy/firmware/offline/bypass guards are preserved. Focused offline WPF interactions cover every integer target and five viewport sizes. All 18 actual Windows slider/Apply paths pass one-step changes and immediate restoration; a fresh independent session verifies the complete original preset. Nothing saved; Phase 6 remains excluded.
+
+## Earlier: observed Analog Delay ranges in 1.20.0
+
+Version 1.20.0 expands Analog Delay Level/Feedback to observed 0–100 ranges and Time to 40–2500 ms, including four-digit entry. Exact ADB endpoint frames, 43 affected protocol/save-guard cases and offline pending/busy/firmware/import/five-size checks pass. Actual Windows controls verify boundaries, interior values and representative combinations; high Feedback is tested with Level muted. Complete original state/detail independently restored. Nothing saved; Phase 6 remains excluded. See Analog-Delay-Ranges.md.
+
+## Earlier: observed Hall Reverb ranges in 1.19.0
+
+Version 1.19.0 expands Hall Reverb Pre Delay to observed 0–200 ms and Level, Decay and Tone to 0–100 on the verified V1.1.9 profile. Exact ADB endpoint captures and full independent phone restoration are verified. Fifty-five affected Reverb/save-guard cases and offline input/pending/busy/firmware/import/five-size checks pass. Actual desktop handlers verify boundary/interior values and all 16 extreme combinations, followed by complete independent original restoration. No saving; persistence restrictions and Phase 6 exclusion remain unchanged. See Hall-Reverb-Ranges.md.
+
+## Earlier: PLX 100 0–100 ranges in 1.18.0
+
+Version 1.18.0 expands PLX 100 Gain, Bass, Mid, Treble, Presence and Master to observed mobile 0–100 ranges on the verified V1.1.9 profile. Exact ADB endpoint captures and complete independent original restoration are verified. Ninety-five affected Amp/save-guard protocol cases pass, including every target and all 64 extreme source combinations in software. Actual desktop handlers verify boundary/interior values for all six controls and all-minimum/all-maximum/alternating combinations, restoring every original byte independently. Offline input/pending/busy/firmware/import/five-size checks pass. No saving; persistence restrictions and Phase 6 exclusion remain unchanged. See PLX100-Ranges.md.
+
+## Earlier: OD808 0–100 ranges in 1.17.0
+
+Version 1.17.0 expands OD808 Gain, Tone and Volume to the mobile app’s observed 0–100 ranges on the verified V1.1.9 profile. ADB endpoint captures and full independent original restoration are verified. Forty-two focused protocol/save-guard cases pass, covering every target and representative combined source profiles. Actual desktop handlers verify boundaries/interior values and all eight extreme combinations, followed by complete independent restoration. Offline input/pending/busy/firmware/import/five-size checks pass. Typing pending Tone now immediately refreshes the effect on/off button and related controls. No saving; existing persistence restrictions and Phase 6 exclusion remain unchanged. See OD808-Ranges.md.
+
+## Earlier: Noise Killer 0–100 ranges in 1.16.0
+
+Version 1.16.0 expands Noise Killer Threshold and Level to the mobile app’s observed 0–100 range on the verified V1.1.9 profile. ADB endpoint commands and complete original restoration are independently verified. Thirty-eight focused protocol/save-guard cases pass, including software encoding checks across all 10,201 integer source combinations. Actual desktop handlers verified 0, 1, 25, 50, 75, 99 and 100, all four extreme combinations and full independent restoration. Offline input/pending/busy/firmware/import/layout checks pass. Nothing saved; same-slot saving remains limited to original 0D content with Threshold 25/26. Phase 6 remains excluded. See Noise-Killer-Ranges.md.
+
+## Earlier: verified Hall Reverb and Tone mapping in 1.15.0
+
+Version 1.15.0 adds guarded Hall Reverb Pre Delay 18–20 ms, Level 23–24, Decay 34–35 and Tone 0–1. Independent ADB captures resolve Tone to word 5 and confirm all four parameter offsets. Forty-eight relevant protocol cases and offline summary/input/state/layout checks pass. Actual Windows handlers tested each control, the 19 ms midpoint and all four together; a fresh independent connection matched every original state/detail byte. No saving. USB stay-awake remains enabled during ongoing development/testing. Phase 6 remains excluded. See Reverb-Editing.md.
+
+## Earlier: verified Analog Delay controls in 1.14.0
+
+Version 1.14.0 adds guarded Analog Delay Level 16–17, Feedback 24–25 and Time 499–500 ms. Exact ADB phone commands and full independent restoration are verified. Thirty-eight relevant protocol cases and focused offline UI/layout checks pass. Actual Windows handlers tested each control and their combined dirty state, with every original state/detail byte independently restored. No saving. USB stay-awake remains enabled across ongoing development/testing; Phase 6 remains excluded. See Delay-Editing.md.
+
+## Earlier: verified PLX 100 Gain/Master in 1.13.0
+
+Version 1.13.0 adds guarded PLX 100 Gain 99–100 and Master 74–75 alongside Bass 34–35, Mid 42–43, Treble 39–40 and Presence 44–45. Exact ADB phone frames and complete independent phone restoration are verified. Sixty relevant protocol tests and focused offline UI guards pass. Actual Windows handlers verified both new controls individually, then all six bounded Amp controls together, restoring every original state/detail byte through an independent connection. Nothing saved. USB stay-awake remains enabled across the ongoing session. Phase 6 remains excluded. See Amp-Gain-Master.md. Additional offline geometry checks confirm all six Amp inputs/actions remain within the horizontal viewport and scrollable content at 1920×1080, 1366×768, 911×512, 683×384 and 620×320 logical pixels. No screenshots or hardware commands were used for those checks; physical DPI/Narrator acceptance remains open.
+
+## Earlier: verified Treble/Presence and four-control tone editing in 1.12.0
+
+Version 1.12.0 adds guarded PLX 100 Treble 39–40 and Presence 44–45, including combinations with Bass 34–35 and Mid 42–43. ADB phone changes/restoration and exact captured frames are independently corroborated by full original-state equality. Forty-nine focused protocol tests and offline UI guards pass. Actual Windows handlers restored each new control individually, then verified all four tone controls changed together and completely restored through an independent connection. Nothing saved; no computer screenshots or mobile-screen stability checks. The user clarified USB stay-awake must remain enabled throughout the ongoing testing/development session, including packaging between tests; restore its backed-up original value only when the session finishes or on request. Phase 6 remains excluded. See Amp-Tone-Controls.md.
+
+## Earlier: verified PLX 100 Mid and ADB testing in 1.11.0
+
+Version 1.11.0 adds guarded PLX 100 Mid Apply at 42–43 on V1.1.9, alongside Bass 34–35. Exact mobile frames, 38 focused protocol cases and offline UI input/busy/firmware/import/pending-edit guards pass. Actual Windows Mid and combined Bass/Mid edits were read back and completely restored; an independent fresh connection matched every original state/detail byte. A separate ADB-operated phone Mid 43→42→43 test also passed with full independent original-state verification. The user authorized ongoing ADB testing, iAMP-only phone screenshots and temporary USB stay-awake with restoration; the original phone setting was restored and verified. No saves or computer screenshots. Do not request further mobile-screen stability checks unless the user asks. Phase 6 remains excluded. Evidence: Amp-Mid-Editing.md and ADB-Testing.md.
+
+## Earlier: verified PLX 100 Bass control in 1.10.0
+
+Version 1.10.0 adds explicit PLX 100 Bass Apply on V1.1.9, limited to 34–35 in the exact observed third-position Amp layout. Every other Amp field is preserved and unfamiliar layouts/values stay disabled. Phone command capture confirms the Bass word and exact frames. Twenty-five focused protocol tests (new Bass cases plus affected existing parameter regressions) and offline input/busy/firmware/import/pending-edit guards pass. Actual Windows Apply 35→34→35 passed, followed by independent complete original state/detail verification. Noise Killer stays enabled in the latest user baseline. No saves, screenshots or phone settings changed; no mobile-screen stability check requested. Phase 6 remains excluded. See [Amp-Bass-Editing.md](Amp-Bass-Editing.md).
+
+## Earlier: read-only battery information in 1.9.0
+
+Version 1.9.0 adds read-only battery percentage and read time on Amplifier Information. Connect/Refresh reads it on V1.1.9, with an approximately thirty-second refresh while connected. Power-state codes remain opaque; charging labels are not inferred. Local snapshot imports clear battery data. Ten focused protocol cases and offline display/import checks pass. Actual Windows Connect and a due production refresh reported 100%; independent before/after reads matched every original state/detail byte. No edits, recalls, saves, screenshots or phone-setting changes; no mobile stability check requested. Phase 6 remains excluded. See [Battery-Information.md](Battery-Information.md).
+
+## Earlier: separate amplifier information in 1.8.0
 
 Version 1.8.0 moves Firmware, Preset Slots, GIR/GNR Slots and Drums/Looper cards to a dedicated Amplifier Information screen. Its sidebar item sits directly below Amplifier Settings, the renamed Amplifier library screen. Information uses the same existing values and snapshot/connection status; navigation sends no amplifier commands and preserves selected presets, snapshots, pending inputs and connection state. Cards adapt to smaller widths. Existing Settings/History/search shortcuts retain their actions. Focused offline checks cover menu order/labels, screen visibility, information cards/status, state preservation and responsive bounds; no full-suite rerun, screenshots or device access. Phase 6 remains excluded.
 
@@ -219,3 +275,7 @@ The user's explicit policy is to restore **every changed preset value and the or
 No Python installation was performed. Existing bundled Python is permitted only where an established library or tested binary parser offers a clear advantage. Specialized APK/ELF/PE helpers remain Python; routine setup/configuration, capture parsing and the application use Bash, Node and C#. Bootstrap now uses Git Bash's existing `unzip`; the Windows application has no Python dependency.
 
 See `Plan.md` for task checkboxes and `Feature-Matrix.md` for separate implementation/hardware acceptance.
+
+## Next core work: guarded effect-model selection
+
+Read-only mobile model browsing is recorded in `Model-Browser.md`, with a partial UI catalog and complete independent unchanged-baseline verification. Display ordinals differ from the five known wire values, and Shimmer is greyed out. No alternate-model writes are enabled. P5.5u tracks the required capture/default-layout/exact-restoration proof before adding a guarded Windows model picker. Phase 6 stays excluded.

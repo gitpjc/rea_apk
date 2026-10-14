@@ -1,0 +1,62 @@
+{
+  "source": "Authorized ADB-operated iAMP phone controls, 14 October 2026",
+  "sourceSha256": "627811af80aeeffd180f8992ddd4fd1b11c4a400fb09029bdb8bf1bcfc080b8f",
+  "firmware": "V1.1.9",
+  "frames": [
+    {
+      "parameter": "PreDelay",
+      "value": 18,
+      "phoneTime": "10-14 22:28:41.141",
+      "hex": "AA5518002505081401000100120018002300000000000000000000007630"
+    },
+    {
+      "parameter": "PreDelay",
+      "value": 20,
+      "phoneTime": "10-14 22:30:20.561",
+      "hex": "AA551800250508140100010014001800230000000000000000000000B68B"
+    },
+    {
+      "parameter": "Level",
+      "value": 23,
+      "phoneTime": "10-14 22:29:39.371",
+      "hex": "AA5518002505081401000100140017002300000000000000000000002DE6"
+    },
+    {
+      "parameter": "Level",
+      "value": 24,
+      "phoneTime": "10-14 22:30:20.561",
+      "hex": "AA551800250508140100010014001800230000000000000000000000B68B"
+    },
+    {
+      "parameter": "Decay",
+      "value": 34,
+      "phoneTime": "10-14 22:30:06.491",
+      "hex": "AA551800250508140100010014001800220000000000000000000000B5FE"
+    },
+    {
+      "parameter": "Decay",
+      "value": 35,
+      "phoneTime": "10-14 22:30:20.561",
+      "hex": "AA551800250508140100010014001800230000000000000000000000B68B"
+    },
+    {
+      "parameter": "Tone",
+      "value": 0,
+      "phoneTime": "10-14 22:30:20.561",
+      "hex": "AA551800250508140100010014001800230000000000000000000000B68B"
+    },
+    {
+      "parameter": "Tone",
+      "value": 1,
+      "phoneTime": "10-14 22:28:05.111",
+      "hex": "AA551800250508140100010014001800230001000000000000000000D9CE"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "combinedFourControls": true,
+    "preDelay19Verified": true,
+    "baselineRestored": true,
+    "saved": false
+  }
+}

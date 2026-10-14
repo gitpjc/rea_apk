@@ -119,6 +119,9 @@ public sealed class F15ReadSession : IAsyncDisposable
             payload[11], payload[12], payload[13], payload[14], payload[15], Convert.ToHexString(payload));
     }
 
+    public Task<BatteryStatus> ReadBatteryAsync(CancellationToken ct)
+        => RunWorkflowAsync(async token=>BatteryStatus.Parse(await QueryAsync(new byte[]{0x91},p=>p.Length>0 && p[0]==0x92,token)),ct);
+
     public Task<IReadOnlyList<PresetName>> ReadPresetNamesAsync(CancellationToken ct)
         => RunWorkflowAsync(ReadPresetNamesCoreAsync, ct);
 
@@ -175,6 +178,36 @@ public sealed class F15ReadSession : IAsyncDisposable
     /// <summary>Restricted unsaved tone edit on the captured second-position 808 model, with full read-back.</summary>
     public Task<CurrentPresetSnapshot> Set808ToneAsync(CurrentPresetSnapshot expected, ushort tone, CancellationToken ct)
         => SetObservedParameterAsync(expected, ObservedParameter.OdTone, tone, ct);
+
+    public Task<CurrentPresetSnapshot> SetAmpBassAsync(CurrentPresetSnapshot expected, ushort bass, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.AmpBass,bass,ct);
+    public Task<CurrentPresetSnapshot> SetAmpMidAsync(CurrentPresetSnapshot expected, ushort mid, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.AmpMid,mid,ct);
+    public Task<CurrentPresetSnapshot> SetAmpTrebleAsync(CurrentPresetSnapshot expected, ushort treble, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.AmpTreble,treble,ct);
+    public Task<CurrentPresetSnapshot> SetAmpPresenceAsync(CurrentPresetSnapshot expected, ushort presence, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.AmpPresence,presence,ct);
+
+    public Task<CurrentPresetSnapshot> SetAmpGainAsync(CurrentPresetSnapshot expected, ushort gain, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.AmpGain,gain,ct);
+    public Task<CurrentPresetSnapshot> SetAmpMasterAsync(CurrentPresetSnapshot expected, ushort master, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.AmpMaster,master,ct);
+
+    public Task<CurrentPresetSnapshot> SetDelayLevelAsync(CurrentPresetSnapshot expected, ushort level, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.DelayLevel,level,ct);
+    public Task<CurrentPresetSnapshot> SetDelayFeedbackAsync(CurrentPresetSnapshot expected, ushort feedback, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.DelayFeedback,feedback,ct);
+    public Task<CurrentPresetSnapshot> SetDelayTimeAsync(CurrentPresetSnapshot expected, ushort milliseconds, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.DelayTime,milliseconds,ct);
+
+    public Task<CurrentPresetSnapshot> SetReverbPreDelayAsync(CurrentPresetSnapshot expected, ushort milliseconds, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.ReverbPreDelay,milliseconds,ct);
+    public Task<CurrentPresetSnapshot> SetReverbLevelAsync(CurrentPresetSnapshot expected, ushort level, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.ReverbLevel,level,ct);
+    public Task<CurrentPresetSnapshot> SetReverbDecayAsync(CurrentPresetSnapshot expected, ushort decay, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.ReverbDecay,decay,ct);
+    public Task<CurrentPresetSnapshot> SetReverbToneAsync(CurrentPresetSnapshot expected, ushort tone, CancellationToken ct)
+        => SetObservedParameterAsync(expected,ObservedParameter.ReverbTone,tone,ct);
 
     private Task<CurrentPresetSnapshot> SetObservedParameterAsync(CurrentPresetSnapshot expected, ObservedParameter parameter, ushort value, CancellationToken ct)
         => RunWorkflowAsync(token => SetObservedParameterCoreAsync(expected, parameter, value, token), ct);

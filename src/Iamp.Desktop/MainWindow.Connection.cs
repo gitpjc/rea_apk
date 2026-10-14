@@ -64,9 +64,9 @@ public sealed partial class MainWindow
     }
     private bool HasPendingInputs()
     {
-        if(thresholdInput.Parent is not null && EditableNoiseKiller() is {} noise && (!TryPendingThreshold(out var threshold)||threshold!=noise.Values[2]))return true;
-        if(toneInput.Parent is not null && Editable808Tone() is {} od && (!TryPendingTone(out var tone)||tone!=od.Values[3]))return true;
-        return AdditionalEditors.Any(e=>e.Input.Parent is not null && EditableBlock(e) is {} block && (!e.TryValue(out var value)||value!=block.Values[e.ParameterIndex]));
+        if(initializedParameterPositions.Contains(1) && EditableNoiseKiller() is {} noise && (!TryPendingThreshold(out var threshold)||threshold!=noise.Values[2]))return true;
+        if(initializedParameterPositions.Contains(2) && Editable808Tone() is {} od && (!TryPendingTone(out var tone)||tone!=od.Values[3]))return true;
+        return AdditionalEditors.Any(e=>initializedParameterPositions.Contains(e.Position) && EditableBlock(e) is {} block && (!e.TryValue(out var value)||value!=block.Values[e.ParameterIndex]));
     }
     private async Task PollCurrentPresetAsync()
     {
@@ -76,6 +76,11 @@ public sealed partial class MainWindow
         try {
             var current=await session.ReadCurrentPresetAsync(timeout.Token);
             if(operation is not null || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+            if(snapshotFirmware=="V1.1.9" && batteryReadAt is {} batteryTime && DateTimeOffset.UtcNow-batteryTime>=TimeSpan.FromSeconds(30)) {
+                var battery=await session.ReadBatteryAsync(timeout.Token);
+                if(operation is not null || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+                SetBatteryDisplay(battery);
+            }
             if(current.RawStatePayloadHex==previous?.RawStatePayloadHex && current.RawDetailPayloadHex==previous.RawDetailPayloadHex){snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();return;}
             if(HasPendingInputs()) {
                 editSnapshotValid=false;refreshTimer.Stop();UpdateThresholdState();
@@ -94,5 +99,10 @@ public sealed partial class MainWindow
             }
         }
         finally {if(pollCancellation==timeout)pollCancellation=null;polling=false;UpdateEffectPowerState();}
+    }
+    private void SetBatteryDisplay(Iamp.Protocol.BatteryStatus battery)
+    {
+        batteryReadAt=DateTimeOffset.UtcNow;
+        batterySummary.Text=$"Battery · {battery.Percentage}% · Read {DateTimeOffset.Now:HH:mm:ss}";
     }
 }

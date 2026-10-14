@@ -1,0 +1,202 @@
+{
+  "source": "Authorized ADB-operated iAMP endpoint tests, 14 October 2026",
+  "sourceSha256": "7e8f9beac9423305f6c916d0e4e1bf2cb064d422d56b326c9100805fda437780",
+  "firmware": "V1.1.9",
+  "frames": [
+    {
+      "parameter": "Level",
+      "value": 0,
+      "sourceValues": [
+        1,
+        1,
+        17,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:25:00.192",
+      "hex": "AA551400250407100100010000001900F401000000000000EEB6"
+    },
+    {
+      "parameter": "Level",
+      "value": 100,
+      "sourceValues": [
+        1,
+        1,
+        17,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:24:17.262",
+      "hex": "AA551400250407100100010064001900F4010000000000005082"
+    },
+    {
+      "parameter": "Level",
+      "value": 17,
+      "sourceValues": [
+        1,
+        1,
+        17,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:29:02.771",
+      "hex": "AA551400250407100100010011001900F401000000000000DA93"
+    },
+    {
+      "parameter": "Feedback",
+      "value": 0,
+      "sourceValues": [
+        1,
+        1,
+        0,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:24:58.032",
+      "hex": "AA551400250407100100010000000000F4010000000000005F2E"
+    },
+    {
+      "parameter": "Feedback",
+      "value": 100,
+      "sourceValues": [
+        1,
+        1,
+        0,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:24:59.142",
+      "hex": "AA551400250407100100010000006400F401000000000000B90C"
+    },
+    {
+      "parameter": "Feedback",
+      "value": 25,
+      "sourceValues": [
+        1,
+        1,
+        0,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:25:00.192",
+      "hex": "AA551400250407100100010000001900F401000000000000EEB6"
+    },
+    {
+      "parameter": "Time",
+      "value": 40,
+      "sourceValues": [
+        1,
+        1,
+        17,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:28:33.191",
+      "hex": "AA551400250407100100010011001900280000000000000045A0"
+    },
+    {
+      "parameter": "Time",
+      "value": 2500,
+      "sourceValues": [
+        1,
+        1,
+        17,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:28:48.401",
+      "hex": "AA551400250407100100010011001900C4090000000000000FE2"
+    },
+    {
+      "parameter": "Time",
+      "value": 500,
+      "sourceValues": [
+        1,
+        1,
+        17,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "phoneTime": "10-14 23:29:02.771",
+      "hex": "AA551400250407100100010011001900F401000000000000DA93"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "levelValues": [
+      0,
+      1,
+      17,
+      50,
+      75,
+      99,
+      100
+    ],
+    "feedbackValues": [
+      0,
+      1,
+      25,
+      50,
+      75,
+      99,
+      100
+    ],
+    "feedbackTestLevel": 0,
+    "timeValues": [
+      40,
+      41,
+      500,
+      999,
+      1000,
+      1250,
+      2499,
+      2500
+    ],
+    "combinations": [
+      [
+        0,
+        100,
+        2500
+      ],
+      [
+        100,
+        0,
+        40
+      ],
+      [
+        50,
+        50,
+        1250
+      ]
+    ],
+    "baselineRestored": true,
+    "saved": false
+  }
+}

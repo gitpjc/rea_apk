@@ -60,7 +60,7 @@ These associations are grounded in outgoing requests followed by coherent respon
 | `AA550300292950EFF1` | Record 452; response 504–515 starts `2A2950` and contains the remaining preset names. Candidate names query, indices 41–80. |
 | `AA55010011CADF` | Record 601; response 604–605 starts `1210` and contains device/model text. Candidate current-state query; field layout remains unresolved. |
 | `AA55020021103571` | Record 606; response 609–611 starts `2210` and contains “Cali MK3 Lead”. Candidate preset-detail query for preset 16; numbering and parameter layout need verification. |
-| `AA550100915B57` | Repeated at roughly 30-second intervals in logcat; responses start `92` with varying values. Polling behavior observed; battery/other field semantics unconfirmed. |
+| `AA550100915B57` | Repeated at roughly 30-second intervals in logcat; responses start `92` with varying values. Battery percentage in the second payload byte is now corroborated by phone logs and Windows V1.1.9 readback; the third power-state byte stays opaque. See `Battery-Information.md`. |
 
 iAMP logs report firmware `V1.1.2`, 80 presets, 10 GIR slots, 10 GNR slots, 70 drums and 10 looper files. These counts are firmware-reported/session observations, not hardcoded product-wide guarantees. Responses beginning `66` follow requests beginning `65` and include “Empty” or drum names; record layouts and category meanings remain partially inferred.
 

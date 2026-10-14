@@ -1,0 +1,129 @@
+{
+  "source": "Authorized ADB-operated iAMP endpoint tests, 14 October 2026",
+  "sourceSha256": "00bb3b7b943c6d83bb09502e4f5c2c1ca23220d8ad5fdb9dec2d2b810fe5d755",
+  "firmware": "V1.1.9",
+  "frames": [
+    {
+      "parameter": "Gain",
+      "value": 0,
+      "phoneTime": "10-14 22:59:18.071",
+      "hex": "AA5516002503021201001F00000023002B0028002D004B0001006A51"
+    },
+    {
+      "parameter": "Gain",
+      "value": 100,
+      "phoneTime": "10-14 23:02:16.152",
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "parameter": "Bass",
+      "value": 0,
+      "phoneTime": "10-14 22:59:51.971",
+      "hex": "AA5516002503021201001F00640000002B0028002D004B0001004ABB"
+    },
+    {
+      "parameter": "Bass",
+      "value": 100,
+      "phoneTime": "10-14 22:59:53.052",
+      "hex": "AA5516002503021201001F00640064002B0028002D004B000100F48F"
+    },
+    {
+      "parameter": "Bass",
+      "value": 35,
+      "phoneTime": "10-14 23:02:16.152",
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "parameter": "Mid",
+      "value": 0,
+      "phoneTime": "10-14 23:00:22.571",
+      "hex": "AA5516002503021201001F0064002300000028002D004B000100E30D"
+    },
+    {
+      "parameter": "Mid",
+      "value": 100,
+      "phoneTime": "10-14 23:00:23.682",
+      "hex": "AA5516002503021201001F0064002300640028002D004B000100052F"
+    },
+    {
+      "parameter": "Mid",
+      "value": 43,
+      "phoneTime": "10-14 23:02:16.152",
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "parameter": "Treble",
+      "value": 0,
+      "phoneTime": "10-14 23:00:54.552",
+      "hex": "AA5516002503021201001F00640023002B0000002D004B0001004436"
+    },
+    {
+      "parameter": "Treble",
+      "value": 100,
+      "phoneTime": "10-14 23:00:55.662",
+      "hex": "AA5516002503021201001F00640023002B0064002D004B000100C6E3"
+    },
+    {
+      "parameter": "Treble",
+      "value": 40,
+      "phoneTime": "10-14 23:02:16.152",
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "parameter": "Presence",
+      "value": 0,
+      "phoneTime": "10-14 23:01:22.571",
+      "hex": "AA5516002503021201001F00640023002B00280000004B0001005ACF"
+    },
+    {
+      "parameter": "Presence",
+      "value": 100,
+      "phoneTime": "10-14 23:01:23.681",
+      "hex": "AA5516002503021201001F00640023002B00280064004B0001000376"
+    },
+    {
+      "parameter": "Presence",
+      "value": 45,
+      "phoneTime": "10-14 23:02:16.152",
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "parameter": "Master",
+      "value": 0,
+      "phoneTime": "10-14 23:02:14.022",
+      "hex": "AA5516002503021201001F00640023002B0028002D00000001005107"
+    },
+    {
+      "parameter": "Master",
+      "value": 100,
+      "phoneTime": "10-14 23:02:15.011",
+      "hex": "AA5516002503021201001F00640023002B0028002D0064000100C224"
+    },
+    {
+      "parameter": "Master",
+      "value": 75,
+      "phoneTime": "10-14 23:02:16.152",
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "representativeValues": [
+      0,
+      1,
+      25,
+      50,
+      75,
+      99,
+      100
+    ],
+    "combinationMasks": [
+      0,
+      63,
+      21,
+      42
+    ],
+    "baselineRestored": true,
+    "saved": false
+  }
+}

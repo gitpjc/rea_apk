@@ -1,0 +1,37 @@
+{
+  "source": "ADB-operated iAMP phone controls, 14 October 2026",
+  "sourceSha256": "13dfcd092a4fe0bc439ed332024f565b3e240b721189ada723a4ca1fe3a8037b",
+  "firmware": "V1.1.9",
+  "frames": [
+    {
+      "parameter": "Treble",
+      "value": 39,
+      "phoneTime": "10-14 21:52:31.662",
+      "hex": "AA5516002503021201001F00640023002B0027002D004B000100F846"
+    },
+    {
+      "parameter": "Treble",
+      "value": 40,
+      "phoneTime": "10-14 21:53:18.250",
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    },
+    {
+      "parameter": "Presence",
+      "value": 44,
+      "phoneTime": "10-14 21:53:05.680",
+      "hex": "AA5516002503021201001F00640023002B0028002C004B0001006424"
+    },
+    {
+      "parameter": "Presence",
+      "value": 45,
+      "phoneTime": "10-14 21:53:18.250",
+      "hex": "AA5516002503021201001F00640023002B0028002D004B0001002184"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "combinedFourControls": true,
+    "baselineRestored": true,
+    "saved": false
+  }
+}

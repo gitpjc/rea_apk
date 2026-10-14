@@ -19,7 +19,7 @@ public sealed class NoiseKillerCommandTests
     {
         Assert.Throws<NotSupportedException>(() => NoiseKillerCommand.Create(Baseline with { TypeCode = 1 }, 26));
         Assert.Throws<NotSupportedException>(() => NoiseKillerCommand.Create(Baseline with { Position = 2 }, 26));
-        Assert.Throws<NotSupportedException>(() => NoiseKillerCommand.Create(Baseline with { Values = new ushort[] { 1, 2, 25, 51, 0, 0 } }, 26));
-        Assert.Throws<ArgumentOutOfRangeException>(() => NoiseKillerCommand.Create(Baseline, 29));
+        Assert.Throws<NotSupportedException>(() => NoiseKillerCommand.Create(Baseline with { Values = new ushort[] { 1, 2, 25, 101, 0, 0 } }, 26));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NoiseKillerCommand.Create(Baseline, 101));
     }
 }

@@ -1,0 +1,64 @@
+{
+  "source": "Authorized ADB-operated iAMP endpoint tests, 14 October 2026",
+  "sourceSha256": "8044a6d49e21ac89d8767585f3dbef85c29b67fe732e2d0a5f378157637ea81c",
+  "firmware": "V1.1.9",
+  "frames": [
+    {
+      "parameter": "Gain",
+      "value": 0,
+      "phoneTime": "10-14 22:49:50.682",
+      "hex": "AA550E002502010A010003000000640064004DB9"
+    },
+    {
+      "parameter": "Gain",
+      "value": 100,
+      "phoneTime": "10-14 22:50:04.032",
+      "hex": "AA550E002502010A010003006400640064001400"
+    },
+    {
+      "parameter": "Gain",
+      "value": 39,
+      "phoneTime": "10-14 22:51:04.271",
+      "hex": "AA550E002502010A01000300270064006400B0F0"
+    },
+    {
+      "parameter": "Tone",
+      "value": 0,
+      "phoneTime": "10-14 22:50:28.631",
+      "hex": "AA550E002502010A0100030027000000640023D3"
+    },
+    {
+      "parameter": "Tone",
+      "value": 100,
+      "phoneTime": "10-14 22:51:04.271",
+      "hex": "AA550E002502010A01000300270064006400B0F0"
+    },
+    {
+      "parameter": "Volume",
+      "value": 0,
+      "phoneTime": "10-14 22:50:52.391",
+      "hex": "AA550E002502010A01000300270064000000771E"
+    },
+    {
+      "parameter": "Volume",
+      "value": 100,
+      "phoneTime": "10-14 22:51:04.271",
+      "hex": "AA550E002502010A01000300270064006400B0F0"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "representativeValues": [
+      0,
+      1,
+      25,
+      50,
+      75,
+      99,
+      100
+    ],
+    "allEightCorners": true,
+    "baselineRestored": true,
+    "saved": false
+  }
+}

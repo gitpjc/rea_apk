@@ -42,7 +42,7 @@ public sealed class ExpandedParameterTests
         var block = new PresetEffectBlock(2, 1, new ushort[] { 0, 3, 39, 100, 100 });
         Assert.Throws<NotSupportedException>(() => ObservedParameterCommands.Create(block, ObservedParameter.OdGain, 37));
         block = block with { Values = new ushort[] { 1, 3, 39, 100, 100 } };
-        Assert.Throws<ArgumentOutOfRangeException>(() => ObservedParameterCommands.Create(block, ObservedParameter.OdGain, 40));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ObservedParameterCommands.Create(block, ObservedParameter.OdGain, 101));
         Assert.Throws<NotSupportedException>(() => ObservedParameterCommands.Create(block, ObservedParameter.NoiseLevel, 48));
         Assert.Throws<ArgumentOutOfRangeException>(() => ObservedParameterCommands.Definition((ObservedParameter)255));
     }

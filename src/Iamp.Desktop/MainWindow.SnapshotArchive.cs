@@ -131,6 +131,7 @@ public sealed partial class MainWindow
             currentSnapshot=loaded;snapshotFirmware=decoded.Firmware;snapshotTime=decoded.CapturedAt;originalSnapshotDetail=loaded.RawDetailPayloadHex;
             snapshotAddress=null;editSnapshotValid=false;liveEditUnsaved=false;localSnapshotSource=true;lastReadSucceeded=false;
             sourceBadge.Text="LOCAL SNAPSHOT";firmware.Text=decoded.Firmware;
+            batterySummary.Text="Battery · Not included in local snapshots";batteryReadAt=null;
             presetCount.Text=libraryCount.Text=rhythmCount.Text="—";
             names=new[]{new PresetName(loaded.WireIndex,loaded.Name)};Filter();
             currentPreset.Text=$"{loaded.SlotLabel} · {loaded.Name}";SetEffects(loaded.Blocks);

@@ -1,0 +1,58 @@
+{
+  "source": "Authorized ADB-operated iAMP endpoint tests, 14 October 2026",
+  "sourceSha256": "f08da4d26129466bb8607b649d535a8216d02c9d8b5a9f7161a1265520672402",
+  "firmware": "V1.1.9",
+  "frames": [
+    {
+      "parameter": "Threshold",
+      "value": 0,
+      "phoneTime": "10-14 22:39:52.241",
+      "hex": "AA5510002501040C010002000000320000000000477F"
+    },
+    {
+      "parameter": "Threshold",
+      "value": 100,
+      "phoneTime": "10-14 22:40:11.651",
+      "hex": "AA5510002501040C010002006400320000000000C5AA"
+    },
+    {
+      "parameter": "Threshold",
+      "value": 25,
+      "phoneTime": "10-14 22:41:14.471",
+      "hex": "AA5510002501040C01000200190032000000000023C2"
+    },
+    {
+      "parameter": "Level",
+      "value": 0,
+      "phoneTime": "10-14 22:40:41.261",
+      "hex": "AA5510002501040C010002001900000000000000870E"
+    },
+    {
+      "parameter": "Level",
+      "value": 100,
+      "phoneTime": "10-14 22:40:57.911",
+      "hex": "AA5510002501040C010002001900640000000000DEB7"
+    },
+    {
+      "parameter": "Level",
+      "value": 50,
+      "phoneTime": "10-14 22:41:14.471",
+      "hex": "AA5510002501040C01000200190032000000000023C2"
+    }
+  ],
+  "windows": {
+    "passed": true,
+    "representativeValues": [
+      0,
+      1,
+      25,
+      50,
+      75,
+      99,
+      100
+    ],
+    "allFourCorners": true,
+    "baselineRestored": true,
+    "saved": false
+  }
+}
