@@ -45,6 +45,29 @@ internal static class Program
                 var current = await session.ReadCurrentPresetAsync(timeout.Token);
                 Print(new { operation = "current_preset_snapshot", session.DeviceName, identity, current });
             }
+            else if (args is ["read-concurrent", var concurrentTarget] && TryAddress(concurrentTarget, out var concurrentAddress))
+            {
+                using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+                var journal = new DiagnosticJournal();
+                F15Identity identity; CurrentPresetSnapshot before, first, second; IReadOnlyList<PresetName> names;
+                await using (var session = await F15ReadSession.ConnectAsync(concurrentAddress, timeout.Token, journal))
+                {
+                    identity = await session.ReadIdentityAsync(timeout.Token);
+                    before = await session.ReadCurrentPresetAsync(timeout.Token);
+                    var firstRead = session.ReadCurrentPresetAsync(timeout.Token);
+                    var nameRead = session.ReadPresetNamesAsync(timeout.Token);
+                    var secondRead = session.ReadCurrentPresetAsync(timeout.Token);
+                    await Task.WhenAll(firstRead, nameRead, secondRead);
+                    first = await firstRead; names = await nameRead; second = await secondRead;
+                }
+                bool Same(CurrentPresetSnapshot candidate) => candidate.WireIndex == before.WireIndex &&
+                    candidate.RawStatePayloadHex == before.RawStatePayloadHex && candidate.RawDetailPayloadHex == before.RawDetailPayloadHex;
+                var passed = Same(first) && Same(second) && names.Count == 80;
+                var version = typeof(Program).Assembly.GetName().Version!.ToString(3);
+                Print(new { operation = "concurrent_read_only_regression", passed, identity, before, first, second, presets = names,
+                    diagnostics = JsonSerializer.Deserialize<JsonElement>(journal.Export(version)) });
+                if (!passed) return 1;
+            }
             else if (args is ["threshold-roundtrip", var editTarget] && TryAddress(editTarget, out var editAddress))
             {
                 await ThresholdRoundtripAsync(editAddress);
@@ -68,7 +91,7 @@ internal static class Program
             }
             else
             {
-                Console.Error.WriteLine("Usage: Iamp.DeviceProbe usb | scan <1-60 seconds> | gatt <BLE address> | read-info <BLE address> | read-current <BLE address> | threshold-roundtrip <BLE address> | selection-roundtrip <BLE address>");
+                Console.Error.WriteLine("Usage: Iamp.DeviceProbe usb | scan <1-60 seconds> | gatt <BLE address> | read-info <BLE address> | read-current <BLE address> | read-concurrent <BLE address> | threshold-roundtrip <BLE address> | selection-roundtrip <BLE address>");
                 Console.Error.WriteLine("threshold-roundtrip performs the experimental V1.1.9 Noise Killer 25→26→25 test with read-back; no saving.");
                 return 2;
             }

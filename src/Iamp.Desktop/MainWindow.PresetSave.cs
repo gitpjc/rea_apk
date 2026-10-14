@@ -41,7 +41,7 @@ public sealed partial class MainWindow
         Begin("Checking amplifier before same-slot save…");
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token))
+            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))
                 confirmed=await session.SaveObservedThresholdAsync(expected,operation.Token);
             currentSnapshot=confirmed;originalSnapshotDetail=confirmed.RawDetailPayloadHex;
             liveEditUnsaved=false;editSnapshotValid=true;snapshotTime=DateTimeOffset.Now;

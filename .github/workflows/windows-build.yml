@@ -1,0 +1,33 @@
+name: Windows desktop build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.19.0'
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build, test and package without hardware
+        run: bash scripts/build-desktop.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iamp-desktop-win-x64
+          path: artifacts/Iamp.Desktop.next/
+          if-no-files-found: error
+          retention-days: 14

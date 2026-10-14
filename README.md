@@ -1,5 +1,9 @@
 # rea_apk
 
+## Windows desktop development
+
+Run `bash scripts/build-desktop.sh` from Git Bash for the offline build, tests and self-contained Windows x64 package. Output is staged at `artifacts/Iamp.Desktop.next`; the usual app launch folder is `artifacts/Iamp.Desktop`. This software check needs no phone, amplifier, APK, REA or Python. See [build and release instructions](DOCO/Codex/Build-and-Release.md), [implementation plan](DOCO/Codex/Plan.md) and [user guide](DOCO/Codex/User-Guide.md).
+
 ## Pay Store `iAMP` App
 
 [iAMP](https://play.google.com/store/apps/details?id=com.mooer.iamp)  

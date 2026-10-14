@@ -13,7 +13,7 @@ public sealed partial class MainWindow : Window
 {
     private static readonly Brush BackgroundBrush = Brush("#15171B"), PanelBrush = Brush("#20242B"),
         MutedBrush = Brush("#A3ADBD"), BlueBrush = Brush("#4C9EFF");
-    private readonly ComboBox devices = new() { DisplayMemberPath = "DisplayName", MinWidth = 360 };
+    private readonly ComboBox devices = new() { DisplayMemberPath = "DisplayName", Width = 360 };
     private readonly TextBox address = new() { Width = 180 };
     private readonly Button scan = Button("Scan Bluetooth"), read = Button("Read amplifier"), cancel = Button("Cancel");
     private readonly TextBlock status = Text("Ready to scan", 14), snapshot = Text("No snapshot yet · Disconnected", 13, MutedBrush);
@@ -36,7 +36,7 @@ public sealed partial class MainWindow : Window
     private string? originalSnapshotDetail;
     private bool lastMutationSucceeded;
     private readonly List<(Button Button, EffectPresentation Effect)> effectButtons = new();
-    private readonly TextBox search = new() { MinWidth = 280 };
+    private readonly TextBox search = new() { Width = 280 };
     private readonly ListView presets = new() { Background = PanelBrush, BorderThickness = new Thickness(0), Foreground = Brushes.White };
     private readonly TextBlock count = Text("0 presets", 13, MutedBrush);
     private readonly Button selectPreset = Button("Select preset on amp");
@@ -51,7 +51,7 @@ public sealed partial class MainWindow : Window
     public MainWindow(bool preview = false)
     {
         this.preview = preview;
-        Title = "iAMP Desktop · Amplifier library"; Width = 1280; Height = 900; MinWidth = 1000; MinHeight = 720;
+        Title = "iAMP Desktop · Amplifier library"; Width = Math.Min(1280,SystemParameters.WorkArea.Width); Height = Math.Min(900,SystemParameters.WorkArea.Height); MinWidth = 620; MinHeight = 320;
         Background = BackgroundBrush; Foreground = Brushes.White; FontFamily = new FontFamily("Segoe UI"); FontSize = 14;
         var root = new Grid(); root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(212) });
         root.ColumnDefinitions.Add(new ColumnDefinition()); Content = root;
@@ -61,17 +61,17 @@ public sealed partial class MainWindow : Window
         Grid.SetColumn(historyScroll,1);root.Children.Add(historyScroll);
         var page = new StackPanel { Margin = new Thickness(32, 20, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
         var titles = new StackPanel(); titles.Children.Add(Text("Amplifier library", 30));
         titles.Children.Add(Text("Read your amplifier’s information and browse its presets.", 14, MutedBrush, new Thickness(0,7,0,0)));
         header.Children.Add(titles);
         var badge = new Border { Background = Brush("#18304D"), CornerRadius = new CornerRadius(6), Padding = new Thickness(13,7,13,7), VerticalAlignment = VerticalAlignment.Top,
             Child = sourceBadge }; Grid.SetColumn(badge,1); header.Children.Add(badge); page.Children.Add(header);
         page.Children.Add(BuildConnection());
-        var cardGrid = new Grid { Margin = new Thickness(0,14,0,0) };
-        for (var i=0;i<4;i++) cardGrid.ColumnDefinitions.Add(new ColumnDefinition());
+        var cardGrid = new System.Windows.Controls.Primitives.UniformGrid { Columns=4, Margin = new Thickness(0,14,0,0) };
         var values = new[] { Card("FIRMWARE", firmware, "Reported by amplifier"), Card("PRESET SLOTS", presetCount, "Names read from your amp"),
             Card("GIR / GNR SLOTS", libraryCount, "Capture library capacity"), Card("DRUMS / LOOPER", rhythmCount, "Patterns and file slots") };
-        for (var i=0;i<values.Length;i++) { Grid.SetColumn(values[i],i); values[i].Margin=new Thickness(0,0,i<3?12:0,0); cardGrid.Children.Add(values[i]); }
+        for (var i=0;i<values.Length;i++) { values[i].Margin=new Thickness(0,0,12,12); cardGrid.Children.Add(values[i]); }
         page.Children.Add(cardGrid);
         var currentPanel=new StackPanel();
         currentPanel.Children.Add(Text("CURRENT PRESET",10,BlueBrush));
@@ -88,6 +88,7 @@ public sealed partial class MainWindow : Window
         page.Children.Add(new Border { Background=PanelBrush,CornerRadius=new CornerRadius(8),Padding=new Thickness(14),Margin=new Thickness(0,10,0,0),Child=effects });
         var library = new StackPanel { Margin = new Thickness(0,27,0,0) };
         var bar = new Grid(); bar.ColumnDefinitions.Add(new ColumnDefinition()); bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
         var label = new StackPanel(); label.Children.Add(Text("Presets", 22)); label.Children.Add(count); bar.Children.Add(label);
         var searchPanel = new StackPanel(); searchPanel.Children.Add(Text("Search names or index", 12, MutedBrush));
         searchPanel.Children.Add(search); Grid.SetColumn(searchPanel,1); bar.Children.Add(searchPanel); library.Children.Add(bar);
@@ -125,10 +126,23 @@ public sealed partial class MainWindow : Window
         indexHeaderStyle.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty,HorizontalAlignment.Center));
         indexHeaderStyle.Setters.Add(new Setter(Control.PaddingProperty,new Thickness(0,9,0,9)));
         view.Columns[0].HeaderContainerStyle=indexHeaderStyle;
+        page.SizeChanged+=(_,_)=> {
+            var available=Math.Max(120,page.ActualWidth);
+            var compact=available<620;
+            devices.Width=Math.Min(360,Math.Max(120,available-36));search.Width=Math.Min(280,available);
+            cardGrid.Columns=available<380?1:available<760?2:4;
+            Grid.SetRow(badge,compact?1:0);Grid.SetColumn(badge,compact?0:1);Grid.SetColumnSpan(badge,compact?2:1);
+            badge.HorizontalAlignment=compact?HorizontalAlignment.Left:HorizontalAlignment.Right;
+            badge.Margin=new Thickness(0,compact?10:0,0,0);
+            Grid.SetRow(searchPanel,compact?1:0);Grid.SetColumn(searchPanel,compact?0:1);Grid.SetColumnSpan(searchPanel,compact?2:1);
+            searchPanel.Margin=new Thickness(0,compact?10:0,0,0);
+            searchPanel.HorizontalAlignment=compact?HorizontalAlignment.Left:HorizontalAlignment.Right;
+            view.Columns[1].Width=Math.Max(180,available-100);
+        };
         library.Children.Add(Text("Preset indices are shown as reported by the amplifier.",12,MutedBrush,new Thickness(0,10,0,0)));
         page.Children.Add(library);
         page.Children.Add(Text("Experimental V1.1.9 support: five bounded live controls and captured preset recall. Saving is restricted to British Lead Solo at index 4 with Threshold 25 or 26 and every other value unchanged. Other-slot saving, renaming and broader editing remain unavailable.",13,MutedBrush,new Thickness(0,24,0,0)));
-        InitializeAdditionalEditors();InitializeSnapshotArchive();StyleInputs(); cancel.IsEnabled=false;
+        InitializeAdditionalEditors();InitializeSnapshotArchive();InitializeDiagnostics();InitializeComparison();StyleInputs(); cancel.IsEnabled=false;
         scan.Click += async (_,_) => await ScanAsync(); read.Click += async (_,_) => await ReadAsync(); cancel.Click += (_,_) => operation?.Cancel();
         search.TextChanged += (_,_) => Filter();
         thresholdInput.TextChanged += (_,_) => UpdateThresholdState();
@@ -141,6 +155,7 @@ public sealed partial class MainWindow : Window
         devices.SelectionChanged += (_,_) => InvalidateEditTarget();
         System.Windows.Automation.AutomationProperties.SetName(thresholdInput,"Pending Noise Killer threshold, 25 to 28");
         System.Windows.Automation.AutomationProperties.SetName(toneInput,"Pending OD808 Tone, 97 to 100");
+        InitializeKeyboardNavigation();
         Closed += (_,_) => operation?.Cancel();
         if (preview) SetDemo();
         UpdatePresetSelectionState();
@@ -156,7 +171,10 @@ public sealed partial class MainWindow : Window
         side.Children.Add(Text("F15i Li",17,Brush("#D5DCE8"),new Thickness(14,30,0,5)));
         side.Children.Add(Text("Bluetooth connection",12,MutedBrush,new Thickness(14,0,0,0)));
         side.Children.Add(Text("Snapshot viewer",12,MutedBrush,new Thickness(14,22,0,0)));
-        return new Border { Background=Brush("#1A1D22"), BorderBrush=Brush("#30353D"), BorderThickness=new Thickness(0,0,1,0), Child=side };
+        exportDiagnostics.Margin=new Thickness(0,18,0,0);
+        exportDiagnostics.HorizontalAlignment=HorizontalAlignment.Stretch;
+        side.Children.Add(exportDiagnostics);
+        return new Border { Background=Brush("#1A1D22"), BorderBrush=Brush("#30353D"), BorderThickness=new Thickness(0,0,1,0), Child=new ScrollViewer {Content=side,VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled} };
     }
 
     private UIElement BuildConnection()
@@ -173,6 +191,8 @@ public sealed partial class MainWindow : Window
         actions.Children.Add(read); cancel.Margin=new Thickness(10,0,0,0); actions.Children.Add(cancel);
         exportSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(exportSnapshot);
         openSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(openSnapshot);
+        compareSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(compareSnapshot);
+        foreach(var button in actions.Children.OfType<Button>())button.Margin=new Thickness(button==read?0:10,4,0,4);
         status.Margin=new Thickness(17,8,0,0); actions.Children.Add(status); panel.Children.Add(actions);
         snapshot.Margin=new Thickness(0,8,0,0); panel.Children.Add(snapshot);
         return new Border { Background=PanelBrush, CornerRadius=new CornerRadius(10), Padding=new Thickness(18), Margin=new Thickness(0,20,0,0), Child=panel };
@@ -192,11 +212,15 @@ public sealed partial class MainWindow : Window
     {
         operation=new CancellationTokenSource(TimeSpan.FromSeconds(75)); scan.IsEnabled=read.IsEnabled=devices.IsEnabled=address.IsEnabled=false;
         cancel.IsEnabled=true; status.Text=message; status.Foreground=BlueBrush;
+        UpdateDiagnosticsState();
+        UpdateComparisonState();
         UpdateThresholdState();
     }
     private void End()
     {
         operation?.Dispose(); operation=null; scan.IsEnabled=read.IsEnabled=devices.IsEnabled=address.IsEnabled=!preview;cancel.IsEnabled=false;
+        UpdateDiagnosticsState();
+        UpdateComparisonState();
         UpdateThresholdState();
     }
     private async Task ScanAsync()
@@ -221,7 +245,7 @@ public sealed partial class MainWindow : Window
         Begin("Connecting…"); snapshot.Text=names.Count>0?"Previous snapshot · Reading new data…":"Reading amplifier…";
         try {
             F15Identity identity; IReadOnlyList<PresetName> loaded; CurrentPresetSnapshot current;
-            await using(var session=await F15ReadSession.ConnectAsync(selected,operation!.Token)) {
+            await using(var session=await F15ReadSession.ConnectAsync(selected,operation!.Token,diagnostics)) {
                 status.Text="Reading amplifier information…"; identity=await session.ReadIdentityAsync(operation.Token);
                 status.Text="Reading preset names…"; loaded=await session.ReadPresetNamesAsync(operation.Token);
                 status.Text="Reading current preset…";current=await session.ReadCurrentPresetAsync(operation.Token);
@@ -383,7 +407,7 @@ public sealed partial class MainWindow : Window
         Begin("Checking amplifier before applying OD808 Tone…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token))
+            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))
                 confirmed=await session.Set808ToneAsync(expected,value,operation.Token);
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
             currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
@@ -432,7 +456,7 @@ public sealed partial class MainWindow : Window
         snapshot.Text="Previous snapshot · Connecting for explicit preset recall…";
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token))
+            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))
                 confirmed=await session.SelectObservedPresetAsync(expected,(byte)selected.WireIndex,operation.Token);
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=false;originalSnapshotDetail=confirmed.RawDetailPayloadHex;snapshotTime=DateTimeOffset.Now;
             currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
@@ -457,7 +481,7 @@ public sealed partial class MainWindow : Window
         snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
-            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token))
+            await using(var session=await F15ReadSession.ConnectAsync(target,operation!.Token,diagnostics))
                 confirmed=await session.SetNoiseKillerThresholdAsync(expected,value,operation.Token);
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
             currentPreset.Text=$"Index {confirmed.WireIndex} · {confirmed.Name}";SetEffects(confirmed.Blocks);
@@ -477,7 +501,7 @@ public sealed partial class MainWindow : Window
     private static TextBlock Text(string text,double size,Brush? color=null,Thickness? margin=null)=>new(){Text=text,FontSize=size,Foreground=color??Brushes.White,Margin=margin??new Thickness(0),TextWrapping=TextWrapping.Wrap};
     private static Button Button(string text)
     {
-        var button=new Button{Content=text,Padding=new Thickness(14,8,14,8),Background=Brush("#343B46"),Foreground=Brushes.White,BorderThickness=new Thickness(0),Cursor=System.Windows.Input.Cursors.Hand,HorizontalContentAlignment=HorizontalAlignment.Center};
+        var button=new Button{Content=text,Padding=new Thickness(14,8,14,8),Background=Brush("#343B46"),Foreground=Brushes.White,BorderBrush=Brushes.Transparent,BorderThickness=new Thickness(2),Cursor=System.Windows.Input.Cursors.Hand,HorizontalContentAlignment=HorizontalAlignment.Center};
         button.Template=(ControlTemplate)XamlReader.Parse("""
             <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" TargetType="Button">
               <Border x:Name="Surface" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" Padding="{TemplateBinding Padding}">
@@ -486,6 +510,7 @@ public sealed partial class MainWindow : Window
               <ControlTemplate.Triggers>
                 <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Surface" Property="Opacity" Value="0.45"/></Trigger>
                 <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="Opacity" Value="0.8"/></Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Surface" Property="BorderBrush" Value="#4C9EFF"/><Setter TargetName="Surface" Property="BorderThickness" Value="2"/></Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
             """);

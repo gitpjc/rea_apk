@@ -11,6 +11,49 @@ internal static class Program
     public static int Main(string[] args)
     {
         var app = new Application();
+        if(args.Length==2 && args[0]=="--layout-preview") {
+            try {
+                foreach(var (width,height) in new[]{(1366,768),(911,512),(683,384),(1920,1080)}) {
+                    var layoutWindow=new MainWindow(preview:true);
+                    layoutWindow.PrepareResponsivePreview(width,height);
+                    RenderPreview(layoutWindow,Path.Combine(args[1],$"layout-{width}x{height}.png"),width:width,height:height);
+                    RenderPreview(layoutWindow,Path.Combine(args[1],$"layout-{width}x{height}-presets.png"),showPresets:true,width:width,height:height);
+                    layoutWindow.Close();
+                }
+                app.Shutdown();return 0;
+            }
+            catch(Exception ex){Console.Error.WriteLine(ex);app.Shutdown();return 2;}
+        }
+        if (args.Length == 3 && args[0] == "--comparison-preview")
+        {
+            app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            var comparisonWindow = new MainWindow();
+            _ = app.Dispatcher.InvokeAsync(async () =>
+            {
+                var exitCode = 0;
+                try
+                {
+                    var dialog = await comparisonWindow.PrepareComparisonPreviewAsync(args[1], args[2]);
+                    RenderPreview(dialog, args[2], width: 860, height: 600); dialog.Close();
+                }
+                catch (Exception ex) { Console.Error.WriteLine(ex); exitCode = 2; }
+                finally { comparisonWindow.Close(); app.Shutdown(exitCode); }
+            });
+            return app.Run();
+        }
+        if (args.Length == 2 && args[0] == "--diagnostics-preview")
+        {
+            app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            var diagnosticsWindow = new MainWindow();
+            _ = app.Dispatcher.InvokeAsync(async () =>
+            {
+                var exitCode = 0;
+                try { await diagnosticsWindow.PrepareDiagnosticsPreviewAsync(args[1]); RenderPreview(diagnosticsWindow, args[1]); }
+                catch (Exception ex) { Console.Error.WriteLine(ex); exitCode = 2; }
+                finally { diagnosticsWindow.Close(); app.Shutdown(exitCode); }
+            });
+            return app.Run();
+        }
         if(args.Length==3 && args[0]=="--save-preview") {
             var savePreview=new MainWindow();
             try {savePreview.PrepareSavePreview(args[1]);RenderPreview(savePreview,args[2]);savePreview.Close();app.Shutdown();return 0;}
@@ -70,7 +113,7 @@ internal static class Program
             });
             return app.Run();
         }
-        if (args.Length == 3 && args[0] == "--read-preview")
+        if (args.Length == 3 && args[0] is "--read-preview" or "--read-diagnostics-preview")
         {
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var liveWindow = new MainWindow();
@@ -78,7 +121,9 @@ internal static class Program
             {
                 try
                 {
-                    var success = await liveWindow.ReadSnapshotPreviewAsync(args[1]);
+                    var success = args[0] == "--read-diagnostics-preview" ?
+                        await liveWindow.ReadDiagnosticsPreviewAsync(args[1], args[2]) :
+                        await liveWindow.ReadSnapshotPreviewAsync(args[1]);
                     RenderPreview(liveWindow, args[2]);
                     liveWindow.Close(); app.Shutdown(success ? 0 : 2);
                 }

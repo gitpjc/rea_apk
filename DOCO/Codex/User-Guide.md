@@ -2,6 +2,14 @@
 
 Updated 14 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
 
+Current published version: **1.5.2**. The connection code keeps each complete read/edit/save workflow together; concurrent read-only hardware checks preserved all original amplifier values. The window adapts to smaller work areas, with wrapping controls/cards and a scrollable sidebar. **Ctrl+1** opens Amplifier library, **Ctrl+2** opens Version History and **Ctrl+F** focuses preset search. Tab/Shift+Tab move between controls; keyboard-focused buttons have a blue border. These shortcuts do not operate the amplifier. See [Desktop-Usability.md](Desktop-Usability.md).
+
+**Compare snapshot** and **Export diagnostics** remain available. Supported editing ranges are unchanged. Developers can run `bash scripts/build-desktop.sh` without a connected phone or amplifier; see [Build-and-Release.md](Build-and-Release.md).
+
+To compare values, first read the amplifier or open a snapshot, choose **Compare snapshot**, and select an exported `.iamp-snapshot.json`. The read-only dialog shows **FILE** and **DISPLAYED** values. Your displayed snapshot and pending inputs stay unchanged; nothing is sent to the amplifier. Matching snapshots do not prove current live or saved state. See [Snapshot-Comparison.md](Snapshot-Comparison.md).
+
+If a connection problem occurs, choose **Export diagnostics** before closing the desktop app. It retains the latest 256 events in memory and excludes Bluetooth addresses, preset contents and raw packets. Nothing is uploaded automatically. The log is cleared when the app closes; a mobile-only problem while the desktop is closed cannot appear in this log. See [Diagnostics.md](Diagnostics.md).
+
 ## Start and read the amplifier
 
 1. Open `artifacts/Iamp.Desktop/Iamp.Desktop.exe`. Keep all accompanying files together; the published Windows x64 build does not require a separate .NET installation.

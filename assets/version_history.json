@@ -1,5 +1,53 @@
 [
   {
+    "version": "1.5.2",
+    "changedAt": "2026-10-14T14:45:00+11:00",
+    "summary": "Prevented interleaving of complete amplifier workflows.",
+    "details": "Each Windows session now serializes complete current-preset reads, name reads, guarded edits, recalls and saves, including fresh-state checks and readback. Concurrent API requests cannot insert commands between these steps. Cancelling a queued workflow leaves the active workflow alone; active failure or cancellation blocks later workflows until reconnection. Disposal interrupts cooperative work without releasing a still-running action to another caller. Nested internal reads use private core methods to avoid re-entering the queue. Eight new offline cases pass. Concurrent read-only hardware workflows and the actual desktop Read handler completed 12 and six commands with no transfer events; independent reads matched every original state and preset byte. No command formats, supported values or automatic retries were added, and no parameters, recalls or saves were changed during validation. Physical fault and write regression remain separate."
+  },
+  {
+    "version": "1.5.1",
+    "changedAt": "2026-10-14T14:35:00+11:00",
+    "summary": "Added reproducible evidence export for read-only connection checks.",
+    "details": "Added an explicit read-only diagnostic preview command for development verification. It uses the normal amplifier Read handler, then exports bounded diagnostics and the exact displayed snapshot beside a preview image. Existing output paths are refused before connecting. Exported firmware, capture time and complete raw payloads are checked against the display. The actual desktop hardware read passed on V1.1.9: six read-only commands completed, the connection was disposed, no transfer events occurred and independent before/after reads matched all original state and preset bytes. The user subsequently reconnected phone iAMP and reported a stable normal effects screen; no timed passive phone capture was taken. Default startup and existing controls are unchanged; no parameters, preset recall or saves were changed. Broader fault paths and the mobile transfer-screen trigger remain unresolved."
+  },
+  {
+    "version": "1.5.0",
+    "changedAt": "2026-10-14T14:25:00+11:00",
+    "summary": "Improved compact layouts and keyboard navigation.",
+    "details": "The main window can fit smaller desktop work areas. Connection inputs shrink, information cards reflow, and the header/search move to separate rows when space is limited. The sidebar scrolls in short windows, and preset names use the available table width while preserving index alignment. Added Ctrl+1 for Amplifier library, Ctrl+2 for Version History and Ctrl+F for preset search. Buttons have a visible keyboard focus border, and key inputs have accessible names. No hardware actions are bound to these shortcuts. Offline layout checks cover desktop sizes corresponding to common display scaling; full physical DPI and screen-reader acceptance remain open."
+  },
+  {
+    "version": "1.4.0",
+    "changedAt": "2026-10-14T14:18:13+11:00",
+    "summary": "Added read-only comparison with local snapshots.",
+    "details": "Added Compare snapshot beside Open snapshot. Compare the displayed snapshot with a validated local file to see changed preset identity, effect fields, firmware and unmapped state/trailer data. Complete raw payloads are checked, including stored name padding and unknown fields. Comparison preserves the displayed snapshot and pending inputs and never connects to or edits the amplifier. Malformed, tampered or oversized files are rejected. Capture timestamps are intentionally excluded from value differences; matching files do not prove current hardware or saved-preset state."
+  },
+  {
+    "version": "1.3.0",
+    "changedAt": "2026-10-14T14:10:16+11:00",
+    "summary": "Added local export of connection diagnostics.",
+    "details": "Added Export diagnostics in the sidebar. The app keeps the latest 256 connection and command events in memory, including typed outcomes, timestamps and elapsed time. Export writes a local JSON file only when requested. It excludes Bluetooth addresses, device names, preset names and values, raw packets, file paths and exception text. Connection attempts and the production command dispatcher supply the events; timeouts, transfer-state failures and blocked commands are identified. Diagnostics are discarded when the app closes and are never uploaded automatically. Offline privacy, bounded-buffer, concurrency and actual export checks are included. Supported amplifier controls are unchanged; physical lifecycle testing and the mobile transfer-screen trigger remain open."
+  },
+  {
+    "version": "1.2.4",
+    "changedAt": "2026-10-14T14:05:42+11:00",
+    "summary": "Unified command lifecycle checks and added simulated transport tests.",
+    "details": "Reads, saves, recall and live updates now share one serialized command dispatcher. Disconnects, active cancellation, timeouts, disposal, write failures and transfer-status notifications permanently stop the session and prevent queued or later commands from being sent. Replies cannot override a failed write or disconnect; late native failures are observed without replay. Cancelling a request while it is still queued leaves the active request alone. Offline tests exercise the production dispatcher through a simulated transport. No amplifier command formats, supported controls or automatic retries were added. Physical disconnect and reconnect acceptance remains separate, and the mobile transfer-screen trigger is still unresolved."
+  },
+  {
+    "version": "1.2.3",
+    "changedAt": "2026-10-14T13:59:21+11:00",
+    "summary": "Reject inconsistent amplifier snapshots before editing.",
+    "details": "Current-preset reads now require complete matching state replies before and after fetching preset details, rather than comparing only the selected index. Changes to global or unknown state fields during a read reject the snapshot and require a refresh. State responses must match the observed 92-byte structure, and details must identify the same preset. Offline regression tests cover each state byte, preset switches, malformed responses and preservation of unknown fields. No new amplifier commands, automatic retries or supported editing ranges were added. This improves read consistency but does not establish atomic snapshots or resolve the mobile transfer-screen trigger."
+  },
+  {
+    "version": "1.2.2",
+    "changedAt": "2026-10-14T13:51:17+11:00",
+    "summary": "Added repeatable Windows build and release checks.",
+    "details": "Added one Bash command to check semantic version and history consistency, run capture and protocol tests, build with locked dependencies and package the self-contained Windows app into a separate staging folder. Added a GitHub Actions workflow using the same command and retaining the Windows package as a build artifact. These software checks need no phone, amplifier, APK, REA or Python installation. Publishing checks verify that the packaged application version and history match the source. Hardware behavior is unchanged; the mobile transfer-screen trigger remains unresolved."
+  },
+  {
     "version": "1.2.1",
     "changedAt": "2026-10-14T13:09:43+11:00",
     "summary": "Stop Windows sessions when the amplifier reports transfer-state changes.",

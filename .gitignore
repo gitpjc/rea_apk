@@ -38,6 +38,9 @@ tmp/
 artifacts/
 .vs/
 
+# Locally exported connection diagnostics
+*.iamp-diagnostics.json
+
 # Interpreter caches from optional analysis helpers
 __pycache__/
 *.py[cod]

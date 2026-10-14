@@ -2,6 +2,58 @@
 
 Updated 14 October 2026. The full editor is not complete.
 
+## Latest: complete workflow serialization in 1.5.2
+
+Each Windows session now serializes whole public read/edit/recall/save workflows around the existing command dispatcher. Private nested read methods avoid re-entrant queue deadlock. Queued cancellation is isolated, while active failure stops later workflows. Eight new offline concurrency cases pass; all 124 .NET/five Node tests pass with zero build warnings/errors.
+
+With phone iAMP disconnected by the user, real concurrent current-preset/name/current-preset workflows completed 12 read-only commands without splitting their groups and loaded 80 names. The actual desktop Read then completed six commands in a fresh connection; a final independent read matched every original state/detail byte. Diagnostics showed no mutation categories or transfer events and recorded disposal. Original slot 4/Threshold 25 remains unchanged. See `Workflow-Serialization.md` and P4.4b. Windows connections are closed; the user was told phone iAMP could reconnect. No new phone-handoff observation was taken for this version.
+
+Version 1.5.2 is published to the usual folder with binary/history verification and offline local-feature checks. No parameters, recalls, saves or phone settings were changed. Physical fault/write regression and the original mobile loop cause remain open.
+
+## Latest: shared dispatcher passed read-only hardware regression in 1.5.1
+
+Follow-up completed: the user reconnected phone iAMP after the Windows read and reported its normal effects screen stable. P3.5f is complete for this observed read-only handoff; there was no measured passive phone capture or further hardware action. This supersedes the pending observation below and does not resolve the original loop trigger. Documentation/history updated without a code or application version change.
+
+The user confirmed hardware readiness and disconnected phone iAMP/closed MOOER Studio. Independent current-state read → actual desktop Read → fresh independent read all matched the complete original 92-byte state and 160-byte British Lead Solo detail. Original index 4, Threshold 25 and every other field remain unchanged. The current dispatcher completed all six desktop read commands and disposed normally; exported diagnostics contain no mutation categories or transfer-status events. See `Read-Only-Regression.md` and P3.5e. This is normal-path acceptance only; forced fault paths and the loop trigger remain open. Phone reconnect usability has been requested and is pending the user's observation.
+
+Added the explicit read-only evidence helper in 1.5.1, using actual Read and local export handlers and refusing existing output paths before connecting. Source/package checks, 116 .NET/five Node tests and local export regressions passed with zero warnings/errors. The tested package is published to the usual folder with binary/history verification. No parameters, preset recall/save operations or phone settings were changed. The feature matrix was updated to distinguish implemented local tools/narrow save evidence from remaining parent gates.
+
+## Latest: compact desktop layout and keyboard navigation in 1.5.0
+
+The main window now fits its initial work area and permits compact resizing. Header/search reflow, input sizing, adaptive card columns and a scrollable sidebar keep controls available in smaller windows; preset-name width adapts while index alignment remains intact. Ctrl+1/Ctrl+2 navigate library/history and Ctrl+F reveals/selects preset search. Buttons show keyboard focus and key controls have accessible names. No hardware actions are assigned to these shortcuts.
+
+Offline routed-command/state-preservation and horizontal-bound checks passed at 1366×768, 911×512, 683×384 and 1920×1080 logical pixels. Compact/normal render images were inspected. These approximate content space at common scaling levels and are not physical DPI-switch acceptance. All 116 .NET/five Node tests pass with zero build warnings/errors; existing local snapshot/comparison/diagnostics/history regressions pass. Version 1.5.0 is published to the usual folder with binary/history verification. See `Desktop-Usability.md` and P5.2b; actual DPI/Narrator/keyboard and full dialog checks remain open. No phone/amplifier commands were sent and no settings changed.
+
+## Latest: read-only snapshot comparison in 1.4.0
+
+Added Compare snapshot beside Open snapshot. It validates a local file and compares it with the displayed snapshot without connecting, applying data or replacing editor state. Complete raw state/detail equality is reported separately from firmware; differences include opaque fields, name padding, absent effect fields and unknown trailer data. Capture time is excluded from value differences. Seven new protocol cases and actual offline UI comparison/error/preservation checks pass. All 116 .NET/five Node tests pass with zero build warnings/errors; existing snapshot/history/diagnostics checks pass. The dialog's initially compressed columns were corrected and visually verified. See `Snapshot-Comparison.md` and P5.7b.
+
+Version 1.4.0 is published to the usual folder with source/package history verification and staging/published binary comparisons. The published comparison workflow passes. No phone/amplifier commands were sent and no presets or settings changed. Applying imports, broader control coverage and physical lifecycle acceptance remain open.
+
+## Latest: local connection diagnostics in 1.3.0
+
+Added sidebar Export diagnostics, a 256-event in-memory journal and typed instrumentation in Windows connection establishment/disconnect/cleanup and the production command dispatcher. Export contains application version, UTC times, operation/outcome categories, elapsed milliseconds and dropped-event count. It excludes addresses, device/preset names, values, raw packets, paths and exception text; no automatic file write/upload occurs. Nine new tests cover privacy, bounded retention, concurrency, validation and failure classification. All 109 .NET/five Node tests pass, with zero Release warnings/errors. See `Diagnostics.md` and P4.6b.
+
+Actual offline export using simulated events passed privacy and snapshot-preservation checks; navigation and local snapshot guards also passed. Sidebar layout was visually inspected. Version 1.3.0 is published to the usual folder with source/package history verification and staging/published binary comparisons. Physical instrumentation acceptance remains open. No phone or amplifier commands were sent; supported controls and presets were unchanged.
+
+## Latest: shared command dispatcher and lifecycle tests in 1.2.4
+
+Production Windows query and live-write paths now use the same platform-independent `CommandSession`. Eighteen simulated-transport cases exercise terminal failures, late replies, queued cancellation, write/result ordering and fresh-session isolation. The dispatcher checks failure after writes and replies, bounds waits even if native cancellation is delayed, observes late transport faults and never automatically replays. All 100 .NET/five Node tests pass; Release build and self-contained packaging have zero warnings/errors. See `Command-Lifecycle.md`, P4.4a and P4.6a. Physical connection lifecycle and same-opcode late reply ambiguity remain open.
+
+Version 1.2.4 is published at the usual launch path after offline navigation/local snapshot checks and source/package history verification. Executable and three application DLLs match staging. No phone or amplifier commands were sent, no preset values changed and no phone settings changed. Hardware acceptance for the shared dispatcher remains separate; the mobile transfer-screen trigger is unresolved.
+
+## Latest: complete-state read consistency added in 1.2.3
+
+Current-preset reads previously checked only the index before/after retrieving details. The shared read path now requires complete identical state payloads, validates the observed 92-byte schema and checks the detail index. Mixed global-state snapshots are rejected and require a fresh read; no additional commands or automatic retry were added. Eleven independent-capture regression cases cover changed state fields, malformed responses, index changes and opaque field preservation. All 82 .NET and five Node tests pass, with zero Release warnings/errors. See `Read-Consistency.md` and P4.5a; this does not establish atomic snapshots or complete P4.5.
+
+The 1.2.3 self-contained package passed source/package version-history consistency checks and offline navigation/local snapshot guards. It was promoted to the usual launch folder with executable and three application DLLs compared to staging. No hardware commands were sent; presets and phone settings were untouched. Broader lifecycle testing and the mobile loop trigger remain unresolved.
+
+## Latest: repeatable build checks and version 1.2.2 published
+
+Added `bash scripts/build-desktop.sh` and a Windows GitHub Actions workflow using that same command. The software path requires no APK, REA, Python or hardware. Locked restore initially exposed the existing x64 lock files' mismatch with unspecified project runtimes; desktop and Windows transport now explicitly declare that runtime. Version/history validation checks source consistency and the packaged app dependency manifest and history asset. Local build, all 71 .NET/five Node tests and self-contained publication passed with zero warnings/errors. Hosted GitHub execution remains unverified; no push was performed. P4.1a is complete, broader P4.1 remains open.
+
+Version 1.2.2 is published at the normal `artifacts/Iamp.Desktop` path. Staging and published offline Version History QA passed with four entries and preserved library state; staging was visually inspected. Published executable and Desktop/Transport/Protocol DLLs match tested staging byte for byte and shipped history matches source. No phone or amplifier commands were sent, no presets changed and hardware comparisons remain paused. The transfer-screen trigger remains unresolved. See `Build-and-Release.md` for the repeatable command and release checks.
+
 ## Latest: bounded read-only handoff checks passed; defensive 1.2.1 published
 
 Following recovery, three read-only Windows→phone handoffs were observed through the probe and actual desktop Read handler, with amplifier USB absent and connected. All phone captures remained on normal effects UI without 9B messages, and complete original global/preset payloads matched exactly. Each was observed beyond the earlier loop-onset delay. Reconnecting amp USB alone also stayed stable. No parameter, recall or save writes were performed. The original trigger remains unresolved; see `Read-Only-Handoff.md` and P3.5c. The phone was left connected and its original stay-awake setting 0 restored. Further hardware comparisons stopped at the user's instruction to report recurrence.
