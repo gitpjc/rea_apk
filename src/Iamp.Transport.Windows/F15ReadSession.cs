@@ -147,12 +147,34 @@ public sealed class F15ReadSession : IAsyncDisposable
     public Task<CurrentPresetSnapshot> ReadCurrentPresetAsync(CancellationToken ct)
         => RunWorkflowAsync(ReadCurrentPresetCoreAsync, ct);
 
+    /// <summary>V1.1.9 indexed detail reads, verified not to recall presets or change the live chain.</summary>
+    public Task<IReadOnlyList<DecodedPreset>> ReadPresetEffectsAsync(CurrentPresetSnapshot expected,IProgress<int>? progress,CancellationToken ct)
+        =>RunWorkflowAsync(async token=> {
+            if((await ReadIdentityCoreAsync(token)).Firmware!="V1.1.9")
+                throw new NotSupportedException("Indexed preset effect reads are verified on V1.1.9 only.");
+            var before=await ReadCurrentPresetCoreAsync(token);
+            RequireUnchanged(before,expected);
+            var result=new List<DecodedPreset>();
+            for(byte index=1;index<=80;index++) {
+                var payload=await QueryAsync(new byte[]{0x21,index},p=>p.Length>=22 && p[0]==0x22 && p[1]==index,token);
+                result.Add(PresetDataParser.Parse(payload));progress?.Report(index);
+            }
+            RequireUnchanged(await ReadCurrentPresetCoreAsync(token),before);
+            return (IReadOnlyList<DecodedPreset>)result.AsReadOnly();
+        },ct);
+
+    private static void RequireUnchanged(CurrentPresetSnapshot actual,CurrentPresetSnapshot expected)
+    {
+        if(actual.RawStatePayloadHex!=expected.RawStatePayloadHex || actual.RawDetailPayloadHex!=expected.RawDetailPayloadHex)
+            throw new IOException("The amplifier changed while reading preset effects; refresh before filtering.");
+    }
+
     private async Task<CurrentPresetSnapshot> ReadCurrentPresetCoreAsync(CancellationToken ct)
     {
         var state = await QueryAsync(new byte[] { 0x11 }, p => p.Length >= 2 && p[0] == 0x12, ct);
         CurrentPresetReadGuard.ValidateState(state);
         var index = state[1];
-        // Only query the already-selected preset; other-slot query side effects are not yet established.
+        // State/detail/state consistency for the live preset; library reads use a separate guarded workflow.
         var detail = await QueryAsync(new byte[] { 0x21, index }, p => p.Length >= 22 && p[0] == 0x22 && p[1] == index, ct);
         var after = await QueryAsync(new byte[] { 0x11 }, p => p.Length >= 2 && p[0] == 0x12, ct);
         var decoded = CurrentPresetReadGuard.Validate(state, detail, after);

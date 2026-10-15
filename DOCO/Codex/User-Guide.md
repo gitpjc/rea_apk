@@ -2,7 +2,7 @@
 
 Updated 14 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
 
-Current release: **1.21.1**. All 18 currently supported parameters now have verified mobile ranges on their captured V1.1.9 model profiles. Most use **0–100**; Hall Pre Delay uses **0–200 ms** and Analog Delay Time uses **40–2500 ms**.
+Current release: **1.24.2**. All 18 currently supported parameters now have verified mobile ranges on their captured V1.1.9 model profiles. Most use **0–100**; Hall Pre Delay uses **0–200 ms** and Analog Delay Time uses **40–2500 ms**.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
@@ -24,6 +24,14 @@ If a connection problem occurs, choose **Export diagnostics** before closing the
 4. Browse/search all 80 bank-labelled presets. Choose an entry from the dropdown to recall it; the active preset has a blue checkmark on its left. Escape closes the dropdown without recalling a browsed entry. Select effect cards to inspect supported details.
 
 Control uses Windows Bluetooth LE. USB charging or the vendor utility's USB connection is a separate connection. A successful connection stays open and shows Connected. Current state refreshes every three seconds; **Refresh amplifier** performs an explicit reread. Choose **Disconnect** before reconnecting phone iAMP. Disconnection retains the displayed snapshot but disables edits. Use one control app at a time. Connect is disabled until a valid target is available.
+
+## Filter presets by effect
+
+After connecting, choose an effect from the **Effect** dropdown beside the preset search. It lists all 124 built-in models using their mobile names, prefixed by category to distinguish similar names. Type a model name while the dropdown is focused to jump to it. Presets match even when that effect is disabled.
+
+The effect choice and name/bank/index search work together. Click **Reset** to select **All effects**; Reset is disabled while All effects is already selected. Reset leaves the text search unchanged, and the search-field × clears only text. The preset count reflects both filters. Filtering sends no recall, edit or save commands.
+
+The first connection builds a local effect cache. Later connections and normal **Refresh amplifier** reuse it, including after restarting the desktop app. The active preset is still read live. Click **Refresh effect names** to update the full preset-effect cache when you want, for example after changing effect models in the phone app. This requires a connected supported amplifier and offers progress/Cancel; pending parameter inputs are preserved. Cached results remain searchable after disconnecting. A local snapshot searches only its one loaded preset. Built-in effect names are already bundled with the app.
 
 ## Supported controls
 
@@ -65,9 +73,9 @@ Hardware writes are validated on **V1.1.9** for the captured Noise Killer, OD808
 
 Pending values remain while you browse other effect cards or apply another parameter. Hidden pending values still protect against accidental recall or effect toggling. An unchanged amplifier refresh retains them; loading another preset/import or refreshing changed hardware data starts from that new snapshot.
 
-Use the slider or type a whole number to choose a pending value. Arrow keys adjust a focused slider by one; Page Up/Page Down adjust by ten, and Home/End select its limits. Slider and number entry stay synchronized. Moving a slider sends nothing to the amplifier; choose **Apply** to make the checked live edit. The confirmed value remains separate until readback succeeds. Disabled effects, offline/preview snapshots, busy operations and unsupported configurations cannot be edited.
+Each setting has a larger, extra-bold white label above its slider, without a duplicate summary row. The half-width slider shows the value on its right, with the filled track matching the effect icon. Tap or drag anywhere on the track, then release to apply the final value to the amplifier. The value display follows movement immediately; the edit is confirmed only after checked readback. Escape cancels an active pointer drag. Arrow keys adjust a focused slider by one; Page Up/Page Down by ten; Home/End select its limits. Keyboard adjustments apply on key release. Slider and numeric entry stay synchronized. Disabled effects, offline/preview snapshots, busy operations and unsupported configurations cannot be edited.
 
-Select a supported effect, enter a supported whole-number value, then click its Apply button. Typing changes a pending value only. The app uses its live connection, checks the actual preset against its snapshot, writes the captured command and independently reads the result. Values on screen update only when that result is confirmed.
+Numeric entry remains available for precise changes: type a whole number and choose Apply. Typing alone changes a pending value and does not send a command. Both slider release and Apply use the same fresh complete-snapshot check, verified command and full readback. Successful readback confirms the value; pending or unconfirmed edits remain marked.
 
 Apply controls make **live, unsaved edits**. Returning all changed values to their original snapshot values clears the snapshot-difference indicator. Recalling another preset with known live unsaved edits or pending input asks whether to discard them; No is the default. If an external change conflicts with typed input, the app preserves that input, stops automatic refresh and disables editing until you explicitly refresh. Matching a read snapshot alone does not prove that the preset is saved.
 

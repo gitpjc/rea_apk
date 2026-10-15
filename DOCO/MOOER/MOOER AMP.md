@@ -52,10 +52,17 @@ I want to have these sounds:
 
 ## TODO
 
-Add another filter so that I can search for Presets that are using a specific effect. I want that filter to be a dropdown that has a list of all the effects available in the iAMP app that I can choose from.
-Do you understand what I want?
+Make the effect adjuster line half the width and also look and work the same way they do on the mobile iAMP app. Note that the set part uses the color of the effect icon
+
+
 
 **DONE**    
+
+Cache the effect names so you don't have to read them every time I connect to the amplifier. Add a button that lets me refresh the effect names only if I want to.   
+
+Add a reset button to allow me to reset the effect dropdown back to the default 'All effects' value.   
+
+Add another filter so that I can search for Presets that are using a specific effect. I want that filter to be a dropdown that has a list of all the effects available in the iAMP app that I can choose from. 
 
 Get Codex to add a version history in the app like I do for my Flutter apps.  
 

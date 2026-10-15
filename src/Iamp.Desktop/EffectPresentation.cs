@@ -13,7 +13,7 @@ internal sealed record EffectPresentation(string Category, string Color, string 
     {
         var (category, color) = block.TypeCode switch {
             1 => ("OD", "#D6AE48"), 2 => ("Amp", "#D36964"), 4 => ("Dyna", "#FFA45C"), 9 => ("EQ", "#B1BDCD"),
-            7 => ("Delay", "#57B8AE"), 8 => ("Reverb", "#879AE8"), _ => ("Effect", "#94A3B8")
+            7 => ("Delay", "#52DC38"), 8 => ("Reverb", "#879AE8"), _ => ("Effect", "#94A3B8")
         };
         if (block.TypeCode == 1 && block.Values.Count == 5 && block.Values[1] == 5)
             return new(category, color, "D-Drive", new[] {

@@ -1,0 +1,746 @@
+[
+  {
+    "TypeCode": 4,
+    "Model": 0,
+    "Category": "Dyna",
+    "Name": "Red Comp"
+  },
+  {
+    "TypeCode": 4,
+    "Model": 1,
+    "Category": "Dyna",
+    "Name": "Yellow Comp"
+  },
+  {
+    "TypeCode": 4,
+    "Model": 2,
+    "Category": "Dyna",
+    "Name": "Noise Killer"
+  },
+  {
+    "TypeCode": 4,
+    "Model": 3,
+    "Category": "Dyna",
+    "Name": "Intel Reducer"
+  },
+  {
+    "TypeCode": 5,
+    "Model": 0,
+    "Category": "Filter",
+    "Name": "Touch Wah"
+  },
+  {
+    "TypeCode": 5,
+    "Model": 1,
+    "Category": "Filter",
+    "Name": "Auto Wah"
+  },
+  {
+    "TypeCode": 5,
+    "Model": 2,
+    "Category": "Filter",
+    "Name": "Q-Filter"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 0,
+    "Category": "OD",
+    "Name": "Pure Boost"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 1,
+    "Category": "OD",
+    "Name": "Flex Boost"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 2,
+    "Category": "OD",
+    "Name": "Tube DR"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 3,
+    "Category": "OD",
+    "Name": "808"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 4,
+    "Category": "OD",
+    "Name": "Gold Clon"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 5,
+    "Category": "OD",
+    "Name": "D-Drive"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 6,
+    "Category": "OD",
+    "Name": "Jimmy OD"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 7,
+    "Category": "OD",
+    "Name": "Full DR"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 8,
+    "Category": "OD",
+    "Name": "Beebee Pre"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 9,
+    "Category": "OD",
+    "Name": "Beebee+"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 10,
+    "Category": "OD",
+    "Name": "Black Rat"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 11,
+    "Category": "OD",
+    "Name": "Grey Faze"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 12,
+    "Category": "OD",
+    "Name": "Muffy"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 13,
+    "Category": "OD",
+    "Name": "Full DS"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 14,
+    "Category": "OD",
+    "Name": "Shred"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 15,
+    "Category": "OD",
+    "Name": "Riet"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 16,
+    "Category": "OD",
+    "Name": "MTL Zone"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 17,
+    "Category": "OD",
+    "Name": "MTL Master"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 18,
+    "Category": "OD",
+    "Name": "Obsessive Dist"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 19,
+    "Category": "OD",
+    "Name": "ODR 1"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 20,
+    "Category": "OD",
+    "Name": "BE OD"
+  },
+  {
+    "TypeCode": 1,
+    "Model": 21,
+    "Category": "OD",
+    "Name": "Solo"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 0,
+    "Category": "Amp",
+    "Name": "65 US DLX"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 1,
+    "Category": "Amp",
+    "Name": "65 US TW"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 2,
+    "Category": "Amp",
+    "Name": "59 US Bass"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 3,
+    "Category": "Amp",
+    "Name": "US Sonic"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 4,
+    "Category": "Amp",
+    "Name": "US Blues CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 5,
+    "Category": "Amp",
+    "Name": "US Blues OD"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 6,
+    "Category": "Amp",
+    "Name": "E650 CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 7,
+    "Category": "Amp",
+    "Name": "Powerbell CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 8,
+    "Category": "Amp",
+    "Name": "Blacknight CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 9,
+    "Category": "Amp",
+    "Name": "Mark III CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 10,
+    "Category": "Amp",
+    "Name": "Mark V CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 11,
+    "Category": "Amp",
+    "Name": "Tri Rec CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 12,
+    "Category": "Amp",
+    "Name": "Rockvrb CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 13,
+    "Category": "Amp",
+    "Name": "Dr Zee 18 JR"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 14,
+    "Category": "Amp",
+    "Name": "Dr Zee Reck"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 15,
+    "Category": "Amp",
+    "Name": "Jet 100H CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 16,
+    "Category": "Amp",
+    "Name": "Jazz 120"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 17,
+    "Category": "Amp",
+    "Name": "UK 30 CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 18,
+    "Category": "Amp",
+    "Name": "UK 30 OD"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 19,
+    "Category": "Amp",
+    "Name": "HWT 103"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 20,
+    "Category": "Amp",
+    "Name": "PV 5050 CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 21,
+    "Category": "Amp",
+    "Name": "Regal Tone CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 22,
+    "Category": "Amp",
+    "Name": "Regal Tone OD1"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 23,
+    "Category": "Amp",
+    "Name": "Carol CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 24,
+    "Category": "Amp",
+    "Name": "Cardeff"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 25,
+    "Category": "Amp",
+    "Name": "EV 5050 CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 26,
+    "Category": "Amp",
+    "Name": "HT Club CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 27,
+    "Category": "Amp",
+    "Name": "Hugen CL"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 28,
+    "Category": "Amp",
+    "Name": "Koche OD"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 29,
+    "Category": "Amp",
+    "Name": "J800"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 30,
+    "Category": "Amp",
+    "Name": "J900"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 31,
+    "Category": "Amp",
+    "Name": "PLX 100"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 32,
+    "Category": "Amp",
+    "Name": "E650 DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 33,
+    "Category": "Amp",
+    "Name": "Powerbell DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 34,
+    "Category": "Amp",
+    "Name": "Blacknight DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 35,
+    "Category": "Amp",
+    "Name": "Mark III DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 36,
+    "Category": "Amp",
+    "Name": "Mark V DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 37,
+    "Category": "Amp",
+    "Name": "Tri Rec DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 38,
+    "Category": "Amp",
+    "Name": "Rockvrb DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 39,
+    "Category": "Amp",
+    "Name": "Citrus 30"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 40,
+    "Category": "Amp",
+    "Name": "Citrus 50"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 41,
+    "Category": "Amp",
+    "Name": "Slow 100 CR"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 42,
+    "Category": "Amp",
+    "Name": "Slow 100 DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 43,
+    "Category": "Amp",
+    "Name": "Jet 100H OD"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 44,
+    "Category": "Amp",
+    "Name": "PV 5050 DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 45,
+    "Category": "Amp",
+    "Name": "Regal Tone OD2"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 46,
+    "Category": "Amp",
+    "Name": "Carol OD"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 47,
+    "Category": "Amp",
+    "Name": "EV 5050 DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 48,
+    "Category": "Amp",
+    "Name": "HT Club DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 49,
+    "Category": "Amp",
+    "Name": "Hugen OD"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 50,
+    "Category": "Amp",
+    "Name": "Hugen DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 51,
+    "Category": "Amp",
+    "Name": "Koche DS"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 52,
+    "Category": "Amp",
+    "Name": "Mvrkbass 500"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 53,
+    "Category": "Amp",
+    "Name": "Ampog SVT 4"
+  },
+  {
+    "TypeCode": 2,
+    "Model": 54,
+    "Category": "Amp",
+    "Name": "Akuila 750 CL"
+  },
+  {
+    "TypeCode": 9,
+    "Model": 0,
+    "Category": "EQ",
+    "Name": "5 Bands EQ"
+  },
+  {
+    "TypeCode": 9,
+    "Model": 1,
+    "Category": "EQ",
+    "Name": "Custom EQ"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 0,
+    "Category": "Mod",
+    "Name": "Phaser"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 1,
+    "Category": "Mod",
+    "Name": "Step Phaser"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 2,
+    "Category": "Mod",
+    "Name": "Flanger"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 3,
+    "Category": "Mod",
+    "Name": "Jet Flanger"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 4,
+    "Category": "Mod",
+    "Name": "Tremolo"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 5,
+    "Category": "Mod",
+    "Name": "Stutter"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 6,
+    "Category": "Mod",
+    "Name": "Vibrato"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 7,
+    "Category": "Mod",
+    "Name": "Rotary"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 8,
+    "Category": "Mod",
+    "Name": "Ring"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 9,
+    "Category": "Mod",
+    "Name": "Poly Shift"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 10,
+    "Category": "Mod",
+    "Name": "Ana Chorus"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 11,
+    "Category": "Mod",
+    "Name": "Tri Chorus"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 12,
+    "Category": "Mod",
+    "Name": "Lofi"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 13,
+    "Category": "Mod",
+    "Name": "Slow Gear"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 14,
+    "Category": "Mod",
+    "Name": "Panner"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 15,
+    "Category": "Mod",
+    "Name": "Detune"
+  },
+  {
+    "TypeCode": 6,
+    "Model": 16,
+    "Category": "Mod",
+    "Name": "Octave"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 0,
+    "Category": "Delay",
+    "Name": "Digital"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 1,
+    "Category": "Delay",
+    "Name": "Analog"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 2,
+    "Category": "Delay",
+    "Name": "Real Echo"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 3,
+    "Category": "Delay",
+    "Name": "Tape"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 4,
+    "Category": "Delay",
+    "Name": "Mod"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 5,
+    "Category": "Delay",
+    "Name": "Reverse"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 6,
+    "Category": "Delay",
+    "Name": "PingPong"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 7,
+    "Category": "Delay",
+    "Name": "Crystal"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 8,
+    "Category": "Delay",
+    "Name": "Rainbow"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 9,
+    "Category": "Delay",
+    "Name": "Vintage Delay"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 10,
+    "Category": "Delay",
+    "Name": "Galaxy Delay"
+  },
+  {
+    "TypeCode": 7,
+    "Model": 11,
+    "Category": "Delay",
+    "Name": "Sweep"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 0,
+    "Category": "Reverb",
+    "Name": "Room"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 1,
+    "Category": "Reverb",
+    "Name": "Hall"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 2,
+    "Category": "Reverb",
+    "Name": "Plate"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 3,
+    "Category": "Reverb",
+    "Name": "Spring"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 4,
+    "Category": "Reverb",
+    "Name": "Mod"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 5,
+    "Category": "Reverb",
+    "Name": "Shimmer"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 6,
+    "Category": "Reverb",
+    "Name": "Fl-Reverb"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 7,
+    "Category": "Reverb",
+    "Name": "Reverse Reverb"
+  },
+  {
+    "TypeCode": 8,
+    "Model": 8,
+    "Category": "Reverb",
+    "Name": "Dist Reverb"
+  }
+]

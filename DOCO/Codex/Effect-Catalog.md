@@ -95,3 +95,7 @@ Reproduce the bounded resource inventory with `source scripts/env.sh` followed b
 ## Read-only model browser follow-up
 
 The authorized mobile picker inspection records a partial category/model list and five known displayed-ordinal/wire correspondences in `Model-Browser.md`. It does not establish general wire IDs, defaults, ranges or support for unselected models. Shimmer is visibly greyed out. A separate Windows read verifies the complete original preset unchanged; no model rows were selected.
+
+## Complete built-in search catalog — 1.22.0
+
+The read-only search catalog now contains all 124 built-in mobile model labels from completed authorized category/list browsing, corroborated in the installed APK. Filter category type 5/model 0 was captured directly and the original Noise Killer configuration restored exactly. The catalog is for matching preset contents; it does not broaden write permissions or prove every model’s parameter layout/ranges. See `Preset-Effect-Filter.md`. Empty GIR/IR/GNR sample libraries are kept separate.

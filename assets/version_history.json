@@ -1,5 +1,35 @@
 [
   {
+    "version": "1.24.2",
+    "changedAt": "2026-10-15T00:49:53.096Z",
+    "summary": "Made effect setting labels visibly bolder and brighter.",
+    "details": "Make every effect setting label clearly prominent with 14-point extra-bold Segoe UI and white text, replacing the smaller muted labels. Apply consistently to all sliders and read-only parameter rows. Focused offline WPF checks cover all 18 controls and five window sizes; no amplifier commands or behavior changes."
+  },
+  {
+    "version": "1.24.1",
+    "changedAt": "2026-10-15T00:44:57.630Z",
+    "summary": "Simplified effect parameter headings consistently.",
+    "details": "Removed the duplicate large-value summary row across all effect editors and made every setting label above a slider bold. Read-only parameters keep their values in individual labelled rows with bold names. Focused offline WPF checks pass across all 18 supported controls and five window sizes; no amplifier commands or editing behavior changes."
+  },
+  {
+    "version": "1.24.0",
+    "changedAt": "2026-10-15T00:11:28.161Z",
+    "summary": "Matched effect sliders to mobile iAMP styling and interaction.",
+    "details": "Effect sliders now occupy half the effect-panel width and use mobile-style rounded grey tracks, effect-coloured fill, white round thumbs with coloured centres and right-aligned live values/units. Delay icon and fill use mobile green. Tap or drag anywhere along the track; releasing applies the final whole-number value once through existing fresh-snapshot/full-readback guards. Keyboard adjustments apply on key release; cancelled gestures and programmatic updates do not auto-apply. Numeric entry retains explicit Apply. Focused WPF checks cover all 18 sliders, five window sizes, icon/fill/thumb colours, endpoint mapping, live values, keyboard commit/cancellation and busy/detached guards. All 18 actual Windows slider commit paths pass one-step edits and immediate restoration, with complete original state/detail independently verified. Nothing saved; Phase 6 untouched."
+  },
+  {
+    "version": "1.23.0",
+    "changedAt": "2026-10-14T23:53:21.567Z",
+    "summary": "Cached preset effects and added refresh/reset buttons.",
+    "details": "Persistently cache which effects all 80 presets use, separately for each amplifier/firmware. The first uncached connection reads the library; later connections and normal amplifier refresh reuse it, including after an app restart. Refresh effect names explicitly rereads and replaces the cache. Reset selects All effects, stays disabled on All effects and preserves text search. Cached filtering works offline; the live current chain is still refreshed. Cache validation, atomic writes and in-memory fallback protect against damaged/unwritable files. Twenty-eight affected cache/search protocol cases and focused persistence/WPF/button/five-size checks pass. Real Windows checks confirm 83 detail queries on a cold connection, only one live-preset detail query on a fresh-window cached connection, and 82 on explicit effect refresh. Pending input survives refresh; every original amplifier byte independently unchanged. No edits, recalls, saves or Phase 6 work."
+  },
+  {
+    "version": "1.22.0",
+    "changedAt": "2026-10-14T23:16:52.677Z",
+    "summary": "Added preset filtering by effect.",
+    "details": "Added an Effect dropdown listing all 124 captured built-in iAMP model names, with All effects to clear the filter. It combines with preset name, bank/slot and index search, and counts disabled effects as present. Guarded V1.1.9 indexed reads load all 80 preset chains without recall or saving, with progress/cancellation and complete current-state checks. Filters wrap responsively and also work on retained/offline snapshot data. Twenty-nine affected protocol cases and focused WPF filter/slider/header checks pass at five window sizes. Actual desktop read/index and all 124 effect filters plus combined text/reset pass against independent device captures. Original amplifier state/detail is fully restored and independently verified. No Phase 6 work."
+  },
+  {
     "version": "1.21.1",
     "changedAt": "2026-10-14T12:46:29.305Z",
     "summary": "Preserved pending edits while browsing and applying parameters.",

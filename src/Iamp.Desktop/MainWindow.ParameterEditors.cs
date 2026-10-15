@@ -44,7 +44,7 @@ public sealed partial class MainWindow
     private void InitializeAdditionalEditors()
     {
         foreach(var editor in AdditionalEditors) {
-            editor.Slider=CreateParameterSlider(editor.Input,editor.Label,editor.Minimum,editor.Maximum);
+            editor.Slider=CreateParameterSlider(editor.Input,editor.Label,editor.Minimum,editor.Maximum,()=>ApplyAdditionalParameterAsync(editor));
             editor.Input.TextChanged+=(_,_)=>UpdateAdditionalEditorStates();
             editor.Apply.Click+=async(_,_)=>await ApplyAdditionalParameterAsync(editor);
             System.Windows.Automation.AutomationProperties.SetName(editor.Input,$"Pending {editor.Label}, {editor.Minimum} to {editor.Maximum}");
@@ -66,10 +66,8 @@ public sealed partial class MainWindow
         var knownDelay=displayed.Position==4 && displayed.TypeCode==7 && displayed.Values.Count==8 && displayed.Values[1]==1;
         var knownReverb=displayed.Position==5 && displayed.TypeCode==8 && displayed.Values.Count==10 && displayed.Values[1]==1;
         foreach(var editor in AdditionalEditors.Where(e=>e.Position==displayed.Position && (knownNoise||knownOd||knownAmp||knownDelay||knownReverb))) {
-            var rangeLabel="Supported range";
-            effectDetails.Children.Add(Text($"Pending {editor.Label} · {rangeLabel} {editor.Minimum}–{editor.Maximum}",12,MutedBrush,new Thickness(0,10,0,7)));
             if(initializeInputs)editor.Input.Text=ConfirmedParameterText(displayed,editor.ParameterIndex);
-            effectDetails.Children.Add(editor.Slider);
+            AddMobileParameterSlider(editor.Slider,editor.Input,editor.Label,EffectPresentation.From(displayed).Color);
             var actions=new WrapPanel();actions.Children.Add(editor.Input);editor.Apply.Margin=new Thickness(12,0,0,0);actions.Children.Add(editor.Apply);
             effectDetails.Children.Add(actions);editor.Message.Margin=new Thickness(0,7,0,0);effectDetails.Children.Add(editor.Message);
         }
@@ -107,7 +105,7 @@ public sealed partial class MainWindow
             editor.Message.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
                 !supported?"Read a supported V1.1.9 configuration before applying.":!editor.TryValue(out value)?$"Enter a whole number from {editor.Minimum} to {editor.Maximum}.":
                 value==block!.Values[editor.ParameterIndex]?"Matches confirmed snapshot · Other values are preserved.":
-                $"Pending {value} · Confirmed {block.Values[editor.ParameterIndex]} · Apply reconnects and checks the preset. Nothing is saved.";
+                $"Pending {value} · Confirmed {block.Values[editor.ParameterIndex]} · Release the slider or choose Apply. Nothing is saved.";
         }
     }
     private async Task ApplyAdditionalParameterAsync(PendingParameterEditor editor)

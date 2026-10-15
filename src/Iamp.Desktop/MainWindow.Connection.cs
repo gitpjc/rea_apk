@@ -26,6 +26,7 @@ public sealed partial class MainWindow
         read.IsEnabled=!preview && operation is null && TryReadTarget(out _);
         read.Content=connectedSession is null?"Connect amplifier":"Refresh amplifier";
         disconnect.IsEnabled=connectedSession is not null && operation is null;
+        UpdateEffectFilterState();
     }
     private void InitializeConnection()
     {

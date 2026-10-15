@@ -30,3 +30,23 @@ Additional offline geometry checks confirm all six Amp inputs/actions remain wit
 ## Parameter sliders — 1.21.0
 
 All 18 verified parameter controls now expose a responsive integer slider alongside numeric entry and explicit Apply. Sliders change pending input only, with one-step arrows, ten-step Page Up/Page Down and Home/End. Labels expose parameter/range to accessibility tools. Offline WPF interaction checks cover every target, invalid numeric entry, no device work on slider movement, pending guards, disabled states and five viewport sizes. Every actual Windows slider/Apply path passes a one-step change and immediate original restoration, followed by independent full original readback. See `Parameter-Sliders.md`.
+
+## Preset effect dropdown — 1.22.0
+
+Effect search lists all 124 captured built-in models, includes disabled effects and intersects name/bank/index search. All effects and the search × reset their respective filters independently. The text/effect controls share a responsive row beside the preset selector where space allows, then wrap below it at smaller sizes. Actual offline WPF geometry/filter checks pass at five sizes down to 620×320; no desktop screenshots. See `Preset-Effect-Filter.md`.
+
+## Effect cache controls — 1.23.0
+
+Reset and Refresh effect names appear below the Effect dropdown. Reset disables on All effects and leaves text search intact. Refresh requires a supported live connection; cached filtering stays available offline. Cache status shows whether effects were reused or refreshed. Five-size WPF geometry checks pass for dropdown, search, preset selector and both buttons. See `Effect-Cache.md`.
+
+## Mobile-style half-width adjusters — 1.24.0
+
+Supported effect sliders now use half the effect-panel width, rounded grey/coloured tracks, white thumbs with matching centres and live right-aligned values. Delay uses mobile green. Pointer/key release commits through existing guarded handlers; numeric Apply remains. All-18/five-size WPF geometry and keyboard/no-replay checks plus actual hardware callback/restoration checks pass. See `Mobile-Style-Sliders.md`.
+
+## Consistent setting headings — 1.24.1
+
+The duplicate large-value summary row is removed across effect editors. All parameter labels above sliders are bold. Effects with read-only values use individual bold-labelled rows so their data remains available. Existing offline all-18-control and five-size layout checks pass without hardware commands or interaction changes.
+
+## Stronger setting-label emphasis — 1.24.2
+
+All setting labels now use 14-point extra-bold white Segoe UI rather than 12-point bold muted text. Shared slider headings and read-only rows receive the same treatment. Existing focused all-18/five-size WPF checks pass; no hardware access.

@@ -16,3 +16,7 @@ This check instantiates actual WPF controls with a synthetic offline snapshot, c
 Authorized hardware acceptance records a fresh original baseline and uses the actual Windows slider ValueChanged and Apply handlers for every supported parameter. Each value changes by one within its supported range and immediately returns to its original value, with complete baseline verification after each pair. A separate fresh connection verifies complete original state/detail equality at the end. Private report: analysis/private/slider-windows-report.json, passed=true, baselineRestored=true, 18 restored controls, failure=null. No preset recalls or saves.
 
 Other models, broader persistence and Phase 6 remain outside this change. USB stay-awake remains enabled during ongoing development/testing.
+
+## Mobile interaction follow-up — 1.24.0
+
+The original explicit-Apply-only slider behavior above is superseded by `Mobile-Style-Sliders.md`: half-width rounded coloured adjusters now commit the final tap/drag value on release, or keyboard adjustment on key release. Typed values still require Apply. All 18 actual commit/restore paths and focused half-width/colour/live-value/keyboard/cancellation checks pass.

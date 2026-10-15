@@ -4,7 +4,27 @@ Updated 14 October 2026. The full editor is not complete.
 
 Scope update, 14 October: the user explicitly excluded all Phase 6 work unless separately instructed. No Phase 6 investigation, implementation or hardware test is authorized by a general request to continue. Remaining core MVP, connection reliability and release verification work stays in scope. That scope restriction remains in effect for subsequent versions.
 
-## Latest: pending input preservation in 1.21.1
+## Latest: stronger setting-label emphasis in 1.24.2
+
+Make every effect setting label clearly prominent with 14-point extra-bold Segoe UI and white text, replacing the smaller muted labels. Apply consistently to all sliders and read-only parameter rows. Focused offline WPF checks cover all 18 controls and five window sizes; no amplifier commands or behavior changes.
+
+## Earlier: consistent effect parameter headings in 1.24.1
+
+Removed the duplicate large-value summary row across all effect editors and made every setting label above a slider bold. Read-only parameters keep their values in individual labelled rows with bold names. Focused offline WPF checks pass across all 18 supported controls and five window sizes; no amplifier commands or editing behavior changes.
+
+## Earlier: mobile-style half-width effect adjusters in 1.24.0
+
+Effect sliders now occupy half the effect-panel width and use mobile-style rounded grey tracks, effect-coloured fill, white round thumbs with coloured centres and right-aligned live values/units. Delay icon and fill use mobile green. Tap or drag anywhere along the track; releasing applies the final whole-number value once through existing fresh-snapshot/full-readback guards. Keyboard adjustments apply on key release; cancelled gestures and programmatic updates do not auto-apply. Numeric entry retains explicit Apply. Focused WPF checks cover all 18 sliders, five window sizes, icon/fill/thumb colours, endpoint mapping, live values, keyboard commit/cancellation and busy/detached guards. All 18 actual Windows slider commit paths pass one-step edits and immediate restoration, with complete original state/detail independently verified. Nothing saved; Phase 6 untouched.
+
+## Earlier: persistent effect cache and reset in 1.23.0
+
+Persistently cache which effects all 80 presets use, separately for each amplifier/firmware. The first uncached connection reads the library; later connections and normal amplifier refresh reuse it, including after an app restart. Refresh effect names explicitly rereads and replaces the cache. Reset selects All effects, stays disabled on All effects and preserves text search. Cached filtering works offline; the live current chain is still refreshed. Cache validation, atomic writes and in-memory fallback protect against damaged/unwritable files. Twenty-eight affected cache/search protocol cases and focused persistence/WPF/button/five-size checks pass. Real Windows checks confirm 83 detail queries on a cold connection, only one live-preset detail query on a fresh-window cached connection, and 82 on explicit effect refresh. Pending input survives refresh; every original amplifier byte independently unchanged. No edits, recalls, saves or Phase 6 work.
+
+## Earlier: preset effect filtering in 1.22.0
+
+Added an Effect dropdown listing all 124 captured built-in iAMP model names, with All effects to clear the filter. It combines with preset name, bank/slot and index search, and counts disabled effects as present. Guarded V1.1.9 indexed reads load all 80 preset chains without recall or saving, with progress/cancellation and complete current-state checks. Filters wrap responsively and also work on retained/offline snapshot data. Twenty-nine affected protocol cases and focused WPF filter/slider/header checks pass at five window sizes. Actual desktop read/index and all 124 effect filters plus combined text/reset pass against independent device captures. Original amplifier state/detail is fully restored and independently verified. No Phase 6 work.
+
+## Earlier: pending input preservation in 1.21.1
 
 Version 1.21.1 preserves valid and invalid pending parameter inputs while browsing effect cards, after applying another parameter and across an unchanged amplifier refresh. Hidden pending inputs retain conflict/recall/effect-power guards. New presets, imports and changed refresh snapshots initialize fresh controls. Focused offline checks cover all 18 controls and five viewport sizes. Actual Windows navigation, Threshold/Gain Apply-and-restore and unchanged full refresh pass, with complete original state/detail independently restored. Nothing saved; Phase 6 remains excluded.
 

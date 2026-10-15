@@ -111,7 +111,14 @@ public sealed partial class MainWindow : Window
         clearSearch.Visibility=Visibility.Collapsed;clearSearch.ToolTip="Clear preset search";
         System.Windows.Automation.AutomationProperties.SetName(clearSearch,"Clear preset search");
         clearSearch.Click+=(_,_)=> {search.Clear();search.Focus();};searchField.Children.Add(clearSearch);
-        searchPanel.Children.Add(searchField); Grid.SetColumn(searchPanel,2); bar.Children.Add(searchPanel); library.Children.Add(bar);
+        searchPanel.Children.Add(searchField);
+        var effectFilterPanel=new StackPanel();effectFilterPanel.Children.Add(Text("Effect",12,MutedBrush));effectFilterPanel.Children.Add(effectFilter);
+        var effectFilterActions=new WrapPanel {Margin=new Thickness(0,7,0,0)};
+        effectFilterActions.Children.Add(resetEffectFilter);refreshEffectNames.Margin=new Thickness(8,0,0,0);effectFilterActions.Children.Add(refreshEffectNames);
+        effectFilterPanel.Children.Add(effectFilterActions);effectCacheNote.TextWrapping=TextWrapping.Wrap;effectCacheNote.MaxWidth=280;
+        effectCacheNote.Margin=new Thickness(0,6,0,0);effectFilterPanel.Children.Add(effectCacheNote);
+        var filtersPanel=new WrapPanel();filtersPanel.Children.Add(searchPanel);filtersPanel.Children.Add(effectFilterPanel);
+        Grid.SetColumn(filtersPanel,2);bar.Children.Add(filtersPanel);library.Children.Add(bar);
         var selectionActions=new WrapPanel {Margin=new Thickness(0,12,0,0)};
         selectionActions.Children.Add(selectPreset);selectionMessage.Margin=new Thickness(12,8,0,0);selectionActions.Children.Add(selectionMessage);
         library.Children.Add(selectionActions);
@@ -169,6 +176,7 @@ public sealed partial class MainWindow : Window
             </ControlTemplate>
             """)));
         presets.ItemContainerStyle=rowStyle;
+        InitializeEffectFilter();
         presets.MinHeight=42;presets.Width=440;presets.HorizontalAlignment=HorizontalAlignment.Left;
         presets.VerticalAlignment=VerticalAlignment.Center;presets.Margin=new Thickness(16,0,20,0);
         Grid.SetColumn(presets,1);bar.Children.Add(presets);
@@ -176,24 +184,25 @@ public sealed partial class MainWindow : Window
         page.SizeChanged+=(_,_)=> {
             var available=Math.Max(120,page.ActualWidth);
             var compact=available<620;
-            devices.Width=Math.Min(360,Math.Max(120,available-36));search.Width=Math.Min(280,available);
+            devices.Width=Math.Min(360,Math.Max(120,available-36));search.Width=effectFilter.Width=Math.Min(280,available);
             Grid.SetRow(badge,compact?1:0);Grid.SetColumn(badge,compact?0:1);Grid.SetColumnSpan(badge,compact?2:1);
             badge.HorizontalAlignment=compact?HorizontalAlignment.Left:HorizontalAlignment.Right;
             badge.Margin=new Thickness(0,compact?10:0,0,0);
-            var wrapSearch=available<760;var wrapPreset=available<420;
+            var wrapSearch=available<1120;var wrapPreset=available<420;
             Grid.SetRow(presets,wrapPreset?1:0);Grid.SetColumn(presets,wrapPreset?0:1);Grid.SetColumnSpan(presets,wrapPreset?3:1);
             presets.Margin=new Thickness(wrapPreset?0:16,wrapPreset?10:0,wrapSearch?0:20,0);
-            presets.Width=Math.Min(440,Math.Max(120,available-(wrapPreset?0:Math.Max(100,label.ActualWidth)+16)-(wrapSearch?0:300)));
-            Grid.SetRow(searchPanel,wrapPreset?2:wrapSearch?1:0);Grid.SetColumn(searchPanel,wrapSearch?0:2);Grid.SetColumnSpan(searchPanel,wrapSearch?3:1);
-            searchPanel.Margin=new Thickness(0,wrapSearch?10:0,0,0);
-            searchPanel.HorizontalAlignment=wrapSearch?HorizontalAlignment.Left:HorizontalAlignment.Right;
+            presets.Width=Math.Min(440,Math.Max(120,available-(wrapPreset?0:Math.Max(100,label.ActualWidth)+16)-(wrapSearch?0:592)));
+            Grid.SetRow(filtersPanel,wrapPreset?2:wrapSearch?1:0);Grid.SetColumn(filtersPanel,wrapSearch?0:2);Grid.SetColumnSpan(filtersPanel,wrapSearch?3:1);
+            filtersPanel.Width=wrapSearch?available:572;filtersPanel.Margin=new Thickness(0,wrapSearch?10:0,0,0);
+            filtersPanel.HorizontalAlignment=wrapSearch?HorizontalAlignment.Left:HorizontalAlignment.Right;
+            searchPanel.Margin=new Thickness(0,0,available>=572?12:0,available>=572?0:10);
 
         };
         library.Children.Add(Text("Preset banks match iAMP: 0A–0D, 1A–1D … 19A–19D. A blue check on the left marks the active amplifier preset.",12,MutedBrush,new Thickness(0,10,0,0)));
         page.Children.Insert(2,library);
         page.Children.Add(Text("V1.1.9: preset recall across 0A–19D, eighteen bounded live parameter controls and supported effect on/off. Saving remains restricted to 0D British Lead Solo with Threshold 25 or 26 and every other original value unchanged. Other models, broader saving and renaming remain unavailable.",13,MutedBrush,new Thickness(0,24,0,0)));
-        thresholdSlider=CreateParameterSlider(thresholdInput,"Noise Killer threshold",0,100);
-        toneSlider=CreateParameterSlider(toneInput,"OD808 Tone",0,100);
+        thresholdSlider=CreateParameterSlider(thresholdInput,"Noise Killer threshold",0,100,ApplyThresholdAsync);
+        toneSlider=CreateParameterSlider(toneInput,"OD808 Tone",0,100,ApplyToneAsync);
         InitializeAdditionalEditors();InitializeSnapshotArchive();InitializeDiagnostics();InitializeComparison();StyleInputs(); cancel.IsEnabled=false;
         search.Padding=new Thickness(9,7,34,7);
         scan.Click += async (_,_) => await ScanAsync(); read.Click += async (_,_) => await ReadAsync(); cancel.Click += (_,_) => operation?.Cancel();
@@ -282,6 +291,7 @@ public sealed partial class MainWindow : Window
         UpdateDiagnosticsState();
         UpdateComparisonState();UpdateConnectionControls();
         UpdateThresholdState();
+        UpdateEffectFilterState();
     }
     private void End()
     {
@@ -289,6 +299,7 @@ public sealed partial class MainWindow : Window
         UpdateDiagnosticsState();
         UpdateComparisonState();UpdateConnectionControls();
         UpdateThresholdState();
+        UpdateEffectFilterState();
     }
     private async Task ScanAsync()
     {
@@ -316,6 +327,7 @@ public sealed partial class MainWindow : Window
         try {
             await ReleaseConnectionAsync();
             F15Identity identity; IReadOnlyList<PresetName> loaded; CurrentPresetSnapshot current;
+            IReadOnlyList<DecodedPreset> effectRecords=Array.Empty<DecodedPreset>();
             {
                 var session=await F15ReadSession.ConnectAsync(selected,operation!.Token,diagnostics);
                 if(closing){await session.DisposeAsync();throw new OperationCanceledException();}
@@ -325,10 +337,11 @@ public sealed partial class MainWindow : Window
                 status.Text="Reading current preset…";current=await session.ReadCurrentPresetAsync(operation.Token);
                 if(identity.Firmware=="V1.1.9") {
                     status.Text="Reading battery…";SetBatteryDisplay(await session.ReadBatteryAsync(operation.Token));
-                } else batterySummary.Text="Battery · Not verified for this firmware";
+                    effectRecords=await LoadPresetEffectsAsync(session,current,selected,identity.Firmware,operation.Token);
+                } else {batterySummary.Text="Battery · Not verified for this firmware";effectCacheNote.Text="Effect indexing is not verified for this firmware";}
             }
             firmware.Text=identity.Firmware;presetCount.Text=identity.PresetSlots.ToString();libraryCount.Text=$"{identity.GirSlots} / {identity.GnrSlots}";
-            rhythmCount.Text=$"{identity.DrumPatterns} / {identity.LooperFiles}"; names=loaded;Filter();
+            rhythmCount.Text=$"{identity.DrumPatterns} / {identity.LooperFiles}";names=loaded;SetPresetEffectIndex(effectRecords);Filter();
             currentPreset.Text=$"{current.SlotLabel} · {current.Name}";
             liveEditUnsaved=liveEditUnsaved && snapshotAddress==selected && currentSnapshot?.WireIndex==current.WireIndex;
             if(!liveEditUnsaved)originalSnapshotDetail=current.RawDetailPayloadHex;
@@ -363,7 +376,7 @@ public sealed partial class MainWindow : Window
     private void Filter()
     {
         var selectedIndex=(presets.SelectedItem as PresetName)?.WireIndex;
-        var term=search.Text.Trim();var filtered=names.Where(p=>p.Name.Contains(term,StringComparison.OrdinalIgnoreCase)||p.SlotLabel.Contains(term,StringComparison.OrdinalIgnoreCase)||p.WireIndex.ToString().Contains(term)).Select(p=>p with {IsCurrent=p.WireIndex==currentSnapshot?.WireIndex}).ToArray();
+        var term=search.Text.Trim();var filtered=names.Where(p=>PresetEffectSearch.MatchesText(p.WireIndex,p.Name,term) && MatchesEffectFilter(p)).Select(p=>p with {IsCurrent=p.WireIndex==currentSnapshot?.WireIndex}).ToArray();
         presets.ItemsSource=filtered;presets.SelectedItem=filtered.FirstOrDefault(p=>p.WireIndex==(selectedIndex??currentSnapshot?.WireIndex));count.Text=$"{filtered.Length} of {names.Count} presets";
     }
     private void ResetDropdownToCurrent()
@@ -399,6 +412,7 @@ public sealed partial class MainWindow : Window
     }
     private void SetEffects(IReadOnlyList<PresetEffectBlock> blocks)
     {
+        UpdateIndexedCurrentEffects();
         initializedParameterPositions.Clear();
         effectChain.Children.Clear();effectButtons.Clear();effectDetails.Children.Clear();
         foreach(var block in blocks.Where(b=>b.TypeCode!=0)) {
@@ -425,29 +439,30 @@ public sealed partial class MainWindow : Window
         effectDetails.Children.Clear();effectDetails.Children.Add(Text(effect.Title,22,effect.Enabled==false?MutedBrush:Brush(effect.Color)));
         AddEffectPowerControl(effect);
         if(effect.Parameters.Count==0) {effectDetails.Children.Add(Text("Parameter details not available in this version.",13,MutedBrush,new Thickness(0,8,0,0)));return;}
-        var values=new WrapPanel { Margin=new Thickness(0,8,0,0) };
-        foreach(var parameter in effect.Parameters) {
-            var cell=new StackPanel { MinWidth=110,Margin=new Thickness(0,0,24,0) };
-            cell.Children.Add(Text(parameter.Name,12,MutedBrush));cell.Children.Add(Text(parameter.Value.ToString(),27));values.Children.Add(cell);
-        }
-        effectDetails.Children.Add(values);
         if(effect.Source.TypeCode==4 && effect.Source.Values.Count==6 && effect.Source.Values[1]==2) {
-            effectDetails.Children.Add(Text("Pending threshold · Supported range 0–100",12,MutedBrush,new Thickness(0,10,0,7)));
             if(initializeInputs)thresholdInput.Text=ConfirmedParameterText(effect.Source,2);
-            effectDetails.Children.Add(thresholdSlider);
+            AddMobileParameterSlider(thresholdSlider,thresholdInput,"Threshold",effect.Color);
             var actions=new WrapPanel();actions.Children.Add(thresholdInput);applyThreshold.Margin=new Thickness(12,0,0,0);actions.Children.Add(applyThreshold);
             effectDetails.Children.Add(actions);thresholdMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(thresholdMessage);
             UpdateThresholdState();
         }
         if(effect.Source.TypeCode==1 && effect.Source.Values.Count==5 && effect.Source.Values[1]==3) {
-            effectDetails.Children.Add(Text("Pending Tone · Supported range 0–100",12,MutedBrush,new Thickness(0,10,0,7)));
             if(initializeInputs)toneInput.Text=ConfirmedParameterText(effect.Source,3);
-            effectDetails.Children.Add(toneSlider);
+            AddMobileParameterSlider(toneSlider,toneInput,"Tone",effect.Color);
             var actions=new WrapPanel();actions.Children.Add(toneInput);applyTone.Margin=new Thickness(12,0,0,0);actions.Children.Add(applyTone);
             effectDetails.Children.Add(actions);toneMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(toneMessage);
             UpdateToneState();
         }
         AddAdditionalEditors(effect.Source,initializeInputs);
+        if(!effectDetails.Children.OfType<Slider>().Any()) {
+            foreach(var parameter in effect.Parameters) {
+                var row=new Grid {Margin=new Thickness(0,12,0,0),HorizontalAlignment=HorizontalAlignment.Left};
+                row.SetBinding(FrameworkElement.WidthProperty,new Binding("ActualWidth"){Source=effectDetails,Converter=new HalfWidthConverter()});
+                row.ColumnDefinitions.Add(new ColumnDefinition());row.ColumnDefinitions.Add(new ColumnDefinition{Width=GridLength.Auto});
+                row.Children.Add(new TextBlock {Text=parameter.Name,FontFamily=new FontFamily("Segoe UI"),FontSize=14,FontWeight=FontWeights.ExtraBold,Foreground=Brushes.White,TextTrimming=TextTrimming.CharacterEllipsis});
+                var value=Text(parameter.Value.ToString(CultureInfo.InvariantCulture),14);Grid.SetColumn(value,1);row.Children.Add(value);effectDetails.Children.Add(row);
+            }
+        }
     }
     private PresetEffectBlock? EditableNoiseKiller()
     {
@@ -470,7 +485,7 @@ public sealed partial class MainWindow : Window
         thresholdMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
             !supported?"Read a supported V1.1.9 preset before applying a threshold.":
             !TryPendingThreshold(out value)?"Enter a whole number from 0 to 100.":
-            value==block!.Values[2]?$"Matches confirmed snapshot · Level stays at {block.Values[3]}.":$"Pending {value} · Confirmed {block.Values[2]} · Apply reconnects and checks the preset. Nothing is saved.";
+            value==block!.Values[2]?$"Matches confirmed snapshot · Level stays at {block.Values[3]}.":$"Pending {value} · Confirmed {block.Values[2]} · Release the slider or choose Apply. Nothing is saved.";
         UpdatePresetSelectionState();
         UpdateToneState();
         UpdateAdditionalEditorStates();
@@ -499,7 +514,7 @@ public sealed partial class MainWindow : Window
         toneMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
             !supported?"Read a supported V1.1.9 OD808 preset before applying Tone.":!TryPendingTone(out value)?"Enter a whole number from 0 to 100.":
             value==block!.Values[3]?$"Matches confirmed snapshot · Gain stays at {block.Values[2]} and Vol at {block.Values[4]}.":
-            $"Pending {value} · Confirmed {block.Values[3]} · Apply reconnects and checks the preset. Nothing is saved.";
+            $"Pending {value} · Confirmed {block.Values[3]} · Release the slider or choose Apply. Nothing is saved.";
     }
     private async Task ApplyToneAsync()
     {
