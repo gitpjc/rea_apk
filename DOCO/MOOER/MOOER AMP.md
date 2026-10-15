@@ -52,11 +52,14 @@ I want to have these sounds:
 
 ## TODO
 
-Make the effect adjuster line half the width and also look and work the same way they do on the mobile iAMP app. Note that the set part uses the color of the effect icon
+ I added another amp and i t never showed up in the Desktop app. I closed and restarted the app and then it showed up, then I tried to delete it and the 'Remove effect' button became disabled but the newly added amp is still showing. When I closed and restated the app the new amp was gone then. These are bugs need fixing
 
 
+Do you understand what I want?
 
 **DONE**    
+
+Make the effect adjuster line half the width and also look and work the same way they do on the mobile iAMP app. Note that the set part uses the color of the effect icon
 
 Cache the effect names so you don't have to read them every time I connect to the amplifier. Add a button that lets me refresh the effect names only if I want to.   
 

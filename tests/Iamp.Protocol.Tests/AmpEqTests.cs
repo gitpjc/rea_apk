@@ -26,7 +26,7 @@ public class AmpEqTests
             var values=Baseline.Values.ToArray();values[index]=index is >=2 and <=7?(ushort)101:(ushort)(values[index]+1);
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,ObservedParameterCommands.Definition(parameter).Minimum));
         }
-        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=2},parameter,40));
+        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=21},parameter,40));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {TypeCode=1},parameter,40));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=new ushort[]{1,31}},parameter,40));
     }

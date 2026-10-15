@@ -24,7 +24,7 @@ public class NoiseRangeTests
     {
         foreach(var values in new[]{new ushort[]{0,2,25,50,0,0},new ushort[]{2,2,25,50,0,0},new ushort[]{1,3,25,50,0,0},new ushort[]{1,2,101,50,0,0},new ushort[]{1,2,25,101,0,0},new ushort[]{1,2,25,50,1,0},new ushort[]{1,2,25,50,0,1},new ushort[]{1,2}})
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,0));
-        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=2},parameter,0));
+        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=21},parameter,0));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {TypeCode=1},parameter,0));
     }
     [Fact]

@@ -32,7 +32,7 @@ public class AmpBassTests
     [Fact]
     public void RejectsWrongPositionTypeAndLength()
     {
-        foreach(var block in new[]{Baseline with {Position=2},Baseline with {TypeCode=1},Baseline with {Values=new ushort[]{1,31,100,35}}})
+        foreach(var block in new[]{Baseline with {Position=0},Baseline with {TypeCode=1},Baseline with {Values=new ushort[]{1,31,100,35}}})
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(block,ObservedParameter.AmpBass,34));
     }
 }

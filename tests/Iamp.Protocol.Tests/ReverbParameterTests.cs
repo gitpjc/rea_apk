@@ -40,7 +40,7 @@ public class ReverbParameterTests
             }
         }
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=new ushort[]{0,1,20,24,35,0,0,0,0,0}},parameter,target));
-        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=4},parameter,target));
+        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=0},parameter,target));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {TypeCode=7},parameter,target));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=new ushort[]{1,1}},parameter,target));
     }

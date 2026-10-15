@@ -38,7 +38,7 @@ public class ReverbRangeTests
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,0));
         }
         var disabled=Baseline.Values.ToArray();disabled[0]=0;Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=disabled},parameter,0));
-        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=4},parameter,0));
+        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=21},parameter,0));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {TypeCode=7},parameter,0));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=new ushort[]{1,1}},parameter,0));
     }

@@ -93,6 +93,8 @@ internal static class Program
             Set(window,"currentSnapshot",snapshot with {Blocks=disabled});Call(window,"SetEffects",(object)disabled);
             foreach(var c in controls){Select(c.Position);Update();Require(!c.Slider.IsEnabled,"Disabled effect slider enabled.");}
             EffectFilterChecks.Run();
+            ReorderedParameterChecks.Run();
+            EffectChainUiChecks.Run();
             EffectCacheStoreChecks.Run();
             var preview=new MainWindow(true);Require(!Field<Slider>(preview,"thresholdSlider").IsEnabled,"Preview slider enabled.");preview.Close();
             Console.WriteLine("PASS: all 18 sliders; every integer target; numeric/invalid/fractional input; pending/no-write guards; busy/firmware/invalid/disabled/preview states; five viewport sizes; valid/invalid pending navigation, hidden guards, partial Apply/unchanged refresh preservation and new-snapshot reset.");

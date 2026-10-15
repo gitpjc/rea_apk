@@ -65,21 +65,21 @@ public sealed partial class MainWindow
     }
     private bool HasPendingInputs()
     {
-        if(initializedParameterPositions.Contains(1) && EditableNoiseKiller() is {} noise && (!TryPendingThreshold(out var threshold)||threshold!=noise.Values[2]))return true;
-        if(initializedParameterPositions.Contains(2) && Editable808Tone() is {} od && (!TryPendingTone(out var tone)||tone!=od.Values[3]))return true;
-        return AdditionalEditors.Any(e=>initializedParameterPositions.Contains(e.Position) && EditableBlock(e) is {} block && (!e.TryValue(out var value)||value!=block.Values[e.ParameterIndex]));
+        CaptureParameterInputs();
+        return pendingParameterValues.Any(p=>currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==p.Key.Position) is {} block &&
+            (p.Key.Index>=block.Values.Count || !ushort.TryParse(p.Value,System.Globalization.NumberStyles.None,System.Globalization.CultureInfo.InvariantCulture,out var value) || value!=block.Values[p.Key.Index]));
     }
     private async Task PollCurrentPresetAsync()
     {
-        if(polling || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
+        if(polling || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
         polling=true;var previous=currentSnapshot;
         using var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(20));pollCancellation=timeout;
         try {
             var current=await session.ReadCurrentPresetAsync(timeout.Token);
-            if(operation is not null || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+            if(operation is not null || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
             if(snapshotFirmware=="V1.1.9" && batteryReadAt is {} batteryTime && DateTimeOffset.UtcNow-batteryTime>=TimeSpan.FromSeconds(30)) {
                 var battery=await session.ReadBatteryAsync(timeout.Token);
-                if(operation is not null || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+                if(operation is not null || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
                 SetBatteryDisplay(battery);
             }
             if(current.RawStatePayloadHex==previous?.RawStatePayloadHex && current.RawDetailPayloadHex==previous.RawDetailPayloadHex){snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();return;}

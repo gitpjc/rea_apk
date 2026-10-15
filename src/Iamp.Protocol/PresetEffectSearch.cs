@@ -7,7 +7,7 @@ public sealed record EffectDefinition(byte TypeCode,ushort Model,string Category
     public string DisplayName=>$"{Category} · {Name}";
 }
 
-/// <summary>Read-only names for searching; catalog membership never grants write support.</summary>
+/// <summary>Built-in names/model identities. Parameter editing requires separate verified model profiles.</summary>
 public static class PresetEffectSearch
 {
     public static IReadOnlyList<EffectDefinition> Catalog {get;}=LoadCatalog();

@@ -44,6 +44,7 @@ public sealed partial class MainWindow
     }
     private void UpdateEffectPowerState()
     {
+        UpdateChainControls();
         if(effectPowerButton is null)return;
         effectPowerButton.IsEnabled=!preview && operation is null && !polling && editSnapshotValid && snapshotAddress.HasValue &&
             snapshotFirmware=="V1.1.9" && displayedEffect?.Enabled is not null && !HasPendingInputs();

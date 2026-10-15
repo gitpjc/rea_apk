@@ -79,6 +79,12 @@ Numeric entry remains available for precise changes: type a whole number and cho
 
 Apply controls make **live, unsaved edits**. Returning all changed values to their original snapshot values clears the snapshot-difference indicator. Recalling another preset with known live unsaved edits or pending input asks whether to discard them; No is the default. If an external change conflicts with typed input, the app preserves that input, stops automatic refresh and disables editing until you explicitly refresh. Matching a read snapshot alone does not prove that the preset is saved.
 
+## Rearrange, add or remove effects
+
+On F15i V1.1.9, drag an effect icon to the blue insertion line between icons, or use the selected effect’s Move left/Move right buttons. The line shows the exact placement before you drop. Select + to browse the mobile-style category list and choose a model; search the model list if needed, then choose Add effect. Multiple effects from the same category and repeated identical models can be added, as in mobile iAMP. Each instance has its own chain position and pending parameter values. GIR&IR is listed with an explanation that library access is not yet supported. The amplifier supplies the new effect’s default values. Select Remove effect to delete the selected module.
+
+Moves preserve the effect’s values. Previously supported parameter editors continue working at the new position. Newly added models show their names, with parameter editing available only for verified layouts. Apply or clear pending parameter inputs before changing the chain. Every change is checked against a fresh preset and verified by readback. Chain changes are live and unsaved; the restricted save workflow below still applies.
+
 ## Save the supported preset
 
 The supported save workflow provides **Save current preset** in the current-preset panel. It enables only for a live edit to **0D / British Lead Solo** on firmware **V1.1.9**, with Noise Killer Threshold **25 or 26** and every other original value unchanged. Apply the supported Threshold change first; then choose Save and review the unchanged name, destination **0D / index 4** and Threshold in the overwrite confirmation. **No** is the default choice.

@@ -35,20 +35,20 @@ public static class ObservedParameterCommands
     {
         var definition = Definition(parameter);
         var v = block.Values;
-        var supported = definition.Position switch {
-            1 => block.Position == 1 && block.TypeCode == 4 && v.Count == 6 && v[0] == 1 && v[1] == 2 &&
+        var supported = block.Position is >= 1 and <= 20 && (definition.Position switch {
+            1 => block.TypeCode == 4 && v.Count == 6 && v[0] == 1 && v[1] == 2 &&
                 v[2] <= 100 && v[3] <= 100 && v[4] == 0 && v[5] == 0,
-            2 => block.Position == 2 && block.TypeCode == 1 && v.Count == 5 && v[0] == 1 && v[1] == 3 &&
+            2 => block.TypeCode == 1 && v.Count == 5 && v[0] == 1 && v[1] == 3 &&
                 v[2] <= 100 && v[3] <= 100 && v[4] <= 100,
-            3 => block.Position == 3 && block.TypeCode == 2 && v.Count == 9 && v[0] == 1 && v[1] == 31 &&
-                v[2] <= 100 && v[3] <= 100 && v[4] <= 100 && v[5] <= 100 && v[6] <= 100 && v[7] <= 100 && v[8] == 1,
-            4 => block.Position == 4 && block.TypeCode == 7 && v.Count == 8 && v[0] == 1 && v[1] == 1 &&
+            3 => block.TypeCode == 2 && v.Count == 9 && v[0] == 1 && v[1] == 31 &&
+                v[2] <= 100 && v[3] <= 100 && v[4] <= 100 && v[5] <= 100 && v[6] <= 100 && v[7] <= 100 && v[8] <= 1,
+            4 => block.TypeCode == 7 && v.Count == 8 && v[0] == 1 && v[1] == 1 &&
                 v[2] <= 100 && v[3] <= 100 && v[4] is >=40 and <=2500 && v[5] == 0 && v[6] == 0 && v[7] == 0,
-            5 => block.Position == 5 && block.TypeCode == 8 && v.Count == 10 && v[0] == 1 && v[1] == 1 &&
+            5 => block.TypeCode == 8 && v.Count == 10 && v[0] == 1 && v[1] == 1 &&
                 v[2] <= 200 && v[3] <= 100 && v[4] <= 100 && v[5] <= 100 &&
                 v[6] == 0 && v[7] == 0 && v[8] == 0 && v[9] == 0,
             _ => false
-        };
+        });
         if (!supported) throw new NotSupportedException("Effect differs from the captured configuration or supported ranges.");
         if (value < definition.Minimum || value > definition.Maximum)
             throw new ArgumentOutOfRangeException(nameof(value), $"Supported range is {definition.Minimum}–{definition.Maximum}.");
@@ -57,5 +57,16 @@ public static class ObservedParameterCommands
         for (var i = 0; i < v.Count; i++)
             BinaryPrimitives.WriteUInt16LittleEndian(payload.AsSpan(4 + i * 2, 2), i == definition.ValueIndex ? value : v[i]);
         return payload;
+    }
+
+    /// <summary>Find a unique captured model at its current chain position. Ambiguous duplicates are not editable.</summary>
+    public static PresetEffectBlock? FindSupportedBlock(IEnumerable<PresetEffectBlock> blocks, ObservedParameter parameter)
+    {
+        var definition = Definition(parameter);
+        var type = definition.Position switch { 1 => 4, 2 => 1, 3 => 2, 4 => 7, 5 => 8, _ => 0 };
+        var candidates = blocks.Where(block => block.TypeCode == type).Take(2).ToArray();
+        if (candidates.Length != 1) return null;
+        try { Create(candidates[0], parameter, definition.Minimum); return candidates[0]; }
+        catch (NotSupportedException) { return null; }
     }
 }

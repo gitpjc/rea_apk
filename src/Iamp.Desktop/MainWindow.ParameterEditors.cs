@@ -12,7 +12,8 @@ public sealed partial class MainWindow
         Func<F15ReadSession,CurrentPresetSnapshot,ushort,CancellationToken,Task<CurrentPresetSnapshot>> write)
     {
         internal string Label {get;}=label;
-        internal byte Position {get;}=position;
+        internal byte ProfilePosition {get;}=position;
+        internal byte Position {get;set;}=position;
         internal int ParameterIndex {get;}=parameterIndex;
         internal ushort Minimum {get;}=minimum;
         internal ushort Maximum {get;}=maximum;
@@ -60,45 +61,45 @@ public sealed partial class MainWindow
     }
     private void AddAdditionalEditors(PresetEffectBlock displayed,bool initializeInputs)
     {
-        var knownNoise=displayed.Position==1 && displayed.TypeCode==4 && displayed.Values.Count==6 && displayed.Values[1]==2;
-        var knownOd=displayed.Position==2 && displayed.TypeCode==1 && displayed.Values.Count==5 && displayed.Values[1]==3;
-        var knownAmp=displayed.Position==3 && displayed.TypeCode==2 && displayed.Values.Count==9 && displayed.Values[1]==31;
-        var knownDelay=displayed.Position==4 && displayed.TypeCode==7 && displayed.Values.Count==8 && displayed.Values[1]==1;
-        var knownReverb=displayed.Position==5 && displayed.TypeCode==8 && displayed.Values.Count==10 && displayed.Values[1]==1;
-        foreach(var editor in AdditionalEditors.Where(e=>e.Position==displayed.Position && (knownNoise||knownOd||knownAmp||knownDelay||knownReverb))) {
-            if(initializeInputs)editor.Input.Text=ConfirmedParameterText(displayed,editor.ParameterIndex);
+        foreach(var editor in AdditionalEditors.Where(e=>MatchesEditorProfile(e,displayed))) {
+            editor.Position=displayed.Position;
+            editor.Input.Text=PendingParameterText(displayed,editor.ParameterIndex);
             AddMobileParameterSlider(editor.Slider,editor.Input,editor.Label,EffectPresentation.From(displayed).Color);
             var actions=new WrapPanel();actions.Children.Add(editor.Input);editor.Apply.Margin=new Thickness(12,0,0,0);actions.Children.Add(editor.Apply);
             effectDetails.Children.Add(actions);editor.Message.Margin=new Thickness(0,7,0,0);effectDetails.Children.Add(editor.Message);
         }
         UpdateAdditionalEditorStates();
     }
-    private PresetEffectBlock? EditableBlock(PendingParameterEditor editor)=>editor.Position switch {
+    private static bool MatchesEditorProfile(PendingParameterEditor editor,PresetEffectBlock block)
+        =>editor.ProfilePosition switch {
+            1=>block.TypeCode==4 && block.Values.Count==6 && block.Values[1]==2,
+            2=>block.TypeCode==1 && block.Values.Count==5 && block.Values[1]==3,
+            3=>block.TypeCode==2 && block.Values.Count==9 && block.Values[1]==31,
+            4=>block.TypeCode==7 && block.Values.Count==8 && block.Values[1]==1,
+            5=>block.TypeCode==8 && block.Values.Count==10 && block.Values[1]==1,
+            _=>false
+        };
+    private PresetEffectBlock? EditableBlock(PendingParameterEditor editor)=>editor.ProfilePosition switch {
         1=>EditableNoiseKiller(),2=>Editable808Tone(),3=>EditableAmpBass(),4=>EditableAnalogDelay(),5=>EditableHallReverb(),_=>null
     };
     private PresetEffectBlock? EditableAmpBass()
     {
-        if(currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==3) is not {} block)return null;
-        try {ObservedParameterCommands.Create(block,ObservedParameter.AmpBass,34);return block;}
-        catch(NotSupportedException){return null;}
+        return FindEditableParameterBlock(ObservedParameter.AmpBass);
     }
     private PresetEffectBlock? EditableAnalogDelay()
     {
-        if(currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==4) is not {} block)return null;
-        try {ObservedParameterCommands.Create(block,ObservedParameter.DelayLevel,16);return block;}
-        catch(NotSupportedException){return null;}
+        return FindEditableParameterBlock(ObservedParameter.DelayLevel);
     }
     private PresetEffectBlock? EditableHallReverb()
     {
-        if(currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==5) is not {} block)return null;
-        try {ObservedParameterCommands.Create(block,ObservedParameter.ReverbTone,0);return block;}
-        catch(NotSupportedException){return null;}
+        return FindEditableParameterBlock(ObservedParameter.ReverbTone);
     }
     private void UpdateAdditionalEditorStates()
     {
         UpdateEffectPowerState();
         foreach(var editor in AdditionalEditors) {
             var block=EditableBlock(editor);
+            if(block is not null)editor.Position=block.Position;
             var supported=!preview && editSnapshotValid && snapshotAddress.HasValue && snapshotFirmware=="V1.1.9" && block is not null;
             editor.Input.IsEnabled=supported && operation is null;
             editor.Apply.IsEnabled=supported && operation is null && editor.TryValue(out var value) && value!=block!.Values[editor.ParameterIndex];
@@ -116,10 +117,11 @@ public sealed partial class MainWindow
         Begin($"Checking amplifier before applying {editor.Label}…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
-            confirmed=await UseSessionAsync(target,session=>editor.Write(session,expected,value,operation!.Token));
+            var parameter=Enum.GetValues<ObservedParameter>().Single(p=>ObservedParameterCommands.Definition(p).Position==editor.ProfilePosition && ObservedParameterCommands.Definition(p).ValueIndex==editor.ParameterIndex);
+            confirmed=await UseSessionAsync(target,session=>session.SetParameterAtPositionAsync(expected,block.Position,parameter,value,operation!.Token));
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
             currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffectsPreservingPending(confirmed.Blocks);
-            var selected=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==editor.Position).Effect;
+            var selected=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==block.Position).Effect;
             if(selected is not null)SelectEffect(selected);
             snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · {editor.Label} {value}":
                 $"{editor.Label} {value} verified · Matches original snapshot · Nothing saved";

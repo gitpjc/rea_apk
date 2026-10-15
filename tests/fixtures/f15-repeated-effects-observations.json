@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-15",
+  "firmware": "V1.1.9",
+  "observed": "Mobile allows multiple effects in the same category and identical model instances. Earlier one-category inference was incorrect.",
+  "payloads": {
+    "addRedCompAt6": [
+      45,
+      0,
+      1,
+      6,
+      4,
+      0
+    ],
+    "addSecondNoiseKillerAt6": [
+      45,
+      0,
+      1,
+      6,
+      4,
+      2
+    ]
+  },
+  "completeOriginalRestored": true,
+  "desktopChecks": [
+    "Desktop move 1→3, moved editor apply/restore, inverse move",
+    "Desktop move 2→4, moved editor apply/restore, inverse move",
+    "Desktop category 5 add/remove",
+    "Desktop category 9 add/remove",
+    "Desktop category 6 add/remove",
+    "Second identical 4/2 add, edit/restore, move, edit/restore, reverse, remove",
+    "Second identical 1/3 add, edit/restore, move, edit/restore, reverse, remove"
+  ],
+  "evidence": [
+    {
+      "path": "analysis/private/duplicate-mobile.log",
+      "sha256": "ce506ea08b58ca6bf5a321b78f38f32b86eb470f6dcb7980adefa62c80e5a5e1"
+    },
+    {
+      "path": "analysis/private/duplicate-same-mobile.log",
+      "sha256": "06469e50bd1ea7b090f7484d5566634481458a637764f61508221ab92b3890e4"
+    },
+    {
+      "path": "analysis/private/duplicate-add-result.png",
+      "sha256": "760a593f54ea3583785cd64c41d59aae0525f00b1f5b554f3f4cc6e081074403"
+    },
+    {
+      "path": "analysis/private/duplicate-same-added.png",
+      "sha256": "58c7f39f527ba49c0e688dcabce2572ab16eafe93c4582da5e1eb56e00fc8a26"
+    },
+    {
+      "path": "analysis/private/duplicate-baseline.json",
+      "sha256": "a6ac21c8a50b8d62e5ef1b154b41ea93e1ba3ce097cf3e4bde47ca1c69cf89e0"
+    },
+    {
+      "path": "analysis/private/duplicate-final-restored.json",
+      "sha256": "a6ac21c8a50b8d62e5ef1b154b41ea93e1ba3ce097cf3e4bde47ca1c69cf89e0"
+    },
+    {
+      "path": "analysis/private/duplicate-ui-report.json",
+      "sha256": "8d69102dbb71610185c147bb89119f03927cda4d285d2d4a8809ff7ea4abc262"
+    }
+  ],
+  "limits": [
+    "No save/recall performed.",
+    "GIR/IR library access remains outside this change.",
+    "Repeated identical physical parameter tests cover Noise Killer and OD808; other known layouts use the same positional guards."
+  ]
+}

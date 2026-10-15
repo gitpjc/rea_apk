@@ -95,7 +95,8 @@ public sealed partial class MainWindow : Window
             Margin=new Thickness(0,10,0,0),Child=currentPanel });
         var effects=new StackPanel();effects.Children.Add(Text("Preset effects",18));
         effects.Children.Add(Text("Select an effect to view its snapshot. Supported parameters can be applied explicitly.",12,MutedBrush,new Thickness(0,5,0,12)));
-        effects.Children.Add(effectChain);effectDetails.Margin=new Thickness(0,15,0,0);effects.Children.Add(effectDetails);
+        effects.Children.Add(Text("Drag effects to reorder, or use the move buttons. Use + to add an effect. Changes are live; nothing is saved automatically.",12,MutedBrush,new Thickness(0,0,0,10)));
+        effects.Children.Add(CreateChainDragSurface());effectDetails.Margin=new Thickness(0,15,0,0);effects.Children.Add(effectDetails);
         effectDetails.Children.Add(Text("Read the amplifier to see its preset effects.",13,MutedBrush));
         page.Children.Add(new Border { Background=PanelBrush,CornerRadius=new CornerRadius(8),Padding=new Thickness(14),Margin=new Thickness(0,10,0,0),Child=effects });
         var library = new StackPanel { Margin = new Thickness(0,27,0,0) };
@@ -414,6 +415,8 @@ public sealed partial class MainWindow : Window
     {
         UpdateIndexedCurrentEffects();
         initializedParameterPositions.Clear();
+        pendingParameterValues.Clear();parameterTargets.Clear();
+        displayedEffect=null;
         effectChain.Children.Clear();effectButtons.Clear();effectDetails.Children.Clear();
         foreach(var block in blocks.Where(b=>b.TypeCode!=0)) {
             var effect=EffectPresentation.From(block);var button=Button(effect.Category);
@@ -422,12 +425,18 @@ public sealed partial class MainWindow : Window
             button.BorderThickness=new Thickness(0,0,0,3);button.BorderBrush=Brushes.Transparent;
             button.ToolTip=$"View {effect.Category} details · {effect.Enabled switch {true=>"Enabled",false=>"Disabled",_=>"State unknown"}}";button.Click+=(_,_)=>SelectEffect(effect);
             effectButtons.Add((button,effect));effectChain.Children.Add(button);
+            EnableEffectDragging(button,effect);
         }
+        AddChainControls();
         if(effectButtons.Count>0)SelectEffect(effectButtons[0].Effect);
         else effectDetails.Children.Add(Text("No preset effect details available.",13,MutedBrush));
     }
     private void SelectEffect(EffectPresentation effect)
     {
+        CaptureParameterInputs();
+        var wasRestoring=restoringParameterInputs;restoringParameterInputs=true;
+        try {
+        AssignParameterTarget(effect.Source);
         var initializeInputs=initializedParameterPositions.Add(effect.Source.Position);
         DetachSlider(thresholdSlider);DetachSlider(toneSlider);
         if(thresholdInput.Parent is Panel oldInputParent)oldInputParent.Children.Remove(thresholdInput);
@@ -438,16 +447,17 @@ public sealed partial class MainWindow : Window
         foreach(var item in effectButtons)item.Button.BorderBrush=ReferenceEquals(item.Effect,effect)?Brushes.White:Brushes.Transparent;
         effectDetails.Children.Clear();effectDetails.Children.Add(Text(effect.Title,22,effect.Enabled==false?MutedBrush:Brush(effect.Color)));
         AddEffectPowerControl(effect);
+        AddChainSelectionActions();
         if(effect.Parameters.Count==0) {effectDetails.Children.Add(Text("Parameter details not available in this version.",13,MutedBrush,new Thickness(0,8,0,0)));return;}
         if(effect.Source.TypeCode==4 && effect.Source.Values.Count==6 && effect.Source.Values[1]==2) {
-            if(initializeInputs)thresholdInput.Text=ConfirmedParameterText(effect.Source,2);
+            thresholdInput.Text=PendingParameterText(effect.Source,2);
             AddMobileParameterSlider(thresholdSlider,thresholdInput,"Threshold",effect.Color);
             var actions=new WrapPanel();actions.Children.Add(thresholdInput);applyThreshold.Margin=new Thickness(12,0,0,0);actions.Children.Add(applyThreshold);
             effectDetails.Children.Add(actions);thresholdMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(thresholdMessage);
             UpdateThresholdState();
         }
         if(effect.Source.TypeCode==1 && effect.Source.Values.Count==5 && effect.Source.Values[1]==3) {
-            if(initializeInputs)toneInput.Text=ConfirmedParameterText(effect.Source,3);
+            toneInput.Text=PendingParameterText(effect.Source,3);
             AddMobileParameterSlider(toneSlider,toneInput,"Tone",effect.Color);
             var actions=new WrapPanel();actions.Children.Add(toneInput);applyTone.Margin=new Thickness(12,0,0,0);actions.Children.Add(applyTone);
             effectDetails.Children.Add(actions);toneMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(toneMessage);
@@ -463,12 +473,20 @@ public sealed partial class MainWindow : Window
                 var value=Text(parameter.Value.ToString(CultureInfo.InvariantCulture),14);Grid.SetColumn(value,1);row.Children.Add(value);effectDetails.Children.Add(row);
             }
         }
+        }
+        finally {restoringParameterInputs=wasRestoring;if(!restoringParameterInputs)UpdateThresholdState();}
     }
     private PresetEffectBlock? EditableNoiseKiller()
     {
-        if(currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==1) is not {} block)return null;
-        try {ObservedParameterCommands.Create(block,ObservedParameter.NoiseThreshold,0);return block;}
-        catch(NotSupportedException){return null;}
+        return FindEditableParameterBlock(ObservedParameter.NoiseThreshold);
+    }
+    private PresetEffectBlock? FindEditableParameterBlock(ObservedParameter parameter)
+    {
+        if(currentSnapshot is not {} current)return null;
+        var definition=ObservedParameterCommands.Definition(parameter);
+        if(!parameterTargets.TryGetValue(definition.Position,out var position))return ObservedParameterCommands.FindSupportedBlock(current.Blocks,parameter);
+        var block=current.Blocks.FirstOrDefault(b=>b.Position==position);if(block is null)return null;
+        try {ObservedParameterCommands.Create(block,parameter,definition.Minimum);return block;}catch(NotSupportedException){return null;}
     }
     private void InvalidateEditTarget()
     {
@@ -495,8 +513,7 @@ public sealed partial class MainWindow : Window
     }
     private PresetEffectBlock? Editable808Tone()
     {
-        var block=currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==2);
-        return IsSupported808ToneBlock(block)?block:null;
+        return FindEditableParameterBlock(ObservedParameter.OdTone);
     }
     private static bool IsSupported808ToneBlock(PresetEffectBlock? block)
     {
@@ -524,10 +541,10 @@ public sealed partial class MainWindow : Window
         Begin("Checking amplifier before applying OD808 Tone…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
-            confirmed=await UseSessionAsync(target,session=>session.Set808ToneAsync(expected,value,operation!.Token));
+            confirmed=await UseSessionAsync(target,session=>session.SetParameterAtPositionAsync(expected,block.Position,ObservedParameter.OdTone,value,operation!.Token));
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
             currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffectsPreservingPending(confirmed.Blocks);
-            var toneEffect=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==2 && item.Effect.Source.TypeCode==1).Effect;
+            var toneEffect=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==block.Position && item.Effect.Source.TypeCode==1).Effect;
             if(toneEffect is not null)SelectEffect(toneEffect);
             snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · OD808 Tone {value}":
                 $"OD808 Tone {value} verified · Matches original snapshot · Nothing saved";
@@ -597,9 +614,11 @@ public sealed partial class MainWindow : Window
         snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
-            confirmed=await UseSessionAsync(target,session=>session.SetNoiseKillerThresholdAsync(expected,value,operation!.Token));
+            confirmed=await UseSessionAsync(target,session=>session.SetParameterAtPositionAsync(expected,block.Position,ObservedParameter.NoiseThreshold,value,operation!.Token));
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
             currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffectsPreservingPending(confirmed.Blocks);
+            var noiseEffect=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==block.Position && item.Effect.Source.TypeCode==4).Effect;
+            if(noiseEffect is not null)SelectEffect(noiseEffect);
             snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · Threshold {value}":
                 $"Threshold {value} verified · Matches original snapshot · Nothing saved";
             lastMutationSucceeded=true;

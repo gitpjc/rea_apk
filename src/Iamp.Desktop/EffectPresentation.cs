@@ -13,6 +13,7 @@ internal sealed record EffectPresentation(string Category, string Color, string 
     {
         var (category, color) = block.TypeCode switch {
             1 => ("OD", "#D6AE48"), 2 => ("Amp", "#D36964"), 4 => ("Dyna", "#FFA45C"), 9 => ("EQ", "#B1BDCD"),
+            5 => ("Filter", "#F58CEB"), 6 => ("Mod", "#52B7FF"),
             7 => ("Delay", "#52DC38"), 8 => ("Reverb", "#879AE8"), _ => ("Effect", "#94A3B8")
         };
         if (block.TypeCode == 1 && block.Values.Count == 5 && block.Values[1] == 5)
@@ -39,6 +40,7 @@ internal sealed record EffectPresentation(string Category, string Color, string 
             return new(category,color,"Hall Reverb",new[] {
                 new ReadOnlyParameter("Pre-delay (ms)",block.Values[2]),new ReadOnlyParameter("Level",block.Values[3]),
                 new ReadOnlyParameter("Decay",block.Values[4]),new ReadOnlyParameter("Tone",block.Values[5]) },block);
-        return new(category,color,category,Array.Empty<ReadOnlyParameter>(),block);
+        var known=block.Values.Count>=2?PresetEffectSearch.Catalog.FirstOrDefault(e=>e.TypeCode==block.TypeCode && e.Model==block.Values[1]):null;
+        return new(category,color,known?.Name??category,Array.Empty<ReadOnlyParameter>(),block);
     }
 }

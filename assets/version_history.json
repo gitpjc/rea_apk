@@ -1,5 +1,35 @@
 [
   {
+    "version": "1.25.4",
+    "changedAt": "2026-10-15T02:54:16.818Z",
+    "summary": "Fixed stale effect chains after adding or removing another Amp.",
+    "details": "Reproduced successful 65 US DLX addition being rejected because the amplifier recomputes an opaque Boolean ninth word in existing Amp records; removal reverses that flag. Permit only those observed Boolean Amp-word updates during Amp chain edits while still checking every other preset byte and complete global state. Preserve either observed Amp flag during supported parameter edits. If a complete readback is genuinely unexpected, display its authoritative chain without claiming success rather than retaining stale effects. Focused protocol/WPF checks pass; actual desktop 65 US DLX and duplicate PLX100 add/remove, moves and original Bass edit/restore tests update immediately and finish with exact independent baseline restoration. Nothing saved."
+  },
+  {
+    "version": "1.25.3",
+    "changedAt": "2026-10-15T02:29:43.997Z",
+    "summary": "Matched mobile support for repeated effect categories and models.",
+    "details": "Removed the incorrect one-effect-per-category restriction after ADB confirmed adding Red Comp alongside Noise Killer and a second identical Noise Killer. All built-in models remain addable while space is available. Repeated effects use explicit chain-position targeting; the 18 supported parameter controls retain separate pending values per instance across selection, refresh and applying. Focused protocol and WPF regressions pass. Actual desktop tests add, edit/restore, move, edit/restore, reverse and remove second Noise Killer/OD808 instances. Mobile and Windows tests finish with the exact fresh original state/detail independently verified. No presets saved; GIR/IR library access and Phase 6 unchanged."
+  },
+  {
+    "version": "1.25.2",
+    "changedAt": "2026-10-15T02:07:39.647Z",
+    "summary": "Stopped effect-chain buttons flashing during automatic refresh.",
+    "details": "Keep Add, Move and Remove controls stable during background preset reads. Chain changes continue through the existing serialized workflow queue with fresh complete-state checks. A background read finishing during a drag or model picker no longer replaces that interaction’s snapshot. Real user operations, invalid/disconnected states and pending inputs still disable actions. Focused WPF regressions cover 20 background-read cycles, preserved drag feedback and busy guards; eight workflow queue tests pass. No phone or amplifier access or preset changes."
+  },
+  {
+    "version": "1.25.1",
+    "changedAt": "2026-10-15T01:44:07.895Z",
+    "summary": "Made effect dragging predictable and showed the full mobile category list.",
+    "details": "Show a blue #4385ff insertion line at the exact drop gap, accept drops in the chain gaps and row ends, and correctly adjust positions when moving forwards or backwards. Clear the line on leave/cancel and pause polling during drags and the model picker. Replace the three-category dropdown with the mobile-style list of all nine categories and retain all 124 built-in model names; explain occupied categories and disable duplicate additions rather than hiding them. List GIR&IR with an unavailable-library explanation without adding library/transfer functionality. Focused offline WPF checks verify insertion mapping/geometry/cleanup, wrapping, all categories/models, search, occupied/disabled guards and picker sizing. No device access or preset changes."
+  },
+  {
+    "version": "1.25.0",
+    "changedAt": "2026-10-15T01:22:08.562Z",
+    "summary": "Added live effect-chain reordering and an add-effect picker.",
+    "details": "Drag effect icons to reorder, use accessible Move left/Move right controls, add a built-in effect with +, or remove the selected effect. The category/model picker uses the 124-name catalog and excludes categories already present, including disabled effects. Amplifier defaults are read back for new models; unknown parameter layouts remain read-only. All 18 supported parameter editors follow moved effects. Fresh whole-preset checks, serialized operations and exact readback preserve unrelated state; commands use reconnect-safe counters with one fresh-token attempt only when a complete read proves no change. Focused protocol and offline WPF checks pass. Mobile and actual Windows desktop tests verify reorder, add/remove and moved-editor changes, with exact original state independently restored after testing. No presets saved; Phase 6 unchanged."
+  },
+  {
     "version": "1.24.2",
     "changedAt": "2026-10-15T00:49:53.096Z",
     "summary": "Made effect setting labels visibly bolder and brighter.",

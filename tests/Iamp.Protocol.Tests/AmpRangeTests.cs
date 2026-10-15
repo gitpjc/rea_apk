@@ -47,8 +47,9 @@ public class AmpRangeTests
             var values=Baseline.Values.ToArray();values[index]=index is >=2 and <=7?(ushort)101:(ushort)(values[index]+1);
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,0));
         }
-        foreach(var index in new[]{0,8}) {var values=Baseline.Values.ToArray();values[index]=0;Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,0));}
-        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=2},parameter,0));
+        var disabled=Baseline.Values.ToArray();disabled[0]=0;
+        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=disabled},parameter,0));
+        Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=21},parameter,0));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {TypeCode=1},parameter,0));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=new ushort[]{1,31}},parameter,0));
     }

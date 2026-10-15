@@ -8,7 +8,7 @@ using Windows.Security.Cryptography;
 namespace Iamp.Transport.Windows;
 
 /// <summary>Captured queries and restricted V1.1.9 controls. Complete workflows are serialized within each session.</summary>
-public sealed class F15ReadSession : IAsyncDisposable
+public sealed partial class F15ReadSession : IAsyncDisposable
 {
     private readonly BluetoothLEDevice device;
     private readonly GattDeviceService service;
@@ -234,7 +234,10 @@ public sealed class F15ReadSession : IAsyncDisposable
     private Task<CurrentPresetSnapshot> SetObservedParameterAsync(CurrentPresetSnapshot expected, ObservedParameter parameter, ushort value, CancellationToken ct)
         => RunWorkflowAsync(token => SetObservedParameterCoreAsync(expected, parameter, value, token), ct);
 
-    private async Task<CurrentPresetSnapshot> SetObservedParameterCoreAsync(CurrentPresetSnapshot expected, ObservedParameter parameter, ushort value, CancellationToken ct)
+    public Task<CurrentPresetSnapshot> SetParameterAtPositionAsync(CurrentPresetSnapshot expected,byte position,ObservedParameter parameter,ushort value,CancellationToken ct)
+        =>RunWorkflowAsync(token=>SetObservedParameterCoreAsync(expected,parameter,value,token,position),ct);
+
+    private async Task<CurrentPresetSnapshot> SetObservedParameterCoreAsync(CurrentPresetSnapshot expected, ObservedParameter parameter, ushort value, CancellationToken ct,byte? position=null)
     {
         var identity = await ReadIdentityCoreAsync(ct);
         if (identity.Firmware != "V1.1.9") throw new NotSupportedException("Parameter editing is verified only on F15i V1.1.9.");
@@ -243,12 +246,14 @@ public sealed class F15ReadSession : IAsyncDisposable
             before.RawStatePayloadHex != expected.RawStatePayloadHex)
             throw new IOException("The amplifier changed since the snapshot. Read it again before editing.");
         var definition = ObservedParameterCommands.Definition(parameter);
-        var block = before.Blocks[definition.Position - 1];
+        var block = position is {} requested?before.Blocks.SingleOrDefault(b=>b.Position==requested):ObservedParameterCommands.FindSupportedBlock(before.Blocks, parameter);
+        block = block
+            ?? throw new NotSupportedException("A unique captured effect model is required before editing.");
         var request = ObservedParameterCommands.Create(block, parameter, value);
         if (block.Values[definition.ValueIndex] == value) return before;
         await WriteObservedUpdateAsync(request, ct);
         var after = await ReadCurrentPresetCoreAsync(ct);
-        var expectedDetail = PresetDataParser.WithParameterValue(Convert.FromHexString(before.RawDetailPayloadHex), definition.Position, definition.ValueIndex, value);
+        var expectedDetail = PresetDataParser.WithParameterValue(Convert.FromHexString(before.RawDetailPayloadHex), block.Position, definition.ValueIndex, value);
         if (after.WireIndex != before.WireIndex || after.RawStatePayloadHex != before.RawStatePayloadHex ||
             after.RawDetailPayloadHex != Convert.ToHexString(expectedDetail))
             throw new IOException("Parameter read-back differs from the requested change. Read the amplifier before another operation; nothing was saved.");

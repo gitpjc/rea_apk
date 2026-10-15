@@ -1,0 +1,154 @@
+{
+  "firmware": "V1.1.9",
+  "date": "2026-10-15",
+  "source": "ADB-operated user-supplied iAMP 1.6.1 and Windows complete state/detail readbacks",
+  "observedMobilePayloads": {
+    "move1to3": [
+      45,
+      151,
+      4,
+      1,
+      3
+    ],
+    "move3to2": [
+      45,
+      152,
+      4,
+      3,
+      2
+    ],
+    "move2to1": [
+      45,
+      153,
+      4,
+      2,
+      1
+    ],
+    "addTouchWahAt6": [
+      45,
+      0,
+      1,
+      6,
+      5,
+      0
+    ],
+    "removeAt6": [
+      45,
+      50,
+      3,
+      6
+    ]
+  },
+  "evidence": [
+    {
+      "path": "analysis/private/chain-start-baseline.json",
+      "sha256": "a6ac21c8a50b8d62e5ef1b154b41ea93e1ba3ce097cf3e4bde47ca1c69cf89e0"
+    },
+    {
+      "path": "analysis/private/chain-restored-baseline.json",
+      "sha256": "a6ac21c8a50b8d62e5ef1b154b41ea93e1ba3ce097cf3e4bde47ca1c69cf89e0"
+    },
+    {
+      "path": "analysis/private/chain-delete.log",
+      "sha256": "4d30b2c5ab8243413047ce16ad0fa94e38847d56d3d72b7d360b62dd79d50f30"
+    },
+    {
+      "path": "analysis/private/chain-windows-report.json",
+      "sha256": "3ddd7a7fd1657b3e802b664b9c7d3f6182470605f1ba36e3fc4ac4300185d8fe"
+    },
+    {
+      "path": "analysis/private/chain-ui-report.json",
+      "sha256": "b0e1714bb233d08a345412d0f7d6fd115d807a6850ce85da3c3ffb7cffdf9599"
+    }
+  ],
+  "validation": {
+    "mobileOriginalRestored": true,
+    "windowsOriginalRestored": true,
+    "desktopOriginalRestored": true,
+    "windows": [
+      {
+        "operation": "move",
+        "from": 1,
+        "to": 3,
+        "passed": true
+      },
+      {
+        "operation": "move",
+        "from": 5,
+        "to": 1,
+        "passed": true
+      },
+      {
+        "operation": "move",
+        "from": 2,
+        "to": 4,
+        "passed": true
+      },
+      {
+        "operation": "add",
+        "effect": "Filter · Touch Wah",
+        "values": [
+          1,
+          0,
+          60,
+          45,
+          55,
+          70
+        ],
+        "passed": true
+      },
+      {
+        "operation": "add",
+        "effect": "EQ · 5 Bands EQ",
+        "values": [
+          1,
+          0,
+          32,
+          32,
+          32,
+          32,
+          32,
+          50,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "passed": true
+      },
+      {
+        "operation": "add",
+        "effect": "Mod · Phaser",
+        "values": [
+          1,
+          0,
+          8,
+          40,
+          60,
+          0,
+          0
+        ],
+        "passed": true
+      }
+    ],
+    "desktop": [
+      "Desktop move 1→3, moved editor apply/restore, inverse move",
+      "Desktop move 2→4, moved editor apply/restore, inverse move",
+      "Desktop category 5 add/remove",
+      "Desktop category 9 add/remove",
+      "Desktop category 6 add/remove"
+    ]
+  },
+  "limits": [
+    "Only F15i V1.1.9 tested.",
+    "Built-in catalog only; user GIR/IR/GNR libraries excluded.",
+    "Representative add/remove models tested, not every model.",
+    "No preset save or recall performed.",
+    "Counter bands are a client allocation based on observed mobile starting tokens; reconnect suppression was observed in Windows tests."
+  ]
+}
