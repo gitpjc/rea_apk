@@ -31,6 +31,26 @@ public static class EffectChainCommands
             throw new NotSupportedException("Choose an available built-in effect category.");
         return [0x2D,token,1,checked((byte)(active.Count+1)),effect.TypeCode,checked((byte)effect.Model)];
     }
+    public static byte[] Replace(IReadOnlyList<PresetEffectBlock> blocks,byte position,EffectDefinition effect,byte token)
+    {
+        RequirePosition(Active(blocks),position);
+        if(!PresetEffectSearch.Catalog.Contains(effect) || effect.Model>byte.MaxValue)
+            throw new NotSupportedException("Choose an available built-in effect model.");
+        return [0x2D,token,2,position,effect.TypeCode,checked((byte)effect.Model)];
+    }
+    public static bool IsExpectedReplacement(ReadOnlySpan<byte> before,ReadOnlySpan<byte> after,byte position,EffectDefinition effect)
+    {
+        var original=Active(PresetDataParser.Parse(before).Blocks);
+        RequirePosition(original,position);
+        var actual=Active(PresetDataParser.Parse(after).Blocks).ToList();
+        if(actual.Count!=original.Count)return false;
+        var replaced=actual[position-1];
+        if(replaced.TypeCode!=effect.TypeCode || replaced.Values.Count<2 || replaced.Values[0]!=1 || replaced.Values[1]!=effect.Model)return false;
+        // The amp supplies defaults for the selected model. Restore the original
+        // record for comparison so every unrelated record/header/trailer is checked.
+        actual[position-1]=original[position-1];
+        return MatchesChainDetail(before,Rebuild(after,actual),original[position-1].TypeCode==2 || effect.TypeCode==2);
+    }
     public static byte[] ExpectedMove(ReadOnlySpan<byte> detail,byte from,byte to)
     {
         var decoded=PresetDataParser.Parse(detail);var active=Active(decoded.Blocks).ToList();

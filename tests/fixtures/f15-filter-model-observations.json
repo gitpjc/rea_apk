@@ -1,0 +1,503 @@
+{
+  "firmware": "V1.1.9",
+  "mobileApp": "1.6.1",
+  "capturedOn": "2026-10-15",
+  "mobileLogSha256": "822c6e610be5accfe76b58f4b9c1544a1f657bd344d93a88f2f33d53a1476d39",
+  "models": [
+    {
+      "model": 0,
+      "name": "Touch Wah",
+      "settings": [
+        "Attack",
+        "Peak",
+        "Sensitivity",
+        "Level"
+      ],
+      "defaults": [
+        1,
+        0,
+        60,
+        45,
+        55,
+        70
+      ],
+      "cases": [
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            0,
+            10,
+            45,
+            55,
+            70
+          ],
+          "frameHex": "AA5510002501050C0100000000002D0037004600E7BD"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            0,
+            99,
+            45,
+            55,
+            70
+          ],
+          "frameHex": "AA5510002501050C0100000064002D00370046006568"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            0,
+            100,
+            10,
+            55,
+            70
+          ],
+          "frameHex": "AA5510002501050C0100000064000000370046001E23"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            0,
+            100,
+            99,
+            55,
+            70
+          ],
+          "frameHex": "AA5510002501050C010000006400640037004600479A"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 0,
+          "before": [
+            1,
+            0,
+            100,
+            100,
+            11,
+            70
+          ],
+          "frameHex": "AA5510002501050C0100000064006400000046003A5E"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 100,
+          "before": [
+            1,
+            0,
+            100,
+            100,
+            98,
+            70
+          ],
+          "frameHex": "AA5510002501050C010000006400640064004600A97D"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 0,
+          "before": [
+            1,
+            0,
+            100,
+            100,
+            100,
+            10
+          ],
+          "frameHex": "AA5510002501050C0100000064006400640000000E17"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 100,
+          "before": [
+            1,
+            0,
+            100,
+            100,
+            100,
+            89
+          ],
+          "frameHex": "AA5510002501050C010000006400640064006400C9F9"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            0,
+            100,
+            100,
+            100,
+            100
+          ],
+          "frameHex": "AA5510002501050C000000006400640064006400CA8C"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            0,
+            100,
+            100,
+            100,
+            100
+          ],
+          "frameHex": "AA5510002501050C010000006400640064006400C9F9"
+        }
+      ]
+    },
+    {
+      "model": 1,
+      "name": "Auto Wah",
+      "settings": [
+        "Rate",
+        "Peak",
+        "Range",
+        "Level"
+      ],
+      "defaults": [
+        1,
+        1,
+        20,
+        45,
+        50,
+        70
+      ],
+      "cases": [
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            1,
+            10,
+            45,
+            50,
+            70
+          ],
+          "frameHex": "AA5510002501050C0100010000002D003200460034BD"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            1,
+            87,
+            45,
+            50,
+            70
+          ],
+          "frameHex": "AA5510002501050C0100010064002D0032004600B668"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            1,
+            100,
+            1,
+            50,
+            70
+          ],
+          "frameHex": "AA5510002501050C010001006400000032004600CD23"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            1,
+            100,
+            92,
+            50,
+            70
+          ],
+          "frameHex": "AA5510002501050C010001006400640032004600949A"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 0,
+          "before": [
+            1,
+            1,
+            100,
+            100,
+            12,
+            70
+          ],
+          "frameHex": "AA5510002501050C010001006400640000004600551B"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 100,
+          "before": [
+            1,
+            1,
+            100,
+            100,
+            98,
+            70
+          ],
+          "frameHex": "AA5510002501050C010001006400640064004600C638"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 0,
+          "before": [
+            1,
+            1,
+            100,
+            100,
+            100,
+            7
+          ],
+          "frameHex": "AA5510002501050C0100010064006400640000006152"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 100,
+          "before": [
+            1,
+            1,
+            100,
+            100,
+            100,
+            89
+          ],
+          "frameHex": "AA5510002501050C010001006400640064006400A6BC"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            1,
+            100,
+            100,
+            100,
+            100
+          ],
+          "frameHex": "AA5510002501050C000001006400640064006400A5C9"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            1,
+            100,
+            100,
+            100,
+            100
+          ],
+          "frameHex": "AA5510002501050C010001006400640064006400A6BC"
+        }
+      ]
+    },
+    {
+      "model": 2,
+      "name": "Q-Filter",
+      "settings": [
+        "Rate",
+        "Q",
+        "Mix"
+      ],
+      "defaults": [
+        1,
+        2,
+        12,
+        65,
+        60,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            2,
+            1,
+            65,
+            60,
+            0
+          ],
+          "frameHex": "AA5510002501050C01000200000041003C000000D4B9"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            2,
+            89,
+            65,
+            60,
+            0
+          ],
+          "frameHex": "AA5510002501050C01000200640041003C000000566C"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            2,
+            100,
+            11,
+            60,
+            0
+          ],
+          "frameHex": "AA5510002501050C01000200640000003C00000079DC"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            2,
+            100,
+            88,
+            60,
+            0
+          ],
+          "frameHex": "AA5510002501050C01000200640064003C0000002065"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 0,
+          "before": [
+            1,
+            2,
+            100,
+            100,
+            1,
+            0
+          ],
+          "frameHex": "AA5510002501050C01000200640064000000000043BE"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 100,
+          "before": [
+            1,
+            2,
+            100,
+            100,
+            88,
+            0
+          ],
+          "frameHex": "AA5510002501050C010002006400640064000000D09D"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            2,
+            100,
+            100,
+            100,
+            0
+          ],
+          "frameHex": "AA5510002501050C000002006400640064000000D3E8"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            2,
+            100,
+            100,
+            100,
+            0
+          ],
+          "frameHex": "AA5510002501050C010002006400640064000000D09D"
+        }
+      ]
+    }
+  ],
+  "restoration": "Original Noise Killer enabled, Threshold 25 and Level 50; independent complete state/detail equality confirmed. No saving or recalls.",
+  "limits": "Filter model controls only. Physical units are not inferred; Q-Filter final unused word stays opaque.",
+  "windowsReportSha256": "0fcee69d5e02faff61b438cda75f5ef6cf1fb5d44f5833599f8345a8518ea4fd",
+  "windowsRegression": {
+    "passed": true,
+    "baselineRestored": true,
+    "results": [
+      {
+        "model": 0,
+        "settings": [
+          "Attack: 0→100→60",
+          "Peak: 0→100→45",
+          "Sensitivity: 0→100→55",
+          "Level: 0→100→70"
+        ],
+        "powerOffOn": true,
+        "movedPosition3": true,
+        "completeOriginalRestored": true
+      },
+      {
+        "model": 1,
+        "settings": [
+          "Rate: 0→100→20",
+          "Peak: 0→100→45",
+          "Range: 0→100→50",
+          "Level: 0→100→70"
+        ],
+        "powerOffOn": true,
+        "movedPosition3": true,
+        "completeOriginalRestored": true
+      },
+      {
+        "model": 2,
+        "settings": [
+          "Rate: 0→100→12",
+          "Q: 0→100→65",
+          "Mix: 0→100→60"
+        ],
+        "powerOffOn": true,
+        "movedPosition3": true,
+        "completeOriginalRestored": true
+      }
+    ]
+  }
+}

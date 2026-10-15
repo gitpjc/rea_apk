@@ -1,8 +1,8 @@
 # Running the current iAMP Desktop build
 
-Updated 14 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
+Updated 15 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
 
-Current release: **1.24.2**. All 18 currently supported parameters now have verified mobile ranges on their captured V1.1.9 model profiles. Most use **0–100**; Hall Pre Delay uses **0–200 ms** and Analog Delay Time uses **40–2500 ms**.
+Current release: **1.30.0**. There are now 59 supported parameter controls across thirteen verified V1.1.9 model profiles, including all Dyna, Filter and preset EQ models. Most use **0–100**; EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Hall Pre Delay uses **0–200 ms** and Analog Delay Time uses **40–2500 ms**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
@@ -37,12 +37,20 @@ The first connection builds a local effect cache. Later connections and normal *
 
 The sidebar displays the current desktop application version beneath **DESKTOP COMPANION**. Choose **Version History** to see dated release summaries, then select an entry to open its full details. Choose **Amplifier Settings** to return to your existing snapshot and pending inputs. History is loaded from the accompanying `assets/version_history.json` file; keep it with the published application.
 
-The current build supports the verified Noise Killer/OD808/PLX 100/Hall Reverb/Analog Delay ranges below through explicit Apply controls. Device writes use a fresh full-snapshot check and complete readback. All tested changes were restored through an independent connection. Other models and ranges remain unavailable.
+The current build supports the verified Dyna/Filter/EQ/OD808/PLX 100/Hall Reverb/Analog Delay profiles below through slider release and explicit Apply controls. Device writes use a fresh full-snapshot check and complete readback. All tested changes were restored through an independent connection. Parameter editing for other models remains unavailable.
 
 | Feature | Current support |
 | --- | --- |
 | Information | Firmware, capacity counts, preset names and current-preset details |
-| Noise Killer Threshold | Explicit Apply, values 0–100, matching verified first-position configuration |
+| Red Comp | Sensitivity, Level; each 0–100 |
+| Yellow Comp | Attack, Ratio, Threshold, Level; each 0–100 |
+| Intel Reducer | Threshold, Depth, Level; each 0–100 |
+| Touch Wah | Attack, Peak, Sensitivity, Level; each 0–100 |
+| Auto Wah | Rate, Peak, Range, Level; each 0–100 |
+| Q-Filter | Rate, Q, Mix; each 0–100 |
+| 5 Bands EQ | Five gains −16.0…16.0 dB in 0.5 steps; Level 0–100 |
+| Custom EQ | Low, Low Mid, High Mid and High groups, each with Gain/Freq/Q; Low Cut, High Cut and Level below. See [EQ-Model-Editing.md](EQ-Model-Editing.md) for ranges/steps. |
+| Noise Killer Threshold | Explicit Apply, values 0–100, matching the verified model profile at its current position |
 | Noise Killer Level | Explicit Apply, values 0–100; may be combined with Threshold 0–100 |
 | 808 Gain | Explicit Apply, values 0–100; verified OD808 profile only |
 | 808 Tone | Explicit Apply, values 0–100; all three OD808 values may coexist |
@@ -61,13 +69,14 @@ The current build supports the verified Noise Killer/OD808/PLX 100/Hall Reverb/A
 | PLX 100 Mid | Explicit Apply, values 0–100; all six supported Amp values may coexist |
 | 808 Volume | Explicit Apply, values 0–100; verified OD808 profile only |
 | Preset selection | Dropdown recall for all 80 presets, 0A–19D, with a left-side blue checkmark on the active preset |
-| Effect on/off | Noise Killer, OD808, PLX 100, Analog Delay and Hall Reverb on V1.1.9; grey bypassed icons and Enable/Disable controls |
+| Effect on/off | All Dyna, Filter and preset EQ models, OD808, PLX 100, Analog Delay and Hall Reverb on V1.1.9; grey disabled icons and Enable/Disable controls |
+| Chain editing | Reorder, add/remove repeated models and Change model in place; all 124 built-in models listed; no automatic saving |
 | Other effect parameters | Corroborated fields are displayed read-only; unsupported fields are omitted |
 | Local snapshots | Export/open `.iamp-snapshot.json` files for offline inspection |
 | Save current preset | Same-slot save at 0D / British Lead Solo, Threshold 25 or 26 only, all other original values unchanged |
-| Other-slot save, rename, mixer, chain editing, applying imports | Still in development |
+| Other-slot save, rename, mixer, applying imports | Still in development |
 
-Hardware writes are validated on **V1.1.9** for the captured Noise Killer, OD808, PLX 100, Analog Delay and Hall Reverb profiles and the table’s supported ranges. All listed limits match the observed mobile sliders for those captured profiles. Physical units are shown only where established. Fresh snapshot/layout checks reject unfamiliar configurations, and all-slot recall does not broaden parameter or saving support.
+Hardware parameter writes are validated on **V1.1.9** for the captured Red Comp, Yellow Comp, Noise Killer, Intel Reducer, Touch Wah, Auto Wah, Q-Filter, 5 Bands EQ, Custom EQ, OD808, PLX 100, Analog Delay and Hall Reverb profiles and the table’s supported ranges. All listed limits match the observed mobile sliders for those captured profiles. Physical units are shown only where established. Fresh snapshot/layout checks reject unfamiliar configurations, and all-slot recall does not broaden parameter or saving support.
 
 ## Apply a supported parameter
 
@@ -84,6 +93,8 @@ Apply controls make **live, unsaved edits**. Returning all changed values to the
 On F15i V1.1.9, drag an effect icon to the blue insertion line between icons, or use the selected effect’s Move left/Move right buttons. The line shows the exact placement before you drop. Select + to browse the mobile-style category list and choose a model; search the model list if needed, then choose Add effect. Multiple effects from the same category and repeated identical models can be added, as in mobile iAMP. Each instance has its own chain position and pending parameter values. GIR&IR is listed with an explanation that library access is not yet supported. The amplifier supplies the new effect’s default values. Select Remove effect to delete the selected module.
 
 Moves preserve the effect’s values. Previously supported parameter editors continue working at the new position. Newly added models show their names, with parameter editing available only for verified layouts. Apply or clear pending parameter inputs before changing the chain. Every change is checked against a fresh preset and verified by readback. Chain changes are live and unsaved; the restricted save workflow below still applies.
+
+Choose **Change model…** to replace the selected effect without changing its position. The picker starts on its current category/model and lets you choose another built-in model, including another category. Replacement loads the new model’s default values; changing back to the original model also loads defaults rather than recovering its previous settings. The currently selected model cannot be reapplied accidentally. See [Dyna-Model-Editing.md](Dyna-Model-Editing.md) for the newly supported Dyna settings.
 
 ## Save the supported preset
 

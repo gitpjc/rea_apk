@@ -1,5 +1,29 @@
 [
   {
+    "version": "1.30.0",
+    "changedAt": "2026-10-15T07:02:17.024Z",
+    "summary": "Add both preset EQ models with grouped controls and JSON.",
+    "details": "Implement 5 Bands EQ and Custom EQ controls in mobile order, signed 0.5 dB gain steps, 0.1 Q steps, stepped Hz frequencies, Off cut values, unitless Level and on/off. Custom EQ uses Low, Low Mid, High Mid and High sections. Preset JSON schema 3.0.0 retains an ordered flat settings array with group metadata and physical values. GIR&IR and global EQ excluded. Verified 46 independent mobile endpoint/power frames, 151 affected protocol cases, all discrete physical-value choices, grouped WPF controls at five viewport sizes, duplicate pending inputs and ordered JSON. Actual Windows boundary/default/interior and decade-step edits, off/on and moved-position edits passed for both EQ models. Complete original state/detail restored after each model and independently at the end. No saves or recalls. Amp is next in the requested order."
+  },
+  {
+    "version": "1.29.0",
+    "changedAt": "2026-10-15T06:08:47.923Z",
+    "summary": "Add parameter editing and on/off controls for all Filter models.",
+    "details": "Add 11 verified 0–100 settings for Touch Wah, Auto Wah and Q-Filter in mobile order, using effect-coloured sliders and numeric Apply. Show confirmed enabled/disabled icons and on/off actions. Preserve per-position duplicate pending values and ordered preset JSON. Fresh complete-state/readback/firmware guards and existing save limits remain in force. Verified 28 independent mobile frames, 136 affected protocol cases, offline WPF colour/order/duplicate/disabled/JSON checks and actual desktop 0/100/default, off/on and moved-position round trips for all three Filter models. Complete original amplifier state/detail restored after each model and independently at the end. No saves, recalls or Phase 6 work. Development order updated at user request: EQ next, then Amp, OD, Delay, Reverb and Mod. GIR&IR excluded entirely; other Phase 6 restrictions remain."
+  },
+  {
+    "version": "1.28.0",
+    "changedAt": "2026-10-15T05:50:11.637Z",
+    "summary": "Add parameter editing and on/off controls for all Dyna models.",
+    "details": "Add the nine verified 0–100 settings for Red Comp, Yellow Comp and Intel Reducer in mobile order, using the existing half-width coloured sliders and numeric Apply controls. Support confirmed enabled/disabled icons and explicit on/off for these models. Preserve independent pending values by chain position and include the correctly ordered settings in preset JSON. Existing fresh-state/readback/firmware/no-save guards apply. Verified 24 independent mobile frames, 85 affected protocol cases, offline WPF duplicate/disabled/JSON checks and actual desktop 0/100/default, off/on and moved-position round trips for all three models. Complete original amplifier state/detail restored after each model and independently at the end. No saves, recalls or Phase 6 work."
+  },
+  {
+    "version": "1.27.0",
+    "changedAt": "2026-10-15T05:35:25.457Z",
+    "summary": "Change an existing effect model in place.",
+    "details": "Add a Change model picker with the mobile category/model catalog. Replace an effect in its current chain position using amplifier defaults, with complete fresh-state guards and authoritative readback. Keep the current model selected and prevent accidentally resetting it. Nothing is saved automatically. Verified with 11 focused effect-chain protocol tests and offline WPF checks. Actual desktop Red Comp, cross-category Touch Wah and 65 US DLX replacements update immediately; every test restores the complete original state/detail and a final independent connection confirms equality. Nothing saved; Phase 6 excluded. Other models retain existing parameter-editing limits."
+  },
+  {
     "version": "1.26.1",
     "changedAt": "2026-10-15T05:02:06.422Z",
     "summary": "Simplified preset JSON and separated units from setting names.",

@@ -12,6 +12,8 @@ public class EffectChainTests
         Assert.Equal(new byte[]{0x2D,151,4,1,3},EffectChainCommands.Move(blocks,1,3,151));
         Assert.Equal(new byte[]{0x2D,0,1,6,5,0},EffectChainCommands.Add(blocks,PresetEffectSearch.Catalog.Single(e=>e.TypeCode==5&&e.Model==0),0));
         Assert.Equal(new byte[]{0x2D,50,3,5},EffectChainCommands.Remove(blocks,5,50));
+        Assert.Equal(new byte[]{0x2D,100,2,1,4,0},EffectChainCommands.Replace(blocks,1,PresetEffectSearch.Catalog.Single(e=>e.TypeCode==4&&e.Model==0),100));
+        Assert.Equal(new byte[]{0x2D,101,2,1,4,2},EffectChainCommands.Replace(blocks,1,PresetEffectSearch.Catalog.Single(e=>e.TypeCode==4&&e.Model==2),101));
     }
     [Fact]
     public void EveryMoveAndInversePreserveCompleteBytesIncludingDisabledFlagsAndOpaqueFields()
@@ -53,6 +55,40 @@ public class EffectChainTests
     {
         var offset=22;foreach(var b in PresetDataParser.Parse(before).Blocks.Take(5))offset+=3+b.Values.Count*2;
         return before[..offset].Concat(Convert.FromHexString(record)).Concat(before[(offset+3)..]).ToArray();
+    }
+    [Fact]
+    public void ReplacementAcceptsDefaultsButRejectsUnrelatedChangesOrWrongPositionModelAndState()
+    {
+        var before=Convert.FromHexString(Detail);
+        var red=PresetEffectSearch.Catalog.Single(e=>e.TypeCode==4&&e.Model==0);
+        var after=PresetDataParser.WithParameterValue(before,1,1,0);
+        after=PresetDataParser.WithParameterValue(after,1,2,20);
+        after=PresetDataParser.WithParameterValue(after,1,3,70);
+        Assert.True(EffectChainCommands.IsExpectedReplacement(before,after,1,red));
+        Assert.False(EffectChainCommands.IsExpectedReplacement(before,after,2,red));
+        Assert.False(EffectChainCommands.IsExpectedReplacement(before,PresetDataParser.WithParameterValue(after,1,0,0),1,red));
+        Assert.False(EffectChainCommands.IsExpectedReplacement(before,PresetDataParser.WithParameterValue(after,2,2,38),1,red));
+        Assert.False(EffectChainCommands.IsExpectedReplacement(before,PresetDataParser.WithParameterValue(after,3,8,0),1,red));
+        var wrongTrailer=after.ToArray();wrongTrailer[^1]=1;
+        Assert.False(EffectChainCommands.IsExpectedReplacement(before,wrongTrailer,1,red));
+        Assert.False(EffectChainCommands.IsExpectedReplacement(before,EffectChainCommands.ExpectedRemove(after,5),1,red));
+        Assert.Throws<ArgumentOutOfRangeException>(()=>EffectChainCommands.Replace(PresetDataParser.Parse(before).Blocks,6,red,100));
+        Assert.Throws<NotSupportedException>(()=>EffectChainCommands.Replace(PresetDataParser.Parse(before).Blocks,1,new(4,255,"Dyna","Unknown"),100));
+    }
+    [Fact]
+    public void ReplacementCanChangeRecordLengthAndCategoryWithoutLosingOtherBytes()
+    {
+        var before=Convert.FromHexString(Detail);var blocks=PresetDataParser.Parse(before).Blocks;
+        var offset=22+3+blocks[0].Values.Count*2;
+        var ampRecord=Convert.FromHexString("020212010000004B00320032003200320037000100");
+        var after=before[..offset].Concat(ampRecord).Concat(before[(offset+3+blocks[1].Values.Count*2)..]).ToArray();
+        var amp=PresetEffectSearch.Catalog.Single(e=>e.TypeCode==2&&e.Model==0);
+        Assert.True(EffectChainCommands.IsExpectedReplacement(before,after,2,amp));
+        after=PresetDataParser.WithParameterValue(after,3,8,0);
+        Assert.True(EffectChainCommands.IsExpectedReplacement(before,after,2,amp));
+        Assert.False(EffectChainCommands.IsExpectedReplacement(before,PresetDataParser.WithParameterValue(after,3,8,2),2,amp));
+        Assert.False(EffectChainCommands.IsExpectedReplacement(before,PresetDataParser.WithParameterValue(after,3,3,34),2,amp));
+        Assert.Equal(new byte[]{0x2D,102,2,2,2,0},EffectChainCommands.Replace(blocks,2,amp,102));
     }
     [Fact]
     public void AddingAndRemovingAmpAcceptOnlyCapturedBooleanAmpFlagSideEffects()

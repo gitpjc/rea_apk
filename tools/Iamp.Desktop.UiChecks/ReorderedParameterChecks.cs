@@ -33,7 +33,7 @@ internal static class ReorderedParameterChecks
                 (4,3,Field<TextBox>(window,"toneInput"),Field<Slider>(window,"toneSlider"),Field<Button>(window,"applyTone"))
             };
             foreach(var editor in (System.Collections.IEnumerable)window.GetType().GetProperty("AdditionalEditors",Flags)!.GetValue(window)!)
-                inputs.Add((Property<byte>(editor,"Position"),Property<int>(editor,"ParameterIndex"),Property<TextBox>(editor,"Input"),Property<Slider>(editor,"Slider"),Property<Button>(editor,"Apply")));
+                if(Property<byte>(editor,"ProfilePosition")<=5)inputs.Add((Property<byte>(editor,"Position"),Property<int>(editor,"ParameterIndex"),Property<TextBox>(editor,"Input"),Property<Slider>(editor,"Slider"),Property<Button>(editor,"Apply")));
             foreach(var input in inputs) {
                 Select(input.Position);
                 var value=reversed[input.Position-1].Values[input.Index];

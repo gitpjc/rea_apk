@@ -22,7 +22,9 @@ public sealed partial class MainWindow
         internal Button Apply {get;}=MainWindow.Button($"Apply {label} to amp");
         internal TextBlock Message {get;}=Text("",12,MutedBrush);
         internal Func<F15ReadSession,CurrentPresetSnapshot,ushort,CancellationToken,Task<CurrentPresetSnapshot>> Write {get;}=write;
-        internal bool TryValue(out ushort value)=>ushort.TryParse(Input.Text,NumberStyles.None,CultureInfo.InvariantCulture,out value) && value>=Minimum && value<=Maximum;
+        internal EqParameterSpec? EqSpec {get;init;}
+        internal bool TryValue(out ushort value)=>EqSpec is {} eq?eq.TryParse(Input.Text,out value):ushort.TryParse(Input.Text,NumberStyles.None,CultureInfo.InvariantCulture,out value) && value>=Minimum && value<=Maximum;
+        internal string Format(ushort value)=>EqSpec?.Format(value)??value.ToString(CultureInfo.InvariantCulture);
     }
     private readonly PendingParameterEditor noiseLevelEditor=new("Level",1,3,0,100,(s,e,v,ct)=>s.SetNoiseKillerLevelAsync(e,v,ct));
     private readonly PendingParameterEditor gainEditor=new("Gain",2,2,0,100,(s,e,v,ct)=>s.Set808GainAsync(e,v,ct));
@@ -40,12 +42,38 @@ public sealed partial class MainWindow
     private readonly PendingParameterEditor reverbLevelEditor=new("Level",5,3,0,100,(s,e,v,ct)=>s.SetReverbLevelAsync(e,v,ct));
     private readonly PendingParameterEditor reverbDecayEditor=new("Decay",5,4,0,100,(s,e,v,ct)=>s.SetReverbDecayAsync(e,v,ct));
     private readonly PendingParameterEditor reverbToneEditor=new("Tone",5,5,0,100,(s,e,v,ct)=>s.SetReverbToneAsync(e,v,ct));
-    private IEnumerable<PendingParameterEditor> AdditionalEditors=>new[]{noiseLevelEditor,gainEditor,volumeEditor,ampGainEditor,bassEditor,midEditor,trebleEditor,presenceEditor,ampMasterEditor,delayLevelEditor,delayFeedbackEditor,delayTimeEditor,reverbPreDelayEditor,reverbLevelEditor,reverbDecayEditor,reverbToneEditor};
+    private readonly PendingParameterEditor[] dynaEditors=[
+        CreateObservedEditor("Sensitivity",ObservedParameter.RedCompSensitivity),CreateObservedEditor("Level",ObservedParameter.RedCompLevel),
+        CreateObservedEditor("Attack",ObservedParameter.YellowCompAttack),CreateObservedEditor("Ratio",ObservedParameter.YellowCompRatio),
+        CreateObservedEditor("Threshold",ObservedParameter.YellowCompThreshold),CreateObservedEditor("Level",ObservedParameter.YellowCompLevel),
+        CreateObservedEditor("Threshold",ObservedParameter.IntelReducerThreshold),CreateObservedEditor("Depth",ObservedParameter.IntelReducerDepth),CreateObservedEditor("Level",ObservedParameter.IntelReducerLevel)];
+    private static PendingParameterEditor CreateObservedEditor(string label,ObservedParameter parameter)
+    {
+        var definition=ObservedParameterCommands.Definition(parameter);
+        return new(label,definition.Position,definition.ValueIndex,definition.Minimum,definition.Maximum,
+            (s,e,v,ct)=>s.SetParameterAtPositionAsync(e,ObservedParameterCommands.FindSupportedBlock(e.Blocks,parameter)?.Position??
+                throw new NotSupportedException("A unique model target is required."),parameter,v,ct)){EqSpec=EqParameters.Get(parameter)};
+    }
+    private readonly PendingParameterEditor[] filterEditors=[
+        CreateObservedEditor("Attack",ObservedParameter.TouchWahAttack),CreateObservedEditor("Peak",ObservedParameter.TouchWahPeak),
+        CreateObservedEditor("Sensitivity",ObservedParameter.TouchWahSensitivity),CreateObservedEditor("Level",ObservedParameter.TouchWahLevel),
+        CreateObservedEditor("Rate",ObservedParameter.AutoWahRate),CreateObservedEditor("Peak",ObservedParameter.AutoWahPeak),
+        CreateObservedEditor("Range",ObservedParameter.AutoWahRange),CreateObservedEditor("Level",ObservedParameter.AutoWahLevel),
+        CreateObservedEditor("Rate",ObservedParameter.QFilterRate),CreateObservedEditor("Q",ObservedParameter.QFilterQ),CreateObservedEditor("Mix",ObservedParameter.QFilterMix)];
+    private readonly PendingParameterEditor[] eqEditors=EqParameters.All.Select(s=>CreateObservedEditor(s.Name,s.Parameter)).ToArray();
+    private IEnumerable<PendingParameterEditor> AdditionalEditors=>new[]{noiseLevelEditor,gainEditor,volumeEditor,ampGainEditor,bassEditor,midEditor,trebleEditor,presenceEditor,ampMasterEditor,delayLevelEditor,delayFeedbackEditor,delayTimeEditor,reverbPreDelayEditor,reverbLevelEditor,reverbDecayEditor,reverbToneEditor}.Concat(dynaEditors).Concat(filterEditors).Concat(eqEditors);
 
     private void InitializeAdditionalEditors()
     {
         foreach(var editor in AdditionalEditors) {
-            editor.Slider=CreateParameterSlider(editor.Input,editor.Label,editor.Minimum,editor.Maximum,()=>ApplyAdditionalParameterAsync(editor));
+            if(editor.EqSpec is {} eq) {
+                editor.Input.MaxLength=12;
+                editor.Slider=CreateParameterSlider(editor.Input,editor.Label,0,(ushort)(eq.WireValues.Count-1),()=>ApplyAdditionalParameterAsync(editor),
+                    index=>eq.Format(eq.WireValues[index]),text=>eq.TryParse(text,out var wire)?(ushort)eq.WireValues.ToList().IndexOf(wire):null);
+                editor.Slider.ToolTip=$"{eq.Name} · {eq.Format(eq.WireValues[0])}–{eq.Format(eq.WireValues[^1])} {eq.Unit} · Release to apply. Arrow keys select the next supported step.";
+                System.Windows.Automation.AutomationProperties.SetName(editor.Slider,$"Pending {eq.Name}, {eq.Format(eq.WireValues[0])} to {eq.Format(eq.WireValues[^1])} {eq.Unit}");
+            }
+            else editor.Slider=CreateParameterSlider(editor.Input,editor.Label,editor.Minimum,editor.Maximum,()=>ApplyAdditionalParameterAsync(editor));
             editor.Input.TextChanged+=(_,_)=>UpdateAdditionalEditorStates();
             editor.Apply.Click+=async(_,_)=>await ApplyAdditionalParameterAsync(editor);
             System.Windows.Automation.AutomationProperties.SetName(editor.Input,$"Pending {editor.Label}, {editor.Minimum} to {editor.Maximum}");
@@ -57,10 +85,12 @@ public sealed partial class MainWindow
             DetachSlider(editor.Slider);
             if(editor.Input.Parent is Panel inputParent)inputParent.Children.Remove(editor.Input);
             if(editor.Apply.Parent is Panel applyParent)applyParent.Children.Remove(editor.Apply);
+            if(editor.Message.Parent is Panel messageParent)messageParent.Children.Remove(editor.Message);
         }
     }
     private void AddAdditionalEditors(PresetEffectBlock displayed,bool initializeInputs)
     {
+        Panel host=effectDetails;string? previousGroup=null;
         foreach(var setting in EffectPresentation.From(displayed).Parameters) {
             if(displayed.TypeCode==1 && displayed.Values.Count==5 && displayed.Values[1]==3 && setting.ValueIndex==3) {
                 toneInput.Text=PendingParameterText(displayed,3);
@@ -72,23 +102,30 @@ public sealed partial class MainWindow
             if(editor is null)continue;
             editor.Position=displayed.Position;
             editor.Input.Text=PendingParameterText(displayed,editor.ParameterIndex);
-            AddMobileParameterSlider(editor.Slider,editor.Input,editor.Label,EffectPresentation.From(displayed).Color);
+            var group=editor.EqSpec?.Group;
+            if(group!=previousGroup) {
+                host=effectDetails;
+                if(group is not null) {
+                    var content=new StackPanel();
+                    effectDetails.Children.Add(new Expander {Header=group,IsExpanded=true,Content=content,Foreground=System.Windows.Media.Brushes.White,Margin=new Thickness(0,12,0,0)});
+                    host=content;
+                }
+                previousGroup=group;
+            }
+            AddMobileParameterSlider(editor.Slider,editor.Input,editor.Label,EffectPresentation.From(displayed).Color,host,editor.EqSpec?.Unit);
             var actions=new WrapPanel();actions.Children.Add(editor.Input);editor.Apply.Margin=new Thickness(12,0,0,0);actions.Children.Add(editor.Apply);
-            effectDetails.Children.Add(actions);editor.Message.Margin=new Thickness(0,7,0,0);effectDetails.Children.Add(editor.Message);
+            host.Children.Add(actions);editor.Message.Margin=new Thickness(0,7,0,0);host.Children.Add(editor.Message);
         }
         UpdateAdditionalEditorStates();
     }
     private static bool MatchesEditorProfile(PendingParameterEditor editor,PresetEffectBlock block)
-        =>editor.ProfilePosition switch {
-            1=>block.TypeCode==4 && block.Values.Count==6 && block.Values[1]==2,
-            2=>block.TypeCode==1 && block.Values.Count==5 && block.Values[1]==3,
-            3=>block.TypeCode==2 && block.Values.Count==9 && block.Values[1]==31,
-            4=>block.TypeCode==7 && block.Values.Count==8 && block.Values[1]==1,
-            5=>block.TypeCode==8 && block.Values.Count==10 && block.Values[1]==1,
-            _=>false
-        };
+        =>ObservedParameterCommands.Profile(block)==editor.ProfilePosition;
     private PresetEffectBlock? EditableBlock(PendingParameterEditor editor)=>editor.ProfilePosition switch {
-        1=>EditableNoiseKiller(),2=>Editable808Tone(),3=>EditableAmpBass(),4=>EditableAnalogDelay(),5=>EditableHallReverb(),_=>null
+        1=>EditableNoiseKiller(),2=>Editable808Tone(),3=>EditableAmpBass(),4=>EditableAnalogDelay(),5=>EditableHallReverb(),
+        6=>FindEditableParameterBlock(ObservedParameter.RedCompSensitivity),7=>FindEditableParameterBlock(ObservedParameter.YellowCompAttack),
+        8=>FindEditableParameterBlock(ObservedParameter.IntelReducerThreshold),9=>FindEditableParameterBlock(ObservedParameter.TouchWahAttack),
+        10=>FindEditableParameterBlock(ObservedParameter.AutoWahRate),11=>FindEditableParameterBlock(ObservedParameter.QFilterRate),
+        12=>FindEditableParameterBlock(ObservedParameter.Eq100Hz),13=>FindEditableParameterBlock(ObservedParameter.CustomEqBand1Gain),_=>null
     };
     private PresetEffectBlock? EditableAmpBass()
     {
@@ -112,9 +149,9 @@ public sealed partial class MainWindow
             editor.Input.IsEnabled=supported && operation is null;
             editor.Apply.IsEnabled=supported && operation is null && editor.TryValue(out var value) && value!=block!.Values[editor.ParameterIndex];
             editor.Message.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
-                !supported?"Read a supported V1.1.9 configuration before applying.":!editor.TryValue(out value)?$"Enter a whole number from {editor.Minimum} to {editor.Maximum}.":
+                !supported?"Read a supported V1.1.9 configuration before applying.":!editor.TryValue(out value)?editor.EqSpec is {} eq?$"Enter a supported step from {eq.Format(eq.WireValues[0])} to {eq.Format(eq.WireValues[^1])} {eq.Unit}.":$"Enter a whole number from {editor.Minimum} to {editor.Maximum}.":
                 value==block!.Values[editor.ParameterIndex]?"Matches confirmed snapshot · Other values are preserved.":
-                $"Pending {value} · Confirmed {block.Values[editor.ParameterIndex]} · Release the slider or choose Apply. Nothing is saved.";
+                $"Pending {editor.Format(value)} · Confirmed {editor.Format(block.Values[editor.ParameterIndex])} · Release the slider or choose Apply. Nothing is saved.";
         }
     }
     private async Task ApplyAdditionalParameterAsync(PendingParameterEditor editor)
@@ -131,8 +168,8 @@ public sealed partial class MainWindow
             currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffectsPreservingPending(confirmed.Blocks);
             var selected=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==block.Position).Effect;
             if(selected is not null)SelectEffect(selected);
-            snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · {editor.Label} {value}":
-                $"{editor.Label} {value} verified · Matches original snapshot · Nothing saved";
+            snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · {editor.Label} {editor.Format(value)}":
+                $"{editor.Label} {editor.Format(value)} verified · Matches original snapshot · Nothing saved";
             lastMutationSucceeded=true;
         }
         catch(OperationCanceledException) {editSnapshotValid=false;status.Text=$"{editor.Label} edit interrupted · Outcome may be unknown. Read the amplifier before another edit.";snapshot.Text=SnapshotLabel();}

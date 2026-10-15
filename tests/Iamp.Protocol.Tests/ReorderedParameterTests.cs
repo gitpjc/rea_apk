@@ -12,6 +12,14 @@ public sealed class ReorderedParameterTests
             3=>new(3,2,new ushort[]{1,31,100,35,43,40,45,75,1}),
             4=>new(4,7,new ushort[]{1,1,17,25,500,0,0,0}),
             5=>new(5,8,new ushort[]{1,1,20,24,35,0,0,0,0,0}),
+            6=>new(6,4,new ushort[]{1,0,20,70,0,0}),
+            7=>new(7,4,new ushort[]{1,1,30,15,45,75}),
+            8=>new(8,4,new ushort[]{1,3,10,15,50,0}),
+            9=>new(9,5,new ushort[]{1,0,60,45,55,70}),
+            10=>new(10,5,new ushort[]{1,1,20,45,50,70}),
+            11=>new(11,5,new ushort[]{1,2,12,65,60,0}),
+            12=>new(12,9,new ushort[]{1,0,32,32,32,32,32,50,0,0,0,0,0,0,0,0,0}),
+            13=>new(13,9,new ushort[]{1,1,32,100,8,32,500,8,32,1600,8,32,6000,8,0,0,50}),
             _=>throw new InvalidOperationException()
         };
 

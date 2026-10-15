@@ -52,6 +52,15 @@ I want to have these sounds:
 
 ## TODO
 
+Work through implementing this effects in this order:
+
+
+
+
+Do you understand what I want?
+
+**DONE**   
+
 See screenshot, I want you to add a button that will show me in JSON format all the settings for the effects for the current preset.
 
 It should work this way
@@ -61,9 +70,6 @@ It should work this way
 - The dialog should also have a copy icon that allow me to save the JSON to my clipboard
 - The json format should follow a consistent structre that it will use for all presets
 
-Do you understand what I want?
-
-**DONE**   
 
 I am trying to restore from a backup I made in MOOER Studio but it fails with this error why, see screenshot
 

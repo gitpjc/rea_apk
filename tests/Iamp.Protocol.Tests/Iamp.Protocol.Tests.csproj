@@ -17,6 +17,9 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <None Include="../fixtures/f15-eq-model-observations.json" Link="fixtures/f15-eq-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-dyna-model-observations.json" Link="fixtures/f15-dyna-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-filter-model-observations.json" Link="fixtures/f15-filter-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-observed-frames.json" Link="fixtures/f15-observed-frames.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-observed-preset.json" Link="fixtures/f15-observed-preset.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-observed-selection.json" Link="fixtures/f15-observed-selection.json" CopyToOutputDirectory="PreserveNewest" />

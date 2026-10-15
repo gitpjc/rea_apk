@@ -9,7 +9,7 @@ namespace Iamp.Desktop;
 
 public sealed partial class MainWindow
 {
-    private readonly Button addChainEffect=Button("+"),moveEffectLeft=Button("← Move left"),moveEffectRight=Button("Move right →"),removeChainEffect=Button("Remove effect");
+    private readonly Button addChainEffect=Button("+"),moveEffectLeft=Button("← Move left"),moveEffectRight=Button("Move right →"),removeChainEffect=Button("Remove effect"),changeEffectModel=Button("Change model…");
     private bool chainControlsWired;
     private bool chainPickerOpen;
     private EffectDrag? chainDrag;
@@ -79,14 +79,15 @@ public sealed partial class MainWindow
             moveEffectLeft.Click+=async(_,_)=>await MoveDisplayedEffectAsync(-1);
             moveEffectRight.Click+=async(_,_)=>await MoveDisplayedEffectAsync(1);
             removeChainEffect.Click+=async(_,_)=> {if(displayedEffect is {} e)await ChangeEffectChainAsync("Removing effect",e.Source.Position,null,null);};
+            changeEffectModel.Click+=(_,_)=>ShowEffectModelPicker();
         }
         effectChain.Children.Add(addChainEffect);UpdateChainControls();
     }
     private void AddChainSelectionActions()
     {
-        foreach(var b in new[]{moveEffectLeft,moveEffectRight,removeChainEffect})if(b.Parent is Panel parent)parent.Children.Remove(b);
+        foreach(var b in new[]{changeEffectModel,moveEffectLeft,moveEffectRight,removeChainEffect})if(b.Parent is Panel parent)parent.Children.Remove(b);
         var row=new WrapPanel {Margin=new Thickness(0,0,0,8)};
-        foreach(var b in new[]{moveEffectLeft,moveEffectRight,removeChainEffect}){b.Margin=new Thickness(0,0,8,4);row.Children.Add(b);}
+        foreach(var b in new[]{changeEffectModel,moveEffectLeft,moveEffectRight,removeChainEffect}){b.Margin=new Thickness(0,0,8,4);row.Children.Add(b);}
         effectDetails.Children.Add(row);UpdateChainControls();
     }
     private void UpdateChainControls()
@@ -96,7 +97,8 @@ public sealed partial class MainWindow
         var pos=displayedEffect?.Source.Position??0;
         moveEffectLeft.IsEnabled=enabled && pos>1;moveEffectRight.IsEnabled=enabled && pos>0 && pos<count;
         removeChainEffect.IsEnabled=enabled && pos>0;
-        foreach(var b in new[]{moveEffectLeft,moveEffectRight,removeChainEffect})b.ToolTip=HasPendingInputs()?"Apply or clear pending parameter inputs before changing the chain.":"Live chain change · Nothing is saved";
+        changeEffectModel.IsEnabled=enabled && pos>0;
+        foreach(var b in new[]{changeEffectModel,moveEffectLeft,moveEffectRight,removeChainEffect})b.ToolTip=HasPendingInputs()?"Apply or clear pending parameter inputs before changing the chain.":"Live chain change · Nothing is saved";
     }
     private async Task MoveDisplayedEffectAsync(int direction)
     {
@@ -128,34 +130,47 @@ public sealed partial class MainWindow
         var picker=CreateAddEffectPicker(starting);picker.Owner=this;chainPickerOpen=true;
         try {picker.ShowDialog();}finally {chainPickerOpen=false;}
     }
+    private void ShowEffectModelPicker()
+    {
+        if(!CanEditChain || currentSnapshot is not {} starting || displayedEffect is not {} effect)return;
+        var picker=CreateEffectModelPicker(starting,effect.Source.Position);picker.Owner=this;chainPickerOpen=true;
+        try {picker.ShowDialog();}finally {chainPickerOpen=false;}
+    }
     private sealed record ChainCategory(string Name,byte? TypeCode);
     private static readonly ChainCategory[] ChainCategories=[new("Dyna",4),new("Filter",5),new("OD",1),new("Amp",2),
         new("GIR&IR",null),new("EQ",9),new("Mod",6),new("Delay",7),new("Reverb",8)];
     private Window CreateAddEffectPicker(CurrentPresetSnapshot starting)
+        =>CreateEffectModelPicker(starting,null);
+    private Window CreateEffectModelPicker(CurrentPresetSnapshot starting,byte? replacementPosition)
     {
-        var picker=new Window {Title="Add effect",Width=680,Height=620,MinWidth=460,MinHeight=420,
+        var replacing=replacementPosition.HasValue;
+        var original=replacing?starting.Blocks.Single(b=>b.Position==replacementPosition):null;
+        var picker=new Window {Title=replacing?"Change effect model":"Add effect",Width=680,Height=620,MinWidth=460,MinHeight=420,
             Background=PanelBrush,Foreground=Brushes.White,WindowStartupLocation=WindowStartupLocation.CenterOwner};
         var root=new DockPanel {Margin=new Thickness(20)};
-        var top=new StackPanel();top.Children.Add(Text("Add an effect",22));
+        var top=new StackPanel();top.Children.Add(Text(replacing?"Change effect model":"Add an effect",22));
         top.Children.Add(Text("Choose an effect category and model.",13,MutedBrush,new Thickness(0,8,0,12)));
         top.Children.Add(Text("Search models",12,MutedBrush));
         var searchBox=new TextBox {Name="EffectModelSearch",Margin=new Thickness(0,4,0,10),Padding=new Thickness(8),Background=BackgroundBrush,Foreground=Brushes.White};
         System.Windows.Automation.AutomationProperties.SetName(searchBox,"Search effect models");top.Children.Add(searchBox);
         DockPanel.SetDock(top,Dock.Top);root.Children.Add(top);
         var bottom=new StackPanel();var message=Text("",12,MutedBrush,new Thickness(0,10,0,10));message.Name="EffectPickerMessage";message.TextWrapping=TextWrapping.Wrap;
-        bottom.Children.Add(message);var buttons=new WrapPanel();var add=Button("Add effect");add.Name="ConfirmAddEffect";var close=Button("Cancel");close.Margin=new Thickness(10,0,0,0);
+        bottom.Children.Add(message);var buttons=new WrapPanel();var add=Button(replacing?"Change model":"Add effect");add.Name=replacing?"ConfirmReplaceEffect":"ConfirmAddEffect";var close=Button("Cancel");close.Margin=new Thickness(10,0,0,0);
         buttons.Children.Add(add);buttons.Children.Add(close);bottom.Children.Add(buttons);DockPanel.SetDock(bottom,Dock.Bottom);root.Children.Add(bottom);
         var body=new Grid();body.ColumnDefinitions.Add(new ColumnDefinition {Width=new GridLength(135)});body.ColumnDefinitions.Add(new ColumnDefinition());root.Children.Add(body);
         var categories=new ListBox {Name="EffectCategories",ItemsSource=ChainCategories,DisplayMemberPath="Name",Background=PanelBrush,Foreground=Brushes.White,Margin=new Thickness(0,0,12,0)};
         var itemStyle=new Style(typeof(ListBoxItem));itemStyle.Setters.Add(new Setter(Control.PaddingProperty,new Thickness(10,12,10,12)));categories.ItemContainerStyle=itemStyle;
         System.Windows.Automation.AutomationProperties.SetName(categories,"Effect categories");body.Children.Add(categories);
         var list=new ListBox {Name="EffectModels",Background=BackgroundBrush,Foreground=Brushes.White,DisplayMemberPath="Name"};Grid.SetColumn(list,1);body.Children.Add(list);
-        void UpdateAdd()=>add.IsEnabled=list.SelectedItem is EffectDefinition && starting.Blocks.Count(b=>b.TypeCode!=0)<20 && CanEditChain && ReferenceEquals(currentSnapshot,starting);
+        bool IsOriginal(EffectDefinition choice)=>original is not null && original.TypeCode==choice.TypeCode && original.Values[1]==choice.Model;
+        void UpdateAdd()=>add.IsEnabled=list.SelectedItem is EffectDefinition selected && !IsOriginal(selected) &&
+            (replacing || starting.Blocks.Count(b=>b.TypeCode!=0)<20) && CanEditChain && ReferenceEquals(currentSnapshot,starting);
         void FilterModels() {
             var category=categories.SelectedItem as ChainCategory;
             list.ItemsSource=PresetEffectSearch.Catalog.Where(e=>e.TypeCode==category?.TypeCode && e.Name.Contains(searchBox.Text.Trim(),StringComparison.OrdinalIgnoreCase)).ToArray();
             list.Foreground=Brushes.White;
-            message.Text=category?.TypeCode is null?"GIR&IR library access is not available in this desktop version.":starting.Blocks.Count(b=>b.TypeCode!=0)>=20?
+            message.Text=category?.TypeCode is null?"GIR&IR library access is not available in this desktop version.":replacing?
+                "Replaces this effect in the same position using the amplifier’s default values. Nothing is saved.":starting.Blocks.Count(b=>b.TypeCode!=0)>=20?
                 "The effect chain has no empty slots.":
                 "Adds to the end of the chain using the amplifier’s default values. Nothing is saved.";
             UpdateAdd();
@@ -163,11 +178,34 @@ public sealed partial class MainWindow
         categories.SelectionChanged+=(_,_)=>FilterModels();searchBox.TextChanged+=(_,_)=>FilterModels();list.SelectionChanged+=(_,_)=>UpdateAdd();
         close.Click+=(_,_)=>picker.Close();add.Click+=async(_,_)=> {
             if(!add.IsEnabled || list.SelectedItem is not EffectDefinition choice)return;
-            if(!CanEditChain || !ReferenceEquals(currentSnapshot,starting)) {message.Text="The amplifier view changed. Close this picker and refresh before adding an effect.";UpdateAdd();return;}
+            if(!CanEditChain || !ReferenceEquals(currentSnapshot,starting)) {message.Text="The amplifier view changed. Close this picker and refresh before changing an effect.";UpdateAdd();return;}
             picker.Close();
-            if(ReferenceEquals(currentSnapshot,starting))await ChangeEffectChainAsync("Adding effect",0,null,choice);
+            if(ReferenceEquals(currentSnapshot,starting)) {
+                if(replacementPosition is {} position)await ReplaceEffectModelAsync(position,choice);
+                else await ChangeEffectChainAsync("Adding effect",0,null,choice);
+            }
         };
-        picker.Content=root;categories.SelectedIndex=0;return picker;
+        picker.Content=root;categories.SelectedIndex=original is not null?Math.Max(0,Array.FindIndex(ChainCategories,c=>c.TypeCode==original.TypeCode)):0;
+        if(original is not null)list.SelectedItem=list.Items.Cast<EffectDefinition>().FirstOrDefault(e=>IsOriginal(e));
+        return picker;
+    }
+    private async Task ReplaceEffectModelAsync(byte position,EffectDefinition choice)
+    {
+        lastMutationSucceeded=false;
+        if(!CanEditChain || currentSnapshot is not {} expected || snapshotAddress is not {} target)return;
+        var original=expected.Blocks.FirstOrDefault(b=>b.Position==position && b.TypeCode!=0);
+        if(original is null || (original.TypeCode==choice.TypeCode && original.Values[1]==choice.Model))return;
+        Begin("Changing effect model: checking the current amplifier chain…");
+        try {
+            var confirmed=await UseSessionAsync(target,s=>s.ReplaceEffectAsync(expected,position,choice,operation!.Token));
+            currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
+            SetEffects(confirmed.Blocks);SelectChangedChainEffect(position,position,null);Filter();
+            snapshot.Text=SnapshotLabel();status.Text="Effect model verified · Default values loaded · Nothing saved";lastMutationSucceeded=true;
+        }
+        catch(EffectChainReadbackException ex) {ShowUnconfirmedChain(ex.ActualSnapshot,position,position,null);}
+        catch(OperationCanceledException) {editSnapshotValid=false;status.Text="Model change interrupted. Read the amplifier before another action; the outcome may be unknown.";}
+        catch(Exception) {editSnapshotValid=false;status.Text="Model change not confirmed. Read the amplifier before another action. Nothing was saved.";}
+        finally {status.Foreground=MutedBrush;End();}
     }
     private async Task ChangeEffectChainAsync(string action,byte position,byte? destination,EffectDefinition? addition)
     {

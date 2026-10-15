@@ -1,0 +1,115 @@
+{
+  "firmware": "V1.1.9",
+  "mobileLogSha256": "7c06e0477715db3935ec0f642af3c7552b99951712289beb896b52dc2066d62f",
+  "observations": [
+    {
+      "operation": "Noise Killer to Red Comp",
+      "payload": [
+        45,
+        100,
+        2,
+        1,
+        4,
+        0
+      ],
+      "position": 1,
+      "type": 4,
+      "model": 0,
+      "values": [
+        1,
+        0,
+        20,
+        70,
+        0,
+        0
+      ],
+      "settings": [
+        "Sensitivity",
+        "Level"
+      ]
+    },
+    {
+      "operation": "Red Comp to Noise Killer",
+      "payload": [
+        45,
+        101,
+        2,
+        1,
+        4,
+        2
+      ],
+      "position": 1,
+      "type": 4,
+      "model": 2,
+      "values": [
+        1,
+        2,
+        15,
+        50,
+        0,
+        0
+      ],
+      "settings": [
+        "Threshold",
+        "Level"
+      ]
+    }
+  ],
+  "restoration": "Original threshold 25 restored separately; independent complete state/detail equal to original. No saving.",
+  "limits": "Representative runtime captures; not every built-in model individually tested.",
+  "windowsReportSha256": "b74a3fc9fc3a0a28baf5881991de4b32bededbc7753a514752c3f770e1493bcb",
+  "windowsRegression": {
+    "passed": true,
+    "baselineRestored": true,
+    "results": [
+      {
+        "position": 1,
+        "type": 4,
+        "model": 0,
+        "values": [
+          1,
+          0,
+          20,
+          70,
+          0,
+          0
+        ],
+        "immediateUi": true,
+        "completeOriginalRestored": true
+      },
+      {
+        "position": 1,
+        "type": 5,
+        "model": 0,
+        "values": [
+          1,
+          0,
+          60,
+          45,
+          55,
+          70
+        ],
+        "immediateUi": true,
+        "completeOriginalRestored": true
+      },
+      {
+        "position": 3,
+        "type": 2,
+        "model": 0,
+        "values": [
+          1,
+          0,
+          75,
+          50,
+          50,
+          50,
+          50,
+          55,
+          1
+        ],
+        "immediateUi": true,
+        "completeOriginalRestored": true
+      }
+    ]
+  }
+}

@@ -48,6 +48,7 @@ internal static class EffectChainUiChecks
 
             Load(snapshot);Select(1);
             CheckPicker(window,snapshot);
+            CheckReplacementPicker(window,snapshot);
             CheckInsertion(window,snapshot);
             Require(Add().IsEnabled && !Left().IsEnabled && Right().IsEnabled && Remove().IsEnabled,"First effect move boundaries or + availability differ.");
             Require(Field<WrapPanel>(window,"effectChain").Children.Count==6,"The + button must follow the five active effects.");
@@ -159,6 +160,22 @@ internal static class EffectChainUiChecks
             search.Text="";Require(models.Items.Count==3,"Clearing model search did not restore results.");
             var root=(FrameworkElement)picker.Content;
             foreach(var size in new[]{new Size(640,550),new Size(420,350)}) {root.Measure(size);root.Arrange(new Rect(size));root.UpdateLayout();Require(categories.ActualWidth>100 && models.ActualWidth>140,"Picker columns collapse at minimum size.");}
+        }finally {picker.Close();}
+    }
+    private static void CheckReplacementPicker(MainWindow window,CurrentPresetSnapshot snapshot)
+    {
+        var picker=(Window)Call(window,"CreateEffectModelPicker",snapshot,(byte?)1)!;
+        try {
+            var categories=Named<ListBox>(picker,"EffectCategories");var models=Named<ListBox>(picker,"EffectModels");
+            var confirm=Named<Button>(picker,"ConfirmReplaceEffect");
+            Require(((EffectDefinition)models.SelectedItem).Name=="Noise Killer" && !confirm.IsEnabled,"Current model must be selected without allowing accidental default reset.");
+            models.SelectedIndex=0;Require(confirm.IsEnabled,"Alternate same-category model disabled.");
+            categories.SelectedIndex=3;models.SelectedIndex=0;Require(confirm.IsEnabled,"Cross-category replacement disabled.");
+            categories.SelectedIndex=4;Require(!confirm.IsEnabled,"Unavailable GIR&IR replacement enabled.");
+            Set(window,"editSnapshotValid",false);categories.SelectedIndex=0;models.SelectedIndex=0;
+            Require(!confirm.IsEnabled,"Stale amplifier view permits model replacement.");Set(window,"editSnapshotValid",true);
+            var current=PresetEffectSearch.Catalog.Single(e=>e.TypeCode==4&&e.Model==2);
+            Require(((Task)Call(window,"ReplaceEffectModelAsync",(byte)1,current)!).IsCompletedSuccessfully && Field<F15ReadSession?>(window,"connectedSession") is null,"Selecting the current model starts device work.");
         }finally {picker.Close();}
     }
     private static void CheckInsertion(MainWindow window,CurrentPresetSnapshot snapshot)

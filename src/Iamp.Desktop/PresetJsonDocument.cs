@@ -15,12 +15,13 @@ internal static class PresetJsonDocument
                 position=block.Position,category=shown.Category,name=shown.Title,enabled=shown.Enabled,
                 settings=shown.Parameters.Select(p=> {
                     const string suffix=" (ms)";var milliseconds=p.Name.EndsWith(suffix,StringComparison.Ordinal);
-                    return new {name=milliseconds?p.Name[..^suffix.Length]:p.Name,value=p.Value,unit=milliseconds?"ms":null};
+                    return new {name=milliseconds?p.Name[..^suffix.Length]:p.Name,value=p.IsOff?(object)"Off":p.Value,
+                        unit=p.IsOff?null:p.Unit??(milliseconds?"ms":null),group=p.Group};
                 }).ToArray()
             };
         }).ToArray();
         return JsonSerializer.Serialize(new {
-            schemaVersion="2.0.0",
+            schemaVersion="3.0.0",
             preset=new {slot=preset.SlotLabel,wireIndex=preset.WireIndex,name=preset.Name},
             source=new {kind=sourceKind,firmware,readAt,confirmedSnapshot=confirmed,hasUnappliedInputs=hasPendingInputs},effects
         },new JsonSerializerOptions {WriteIndented=true});

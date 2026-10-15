@@ -12,10 +12,8 @@ public sealed partial class MainWindow
     private bool restoringParameterInputs;
     private void AssignParameterTarget(PresetEffectBlock block)
     {
-        var profile=(block.TypeCode,block.Values.Count,block.Values.Count>1?block.Values[1]:-1) switch {
-            (4,6,2)=>1,(1,5,3)=>2,(2,9,31)=>3,(7,8,1)=>4,(8,10,1)=>5,_=>0
-        };
-        if(profile!=0)parameterTargets[(byte)profile]=block.Position;
+        var profile=ObservedParameterCommands.Profile(block);
+        if(profile!=0)parameterTargets[profile]=block.Position;
     }
     private void CaptureParameterInputs()
     {
@@ -58,5 +56,8 @@ public sealed partial class MainWindow
     }
 
     private string ConfirmedParameterText(PresetEffectBlock block,int index)
-        =>block.Values[index].ToString(CultureInfo.InvariantCulture);
+        =>EqParameters.Find(block,index)?.Format(block.Values[index])??block.Values[index].ToString(CultureInfo.InvariantCulture);
+
+    private static bool TryParseParameterText(PresetEffectBlock block,int index,string text,out ushort value)
+        =>EqParameters.Find(block,index) is {} eq?eq.TryParse(text,out value):ushort.TryParse(text,NumberStyles.None,CultureInfo.InvariantCulture,out value);
 }

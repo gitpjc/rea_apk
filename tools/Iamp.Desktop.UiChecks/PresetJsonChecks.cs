@@ -37,14 +37,15 @@ internal static class PresetJsonChecks
         var readAt=new DateTimeOffset(2026,10,15,15,0,0,TimeSpan.FromHours(11));
         string Json(CurrentPresetSnapshot p,bool pending=false)=>(string)Encode("Create",p,"V1.1.9",readAt,"amplifierSnapshot",true,pending)!;
         var json=Json(preset);using var doc=JsonDocument.Parse(json);var root=doc.RootElement;var effects=root.GetProperty("effects").EnumerateArray().ToArray();
-        Require(root.GetProperty("schemaVersion").GetString()=="2.0.0","Preset JSON schema version missing.");
+        Require(root.GetProperty("schemaVersion").GetString()=="3.0.0","Preset JSON schema version missing.");
         Require(effects.Select(e=>e.GetProperty("position").GetInt32()).SequenceEqual(new[]{1,2,3,4,5,6}),"Effect order changed or duplicates were removed.");
         Require(!effects[0].GetProperty("enabled").GetBoolean(),"Disabled effects lost their status.");
         var order=new[]{new[]{"Threshold","Level"},new[]{"Gain","Tone","Vol"},new[]{"Gain","Bass","Mid","Treble","Presence","Master"},new[]{"Level","Feedback","Time"},new[]{"Pre Delay","Level","Decay","Tone"},Array.Empty<string>()};
         for(var i=0;i<effects.Length;i++) {
             Require(effects[i].GetProperty("settings").EnumerateArray().Select(s=>s.GetProperty("name").GetString()).SequenceEqual(order[i]),"JSON settings are not in UI/mobile order.");
-            var values=effects[i].GetProperty("settings").EnumerateArray().Select(s=>s.GetProperty("value").GetUInt16());
-            Require(values.SequenceEqual(blocks[i].Values.Skip(2).Take(order[i].Length)),"Displayed setting values changed during schema cleanup.");
+            var values=effects[i].GetProperty("settings").EnumerateArray().Select(s=>s.GetProperty("value").GetDecimal());
+            Require(values.SequenceEqual(blocks[i].Values.Skip(2).Take(order[i].Length).Select(v=>(decimal)v)),"Displayed setting values changed during schema cleanup.");
+            Require(effects[i].GetProperty("settings").EnumerateArray().All(s=>s.GetProperty("group").ValueKind==JsonValueKind.Null),"Ungrouped settings must explicitly export a null group.");
         }
         void CheckRemovedProperties(JsonElement element) {
             if(element.ValueKind==JsonValueKind.Object)foreach(var property in element.EnumerateObject()) {
@@ -53,6 +54,36 @@ internal static class PresetJsonChecks
             else if(element.ValueKind==JsonValueKind.Array)foreach(var item in element.EnumerateArray())CheckRemovedProperties(item);
         }
         CheckRemovedProperties(root);
+        var eqBlocks=new PresetEffectBlock[]{
+            new(1,9,new ushort[]{1,0,32,33,0,64,31,50,0,0,0,0,0,0,0,0,0}),
+            new(2,9,new ushort[]{1,1,32,100,8,32,500,8,32,1600,8,32,6000,8,0,0,50})
+        };
+        using(var eqDoc=JsonDocument.Parse(Json(preset with {Blocks=eqBlocks}))) {
+            var eqEffects=eqDoc.RootElement.GetProperty("effects");
+            Require(eqEffects[0].GetProperty("name").GetString()=="5 Bands EQ" && eqEffects[1].GetProperty("name").GetString()=="Custom EQ","EQ presentation titles differ from the phone.");
+            var fixedSettings=eqEffects[0].GetProperty("settings").EnumerateArray().ToArray();
+            Require(fixedSettings.Select(s=>s.GetProperty("name").GetString()).SequenceEqual(new[]{"100Hz","250Hz","630Hz","1.6kHz","4kHz","Level"}),"Fixed EQ settings order differs from the phone.");
+            Require(fixedSettings.Select(s=>s.GetProperty("value").GetDecimal()).SequenceEqual(new decimal[]{0,0.5m,-16,16,-0.5m,50}),"Fixed EQ must export signed physical gains and unitless Level.");
+            Require(fixedSettings.Select(s=>s.GetProperty("unit").GetString()).SequenceEqual(new string?[]{"dB","dB","dB","dB","dB",null}) && fixedSettings.All(s=>s.GetProperty("group").ValueKind==JsonValueKind.Null),"Fixed EQ units or null groups differ.");
+            var customSettings=eqEffects[1].GetProperty("settings").EnumerateArray().ToArray();
+            Require(customSettings.Select(s=>s.GetProperty("name").GetString()).SequenceEqual(new[]{"Band 1 Gain","Band 1 Freq","Band 1 Q","Band 2 Gain","Band 2 Freq","Band 2 Q","Band 3 Gain","Band 3 Freq","Band 3 Q","Band 4 Gain","Band 4 Freq","Band 4 Q","Low Cut","High Cut","Level"}),"Custom EQ settings order differs from the phone.");
+            Require(customSettings.Select(s=>s.GetProperty("group").GetString()).SequenceEqual(new string?[]{"Low","Low","Low","Low Mid","Low Mid","Low Mid","High Mid","High Mid","High Mid","High","High","High",null,null,null}),"Custom EQ groups must be flat, ordered band metadata.");
+            Require(customSettings.Take(12).Select(s=>s.GetProperty("value").GetDecimal()).SequenceEqual(new decimal[]{0,100,1,0,500,1,0,1600,1,0,6000,1}),"Custom EQ gains, Hz or Q conversion differs.");
+            Require(customSettings.Take(12).Select(s=>s.GetProperty("unit").GetString()).SequenceEqual(Enumerable.Range(0,4).SelectMany(_=>new string?[]{"dB","Hz",null})),"Custom EQ band units differ.");
+            Require(customSettings.Skip(12).Take(2).All(s=>s.GetProperty("value").GetString()=="Off" && s.GetProperty("unit").ValueKind==JsonValueKind.Null),"Off EQ cuts must export a string and no unit.");
+            Require(customSettings[14].GetProperty("value").GetDecimal()==50 && customSettings[14].GetProperty("unit").ValueKind==JsonValueKind.Null,"Custom EQ Level must remain unitless.");
+            CheckRemovedProperties(eqDoc.RootElement);
+        }
+        var activeCuts=eqBlocks[1].Values.ToArray();activeCuts[14]=80;activeCuts[15]=12000;
+        using(var cutsDoc=JsonDocument.Parse(Json(preset with {Blocks=new[]{eqBlocks[1] with {Values=activeCuts}}}))) {
+            var cuts=cutsDoc.RootElement.GetProperty("effects")[0].GetProperty("settings");
+            Require(cuts[12].GetProperty("value").GetDecimal()==80 && cuts[13].GetProperty("value").GetDecimal()==12000 && cuts[12].GetProperty("unit").GetString()=="Hz" && cuts[13].GetProperty("unit").GetString()=="Hz","Active EQ cuts must export numeric frequencies in Hz.");
+        }
+        var unknownEq=new PresetEffectBlock[]{new(1,9,new ushort[]{1,2,100,100,100,100,100,100,100,100,100,100,100,100,100,0,0}),new(2,9,new ushort[]{1,0,100})};
+        using(var unknownEqDoc=JsonDocument.Parse(Json(preset with {Blocks=unknownEq}))) {
+            Require(unknownEqDoc.RootElement.GetProperty("effects").EnumerateArray().All(e=>e.GetProperty("settings").GetArrayLength()==0),"Unsupported EQ models or block shapes must not expose guessed settings.");
+            CheckRemovedProperties(unknownEqDoc.RootElement);
+        }
         Require(effects[5].GetProperty("enabled").ValueKind==JsonValueKind.Null && effects[5].GetProperty("settings").GetArrayLength()==0,"Unknown model settings were guessed.");
         Require(effects[3].GetProperty("settings")[2].GetProperty("unit").GetString()=="ms","Time unit missing.");
         Require(effects[4].GetProperty("settings")[0].GetProperty("name").GetString()=="Pre Delay" && effects[4].GetProperty("settings")[0].GetProperty("unit").GetString()=="ms","Pre Delay repeats or loses its unit.");
@@ -96,6 +127,6 @@ internal static class PresetJsonChecks
             Require(!System.IO.File.ReadAllBytes(file).Take(3).SequenceEqual(new byte[]{0xEF,0xBB,0xBF}),"JSON unexpectedly contains a UTF-8 BOM.");
             ((Task)Encode("SaveAsync",file,json+"\n")!).GetAwaiter().GetResult();Require(System.IO.File.ReadAllText(file)==json+"\n" && System.IO.Directory.GetFiles(directory).Length==1,"Overwrite or temporary-file cleanup failed.");
         }finally {if(System.IO.File.Exists(file))System.IO.File.Delete(file);System.IO.Directory.Delete(directory);}
-        Console.WriteLine("PASS: simplified ordered preset JSON across 80 slots, removed properties/clean names/separate units, disabled/duplicate/unknown models, scrolling/copy/Save As and UTF-8 files without device work.");
+        Console.WriteLine("PASS: ordered preset JSON schema 3 across 80 slots, EQ physical values/groups/Off cuts, removed properties/clean names/separate units, disabled/duplicate/unknown models, scrolling/copy/Save As and UTF-8 files without device work.");
     }
 }

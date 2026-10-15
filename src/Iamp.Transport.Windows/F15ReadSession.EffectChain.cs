@@ -4,9 +4,9 @@ namespace Iamp.Transport.Windows;
 
 public sealed partial class F15ReadSession
 {
-    // Allocate separate bands from observed mobile starts 0/50/150. Keep these across
+    // Allocate separate bands from observed mobile starts 0/50/100/150. Keep these across
     // reconnects: the amplifier can suppress a token reused by a new BLE session.
-    private static int addChainSequence=-1,removeChainSequence=-1,moveChainSequence=-1;
+    private static int addChainSequence=-1,removeChainSequence=-1,replaceChainSequence=-1,moveChainSequence=-1;
     private static byte ChainToken(ref int sequence,int start)=>checked((byte)(start+(uint)Interlocked.Increment(ref sequence)%50));
 
     public Task<CurrentPresetSnapshot> MoveEffectAsync(CurrentPresetSnapshot expected,byte from,byte to,CancellationToken ct)
@@ -18,6 +18,15 @@ public sealed partial class F15ReadSession
     public Task<CurrentPresetSnapshot> AddEffectAsync(CurrentPresetSnapshot expected,EffectDefinition effect,CancellationToken ct)
         => ChangeChainAsync(expected,b=>EffectChainCommands.Add(b.Blocks,effect,ChainToken(ref addChainSequence,0)),
             (b,a)=>EffectChainCommands.IsExpectedAddition(Convert.FromHexString(b.RawDetailPayloadHex),Convert.FromHexString(a.RawDetailPayloadHex),effect),ct);
+
+    public Task<CurrentPresetSnapshot> ReplaceEffectAsync(CurrentPresetSnapshot expected,byte position,EffectDefinition effect,CancellationToken ct)
+    {
+        var block=EffectChainCommands.Active(expected.Blocks).Single(b=>b.Position==position);
+        if(block.TypeCode==effect.TypeCode && block.Values[1]==effect.Model)
+            throw new InvalidOperationException("That model is already selected; replacing it would reset its values.");
+        return ChangeChainAsync(expected,b=>EffectChainCommands.Replace(b.Blocks,position,effect,ChainToken(ref replaceChainSequence,100)),
+            (b,a)=>EffectChainCommands.IsExpectedReplacement(Convert.FromHexString(b.RawDetailPayloadHex),Convert.FromHexString(a.RawDetailPayloadHex),position,effect),ct);
+    }
 
     private Task<CurrentPresetSnapshot> ChangeChainAsync(CurrentPresetSnapshot expected,
         Func<CurrentPresetSnapshot,byte[]> encode,Func<CurrentPresetSnapshot,CurrentPresetSnapshot,bool> verify,CancellationToken ct)

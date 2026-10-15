@@ -46,7 +46,8 @@ public sealed partial class MainWindow
         </ControlTemplate>
         """);
 
-    private Slider CreateParameterSlider(TextBox input, string label, ushort minimum, ushort maximum,Func<Task> commit)
+    private Slider CreateParameterSlider(TextBox input, string label, ushort minimum, ushort maximum,Func<Task> commit,
+        Func<ushort,string>? format=null,Func<string,ushort?>? parse=null)
     {
         var slider=new Slider {
             Minimum=minimum,Maximum=maximum,Value=minimum,
@@ -67,12 +68,16 @@ public sealed partial class MainWindow
             try {
                 var value=(ushort)Math.Round(slider.Value);
                 slider.Value=value;
-                input.Text=value.ToString(CultureInfo.InvariantCulture);
+                input.Text=format is null?value.ToString(CultureInfo.InvariantCulture):format(value);
             }
             finally {synchronizing=false;}
         };
         input.TextChanged+=(_,_)=> {
-            if(synchronizing || !ushort.TryParse(input.Text,NumberStyles.None,CultureInfo.InvariantCulture,out var value) || value<minimum || value>maximum)return;
+            if(synchronizing)return;
+            ushort value;
+            if(parse is not null) {if(parse(input.Text) is not {} parsed)return;value=parsed;}
+            else if(!ushort.TryParse(input.Text,NumberStyles.None,CultureInfo.InvariantCulture,out value))return;
+            if(value<minimum || value>maximum)return;
             synchronizing=true;
             try {slider.Value=value;}
             finally {synchronizing=false;}
@@ -127,16 +132,24 @@ public sealed partial class MainWindow
         if(sliderCommits.TryGetValue(slider,out var commit))await commit();
     }
 
-    private void AddMobileParameterSlider(Slider slider,TextBox input,string label,string color)
+    private void AddMobileParameterSlider(Slider slider,TextBox input,string label,string color,Panel? host=null,string? explicitUnit=null)
     {
         slider.Tag=Brush(color);slider.Foreground=slider.IsEnabled?(Brush)slider.Tag:MutedBrush;
-        var unit=label.EndsWith(" (ms)",StringComparison.Ordinal)?"ms":"";
+        host??=effectDetails;
+        var unit=explicitUnit??(label.EndsWith(" (ms)",StringComparison.Ordinal)?"ms":"");
         var heading=new Grid {Margin=new Thickness(0,12,0,0),HorizontalAlignment=HorizontalAlignment.Left};
         heading.SetBinding(FrameworkElement.WidthProperty,new Binding("Width"){Source=slider});
         heading.ColumnDefinitions.Add(new ColumnDefinition());heading.ColumnDefinitions.Add(new ColumnDefinition{Width=GridLength.Auto});
         heading.Children.Add(new TextBlock {Text=label.Replace(" (ms)",""),Foreground=Brushes.White,FontFamily=new FontFamily("Segoe UI"),FontSize=14,FontWeight=FontWeights.ExtraBold,TextTrimming=TextTrimming.CharacterEllipsis});
-        var value=Text("",14);value.SetBinding(TextBlock.TextProperty,new Binding("Text"){Source=input,StringFormat="{0}"+unit});
-        Grid.SetColumn(value,1);heading.Children.Add(value);effectDetails.Children.Add(heading);effectDetails.Children.Add(slider);
+        var value=Text("",14);value.SetBinding(TextBlock.TextProperty,new Binding("Text"){Source=input,Converter=new ParameterUnitConverter(unit)});
+        Grid.SetColumn(value,1);heading.Children.Add(value);host.Children.Add(heading);host.Children.Add(slider);
+    }
+
+    private sealed class ParameterUnitConverter(string unit):IValueConverter
+    {
+        public object Convert(object value,Type targetType,object parameter,CultureInfo culture)
+            =>value is string text?text.Equals("Off",StringComparison.OrdinalIgnoreCase)?text:text+unit:value;
+        public object ConvertBack(object value,Type targetType,object parameter,CultureInfo culture)=>Binding.DoNothing;
     }
 
     private static void DetachSlider(Slider slider)

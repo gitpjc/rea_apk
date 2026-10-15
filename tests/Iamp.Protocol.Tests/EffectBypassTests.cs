@@ -32,7 +32,7 @@ public class EffectBypassTests
     {
         var valid=new PresetEffectBlock(1,4,new ushort[]{0,2,25,50,0,0});
         foreach(var block in new[]{valid with {Position=0},valid with {Position=21},valid with {TypeCode=9},
-            valid with {Values=new ushort[]{2,2,25,50,0,0}},valid with {Values=new ushort[]{1,3,25,50,0,0}},valid with {Values=Array.Empty<ushort>()}}) {
+            valid with {Values=new ushort[]{2,2,25,50,0,0}},valid with {Values=new ushort[]{1,4,25,50,0,0}},valid with {Values=Array.Empty<ushort>()}}) {
             Assert.False(EffectBypassCommand.TryGetEnabled(block,out _));
             Assert.Throws<NotSupportedException>(()=>EffectBypassCommand.Create(block,true));
         }

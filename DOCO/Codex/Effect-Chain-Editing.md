@@ -1,5 +1,17 @@
 # Effect-chain editing — 1.25.0
 
+## In-place model replacement — 1.27.0
+
+Select an effect and choose **Change model…**. The shared picker retains the mobile category order and all 124 built-in models, including other categories and models already in the chain. It starts on the current category/model. The current choice cannot be reapplied accidentally, because doing so would reset its values. Choosing another model replaces the selected record in the same position with amplifier-supplied defaults. No save is sent. GIR&IR remains listed with the existing unavailable-library explanation; Phase 6 remains excluded.
+
+ADB captured Noise Killer → Red Comp (`2D 64 02 01 04 00`) and Red Comp → Noise Killer (`2D 65 02 01 04 02`). Red Comp returned `[1,0,20,70,0,0]`, matching mobile Sensitivity 20 and Level 70. Returning to Noise Killer returned `[1,2,15,50,0,0]`; selecting the original model does not recover its previous Threshold 25. The test therefore explicitly restored 25 with the existing verified parameter command, then independently verified the complete original state/detail. Fresh baseline enabled all five effects. Raw phone evidence stays private; sanitized payloads/layouts and SHA-256 are in `tests/fixtures/f15-model-replacement-observations.json`.
+
+Replacement uses operation 2 and a process-wide counter starting at the observed 100. The existing serialized fresh-firmware/state/detail checks and bounded no-change retry apply. Readback must retain record count, position, requested type/model and enabled prefix. Restoring the original record in the returned detail must recover every unrelated byte, subject only to the existing Boolean ninth-word Amp allowance for an operation involving Amp. Unexpected complete readback is displayed immediately and further edits are disabled until refresh. Pending parameter inputs block replacement.
+
+Focused protocol checks cover exact mobile payloads, defaults, wrong position/model/state, unrelated parameters/trailer changes, record-count changes and cross-category record-size changes. Offline WPF checks cover initial selection, same-model no-op, alternate/cross-category selection and stale/GIR&IR guards. Actual desktop handlers replaced position-1 Noise Killer with Red Comp and Filter Touch Wah, then position-3 PLX 100 with 65 US DLX. Each changed model appeared immediately with the correct selection and usable chain actions. Every original parameter was restored after returning to the original model, and a separate final connection verified complete original global state/detail equality. Nothing was saved or recalled.
+
+These are representative hardware tests; all 124 models have not been individually tested. Replacement availability does not imply that every model's parameter controls or persistent saving are implemented. Existing verified parameter editors and save limits are unchanged.
+
 ## Second-Amp readback correction — 1.25.4
 
 Adding 65 US DLX at position 6 succeeds on the amplifier, but also changes the original position-3 PLX100 ninth word from 1 to 0. Removal restores that word to 1. All original parameter words and the complete 92-byte global state stay unchanged. Its meaning remains opaque; it is not treated as a user-facing enable/disable value. The previous exact surviving-record comparison rejected this valid transition, invalidated editing and left the old UI visible. Restarting read the actual chain, which explained the reported symptoms.

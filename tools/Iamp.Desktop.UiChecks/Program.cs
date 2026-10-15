@@ -16,10 +16,11 @@ internal static class Program
     static object? Call(object o,string n,params object[] args)=>o.GetType().GetMethod(n,Flags)!.Invoke(o,args);
     static void Require(bool condition,string message){if(!condition)throw new InvalidOperationException(message);}
     [STAThread]
-    static int Main()
+    static int Main(string[] args)
     {
         var app=new Application();var window=new MainWindow();
         try {
+            if(args.Contains("--eq")) {EqModelChecks.Run();PresetJsonChecks.Run();DynaModelChecks.Run();DynaModelChecks.RunFilter();ReorderedParameterChecks.Run();return 0;}
             var blocks=new PresetEffectBlock[]{
                 new(1,4,new ushort[]{1,2,25,50,0,0}),new(2,1,new ushort[]{1,3,39,100,100}),
                 new(3,2,new ushort[]{1,31,100,35,43,40,45,75,1}),new(4,7,new ushort[]{1,1,17,25,500,0,0,0}),
@@ -33,7 +34,7 @@ internal static class Program
                 (Field<Slider>(window,"toneSlider"),Field<TextBox>(window,"toneInput"),Field<Button>(window,"applyTone"),2,3)
             };
             foreach(var editor in (System.Collections.IEnumerable)window.GetType().GetProperty("AdditionalEditors",Flags)!.GetValue(window)!)
-                controls.Add((Property<Slider>(editor,"Slider"),Property<TextBox>(editor,"Input"),Property<Button>(editor,"Apply"),Property<byte>(editor,"Position"),Property<int>(editor,"ParameterIndex")));
+                if(Property<byte>(editor,"ProfilePosition")<=5)controls.Add((Property<Slider>(editor,"Slider"),Property<TextBox>(editor,"Input"),Property<Button>(editor,"Apply"),Property<byte>(editor,"Position"),Property<int>(editor,"ParameterIndex")));
             void Select(byte position)=>((Button)Field<WrapPanel>(window,"effectChain").Children[position-1]).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             void Update()=>Call(window,"UpdateThresholdState");
             var sizes=new[]{new Size(1366,768),new Size(911,512),new Size(683,384),new Size(620,320),new Size(1920,1080)};
@@ -94,6 +95,9 @@ internal static class Program
             foreach(var c in controls){Select(c.Position);Update();Require(!c.Slider.IsEnabled,"Disabled effect slider enabled.");}
             EffectFilterChecks.Run();
             ReorderedParameterChecks.Run();
+            DynaModelChecks.Run();
+            DynaModelChecks.RunFilter();
+            EqModelChecks.Run();
             EffectChainUiChecks.Run();
             EffectCacheStoreChecks.Run();
             PresetJsonChecks.Run();

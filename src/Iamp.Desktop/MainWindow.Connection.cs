@@ -67,7 +67,7 @@ public sealed partial class MainWindow
     {
         CaptureParameterInputs();
         return pendingParameterValues.Any(p=>currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==p.Key.Position) is {} block &&
-            (p.Key.Index>=block.Values.Count || !ushort.TryParse(p.Value,System.Globalization.NumberStyles.None,System.Globalization.CultureInfo.InvariantCulture,out var value) || value!=block.Values[p.Key.Index]));
+            (p.Key.Index>=block.Values.Count || !TryParseParameterText(block,p.Key.Index,p.Value,out var value) || value!=block.Values[p.Key.Index]));
     }
     private async Task PollCurrentPresetAsync()
     {
