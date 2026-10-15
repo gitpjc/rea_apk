@@ -52,12 +52,26 @@ I want to have these sounds:
 
 ## TODO
 
- I added another amp and i t never showed up in the Desktop app. I closed and restarted the app and then it showed up, then I tried to delete it and the 'Remove effect' button became disabled but the newly added amp is still showing. When I closed and restated the app the new amp was gone then. These are bugs need fixing
+See screenshot, I want you to add a button that will show me in JSON format all the settings for the effects for the current preset.
 
+It should work this way
+
+- When I press up the button it will pop up a dialog
+- In the dialog it wil have a a listview that shows the JSON and I can scroll through it
+- The dialog should also have a copy icon that allow me to save the JSON to my clipboard
+- The json format should follow a consistent structre that it will use for all presets
 
 Do you understand what I want?
 
-**DONE**    
+**DONE**   
+
+I am trying to restore from a backup I made in MOOER Studio but it fails with this error why, see screenshot
+
+The backup file is here:
+
+C:\Users\Paul\Documents\Mooer Studio For Future Series\BackupFiles\F15i\2026-10-13 18_34_47.backup
+
+ I added another amp and it never showed up in the Desktop app. I closed and restarted the app and then it showed up, then I tried to delete it and the 'Remove effect' button became disabled but the newly added amp is still showing. When I closed and restated the app the new amp was gone then. These are bugs need fixing
 
 Make the effect adjuster line half the width and also look and work the same way they do on the mobile iAMP app. Note that the set part uses the color of the effect icon
 

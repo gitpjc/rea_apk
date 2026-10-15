@@ -87,6 +87,14 @@ Moves preserve the effect’s values. Previously supported parameter editors con
 
 ## Save the supported preset
 
+### View, copy or save preset JSON
+
+Choose **Show preset JSON** beside Save current preset. The dialog shows verified current-snapshot effect settings in chain order, with settings ordered like the mobile/desktop editor. Disabled and repeated effects are included. Setting names omit units, which have their own `unit` property; internal IDs and raw/unmapped values are excluded. Scroll vertically or horizontally, use the **Copy JSON** icon/button to copy the complete document, or **Save JSON…** to choose a file location with Windows Save As. The default filename is the preset prefix and name, such as `0D British Lead Solo.json`.
+
+The dialog captures the displayed snapshot when opened. Unapplied input values are excluded, and the dialog identifies them if present. Copy and Save contain exactly the JSON shown. These actions do not change the amplifier. See [Preset-JSON.md](Preset-JSON.md) for the consistent schema.
+
+### Save changes to the amplifier
+
 The supported save workflow provides **Save current preset** in the current-preset panel. It enables only for a live edit to **0D / British Lead Solo** on firmware **V1.1.9**, with Noise Killer Threshold **25 or 26** and every other original value unchanged. Apply the supported Threshold change first; then choose Save and review the unchanged name, destination **0D / index 4** and Threshold in the overwrite confirmation. **No** is the default choice.
 
 On confirmation, the app checks a fresh complete snapshot, sends the observed save once, recalls the same slot and verifies the full state/detail. The Windows test saved 26, saved original 25 back and independently verified every original byte after recall. Other saved values, renaming, other destinations and power-cycle persistence are not validated. All-slot recall is available with explicit handling of unsaved edits; saving remains restricted to this supported 0D profile.

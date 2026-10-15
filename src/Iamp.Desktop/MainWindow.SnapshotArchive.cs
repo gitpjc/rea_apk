@@ -22,6 +22,7 @@ public sealed partial class MainWindow
     }
     private void UpdateSnapshotArchiveState()
     {
+        showPresetJson.IsEnabled=currentSnapshot is not null && operation is null;
         exportSnapshot.IsEnabled=!preview && operation is null && currentSnapshot is not null && snapshotFirmware is not null && snapshotTime.HasValue;
         openSnapshot.IsEnabled=!preview && operation is null;
     }

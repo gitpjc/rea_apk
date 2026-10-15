@@ -61,7 +61,15 @@ public sealed partial class MainWindow
     }
     private void AddAdditionalEditors(PresetEffectBlock displayed,bool initializeInputs)
     {
-        foreach(var editor in AdditionalEditors.Where(e=>MatchesEditorProfile(e,displayed))) {
+        foreach(var setting in EffectPresentation.From(displayed).Parameters) {
+            if(displayed.TypeCode==1 && displayed.Values.Count==5 && displayed.Values[1]==3 && setting.ValueIndex==3) {
+                toneInput.Text=PendingParameterText(displayed,3);
+                AddMobileParameterSlider(toneSlider,toneInput,"Tone",EffectPresentation.From(displayed).Color);
+                var toneActions=new WrapPanel();toneActions.Children.Add(toneInput);applyTone.Margin=new Thickness(12,0,0,0);toneActions.Children.Add(applyTone);
+                effectDetails.Children.Add(toneActions);toneMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(toneMessage);UpdateToneState();continue;
+            }
+            var editor=AdditionalEditors.FirstOrDefault(e=>MatchesEditorProfile(e,displayed) && e.ParameterIndex==setting.ValueIndex);
+            if(editor is null)continue;
             editor.Position=displayed.Position;
             editor.Input.Text=PendingParameterText(displayed,editor.ParameterIndex);
             AddMobileParameterSlider(editor.Slider,editor.Input,editor.Label,EffectPresentation.From(displayed).Color);

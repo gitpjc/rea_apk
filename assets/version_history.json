@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.26.1",
+    "changedAt": "2026-10-15T05:02:06.422Z",
+    "summary": "Simplified preset JSON and separated units from setting names.",
+    "details": "Remove unmappedValues, rawValues, rawValueIndex, typeCode and modelId from displayed/copied/saved preset JSON. Export setting names such as Pre Delay and Time without the unit suffix, retaining ms solely in unit. Preserve setting values and effect/mobile-editor ordering. JSON schema 2.0.0 identifies the removed fields. Focused offline checks verify recursive field absence, clean names, separate units, all 80 slot labels and existing dialog/copy/save behaviour. No hardware or clipboard changes."
+  },
+  {
+    "version": "1.26.0",
+    "changedAt": "2026-10-15T04:42:15.591Z",
+    "summary": "Added ordered current-preset JSON viewing, clipboard copy and Save As.",
+    "details": "Add Show preset JSON beside Save current preset. Display a frozen, pretty-printed JSON document in a scrollable ListView with a copy icon and Save JSON using the native Windows Save As dialog. Default filename includes the preset prefix and name, for example 0D British Lead Solo.json. Use a consistent versioned schema for all presets, preserving effect order, disabled/duplicate effects, verified setting order and every raw/unnamed value. Share parameter order with the editor and correct OD808 to mobile Gain–Tone–Vol order. Unapplied inputs are explicitly excluded; viewing/copying/saving never sends amplifier commands. Focused offline WPF, clipboard-delegate and UTF-8 file/overwrite checks pass; no hardware access or full-suite rerun."
+  },
+  {
     "version": "1.25.4",
     "changedAt": "2026-10-15T02:54:16.818Z",
     "summary": "Fixed stale effect chains after adding or removing another Amp.",

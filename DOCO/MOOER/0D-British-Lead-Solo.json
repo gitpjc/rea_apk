@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "2.0.0",
+  "preset": {
+    "slot": "0D",
+    "wireIndex": 4,
+    "name": "British Lead Solo"
+  },
+  "source": {
+    "kind": "amplifierSnapshot",
+    "firmware": "V1.1.9",
+    "readAt": "2026-10-15T16:03:48.6894943+11:00",
+    "confirmedSnapshot": true,
+    "hasUnappliedInputs": false
+  },
+  "effects": [
+    {
+      "position": 1,
+      "category": "Dyna",
+      "name": "Noise Killer",
+      "enabled": true,
+      "settings": [
+        {
+          "name": "Threshold",
+          "value": 25,
+          "unit": null
+        },
+        {
+          "name": "Level",
+          "value": 50,
+          "unit": null
+        }
+      ]
+    },
+    {
+      "position": 2,
+      "category": "OD",
+      "name": "OD808",
+      "enabled": true,
+      "settings": [
+        {
+          "name": "Gain",
+          "value": 39,
+          "unit": null
+        },
+        {
+          "name": "Tone",
+          "value": 100,
+          "unit": null
+        },
+        {
+          "name": "Vol",
+          "value": 100,
+          "unit": null
+        }
+      ]
+    },
+    {
+      "position": 3,
+      "category": "Amp",
+      "name": "PLX 100",
+      "enabled": true,
+      "settings": [
+        {
+          "name": "Gain",
+          "value": 100,
+          "unit": null
+        },
+        {
+          "name": "Bass",
+          "value": 35,
+          "unit": null
+        },
+        {
+          "name": "Mid",
+          "value": 43,
+          "unit": null
+        },
+        {
+          "name": "Treble",
+          "value": 40,
+          "unit": null
+        },
+        {
+          "name": "Presence",
+          "value": 45,
+          "unit": null
+        },
+        {
+          "name": "Master",
+          "value": 75,
+          "unit": null
+        }
+      ]
+    },
+    {
+      "position": 4,
+      "category": "Delay",
+      "name": "Analog Delay",
+      "enabled": true,
+      "settings": [
+        {
+          "name": "Level",
+          "value": 17,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "value": 25,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "value": 500,
+          "unit": "ms"
+        }
+      ]
+    },
+    {
+      "position": 5,
+      "category": "Reverb",
+      "name": "Hall Reverb",
+      "enabled": true,
+      "settings": [
+        {
+          "name": "Pre Delay",
+          "value": 20,
+          "unit": "ms"
+        },
+        {
+          "name": "Level",
+          "value": 24,
+          "unit": null
+        },
+        {
+          "name": "Decay",
+          "value": 35,
+          "unit": null
+        },
+        {
+          "name": "Tone",
+          "value": 0,
+          "unit": null
+        }
+      ]
+    }
+  ]
+}

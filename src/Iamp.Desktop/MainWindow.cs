@@ -89,7 +89,9 @@ public sealed partial class MainWindow : Window
         currentPanel.Children.Add(Text("CURRENT PRESET",10,BlueBrush));
         currentPreset.Margin=new Thickness(0,8,0,0);currentPanel.Children.Add(currentPreset);
         savePreset.Margin=new Thickness(0,12,0,0);savePreset.HorizontalAlignment=HorizontalAlignment.Left;
-        savePreset.Click+=async(_,_)=>await SavePresetAsync();currentPanel.Children.Add(savePreset);
+        savePreset.Click+=async(_,_)=>await SavePresetAsync();
+        var presetActions=new WrapPanel();presetActions.Children.Add(savePreset);showPresetJson.Margin=new Thickness(12,12,0,0);presetActions.Children.Add(showPresetJson);currentPanel.Children.Add(presetActions);
+        showPresetJson.Click+=(_,_)=>ShowPresetJson();
         currentPanel.Children.Add(saveMessage);
         page.Children.Add(new Border { Background=Brush("#1D2B3C"),CornerRadius=new CornerRadius(8),Padding=new Thickness(14),
             Margin=new Thickness(0,10,0,0),Child=currentPanel });
@@ -455,13 +457,6 @@ public sealed partial class MainWindow : Window
             var actions=new WrapPanel();actions.Children.Add(thresholdInput);applyThreshold.Margin=new Thickness(12,0,0,0);actions.Children.Add(applyThreshold);
             effectDetails.Children.Add(actions);thresholdMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(thresholdMessage);
             UpdateThresholdState();
-        }
-        if(effect.Source.TypeCode==1 && effect.Source.Values.Count==5 && effect.Source.Values[1]==3) {
-            toneInput.Text=PendingParameterText(effect.Source,3);
-            AddMobileParameterSlider(toneSlider,toneInput,"Tone",effect.Color);
-            var actions=new WrapPanel();actions.Children.Add(toneInput);applyTone.Margin=new Thickness(12,0,0,0);actions.Children.Add(applyTone);
-            effectDetails.Children.Add(actions);toneMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(toneMessage);
-            UpdateToneState();
         }
         AddAdditionalEditors(effect.Source,initializeInputs);
         if(!effectDetails.Children.OfType<Slider>().Any()) {

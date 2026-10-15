@@ -96,6 +96,7 @@ internal static class Program
             ReorderedParameterChecks.Run();
             EffectChainUiChecks.Run();
             EffectCacheStoreChecks.Run();
+            PresetJsonChecks.Run();
             var preview=new MainWindow(true);Require(!Field<Slider>(preview,"thresholdSlider").IsEnabled,"Preview slider enabled.");preview.Close();
             Console.WriteLine("PASS: all 18 sliders; every integer target; numeric/invalid/fractional input; pending/no-write guards; busy/firmware/invalid/disabled/preview states; five viewport sizes; valid/invalid pending navigation, hidden guards, partial Apply/unchanged refresh preservation and new-snapshot reset.");
             return 0;
