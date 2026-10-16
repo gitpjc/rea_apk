@@ -3,7 +3,7 @@
     "version": "1.41.2",
     "changedAt": "2026-10-16T23:55:00+11:00",
     "summary": "Clarify the settings being saved in preset dialogs.",
-    "details": "Replace Live settings with Current amplifier settings in the Save or rename preset dialog and overwrite confirmation, and use the same wording in the save guidance. No change to save behavior or amplifier commands. Validate with the focused save-dialog UI checks and Windows release build."
+    "details": "Replace Live settings with Current amplifier settings in the Save or rename preset dialog and overwrite confirmation, and use the same wording in the save guidance. No change to save behavior or amplifier commands. Validate with the focused save-dialog UI checks and Windows release build. Documentation audit on 17 October 2026 reconciles Plan.md with source, feature evidence and retained hardware reports: current 1.41.2, completed core implementation checkboxes, power-cycle/save-recovery completion, disabled CI, actual architecture and explicit remaining acceptance gates. Historical milestone limits are labelled historical; GIR&IR stays excluded and Phase 6 deferred. No application code or amplifier settings changed for the audit."
   },
   {
     "version": "1.41.1",
