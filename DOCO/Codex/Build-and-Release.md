@@ -14,7 +14,7 @@ The command checks the semantic version in `Directory.Build.props` and the lates
 
 The script stops on failure. It does not replace the normal launch folder, run device probes, save presets, upload a release or commit files. Keep all files in the output directory together. When preparing a distributable ZIP, archive the complete output directory; the executable alone is insufficient.
 
-`.github/workflows/windows-build.yml` runs the same Bash command on Windows for pushes, pull requests and manual dispatch. It has read-only repository permissions and uploads only the staged Windows package, retained for 14 days. SDK and Node versions are selected explicitly. The workflow has been added locally; an actual hosted GitHub run remains unverified until the changes are pushed. No push was performed during this work.
+The GitHub workflow is disabled at the user's request (repository version 1.40.1, included with desktop 1.41.0). Its definition is retained as `.github/workflows/windows-build.yml.disabled`, which GitHub Actions does not load. Commit and push this change to remove its triggers from the hosted repository. No hosted disable action or push was performed. The local Bash build command remains available. Do not re-enable GitHub automation unless the user requests it.
 
 After successful software checks, close the desktop app before promoting a package. Run the actual offline Version History preview and inspect its output:
 

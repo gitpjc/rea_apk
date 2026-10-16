@@ -1,5 +1,29 @@
 [
   {
+    "version": "1.41.2",
+    "changedAt": "2026-10-16T23:55:00+11:00",
+    "summary": "Clarify the settings being saved in preset dialogs.",
+    "details": "Replace Live settings with Current amplifier settings in the Save or rename preset dialog and overwrite confirmation, and use the same wording in the save guidance. No change to save behavior or amplifier commands. Validate with the focused save-dialog UI checks and Windows release build."
+  },
+  {
+    "version": "1.41.1",
+    "changedAt": "2026-10-16T12:47:53.745Z",
+    "summary": "Recover failed preset saves and match the overwrite dialog to iAMP Desktop.",
+    "details": "Replace the Windows system overwrite prompt with a themed Save/Cancel dialog, with Cancel as the default. Label the initial action Save. Discard terminal failed save sessions and perform one read-only reconnection to reload actual presets and restore controls; never replay a save. Keep the failure outcome beside Save and distinguish stale snapshots from unsupported firmware. Exclude human confirmation time from the device deadline and report dialog/source changes instead of silently abandoning a request. All 44 affected protocol cases and focused WPF save/cache/dialog actions, compact layouts and confirmation-deadline checks pass. Actual Windows stale-source rejection sends no save command and reconnects with Save enabled. Exact 0D British Lead Solo to19D save-as updates the name immediately. All80 original stored presets and original active19D/global state independently restored. The original reported pre-confirmation failure did not recur in direct UI checks; recovery is verified with an intentionally stale source. GIR&IR and Phase6 remain excluded; GitHub workflow stays disabled."
+  },
+  {
+    "version": "1.41.0",
+    "changedAt": "2026-10-16T12:12:58.816Z",
+    "summary": "Add general preset saving, renaming and save-as.",
+    "details": "Add general saving, renaming and Save As for all 80 bank-labelled destinations on V1.1.9, with 1–20 printable ASCII names. Match mobile name/destination behavior, preserve complete effect records and opaque bytes, recheck source/destination, require overwrite confirmation, save once and verify full recall/readback. Update names, dirty state and cached effects immediately; refresh the source’s stored effect index after Save As. All 44 affected protocol/save/recall/workflow cases, focused WPF/dialog/Mixer/cache checks and actual Windows rename/edited-chain Save As tests pass. A saved copy containing broader values, disabled OD and duplicate Dyna survived the user-operated amplifier power cycle with every byte intact. Stale source/destination checks send no save command. All 80 original presets and global settings independently restored after final testing. Unicode remains unverified. GitHub workflow stays disabled; GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.40.1",
+    "changedAt": "2026-10-16T19:29:52+11:00",
+    "summary": "Disable the GitHub Windows build workflow.",
+    "details": "Rename the Windows build workflow to windows-build.yml.disabled so GitHub Actions no longer recognizes its push, pull-request or manual triggers after the change is committed and pushed. Retain the definition for reference and keep the local Bash build script available. No application behavior or amplifier commands changed. The published desktop remains 1.40.0; 1.40.1 is the repository configuration version for the next build. Hosted GitHub workflow state was not changed directly."
+  },
+  {
     "version": "1.40.0",
     "changedAt": "2026-10-16T08:09:12.071Z",
     "summary": "Add the mobile Mixer with four live level and mute controls.",

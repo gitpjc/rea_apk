@@ -212,6 +212,7 @@ public sealed partial class MainWindow
             if(state is not null)displayedMixerState=state;
         }
         finally {mixerUpdating=false;}
+        UpdateSaveState();
     }
 
     private bool HasPendingMixerInputs()

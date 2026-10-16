@@ -1,5 +1,7 @@
 # Observed phone same-slot save and edited-value recall retention
 
+Current implementation: version1.41.0 adds verified general save/rename/save-as; see [Preset-Save-Rename.md](Preset-Save-Rename.md). The narrow historical observations and limitations below describe the original1.2.0 stage.
+
 14 October 2026. The user explicitly approved one unchanged phone-app save of **0D / wire index 4 / British Lead Solo** on firmware **V1.1.9**. The actual Save dialog displayed that exact name and destination; neither field was edited. Save was opened once and Done was confirmed once. No other slot, parameter, name or firmware was changed.
 
 A later explicitly approved experiment now verifies **Threshold 26 retained after phone save and 5 → 4 recall**, followed by an original-value Threshold-25 save and complete observed restoration. The original unchanged observation below remains a separate stage. No Windows save packet or power-cycle test was performed. Full evidence and the final-recall method deviation are recorded in [Preset-Persistence-Test.md](Preset-Persistence-Test.md).

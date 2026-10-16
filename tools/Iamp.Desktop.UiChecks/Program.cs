@@ -20,6 +20,7 @@ internal static class Program
     {
         var app=new Application();var window=new MainWindow();
         try {
+            if(args.Contains("--save")) {PresetSaveChecks.Run();EffectCacheStoreChecks.Run();return 0;}
             if(args.Contains("--mixer")) {MixerChecks.Run(args.Contains("--render")?System.IO.Path.GetFullPath("analysis/private/mixer-desktop-preview.png"):null);return 0;}
             if(args.Contains("--eq")) {EqModelChecks.Run();PresetJsonChecks.Run();DynaModelChecks.Run();DynaModelChecks.RunFilter();ReorderedParameterChecks.Run();return 0;}
             if(args.Contains("--amp")) {AmpModelChecks.Run();PresetJsonChecks.Run();ReorderedParameterChecks.Run();return 0;}

@@ -41,5 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="../fixtures/f15-mixer-observations.json" Link="fixtures/f15-mixer-observations.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-preset-save-observations.json" Link="fixtures/f15-preset-save-observations.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

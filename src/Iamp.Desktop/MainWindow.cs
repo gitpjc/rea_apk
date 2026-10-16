@@ -204,7 +204,7 @@ public sealed partial class MainWindow : Window
         };
         library.Children.Add(Text("Preset banks match iAMP: 0A–0D, 1A–1D … 19A–19D. A blue check on the left marks the active amplifier preset.",12,MutedBrush,new Thickness(0,10,0,0)));
         page.Children.Insert(2,library);
-        page.Children.Add(Text("V1.1.9: preset recall across 0A–19D. All built-in Dyna, Filter, EQ, Amp, OD, Delay, Reverb and Mod models support parameter editing and on/off. Saving remains restricted to 0D British Lead Solo with Threshold 25 or 26 and every other original value unchanged. Broader saving and preset renaming are not yet available.",13,MutedBrush,new Thickness(0,24,0,0)));
+        page.Children.Add(Text("V1.1.9: preset recall and saving across 0A–19D. All built-in Dyna, Filter, EQ, Amp, OD, Delay, Reverb and Mod models support parameter editing and on/off. Save or rename a supported preset, or save a copy to another slot, with explicit overwrite confirmation. Names currently support up to 20 printable ASCII characters.",13,MutedBrush,new Thickness(0,24,0,0)));
         thresholdSlider=CreateParameterSlider(thresholdInput,"Noise Killer threshold",0,100,ApplyThresholdAsync);
         toneSlider=CreateParameterSlider(toneInput,"OD Tone",0,100,ApplyToneAsync);
         InitializeAdditionalEditors();InitializeSnapshotArchive();InitializeDiagnostics();InitializeComparison();StyleInputs(); cancel.IsEnabled=false;
@@ -326,7 +326,7 @@ public sealed partial class MainWindow : Window
             if(input.Length!=12||!ulong.TryParse(input,NumberStyles.HexNumber,CultureInfo.InvariantCulture,out selected)) {status.Text="Enter a Bluetooth address with 12 hexadecimal digits.";return;}
         } else if(devices.SelectedItem is F15DiscoveredDevice device) selected=device.Address;
         else {status.Text="Select an amplifier or enter its Bluetooth address.";return;}
-        Begin("Connecting…"); snapshot.Text=names.Count>0?"Previous snapshot · Reading new data…":"Reading amplifier…";
+        presetSaveNotice=null;Begin("Connecting…"); snapshot.Text=names.Count>0?"Previous snapshot · Reading new data…":"Reading amplifier…";
         batterySummary.Text="Battery · Not read";batteryReadAt=null;
         try {
             await ReleaseConnectionAsync();

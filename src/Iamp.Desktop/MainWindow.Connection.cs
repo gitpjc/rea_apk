@@ -71,15 +71,15 @@ public sealed partial class MainWindow
     }
     private async Task PollCurrentPresetAsync()
     {
-        if(polling || mixerGestureActive || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
+        if(polling || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
         polling=true;var previous=currentSnapshot;
         using var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(20));pollCancellation=timeout;
         try {
             var current=await session.ReadCurrentPresetAsync(timeout.Token);
-            if(operation is not null || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+            if(operation is not null || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
             if(snapshotFirmware=="V1.1.9" && batteryReadAt is {} batteryTime && DateTimeOffset.UtcNow-batteryTime>=TimeSpan.FromSeconds(30)) {
                 var battery=await session.ReadBatteryAsync(timeout.Token);
-                if(operation is not null || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+                if(operation is not null || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
                 SetBatteryDisplay(battery);
             }
             if(current.RawStatePayloadHex==previous?.RawStatePayloadHex && current.RawDetailPayloadHex==previous.RawDetailPayloadHex){snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();return;}

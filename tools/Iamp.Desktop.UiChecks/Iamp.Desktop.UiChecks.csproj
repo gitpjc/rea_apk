@@ -5,6 +5,7 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../../src/Iamp.Desktop/Iamp.Desktop.csproj" /></ItemGroup>
+  <ItemGroup><None Include="../../tests/fixtures/f15-preset-save-observations.json" Link="fixtures/f15-preset-save-observations.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><None Include="../../tests/fixtures/f15-delay-model-observations.json" Link="fixtures/f15-delay-model-observations.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><None Include="../../tests/fixtures/f15-reverb-model-observations.json" Link="fixtures/f15-reverb-model-observations.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup>

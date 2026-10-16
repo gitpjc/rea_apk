@@ -1,3 +1,5 @@
+# Disabled at the user's request. GitHub Actions does not load .yml.disabled files.
+# Keep this definition for reference; do not re-enable without the user's request.
 name: Windows desktop build
 
 on:

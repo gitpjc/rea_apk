@@ -2,7 +2,7 @@
 
 Updated 16 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
 
-Current release: **1.40.0**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
+Current release: **1.41.1**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
@@ -118,11 +118,13 @@ The dialog captures the displayed snapshot when opened. Unapplied input values a
 
 ### Save changes to the amplifier
 
-The supported save workflow provides **Save current preset** in the current-preset panel. It enables only for a live edit to **0D / British Lead Solo** on firmware **V1.1.9**, with Noise Killer Threshold **25 or 26** and every other original value unchanged. Apply the supported Threshold change first; then choose Save and review the unchanged name, destination **0D / index 4** and Threshold in the overwrite confirmation. **No** is the default choice.
+Choose **Save / rename preset…** in the current-preset card. Apply or clear pending effect/Mixer inputs first. Edit the name and choose any bank-labelled destination from **0A–19D**. Keep the current destination to save or rename it; choose another to save a copy. Names currently support **1–20 printable ASCII characters**, including spaces and punctuation; Unicode is not supported yet.
 
-On confirmation, the app checks a fresh complete snapshot, sends the observed save once, recalls the same slot and verifies the full state/detail. The Windows test saved 26, saved original 25 back and independently verified every original byte after recall. Other saved values, renaming, other destinations and power-cycle persistence are not validated. All-slot recall is available with explicit handling of unsaved edits; saving remains restricted to this supported 0D profile.
+Choose **Save**, then review the source, fresh destination name, new name and overwrite warning in the matching dark confirmation dialog. Choose **Save** to confirm or **Cancel** to stop; Cancel is the default. On confirmation the app saves once, recalls the destination and verifies its complete content. The saved destination becomes active, its name/effect filter update immediately and the unsaved marker clears. Rename saves your live settings as well as the new name, matching mobile behavior. Save As preserves the source slot’s stored contents.
 
-An unconfirmed save may have changed storage. The app disables further writes and does not automatically repeat it. Reconnect or refresh the amplifier to inspect its actual state before another action. Local snapshot files cannot enable saving.
+Mobile and actual Windows same-slot rename and cross-slot edited-chain saves pass recall/reconnect checks; every original preset was restored after testing. The edited saved copy also survived a physical amplifier power cycle; all 80 original presets and global settings were subsequently restored. See [Preset-Save-Rename.md](Preset-Save-Rename.md).
+
+An unconfirmed save may have changed storage. The app discards the failed connection and attempts one read-only reconnection to reload actual settings and restore controls. It shows the outcome beside Save and never repeats the save automatically. If recovery fails or the amplifier reports a transfer-state change, use Connect / Refresh amplifier before another action. Time spent reviewing the confirmation does not consume the device deadline. Local snapshot files cannot enable saving.
 
 If an edit is interrupted or not confirmed, its outcome may be unknown. Click **Connect amplifier** (or **Refresh amplifier** when connected) before another edit and inspect the actual values; the app does not automatically replay an ambiguous write.
 

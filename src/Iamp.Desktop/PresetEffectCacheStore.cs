@@ -41,4 +41,11 @@ internal sealed class PresetEffectCacheStore(string directory)
         catch(Exception e) when(e is IOException or UnauthorizedAccessException){return false;}
         finally {if(temporary is not null)try{File.Delete(temporary);}catch(Exception e) when(e is IOException or UnauthorizedAccessException){} }
     }
+
+    internal bool Invalidate(ulong address,string firmware)
+    {
+        var key=Key(address,firmware);memory.Remove(key);
+        try {File.Delete(Path.Combine(directory,key+".json"));return true;}
+        catch(Exception e) when(e is IOException or UnauthorizedAccessException){return false;}
+    }
 }
