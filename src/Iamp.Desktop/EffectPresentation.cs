@@ -17,6 +17,9 @@ internal sealed record EffectPresentation(string Category, string Color, string 
             5 => ("Filter", "#F58CEB"), 6 => ("Mod", "#52B7FF"),
             7 => ("Delay", "#52DC38"), 8 => ("Reverb", "#879AE8"), _ => ("Effect", "#94A3B8")
         };
+        if(OdParameters.IsKnownLayout(block))
+            return new(category,color,block.Values[1]==3?"OD808":PresetEffectSearch.Catalog.Single(e=>e.TypeCode==1&&e.Model==block.Values[1]).Name,
+                OdParameters.Settings.Select(s=>new ReadOnlyParameter(s.Name,block.Values[s.ValueIndex],s.ValueIndex)).ToArray(),block);
         var eqParameters=EqParameters.For(block);
         if(eqParameters.Count>0)
             return new(category,color,block.Values[1]==0?"5 Bands EQ":"Custom EQ",eqParameters.Select(spec=> {
@@ -53,23 +56,18 @@ internal sealed record EffectPresentation(string Category, string Color, string 
         if (block.TypeCode == 4 && block.Values.Count == 6 && block.Values[1] == 2)
             return new(category,color,"Noise Killer",new[] {
                 new ReadOnlyParameter("Threshold",block.Values[2],2),new ReadOnlyParameter("Level",block.Values[3],3) },block);
-        if (block.TypeCode == 1 && block.Values.Count == 5 && block.Values[1] == 3)
-            return new(category,color,"OD808",new[] {
-                new ReadOnlyParameter("Gain",block.Values[2],2),new ReadOnlyParameter("Tone",block.Values[3],3),
-                new ReadOnlyParameter("Vol",block.Values[4],4) },block);
-        if (block.TypeCode == 2 && block.Values.Count == 9 && block.Values[1] == 31)
-            return new(category,color,"PLX 100",new[] {
-                new ReadOnlyParameter("Gain",block.Values[2],2),new ReadOnlyParameter("Bass",block.Values[3],3),
-                new ReadOnlyParameter("Mid",block.Values[4],4),new ReadOnlyParameter("Treble",block.Values[5],5),
-                new ReadOnlyParameter("Presence",block.Values[6],6),new ReadOnlyParameter("Master",block.Values[7],7) },block);
-        if (block.TypeCode == 7 && block.Values.Count == 8 && block.Values[1] == 1)
-            return new(category,color,"Analog Delay",new[] {
-                new ReadOnlyParameter("Level",block.Values[2],2),new ReadOnlyParameter("Feedback",block.Values[3],3),
-                new ReadOnlyParameter("Time (ms)",block.Values[4],4) },block);
-        if (block.TypeCode == 8 && block.Values.Count == 10 && block.Values[1] == 1)
-            return new(category,color,"Hall Reverb",new[] {
-                new ReadOnlyParameter("Pre Delay (ms)",block.Values[2],2),new ReadOnlyParameter("Level",block.Values[3],3),
-                new ReadOnlyParameter("Decay",block.Values[4],4),new ReadOnlyParameter("Tone",block.Values[5],5) },block);
+        if (AmpParameters.IsKnownLayout(block))
+            return new(category,color,PresetEffectSearch.Catalog.Single(e=>e.TypeCode==2&&e.Model==block.Values[1]).Name,
+                AmpParameters.Settings.Select(s=>new ReadOnlyParameter(s.Name,block.Values[s.ValueIndex],s.ValueIndex)).ToArray(),block);
+        if (DelayParameters.IsKnownLayout(block))
+            return new(category,color,block.Values[1]==1?"Analog Delay":PresetEffectSearch.Catalog.Single(e=>e.TypeCode==7&&e.Model==block.Values[1]).Name,
+                DelayParameters.For(block).Select(s=>new ReadOnlyParameter(s.Name,block.Values[s.ValueIndex],s.ValueIndex,s.Unit)).ToArray(),block);
+        if (ReverbParameters.IsKnownLayout(block))
+            return new(category,color,block.Values[1]==1?"Hall Reverb":PresetEffectSearch.Catalog.Single(e=>e.TypeCode==8&&e.Model==block.Values[1]).Name,
+                ReverbParameters.For(block).Select(s=>new ReadOnlyParameter(s.Name,block.Values[s.ValueIndex],s.ValueIndex,s.Unit)).ToArray(),block);
+        if (ModParameters.IsKnownLayout(block))
+            return new(category,color,PresetEffectSearch.Catalog.Single(e=>e.TypeCode==6&&e.Model==block.Values[1]).Name,
+                ModParameters.For(block).Select(s=>new ReadOnlyParameter(s.Name,s.DisplayValue(block.Values[s.ValueIndex]),s.ValueIndex,s.Unit)).ToArray(),block);
         var known=block.Values.Count>=2?PresetEffectSearch.Catalog.FirstOrDefault(e=>e.TypeCode==block.TypeCode && e.Model==block.Values[1]):null;
         return new(category,color,known?.Name??category,Array.Empty<ReadOnlyParameter>(),block);
     }

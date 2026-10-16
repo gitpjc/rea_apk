@@ -131,6 +131,7 @@ public sealed partial class MainWindow
             // No awaits after decoding: commit the validated local snapshot together on the UI thread.
             currentSnapshot=loaded;snapshotFirmware=decoded.Firmware;snapshotTime=decoded.CapturedAt;originalSnapshotDetail=loaded.RawDetailPayloadHex;
             snapshotAddress=null;editSnapshotValid=false;liveEditUnsaved=false;localSnapshotSource=true;lastReadSucceeded=false;
+            UpdateMixerState(resetPending:true);
             sourceBadge.Text="LOCAL SNAPSHOT";firmware.Text=decoded.Firmware;
             batterySummary.Text="Battery · Not included in local snapshots";batteryReadAt=null;
             presetCount.Text=libraryCount.Text=rhythmCount.Text="—";

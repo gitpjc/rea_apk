@@ -34,7 +34,7 @@ public class ReverbRangeTests
     public void RejectsUnknownProfilesAndSourceValues(ObservedParameter parameter)
     {
         foreach(var index in Enumerable.Range(0,10)) {
-            var values=Baseline.Values.ToArray();values[index]=index==2?(ushort)201:index is >=3 and <=5?(ushort)101:(ushort)(values[index]+1);
+            var values=Baseline.Values.ToArray();values[index]=index==1?ushort.MaxValue:index==2?(ushort)201:index is >=3 and <=5?(ushort)101:(ushort)(values[index]+1);
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,0));
         }
         var disabled=Baseline.Values.ToArray();disabled[0]=0;Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=disabled},parameter,0));

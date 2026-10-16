@@ -17,6 +17,10 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <None Include="../fixtures/f15-reverb-model-observations.json" Link="fixtures/f15-reverb-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-delay-model-observations.json" Link="fixtures/f15-delay-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-od-model-observations.json" Link="fixtures/f15-od-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../fixtures/f15-amp-model-observations.json" Link="fixtures/f15-amp-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-eq-model-observations.json" Link="fixtures/f15-eq-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-dyna-model-observations.json" Link="fixtures/f15-dyna-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-filter-model-observations.json" Link="fixtures/f15-filter-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
@@ -32,4 +36,10 @@
     <ProjectReference Include="..\..\src\Iamp.Protocol\Iamp.Protocol.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="../fixtures/f15-mod-model-observations.json" Link="fixtures/f15-mod-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../fixtures/f15-mixer-observations.json" Link="fixtures/f15-mixer-observations.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

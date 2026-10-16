@@ -197,7 +197,7 @@ public sealed partial class F15ReadSession : IAsyncDisposable
     private Task WriteObservedUpdateAsync(byte[] payload, CancellationToken ct)
         => commands.WriteAsync(payload, ct);
 
-    /// <summary>Restricted unsaved tone edit on the captured second-position 808 model, with full read-back.</summary>
+    /// <summary>Unsaved tone edit on a unique verified OD model, with complete checked readback. Retains the legacy API name.</summary>
     public Task<CurrentPresetSnapshot> Set808ToneAsync(CurrentPresetSnapshot expected, ushort tone, CancellationToken ct)
         => SetObservedParameterAsync(expected, ObservedParameter.OdTone, tone, ct);
 
@@ -281,6 +281,38 @@ public sealed partial class F15ReadSession : IAsyncDisposable
                 throw new IOException("Effect on/off readback differs from the verified change. Refresh before another action; nothing was saved.");
             return after;
         },ct);
+
+    /// <summary>Live mixer level edit with fresh-state validation and complete state/detail readback. Does not save.</summary>
+    public Task<CurrentPresetSnapshot> SetMixerLevelAsync(CurrentPresetSnapshot expected, MixerChannel channel, byte level, CancellationToken ct)
+        => RunWorkflowAsync(token => SetMixerCoreAsync(expected, state => MixerCommands.CreateLevel(state, channel, level), token), ct);
+
+    /// <summary>Live mixer mute edit; muted channels remain adjustable as in iAMP. Does not save.</summary>
+    public Task<CurrentPresetSnapshot> SetMixerMuteAsync(CurrentPresetSnapshot expected, MixerChannel channel, bool muted, CancellationToken ct)
+        => RunWorkflowAsync(token => SetMixerCoreAsync(expected, state => MixerCommands.CreateMute(state, channel, muted), token), ct);
+
+    private async Task<CurrentPresetSnapshot> SetMixerCoreAsync(CurrentPresetSnapshot expected, Func<byte[], byte[]> create, CancellationToken ct)
+    {
+        var identity = await ReadIdentityCoreAsync(ct);
+        if (identity.Firmware != "V1.1.9" || identity.PresetSlots != 80)
+            throw new NotSupportedException("Mixer editing is verified only on F15i V1.1.9 with 80 preset slots.");
+        var before = await ReadCurrentPresetCoreAsync(ct);
+        RequireUnchanged(before, expected);
+        if (before.WireIndex != expected.WireIndex)
+            throw new IOException("The current preset changed; read the amplifier before editing its mixer.");
+        var state = Convert.FromHexString(before.RawStatePayloadHex);
+        var request = create(state);
+        var expectedState = request.ToArray(); expectedState[0] = 0x12;
+        if (state.AsSpan().SequenceEqual(expectedState)) return before;
+
+        var response = await QueryAsync(request, payload => payload.Length >= 1 && payload[0] == 0x14, ct);
+        if (!response.AsSpan().SequenceEqual(new byte[] { 0x14, 0x01 }))
+            throw new IOException("Mixer response differs from the observed 14 01. Outcome is unknown; read the amplifier before another edit. Nothing was saved.");
+        var after = await ReadCurrentPresetCoreAsync(ct);
+        if (after.WireIndex != before.WireIndex || after.RawStatePayloadHex != Convert.ToHexString(expectedState) ||
+            after.RawDetailPayloadHex != before.RawDetailPayloadHex)
+            throw new IOException("Mixer readback differs from the requested change or preserved preset. Read the amplifier before another edit. Nothing was saved.");
+        return after;
+    }
 
     /// <summary>Recall one of the two captured slots. Preserves all other whole-state fields; does not save presets.</summary>
     public Task<CurrentPresetSnapshot> SelectObservedPresetAsync(CurrentPresetSnapshot expected, byte targetIndex, CancellationToken ct)

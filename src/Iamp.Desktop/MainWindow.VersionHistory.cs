@@ -13,20 +13,21 @@ public sealed partial class MainWindow
 
     private void ConfigureNavigation()
     {
-        foreach(var button in new[]{libraryNavigation,informationNavigation,historyNavigation}) {
+        foreach(var button in new[]{libraryNavigation,informationNavigation,mixerNavigation,historyNavigation}) {
             button.HorizontalContentAlignment=HorizontalAlignment.Left;
             button.HorizontalAlignment=HorizontalAlignment.Stretch;
             button.Padding=new Thickness(14,12,14,12);button.Margin=new Thickness(0,0,0,5);
         }
         libraryNavigation.Click+=(_,_)=>NavigateToHistory(false);
         informationNavigation.Click+=(_,_)=>NavigateToPage(informationScroll);
+        mixerNavigation.Click+=(_,_)=>NavigateToPage(mixerScroll);
         historyNavigation.Click+=(_,_)=>NavigateToHistory(true);
         SetNavigationColors(libraryScroll);
     }
 
     private void SetNavigationColors(ScrollViewer selected)
     {
-        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(historyNavigation,historyScroll)}) {
+        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(mixerNavigation,mixerScroll),(historyNavigation,historyScroll)}) {
             button.Background=page==selected?Brush("#203B5C"):System.Windows.Media.Brushes.Transparent;
             button.Foreground=page==selected?BlueBrush:MutedBrush;
         }
@@ -38,9 +39,10 @@ public sealed partial class MainWindow
     private void NavigateToPage(ScrollViewer selected)
     {
         if(selected==historyScroll && historyScroll.Content is null)BuildVersionHistory();
-        foreach(var page in new[]{libraryScroll,informationScroll,historyScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
+        foreach(var page in new[]{libraryScroll,informationScroll,mixerScroll,historyScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
+        if(selected==mixerScroll)UpdateMixerState();
         SetNavigationColors(selected);
-        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":"Amplifier Settings");
+        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":selected==mixerScroll?"Mixer":"Amplifier Settings");
     }
 
     private void BuildVersionHistory()

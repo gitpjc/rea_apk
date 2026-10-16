@@ -64,6 +64,7 @@ public sealed partial class MainWindow : Window
         Grid.SetColumn(scroll, 1); root.Children.Add(scroll);
         Grid.SetColumn(historyScroll,1);root.Children.Add(historyScroll);
         Grid.SetColumn(informationScroll,1);root.Children.Add(informationScroll);
+        Grid.SetColumn(mixerScroll,1);root.Children.Add(mixerScroll);BuildMixerPage();
         var page = new StackPanel { Margin = new Thickness(32, 20, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
@@ -203,9 +204,9 @@ public sealed partial class MainWindow : Window
         };
         library.Children.Add(Text("Preset banks match iAMP: 0A–0D, 1A–1D … 19A–19D. A blue check on the left marks the active amplifier preset.",12,MutedBrush,new Thickness(0,10,0,0)));
         page.Children.Insert(2,library);
-        page.Children.Add(Text("V1.1.9: preset recall across 0A–19D, eighteen bounded live parameter controls and supported effect on/off. Saving remains restricted to 0D British Lead Solo with Threshold 25 or 26 and every other original value unchanged. Other models, broader saving and renaming remain unavailable.",13,MutedBrush,new Thickness(0,24,0,0)));
+        page.Children.Add(Text("V1.1.9: preset recall across 0A–19D. All built-in Dyna, Filter, EQ, Amp, OD, Delay, Reverb and Mod models support parameter editing and on/off. Saving remains restricted to 0D British Lead Solo with Threshold 25 or 26 and every other original value unchanged. Broader saving and preset renaming are not yet available.",13,MutedBrush,new Thickness(0,24,0,0)));
         thresholdSlider=CreateParameterSlider(thresholdInput,"Noise Killer threshold",0,100,ApplyThresholdAsync);
-        toneSlider=CreateParameterSlider(toneInput,"OD808 Tone",0,100,ApplyToneAsync);
+        toneSlider=CreateParameterSlider(toneInput,"OD Tone",0,100,ApplyToneAsync);
         InitializeAdditionalEditors();InitializeSnapshotArchive();InitializeDiagnostics();InitializeComparison();StyleInputs(); cancel.IsEnabled=false;
         search.Padding=new Thickness(9,7,34,7);
         scan.Click += async (_,_) => await ScanAsync(); read.Click += async (_,_) => await ReadAsync(); cancel.Click += (_,_) => operation?.Cancel();
@@ -219,7 +220,7 @@ public sealed partial class MainWindow : Window
         address.TextChanged += (_,_) => InvalidateEditTarget();
         devices.SelectionChanged += (_,_) => InvalidateEditTarget();
         System.Windows.Automation.AutomationProperties.SetName(thresholdInput,"Pending Noise Killer threshold, 0 to 100");
-        System.Windows.Automation.AutomationProperties.SetName(toneInput,"Pending OD808 Tone, 0 to 100");
+        System.Windows.Automation.AutomationProperties.SetName(toneInput,"Pending OD Tone, 0 to 100");
         InitializeKeyboardNavigation();InitializeConnection();
         presets.DropDownOpened+=(_,_)=>cancelPresetDropdown=false;
         presets.DropDownClosed+=async(_,_)=> {
@@ -245,7 +246,7 @@ public sealed partial class MainWindow : Window
         side.Children.Add(Text("iAMP",36)); side.Children.Add(Text("DESKTOP COMPANION",10,MutedBrush,new Thickness(0,2,0,0)));
         side.Children.Add(Text($"Version {DesktopVersion.Current}",12,MutedBrush,new Thickness(0,7,0,26)));
         ConfigureNavigation();
-        side.Children.Add(libraryNavigation);side.Children.Add(informationNavigation);side.Children.Add(historyNavigation);
+        side.Children.Add(libraryNavigation);side.Children.Add(informationNavigation);side.Children.Add(mixerNavigation);side.Children.Add(historyNavigation);
         side.Children.Add(Text("F15i Li",17,Brush("#D5DCE8"),new Thickness(14,30,0,5)));
         side.Children.Add(Text("Bluetooth connection",12,MutedBrush,new Thickness(14,0,0,0)));
         side.Children.Add(Text("Snapshot viewer",12,MutedBrush,new Thickness(14,22,0,0)));
@@ -352,6 +353,7 @@ public sealed partial class MainWindow : Window
             var preservePending=snapshotAddress==selected && snapshotFirmware==identity.Firmware &&
                 currentSnapshot?.RawStatePayloadHex==current.RawStatePayloadHex && currentSnapshot.RawDetailPayloadHex==current.RawDetailPayloadHex;
             currentSnapshot=current;snapshotAddress=selected;snapshotFirmware=identity.Firmware;editSnapshotValid=true;
+            UpdateMixerState(resetPending:!preservePending);
             localSnapshotSource=false;sourceBadge.Text="EXPERIMENTAL EDIT";
             if(preservePending)SetEffectsPreservingPending(current.Blocks);else SetEffects(current.Blocks);
             snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();Filter();status.Text="Connected · Presets loaded";lastReadSucceeded=true;refreshTimer.Start();
@@ -505,6 +507,7 @@ public sealed partial class MainWindow : Window
         UpdateSnapshotArchiveState();
         UpdateSaveState();
         UpdateEffectPowerState();
+        UpdateMixerState();
     }
     private PresetEffectBlock? Editable808Tone()
     {
@@ -524,7 +527,7 @@ public sealed partial class MainWindow : Window
         toneInput.IsEnabled=supported && operation is null;
         applyTone.IsEnabled=supported && operation is null && TryPendingTone(out var value) && value!=block!.Values[3];
         toneMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
-            !supported?"Read a supported V1.1.9 OD808 preset before applying Tone.":!TryPendingTone(out value)?"Enter a whole number from 0 to 100.":
+            !supported?"Read a supported V1.1.9 OD preset before applying Tone.":!TryPendingTone(out value)?"Enter a whole number from 0 to 100.":
             value==block!.Values[3]?$"Matches confirmed snapshot · Gain stays at {block.Values[2]} and Vol at {block.Values[4]}.":
             $"Pending {value} · Confirmed {block.Values[3]} · Release the slider or choose Apply. Nothing is saved.";
     }
@@ -533,7 +536,7 @@ public sealed partial class MainWindow : Window
         lastMutationSucceeded=false;
         if(preview || operation is not null || !editSnapshotValid || snapshotFirmware!="V1.1.9" || snapshotAddress is not {} target ||
             currentSnapshot is not {} expected || Editable808Tone() is not {} block || !TryPendingTone(out var value) || value==block.Values[3])return;
-        Begin("Checking amplifier before applying OD808 Tone…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
+        Begin("Checking amplifier before applying OD Tone…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
             confirmed=await UseSessionAsync(target,session=>session.SetParameterAtPositionAsync(expected,block.Position,ObservedParameter.OdTone,value,operation!.Token));
@@ -541,8 +544,8 @@ public sealed partial class MainWindow : Window
             currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffectsPreservingPending(confirmed.Blocks);
             var toneEffect=effectButtons.FirstOrDefault(item=>item.Effect.Source.Position==block.Position && item.Effect.Source.TypeCode==1).Effect;
             if(toneEffect is not null)SelectEffect(toneEffect);
-            snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · OD808 Tone {value}":
-                $"OD808 Tone {value} verified · Matches original snapshot · Nothing saved";
+            snapshot.Text=SnapshotLabel();status.Text=liveEditUnsaved?$"Live unsaved edit verified · OD Tone {value}":
+                $"OD Tone {value} verified · Matches original snapshot · Nothing saved";
             lastMutationSucceeded=true;
         }
         catch(OperationCanceledException) {editSnapshotValid=false;status.Text="Tone edit interrupted · Outcome may be unknown. Read the amplifier before another edit.";snapshot.Text=SnapshotLabel();}

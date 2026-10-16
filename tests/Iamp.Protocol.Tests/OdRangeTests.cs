@@ -25,7 +25,7 @@ public class OdRangeTests
     [InlineData(ObservedParameter.OdGain)][InlineData(ObservedParameter.OdTone)][InlineData(ObservedParameter.OdVolume)]
     public void RejectsUnknownProfilesAndSourceValues(ObservedParameter parameter)
     {
-        foreach(var values in new[]{new ushort[]{0,3,39,100,100},new ushort[]{2,3,39,100,100},new ushort[]{1,4,39,100,100},new ushort[]{1,3,101,100,100},new ushort[]{1,3,39,101,100},new ushort[]{1,3,39,100,101},new ushort[]{1,3}})
+        foreach(var values in new[]{new ushort[]{0,3,39,100,100},new ushort[]{2,3,39,100,100},new ushort[]{1,65535,39,100,100},new ushort[]{1,3,101,100,100},new ushort[]{1,3,39,101,100},new ushort[]{1,3,39,100,101},new ushort[]{1,3}})
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,0));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Position=0},parameter,0));
         Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {TypeCode=2},parameter,0));

@@ -2,15 +2,15 @@ using System.Buffers.Binary;
 
 namespace Iamp.Protocol;
 
-/// <summary>F15i effect on/off state for the thirteen observed model layouts only.</summary>
+/// <summary>F15i effect on/off state for verified model layouts only.</summary>
 public static class EffectBypassCommand
 {
     public static bool TryGetEnabled(PresetEffectBlock block, out bool enabled)
     {
         enabled=false;
         if(block.Position is <1 or >20 || block.Values.Count<2 || block.Values[0]>1)return false;
-        var known=(block.TypeCode,block.Values.Count,block.Values[1]) is
-            (4,6,0) or (4,6,1) or (4,6,2) or (4,6,3) or (5,6,0) or (5,6,1) or (5,6,2) or (1,5,3) or (2,9,31) or (7,8,1) or (8,10,1) or (9,17,0) or (9,17,1);
+        var known=AmpParameters.IsKnownLayout(block) || OdParameters.IsKnownLayout(block) || DelayParameters.IsKnownLayout(block) || ReverbParameters.IsKnownLayout(block) || ModParameters.IsKnownLayout(block) || (block.TypeCode,block.Values.Count,block.Values[1]) is
+            (4,6,0) or (4,6,1) or (4,6,2) or (4,6,3) or (5,6,0) or (5,6,1) or (5,6,2) or (9,17,0) or (9,17,1);
         if(!known || (block.TypeCode==2 && block.Values[8]>1))return false;
         enabled=block.Values[0]==1;return true;
     }

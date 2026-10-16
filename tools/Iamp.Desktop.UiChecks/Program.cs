@@ -20,7 +20,13 @@ internal static class Program
     {
         var app=new Application();var window=new MainWindow();
         try {
+            if(args.Contains("--mixer")) {MixerChecks.Run(args.Contains("--render")?System.IO.Path.GetFullPath("analysis/private/mixer-desktop-preview.png"):null);return 0;}
             if(args.Contains("--eq")) {EqModelChecks.Run();PresetJsonChecks.Run();DynaModelChecks.Run();DynaModelChecks.RunFilter();ReorderedParameterChecks.Run();return 0;}
+            if(args.Contains("--amp")) {AmpModelChecks.Run();PresetJsonChecks.Run();ReorderedParameterChecks.Run();return 0;}
+            if(args.Contains("--od")) {OdModelChecks.Run();PresetJsonChecks.Run();ReorderedParameterChecks.Run();return 0;}
+            if(args.Contains("--delay")) {DelayModelChecks.Run();PresetJsonChecks.Run();ReorderedParameterChecks.Run();return 0;}
+            if(args.Contains("--mod")) {ModModelChecks.Run();PresetJsonChecks.Run();ReorderedParameterChecks.Run();return 0;}
+            if(args.Contains("--reverb")) {ReverbModelChecks.Run();PresetJsonChecks.Run();ReorderedParameterChecks.Run();return 0;}
             var blocks=new PresetEffectBlock[]{
                 new(1,4,new ushort[]{1,2,25,50,0,0}),new(2,1,new ushort[]{1,3,39,100,100}),
                 new(3,2,new ushort[]{1,31,100,35,43,40,45,75,1}),new(4,7,new ushort[]{1,1,17,25,500,0,0,0}),
@@ -98,6 +104,7 @@ internal static class Program
             DynaModelChecks.Run();
             DynaModelChecks.RunFilter();
             EqModelChecks.Run();
+            AmpModelChecks.Run();
             EffectChainUiChecks.Run();
             EffectCacheStoreChecks.Run();
             PresetJsonChecks.Run();

@@ -1,0 +1,2852 @@
+{
+  "source": "Authorized per-model iAMP scrolled screenshots, visible endpoint units and independent successful full-block parameter/power frames. Feedback captured with Level muted.",
+  "firmware": "V1.1.9",
+  "completeCatalog": true,
+  "models": [
+    {
+      "model": 0,
+      "name": "Digital",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time"
+      ],
+      "units": [
+        null,
+        null,
+        "ms"
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        }
+      ],
+      "defaults": [
+        1,
+        0,
+        30,
+        20,
+        500,
+        0,
+        0,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            0,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA55140025040710000000000000000028000000000000001358",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            0,
+            30,
+            20,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA55140025040710010000001E001400F4010000000000003A2A",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            0,
+            1,
+            20,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100000000001400F4010000000000001DEC",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            0,
+            97,
+            20,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100000064001400F401000000000000A3D8",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            0,
+            0,
+            2,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100000000000000F401000000000000244F",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            0,
+            0,
+            75,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100000000006400F401000000000000C26D",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            0,
+            0,
+            0,
+            150,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000000000000002800000000000000BB7C",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            0,
+            0,
+            0,
+            1906,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100000000000000C409000000000000F13E",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "53efeb1a612f34db6b75702829370cbc609dcaa6fbedde89aa27df9520302cde"
+        },
+        {
+          "part": "bottom",
+          "sha256": "6582c6173f5d84af52a44665fafe3fa53a237ab97dffbeb6860cfc35c1262db7"
+        }
+      ],
+      "captureSha256": "e3e925d7071f22945b1ca54aaf950be375b1b3f6532221b455248f0f718a99a4",
+      "rangeEvidenceSha256": "9db0e34f918e20d2e0190df131c2e3d92db0bd7ae667fdb14ac01f4b6ea3c210",
+      "phoneRestorationReportSha256": "5e8d579407e9bf12d514b1c89283e32d3b3f0305f6eb8bb388a805f14f4744e8",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "b826bcf01f1c2b4b4b78c36a4717efb465341bd542f1aec4ff3a894662ea5233",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 1,
+      "name": "Analog Delay",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time"
+      ],
+      "units": [
+        null,
+        null,
+        "ms"
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        }
+      ],
+      "defaults": [
+        1,
+        1,
+        17,
+        25,
+        500,
+        0,
+        0,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            1,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA55140025040710000001000000000028000000000000006839",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            1,
+            17,
+            25,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100010011001900F401000000000000DA93",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            1,
+            4,
+            25,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100010000001900F401000000000000EEB6",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            1,
+            78,
+            25,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100010064001900F4010000000000005082",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            1,
+            0,
+            12,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100010000000000F4010000000000005F2E",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            1,
+            0,
+            93,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100010000006400F401000000000000B90C",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            1,
+            0,
+            0,
+            130,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000100000000002800000000000000C01D",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            1,
+            0,
+            0,
+            2436,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100010000000000C4090000000000008A5F",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "fa6575aea5124867315996af94ac8882639a8ca72ceaf00d9db868a3cd3a5f12"
+        },
+        {
+          "part": "bottom",
+          "sha256": "fa6575aea5124867315996af94ac8882639a8ca72ceaf00d9db868a3cd3a5f12"
+        }
+      ],
+      "captureSha256": "097d130276f4c25497e05900e17dea5fe2bbd7604b2a487a5cb563e1fd31797b",
+      "rangeEvidenceSha256": "113039e2c431de5e08f7b3359229fa45adb9be3a59c8589e9bd5ad67063de472",
+      "phoneRestorationReportSha256": "55c9c0b0aa995e60001eb201ab31569ba594f20de8930d9ba7ecb8ed94a140fc",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "e182223af0d7ccd39f9247fbdf1b659dd536041e9d8e0a22cf226a0f82a10f8c",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 2,
+      "name": "Real Echo",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time"
+      ],
+      "units": [
+        null,
+        null,
+        "ms"
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        }
+      ],
+      "defaults": [
+        1,
+        2,
+        70,
+        50,
+        500,
+        0,
+        0,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            2,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071000000200000000002800000000000000E59A",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            2,
+            70,
+            50,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100020046003200F40100000000000077E2",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            2,
+            17,
+            50,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100020000003200F401000000000000A19C",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            2,
+            98,
+            50,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100020064003200F4010000000000001FA8",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            2,
+            0,
+            4,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100020000000000F401000000000000D28D",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            2,
+            0,
+            97,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100020000006400F40100000000000034AF",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            2,
+            0,
+            0,
+            103,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA55140025040710010002000000000028000000000000004DBE",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            2,
+            0,
+            0,
+            2416,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100020000000000C40900000000000007FC",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "f8eb70b6172cc243cec2abe6f7b3fb854c473fd8eae499481cc569fab5edbef1"
+        },
+        {
+          "part": "bottom",
+          "sha256": "f8eb70b6172cc243cec2abe6f7b3fb854c473fd8eae499481cc569fab5edbef1"
+        }
+      ],
+      "captureSha256": "6fd31e2acd384e0dd369725d137613571003a584b1d3f3c83dda3e0d068d6f4f",
+      "rangeEvidenceSha256": "095dc1c04917dad7cd77e144e3ecef63cb944aafe61e110f97ba50dbc8c83d44",
+      "phoneRestorationReportSha256": "c7b75c825dbd588683a28c79bf48c4fe8fee6ce33772e5cd716325dab6b57ce9",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "482447b6f606472e20b9fe70a39ac12e4c4ec46c5ae6cad1a51f55a099db4698",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 3,
+      "name": "Tape",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time"
+      ],
+      "units": [
+        null,
+        null,
+        "ms"
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        }
+      ],
+      "defaults": [
+        1,
+        3,
+        60,
+        40,
+        350,
+        0,
+        0,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            3,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA55140025040710000003000000000028000000000000009EFB",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            3,
+            60,
+            40,
+            350,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA55140025040710010003003C0028005E0100000000000082B3",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            3,
+            4,
+            40,
+            350,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000300000028005E01000000000000CD3F",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            3,
+            95,
+            40,
+            350,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000300640028005E01000000000000730B",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            3,
+            0,
+            16,
+            350,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000300000000005E01000000000000BE79",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            3,
+            0,
+            83,
+            350,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000300000064005E01000000000000585B",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            3,
+            0,
+            0,
+            448,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100030000000000280000000000000036DF",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            3,
+            0,
+            0,
+            2091,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100030000000000C4090000000000007C9D",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "e4bfe1e9bee812a5fe48940bc41e22a45f301212ae411412b61a257ed3832f1b"
+        },
+        {
+          "part": "bottom",
+          "sha256": "7d0ff112fddca39e5b97cac694feed9efce8d5fb4b493bfa04b0b6586bbbf656"
+        }
+      ],
+      "captureSha256": "f6f6084881f8157ac1f49604d167f3c6bd23b0decf24f3a88602ce1681bd84a3",
+      "rangeEvidenceSha256": "43ec72f9227d901701604b001e09a52f8dbf73184b4d12a573985c3075673cbc",
+      "phoneRestorationReportSha256": "aac1cfa6b646a308d52b793b05aac4914f46097e341613fe62a26cfdb7c1ae64",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "2f52aa6075ffd39d50947244a0a552ca3c4bf8a76123b264bdc62666959d5273",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 4,
+      "name": "Mod",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time"
+      ],
+      "units": [
+        null,
+        null,
+        "ms"
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        }
+      ],
+      "defaults": [
+        1,
+        4,
+        20,
+        40,
+        500,
+        0,
+        0,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            4,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071000000400000000002800000000000000EEFD",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            4,
+            20,
+            40,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100040014002800F4010000000000009028",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            4,
+            5,
+            40,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100040000002800F401000000000000AAAC",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            4,
+            98,
+            40,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100040064002800F4010000000000001498",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            4,
+            0,
+            1,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100040000000000F401000000000000D9EA",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            4,
+            0,
+            77,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100040000006400F4010000000000003FC8",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            4,
+            0,
+            0,
+            83,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100040000000000280000000000000046D9",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            4,
+            0,
+            0,
+            2469,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100040000000000C4090000000000000C9B",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "5f3887eb0daa0160d92f3d56fa216d558380761ecd048f9efca3369eb2f990be"
+        },
+        {
+          "part": "bottom",
+          "sha256": "488d431018d06c1a379ee87323bdd5455a46ff21284ae9e832e0e60d91a4e0a0"
+        }
+      ],
+      "captureSha256": "e64aa38a49b8cc476c0557f857f226b4ec66aa9845095c0f0085b9002c39d447",
+      "rangeEvidenceSha256": "24028fa3d7b47818da09b5d7dfa74fde592d878e5f843c9c9edadc4c118507dc",
+      "phoneRestorationReportSha256": "4be17d50afc8af67b717257ccb4c4e81719d46f090d349b477024dca59653c1f",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "6b3ef8c32abbbd5bf75507824c8b98c6bdab191b7d450036825424ea344e524d",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 5,
+      "name": "Reverse",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time"
+      ],
+      "units": [
+        null,
+        null,
+        "ms"
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        }
+      ],
+      "defaults": [
+        1,
+        5,
+        20,
+        25,
+        650,
+        0,
+        0,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            5,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071000000500000000002800000000000000959C",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            5,
+            20,
+            25,
+            650,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000500140019008A02000000000000DF08",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            5,
+            3,
+            25,
+            650,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000500000019008A02000000000000E58C",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            5,
+            96,
+            25,
+            650,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000500640019008A020000000000005BB8",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            5,
+            0,
+            17,
+            650,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000500000000008A020000000000005414",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            5,
+            0,
+            98,
+            650,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000500000064008A02000000000000B236",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            5,
+            0,
+            0,
+            541,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA55140025040710010005000000000028000000000000003DB8",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            5,
+            0,
+            0,
+            2071,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100050000000000C40900000000000077FA",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "f050b4ef2377a8a08ff428de8bdad891e7c658b12909fddef1ec4b7be300c92b"
+        },
+        {
+          "part": "bottom",
+          "sha256": "6245a3563c9b3f9783cf5585391b255b28041c077b20ffa8d0dd0736b7f57659"
+        }
+      ],
+      "captureSha256": "9022e21f4c6d4b24ead09608c093988d211fba3cb182e7795198ee119c770b7a",
+      "rangeEvidenceSha256": "5f3cdfcbbf6144c1caa2d774eafc35224bbad3407dca697667b8945a9c59b4ad",
+      "phoneRestorationReportSha256": "05a887a4dd6ccfdea050d720d687c7eb062e62e38b2a91f13e94ee258ae6a016",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "7c832b5d30dcd62e0f393ce09a0fa1002bc0f35de12243c0060571caa63c2063",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 6,
+      "name": "PingPong",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time"
+      ],
+      "units": [
+        null,
+        null,
+        "ms"
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        }
+      ],
+      "defaults": [
+        1,
+        6,
+        35,
+        30,
+        500,
+        0,
+        0,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            6,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071000000600000000002800000000000000183F",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            6,
+            35,
+            30,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100060023001E00F401000000000000E975",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            6,
+            5,
+            30,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100060000001E00F401000000000000824A",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            6,
+            79,
+            30,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100060064001E00F4010000000000003C7E",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            6,
+            0,
+            25,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100060000000000F4010000000000002F28",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            6,
+            0,
+            76,
+            500,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100060000006400F401000000000000C90A",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            6,
+            0,
+            0,
+            97,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071001000600000000002800000000000000B01B",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            6,
+            0,
+            0,
+            2462,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA551400250407100100060000000000C409000000000000FA59",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "026350d3dabf062865438964572354ed011e4a7dd3cd9b06ddf0631525d07b7f"
+        },
+        {
+          "part": "bottom",
+          "sha256": "026350d3dabf062865438964572354ed011e4a7dd3cd9b06ddf0631525d07b7f"
+        }
+      ],
+      "captureSha256": "4d33ea7e5283e05d544850b62369f3cbf5f061d9c122fdae6640ec6f58c9181a",
+      "rangeEvidenceSha256": "6c5f087fff7299518dd4aa6396885cabec4c0ebc64aca5eea60016e3370e75c0",
+      "phoneRestorationReportSha256": "78bca56071461381ad46741c494b4d53e083a710c2f0334e0fbce69a4d8db20d",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "b2291d5737a7dec187ce5d9b5489d8468a35a99229afd37b062b81a54f6fa406",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 7,
+      "name": "Crystal",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time",
+        "Depth",
+        "Rate"
+      ],
+      "units": [
+        null,
+        null,
+        "ms",
+        null,
+        null
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        },
+        {
+          "name": "Depth",
+          "index": 5,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Rate",
+          "index": 6,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        }
+      ],
+      "defaults": [
+        1,
+        7,
+        40,
+        30,
+        650,
+        35,
+        50,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            7,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071000000700000000002800000000000000635E",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            7,
+            40,
+            30,
+            650,
+            35,
+            50,
+            0
+          ],
+          "frameHex": "AA551400250407100100070028001E008A0223003200000040D5",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            7,
+            4,
+            30,
+            650,
+            35,
+            50,
+            0
+          ],
+          "frameHex": "AA551400250407100100070000001E008A0223003200000035DD",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            7,
+            99,
+            30,
+            650,
+            35,
+            50,
+            0
+          ],
+          "frameHex": "AA551400250407100100070064001E008A022300320000008BE9",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            7,
+            0,
+            2,
+            650,
+            35,
+            50,
+            0
+          ],
+          "frameHex": "AA5514002504071001000700000000008A0223003200000098BF",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            7,
+            0,
+            79,
+            650,
+            35,
+            50,
+            0
+          ],
+          "frameHex": "AA5514002504071001000700000064008A022300320000007E9D",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            7,
+            0,
+            0,
+            521,
+            35,
+            50,
+            0
+          ],
+          "frameHex": "AA5514002504071001000700000000002800230032000000F113",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            7,
+            0,
+            0,
+            1952,
+            35,
+            50,
+            0
+          ],
+          "frameHex": "AA551400250407100100070000000000C409230032000000BB51",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 0,
+          "before": [
+            1,
+            7,
+            0,
+            0,
+            40,
+            25,
+            50,
+            0
+          ],
+          "frameHex": "AA55140025040710010007000000000028000000320000000AFB",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 100,
+          "before": [
+            1,
+            7,
+            0,
+            0,
+            40,
+            96,
+            50,
+            0
+          ],
+          "frameHex": "AA55140025040710010007000000000028006400320000005342",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 0,
+          "before": [
+            1,
+            7,
+            0,
+            0,
+            40,
+            0,
+            22,
+            0
+          ],
+          "frameHex": "AA5514002504071001000700000000002800000000000000CB7A",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 100,
+          "before": [
+            1,
+            7,
+            0,
+            0,
+            40,
+            0,
+            78,
+            0
+          ],
+          "frameHex": "AA55140025040710010007000000000028000000640000005859",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "30a7a0eea83054988d8537548d0ceb35793e17bf1350e85acacdaae9e7d6ef1b"
+        },
+        {
+          "part": "bottom",
+          "sha256": "30a7a0eea83054988d8537548d0ceb35793e17bf1350e85acacdaae9e7d6ef1b"
+        }
+      ],
+      "captureSha256": "577c1ca85b8824b32e754f4ea87348eaf45c8a94068ecf919a0248607ec95842",
+      "rangeEvidenceSha256": "13060cb367c479136d4a9a32c9070f1c8529625482abdbb78510aa2eb161071a",
+      "phoneRestorationReportSha256": "b598a8a04433f38971c52e9cf99d1642c38ed7b41c6e6e91ef91aba473b5e4a1",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "44a935cd53e3cb71339d73da4c46f6d120c54bce9474fb331c1e89a5cd2a6e46",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 8,
+      "name": "Rainbow",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time",
+        "Depth",
+        "Rate"
+      ],
+      "units": [
+        null,
+        null,
+        "ms",
+        null,
+        null
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        },
+        {
+          "name": "Depth",
+          "index": 5,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Rate",
+          "index": 6,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        }
+      ],
+      "defaults": [
+        1,
+        8,
+        35,
+        40,
+        600,
+        50,
+        50,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            8,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071000000800000000002800000000000000F833",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            8,
+            35,
+            40,
+            600,
+            50,
+            50,
+            0
+          ],
+          "frameHex": "AA5514002504071001000800230028005802320032000000FDCC",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            8,
+            21,
+            40,
+            600,
+            50,
+            50,
+            0
+          ],
+          "frameHex": "AA551400250407100100080000002800580232003200000096F3",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            8,
+            78,
+            40,
+            600,
+            50,
+            50,
+            0
+          ],
+          "frameHex": "AA551400250407100100080064002800580232003200000028C7",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            8,
+            0,
+            3,
+            600,
+            50,
+            50,
+            0
+          ],
+          "frameHex": "AA5514002504071001000800000000005802320032000000E5B5",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            8,
+            0,
+            79,
+            600,
+            50,
+            50,
+            0
+          ],
+          "frameHex": "AA55140025040710010008000000640058023200320000000397",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            8,
+            0,
+            0,
+            44,
+            50,
+            50,
+            0
+          ],
+          "frameHex": "AA5514002504071001000800000000002800320032000000355A",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            8,
+            0,
+            0,
+            2495,
+            50,
+            50,
+            0
+          ],
+          "frameHex": "AA551400250407100100080000000000C4093200320000007F18",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 0,
+          "before": [
+            1,
+            8,
+            0,
+            0,
+            40,
+            4,
+            50,
+            0
+          ],
+          "frameHex": "AA55140025040710010008000000000028000000320000009196",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 100,
+          "before": [
+            1,
+            8,
+            0,
+            0,
+            40,
+            76,
+            50,
+            0
+          ],
+          "frameHex": "AA5514002504071001000800000000002800640032000000C82F",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 0,
+          "before": [
+            1,
+            8,
+            0,
+            0,
+            40,
+            0,
+            2,
+            0
+          ],
+          "frameHex": "AA55140025040710010008000000000028000000000000005017",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 100,
+          "before": [
+            1,
+            8,
+            0,
+            0,
+            40,
+            0,
+            96,
+            0
+          ],
+          "frameHex": "AA5514002504071001000800000000002800000064000000C334",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "daec88893c5ef7adf4be9cfaf87f381b6c9d6e86d3a10aa95739e1497d88ea3d"
+        },
+        {
+          "part": "bottom",
+          "sha256": "daec88893c5ef7adf4be9cfaf87f381b6c9d6e86d3a10aa95739e1497d88ea3d"
+        }
+      ],
+      "captureSha256": "839ab85b18e6a4a1fe6f22739a7f3b6b067df599d8e43a5589a083ed0fbd564b",
+      "rangeEvidenceSha256": "3623dab43af6f2a3ec10e3c231f861f54f57abb3c501ed2299ca354600d03e6f",
+      "phoneRestorationReportSha256": "5531fb9d8effa8ef621b1a88ed5aa258c9b12c1cba8b1aef89da7a1654d5ba0d",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "9b586a24d04afd42fba3ea7427d18718c3df187716ab3974e1d42a4042ae8657",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 9,
+      "name": "Vintage Delay",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time",
+        "Bit",
+        "S-Rate"
+      ],
+      "units": [
+        null,
+        null,
+        "ms",
+        null,
+        null
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        },
+        {
+          "name": "Bit",
+          "index": 5,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "S-Rate",
+          "index": 6,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        }
+      ],
+      "defaults": [
+        1,
+        9,
+        30,
+        50,
+        550,
+        35,
+        40,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            9,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA55140025040710000009000000000028000000000000008352",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            9,
+            30,
+            50,
+            550,
+            35,
+            40,
+            0
+          ],
+          "frameHex": "AA55140025040710010009001E0032002602230028000000C836",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            9,
+            3,
+            50,
+            550,
+            35,
+            40,
+            0
+          ],
+          "frameHex": "AA5514002504071001000900000032002602230028000000EFF0",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            9,
+            99,
+            50,
+            550,
+            35,
+            40,
+            0
+          ],
+          "frameHex": "AA551400250407100100090064003200260223002800000051C4",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            9,
+            0,
+            2,
+            550,
+            35,
+            40,
+            0
+          ],
+          "frameHex": "AA55140025040710010009000000000026022300280000009CE1",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            9,
+            0,
+            97,
+            550,
+            35,
+            40,
+            0
+          ],
+          "frameHex": "AA55140025040710010009000000640026022300280000007AC3",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            9,
+            0,
+            0,
+            130,
+            35,
+            40,
+            0
+          ],
+          "frameHex": "AA55140025040710010009000000000028002300280000006213",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            9,
+            0,
+            0,
+            2489,
+            35,
+            40,
+            0
+          ],
+          "frameHex": "AA551400250407100100090000000000C4092300280000002851",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 0,
+          "before": [
+            1,
+            9,
+            0,
+            0,
+            40,
+            21,
+            40,
+            0
+          ],
+          "frameHex": "AA551400250407100100090000000000280000002800000099FB",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 100,
+          "before": [
+            1,
+            9,
+            0,
+            0,
+            40,
+            99,
+            40,
+            0
+          ],
+          "frameHex": "AA5514002504071001000900000000002800640028000000C042",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 0,
+          "before": [
+            1,
+            9,
+            0,
+            0,
+            40,
+            0,
+            25,
+            0
+          ],
+          "frameHex": "AA55140025040710010009000000000028000000000000002B76",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 100,
+          "before": [
+            1,
+            9,
+            0,
+            0,
+            40,
+            0,
+            96,
+            0
+          ],
+          "frameHex": "AA5514002504071001000900000000002800000064000000B855",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "fd76796ee98b1573f94751b53922733df1ac2ca88e480460ec4808673d66ca6e"
+        },
+        {
+          "part": "bottom",
+          "sha256": "ace4045a0048aa1e40d9a1261090a78cec806b21ec458610ec26a840b4de5183"
+        }
+      ],
+      "captureSha256": "3faa22f9bdc785476117f3eb22020592b633f12870c963d96a48c832822af7ce",
+      "rangeEvidenceSha256": "085e82ce3b163b1671955b1e29f72214c45ce69ed87e82741eb325118e0f7bca",
+      "phoneRestorationReportSha256": "504ed0bbbea5668278496233d59df938b251834ed84031e6d43d2b4b51b3eca5",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "97179a287e7674e9f9039b0512202bac757091abc20e85aa5e240ef4971a9498",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 10,
+      "name": "Galaxy Delay",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time",
+        "Mod Rate",
+        "Mod Depth"
+      ],
+      "units": [
+        null,
+        null,
+        "ms",
+        null,
+        null
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        },
+        {
+          "name": "Mod Rate",
+          "index": 5,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Mod Depth",
+          "index": 6,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        }
+      ],
+      "defaults": [
+        1,
+        10,
+        50,
+        35,
+        350,
+        10,
+        30,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            10,
+            0,
+            0,
+            40,
+            0,
+            0,
+            0
+          ],
+          "frameHex": "AA5514002504071000000A000000000028000000000000000EF1",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            10,
+            50,
+            35,
+            350,
+            10,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A00320023005E010A001E000000C654",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            10,
+            3,
+            35,
+            350,
+            10,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A00000023005E010A001E000000994E",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            10,
+            75,
+            35,
+            350,
+            10,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A00640023005E010A001E000000277A",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            10,
+            0,
+            22,
+            350,
+            10,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A00000000005E010A001E000000118C",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            10,
+            0,
+            97,
+            350,
+            10,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A00000064005E010A001E000000F7AE",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            10,
+            0,
+            0,
+            189,
+            10,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A000000000028000A001E000000992A",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            10,
+            0,
+            0,
+            2449,
+            10,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A0000000000C4090A001E000000D368",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 0,
+          "before": [
+            1,
+            10,
+            0,
+            0,
+            40,
+            4,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A0000000000280000001E0000001F28",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 100,
+          "before": [
+            1,
+            10,
+            0,
+            0,
+            40,
+            77,
+            30,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A0000000000280064001E0000004691",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 0,
+          "before": [
+            1,
+            10,
+            0,
+            0,
+            40,
+            0,
+            21,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A00000000002800000000000000A6D5",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 100,
+          "before": [
+            1,
+            10,
+            0,
+            0,
+            40,
+            0,
+            97,
+            0
+          ],
+          "frameHex": "AA5514002504071001000A0000000000280000006400000035F6",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "76735a8c7fee5c3a51a25114c5f5903084ddfa295ab4259d80f41fae7b7b9292"
+        },
+        {
+          "part": "bottom",
+          "sha256": "76735a8c7fee5c3a51a25114c5f5903084ddfa295ab4259d80f41fae7b7b9292"
+        }
+      ],
+      "captureSha256": "712bc61268b3ee989678a0f95bd84d4def54f119666bad6a39ffcbe173ed8503",
+      "rangeEvidenceSha256": "6308fe4145a13d292cae53365e0c7e24213dfa1d23641ba83ee9cd66a8ae43a7",
+      "phoneRestorationReportSha256": "45c02dec4c447ef36aa482191f80c7350b3320e5ff773a9c4ce281739abd7d31",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "ae5f6e0bbaa6c24af9a7dc78de7d3938dca0f51de75c087f64a8478fb5bedbc5",
+      "completeOriginalRestored": true
+    },
+    {
+      "model": 11,
+      "name": "Sweep",
+      "settings": [
+        "Level",
+        "Feedback",
+        "Time",
+        "Rate",
+        "Range"
+      ],
+      "units": [
+        null,
+        null,
+        "ms",
+        null,
+        null
+      ],
+      "parameterDefinitions": [
+        {
+          "name": "Level",
+          "index": 2,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Feedback",
+          "index": 3,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Time",
+          "index": 4,
+          "minimum": 40,
+          "maximum": 2500,
+          "unit": "ms"
+        },
+        {
+          "name": "Rate",
+          "index": 5,
+          "minimum": 0,
+          "maximum": 100,
+          "unit": null
+        },
+        {
+          "name": "Range",
+          "index": 6,
+          "minimum": 300,
+          "maximum": 4000,
+          "unit": null
+        }
+      ],
+      "defaults": [
+        1,
+        11,
+        50,
+        50,
+        350,
+        10,
+        3000,
+        0
+      ],
+      "cases": [
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 0,
+          "before": [
+            1,
+            11,
+            0,
+            0,
+            40,
+            0,
+            300,
+            0
+          ],
+          "frameHex": "AA5514002504071000000B0000000000280000002C0100003ADC",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "power",
+          "index": 0,
+          "target": 1,
+          "before": [
+            0,
+            11,
+            50,
+            50,
+            350,
+            10,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B00320032005E010A00B80B00007BF8",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 0,
+          "before": [
+            1,
+            11,
+            1,
+            50,
+            350,
+            10,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B00000032005E010A00B80B000024E2",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 2,
+          "target": 100,
+          "before": [
+            1,
+            11,
+            77,
+            50,
+            350,
+            10,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B00640032005E010A00B80B00009AD6",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 0,
+          "before": [
+            1,
+            11,
+            0,
+            2,
+            350,
+            10,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B00000000005E010A00B80B000057F3",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 3,
+          "target": 100,
+          "before": [
+            1,
+            11,
+            0,
+            77,
+            350,
+            10,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B00000064005E010A00B80B0000B1D1",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 40,
+          "before": [
+            1,
+            11,
+            0,
+            0,
+            97,
+            10,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B000000000028000A00B80B0000DF55",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 4,
+          "target": 2500,
+          "before": [
+            1,
+            11,
+            0,
+            0,
+            2449,
+            10,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B0000000000C4090A00B80B00009517",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 0,
+          "before": [
+            1,
+            11,
+            0,
+            0,
+            40,
+            5,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B000000000028000000B80B00005957",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 5,
+          "target": 100,
+          "before": [
+            1,
+            11,
+            0,
+            0,
+            40,
+            95,
+            3000,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B000000000028006400B80B000000EE",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 300,
+          "before": [
+            1,
+            11,
+            0,
+            0,
+            40,
+            0,
+            435,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B0000000000280000002C01000092F8",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        },
+        {
+          "kind": "parameter",
+          "index": 6,
+          "target": 4000,
+          "before": [
+            1,
+            11,
+            0,
+            0,
+            40,
+            0,
+            3356,
+            0
+          ],
+          "frameHex": "AA5514002504071001000B000000000028000000A00F00001BF3",
+          "beforeEvidence": "preceding independently captured successful full-block write"
+        }
+      ],
+      "captures": [
+        {
+          "part": "top",
+          "sha256": "9a7b60def89a7ea79c53d485a374eb845601296a01c4bf7cd74910e97244e244"
+        },
+        {
+          "part": "bottom",
+          "sha256": "66ddaa430f0580d3970e86142254fe6d96dd612c3f84e161791cfacf9fdca05c"
+        }
+      ],
+      "captureSha256": "915ba3b0b768d03091b72aa01ccdb8fb2d07f55f9589184ab4c3e06f5aadc9db",
+      "rangeEvidenceSha256": "02c652e3b5e7cb0ceeb7d7a6692adf86087ee62a1d73fd12b4ab9d6f66fff667",
+      "phoneRestorationReportSha256": "c14486b2edb1cc2a7b0e42efb0b9962836e1684623a8424896d0ebed7de11010",
+      "baselineSha256": "b9c4f7cad959edb63159099e68639a4e45b2ea49d962a7fa95b423feeeeeb4d2",
+      "windowsReportSha256": "28567efc3fd9ab67341c7cea0627b9b82faa326bca0aef9c47b6d35a741cbe88",
+      "completeOriginalRestored": true
+    }
+  ],
+  "windowsBatchReportSha256": "ef63c61b86f1303f215cca4de4e15e6a3c153d45ccdf6c0aeca0f79fe1886693",
+  "completeOriginalRestored": true,
+  "protocolTests": 289
+}

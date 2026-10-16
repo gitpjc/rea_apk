@@ -56,8 +56,8 @@ public sealed partial class MainWindow
     }
 
     private string ConfirmedParameterText(PresetEffectBlock block,int index)
-        =>EqParameters.Find(block,index)?.Format(block.Values[index])??block.Values[index].ToString(CultureInfo.InvariantCulture);
+        =>EqParameters.Find(block,index)?.Format(block.Values[index])??ModParameters.Find(block,index)?.Format(block.Values[index])??block.Values[index].ToString(CultureInfo.InvariantCulture);
 
     private static bool TryParseParameterText(PresetEffectBlock block,int index,string text,out ushort value)
-        =>EqParameters.Find(block,index) is {} eq?eq.TryParse(text,out value):ushort.TryParse(text,NumberStyles.None,CultureInfo.InvariantCulture,out value);
+        =>EqParameters.Find(block,index) is {} eq?eq.TryParse(text,out value):ModParameters.Find(block,index) is {} mod?mod.TryParse(text,out value):ushort.TryParse(text,NumberStyles.None,CultureInfo.InvariantCulture,out value);
 }

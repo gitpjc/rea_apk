@@ -40,7 +40,7 @@ internal static class PresetJsonChecks
         Require(root.GetProperty("schemaVersion").GetString()=="3.0.0","Preset JSON schema version missing.");
         Require(effects.Select(e=>e.GetProperty("position").GetInt32()).SequenceEqual(new[]{1,2,3,4,5,6}),"Effect order changed or duplicates were removed.");
         Require(!effects[0].GetProperty("enabled").GetBoolean(),"Disabled effects lost their status.");
-        var order=new[]{new[]{"Threshold","Level"},new[]{"Gain","Tone","Vol"},new[]{"Gain","Bass","Mid","Treble","Presence","Master"},new[]{"Level","Feedback","Time"},new[]{"Pre Delay","Level","Decay","Tone"},Array.Empty<string>()};
+        var order=new[]{new[]{"Threshold","Level"},new[]{"Gain","Tone","Vol"},new[]{"Gain","Bass","Mid","Treble","Presence","Master"},new[]{"Level","Feedback","Time"},new[]{"Pre Delay","Level","Decay","Tone"},new[]{"Gain","Bass","Mid","Treble","Presence","Master"}};
         for(var i=0;i<effects.Length;i++) {
             Require(effects[i].GetProperty("settings").EnumerateArray().Select(s=>s.GetProperty("name").GetString()).SequenceEqual(order[i]),"JSON settings are not in UI/mobile order.");
             var values=effects[i].GetProperty("settings").EnumerateArray().Select(s=>s.GetProperty("value").GetDecimal());
@@ -84,7 +84,11 @@ internal static class PresetJsonChecks
             Require(unknownEqDoc.RootElement.GetProperty("effects").EnumerateArray().All(e=>e.GetProperty("settings").GetArrayLength()==0),"Unsupported EQ models or block shapes must not expose guessed settings.");
             CheckRemovedProperties(unknownEqDoc.RootElement);
         }
-        Require(effects[5].GetProperty("enabled").ValueKind==JsonValueKind.Null && effects[5].GetProperty("settings").GetArrayLength()==0,"Unknown model settings were guessed.");
+        Require(effects[5].GetProperty("enabled").GetBoolean() && effects[5].GetProperty("settings").GetArrayLength()==6,"Verified Amp model settings missing.");
+        using(var unknownOd=JsonDocument.Parse(Json(preset with {Blocks=new[]{new PresetEffectBlock(1,1,new ushort[]{1,ushort.MaxValue,39,100,100})}})))
+            Require(unknownOd.RootElement.GetProperty("effects")[0].GetProperty("enabled").ValueKind==JsonValueKind.Null && unknownOd.RootElement.GetProperty("effects")[0].GetProperty("settings").GetArrayLength()==0,"Unknown OD models must not expose guessed settings or enabled state.");
+        using(var unknownAmp=JsonDocument.Parse(Json(preset with {Blocks=new[]{new PresetEffectBlock(1,2,new ushort[]{1,ushort.MaxValue,75,50,50,50,50,55,1})}})))
+            Require(unknownAmp.RootElement.GetProperty("effects")[0].GetProperty("enabled").ValueKind==JsonValueKind.Null && unknownAmp.RootElement.GetProperty("effects")[0].GetProperty("settings").GetArrayLength()==0,"Unknown Amp model settings were guessed.");
         Require(effects[3].GetProperty("settings")[2].GetProperty("unit").GetString()=="ms","Time unit missing.");
         Require(effects[4].GetProperty("settings")[0].GetProperty("name").GetString()=="Pre Delay" && effects[4].GetProperty("settings")[0].GetProperty("unit").GetString()=="ms","Pre Delay repeats or loses its unit.");
         var reordered=blocks.Reverse().Select((b,i)=>b with {Position=(byte)(i+1)}).ToArray();using(var reverse=JsonDocument.Parse(Json(preset with {Blocks=reordered})))Require(reverse.RootElement.GetProperty("effects")[0].GetProperty("name").GetString()==effects[5].GetProperty("name").GetString(),"JSON did not follow reordered chain.");
@@ -102,7 +106,7 @@ internal static class PresetJsonChecks
             Require(Field<Button>(window,"showPresetJson").IsEnabled,"Snapshot JSON button unavailable.");
             using(var busy=new CancellationTokenSource()){Set(window,"operation",busy);Invoke(window,"UpdateSnapshotArchiveState");Require(!Field<Button>(window,"showPresetJson").IsEnabled,"JSON button enabled during mutation.");Set(window,"operation",null);}
             ((Button)Field<WrapPanel>(window,"effectChain").Children[1]).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            Require(Field<StackPanel>(window,"effectDetails").Children.OfType<Slider>().Select(s=>AutomationProperties.GetName(s).Split(',')[0]).SequenceEqual(new[]{"Pending Gain","Pending OD808 Tone","Pending Vol"}),"OD808 desktop order does not match JSON/mobile.");
+            Require(Field<StackPanel>(window,"effectDetails").Children.OfType<Slider>().Select(s=>AutomationProperties.GetName(s).Split(',')[0]).SequenceEqual(new[]{"Pending Gain","Pending OD Tone","Pending Vol"}),"OD desktop order does not match JSON/mobile.");
             var dialog=(Window)Invoke(window,"CreatePresetJsonDialog",json,"0D British Lead Solo.json",false)!;
             try {
                 var list=Named<ListView>(dialog,"PresetJsonLines");Require(string.Join("\n",list.Items.Cast<string>())==json,"Dialog does not show complete exact JSON.");

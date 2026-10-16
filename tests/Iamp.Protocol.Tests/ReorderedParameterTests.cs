@@ -20,8 +20,18 @@ public sealed class ReorderedParameterTests
             11=>new(11,5,new ushort[]{1,2,12,65,60,0}),
             12=>new(12,9,new ushort[]{1,0,32,32,32,32,32,50,0,0,0,0,0,0,0,0,0}),
             13=>new(13,9,new ushort[]{1,1,32,100,8,32,500,8,32,1600,8,32,6000,8,0,0,50}),
-            _=>throw new InvalidOperationException()
+            _=>CapturedProfile(parameter)
         };
+
+    private static PresetEffectBlock CapturedProfile(ObservedParameter parameter)
+    {
+        var reverb=ReverbParameters.Get(parameter) is not null;var mod=ModParameters.Get(parameter) is not null;
+        using var captures=System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory,"fixtures",mod?"f15-mod-model-observations.json":reverb?"f15-reverb-model-observations.json":"f15-delay-model-observations.json")));
+        var profile=ObservedParameterCommands.Definition(parameter).Position;
+        return captures.RootElement.GetProperty("models").EnumerateArray()
+            .Select(model=>new PresetEffectBlock(1,mod?(byte)6:reverb?(byte)8:(byte)7,model.GetProperty("defaults").EnumerateArray().Select(v=>v.GetUInt16()).ToArray()))
+            .First(block=>ObservedParameterCommands.Profile(block)==profile);
+    }
 
     public static IEnumerable<object[]> Parameters()=>Enum.GetValues<ObservedParameter>().Select(parameter=>new object[]{parameter});
 

@@ -66,20 +66,20 @@ public sealed partial class MainWindow
     private bool HasPendingInputs()
     {
         CaptureParameterInputs();
-        return pendingParameterValues.Any(p=>currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==p.Key.Position) is {} block &&
+        return HasPendingMixerInputs() || pendingParameterValues.Any(p=>currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==p.Key.Position) is {} block &&
             (p.Key.Index>=block.Values.Count || !TryParseParameterText(block,p.Key.Index,p.Value,out var value) || value!=block.Values[p.Key.Index]));
     }
     private async Task PollCurrentPresetAsync()
     {
-        if(polling || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
+        if(polling || mixerGestureActive || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
         polling=true;var previous=currentSnapshot;
         using var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(20));pollCancellation=timeout;
         try {
             var current=await session.ReadCurrentPresetAsync(timeout.Token);
-            if(operation is not null || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+            if(operation is not null || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
             if(snapshotFirmware=="V1.1.9" && batteryReadAt is {} batteryTime && DateTimeOffset.UtcNow-batteryTime>=TimeSpan.FromSeconds(30)) {
                 var battery=await session.ReadBatteryAsync(timeout.Token);
-                if(operation is not null || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+                if(operation is not null || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
                 SetBatteryDisplay(battery);
             }
             if(current.RawStatePayloadHex==previous?.RawStatePayloadHex && current.RawDetailPayloadHex==previous.RawDetailPayloadHex){snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();return;}
@@ -99,7 +99,7 @@ public sealed partial class MainWindow
                 status.Text="Amplifier connection lost · Reconnect to refresh the preset.";
             }
         }
-        finally {if(pollCancellation==timeout)pollCancellation=null;polling=false;UpdateEffectPowerState();}
+        finally {if(pollCancellation==timeout)pollCancellation=null;polling=false;UpdateEffectPowerState();UpdateMixerState();}
     }
     private void SetBatteryDisplay(Iamp.Protocol.BatteryStatus battery)
     {

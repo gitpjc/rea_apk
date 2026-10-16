@@ -23,8 +23,10 @@ public sealed partial class MainWindow
         internal TextBlock Message {get;}=Text("",12,MutedBrush);
         internal Func<F15ReadSession,CurrentPresetSnapshot,ushort,CancellationToken,Task<CurrentPresetSnapshot>> Write {get;}=write;
         internal EqParameterSpec? EqSpec {get;init;}
-        internal bool TryValue(out ushort value)=>EqSpec is {} eq?eq.TryParse(Input.Text,out value):ushort.TryParse(Input.Text,NumberStyles.None,CultureInfo.InvariantCulture,out value) && value>=Minimum && value<=Maximum;
-        internal string Format(ushort value)=>EqSpec?.Format(value)??value.ToString(CultureInfo.InvariantCulture);
+        internal ModParameterSpec? ModSpec {get;init;}
+        internal string? Unit {get;init;}
+        internal bool TryValue(out ushort value)=>EqSpec is {} eq?eq.TryParse(Input.Text,out value):ModSpec is {} mod?mod.TryParse(Input.Text,out value):ushort.TryParse(Input.Text,NumberStyles.None,CultureInfo.InvariantCulture,out value) && value>=Minimum && value<=Maximum;
+        internal string Format(ushort value)=>EqSpec?.Format(value)??ModSpec?.Format(value)??value.ToString(CultureInfo.InvariantCulture);
     }
     private readonly PendingParameterEditor noiseLevelEditor=new("Level",1,3,0,100,(s,e,v,ct)=>s.SetNoiseKillerLevelAsync(e,v,ct));
     private readonly PendingParameterEditor gainEditor=new("Gain",2,2,0,100,(s,e,v,ct)=>s.Set808GainAsync(e,v,ct));
@@ -37,8 +39,8 @@ public sealed partial class MainWindow
     private readonly PendingParameterEditor presenceEditor=new("Presence",3,6,0,100,(s,e,v,ct)=>s.SetAmpPresenceAsync(e,v,ct));
     private readonly PendingParameterEditor delayLevelEditor=new("Level",4,2,0,100,(s,e,v,ct)=>s.SetDelayLevelAsync(e,v,ct));
     private readonly PendingParameterEditor delayFeedbackEditor=new("Feedback",4,3,0,100,(s,e,v,ct)=>s.SetDelayFeedbackAsync(e,v,ct));
-    private readonly PendingParameterEditor delayTimeEditor=new("Time (ms)",4,4,40,2500,(s,e,v,ct)=>s.SetDelayTimeAsync(e,v,ct));
-    private readonly PendingParameterEditor reverbPreDelayEditor=new("Pre Delay (ms)",5,2,0,200,(s,e,v,ct)=>s.SetReverbPreDelayAsync(e,v,ct));
+    private readonly PendingParameterEditor delayTimeEditor=new("Time",4,4,40,2500,(s,e,v,ct)=>s.SetDelayTimeAsync(e,v,ct)){Unit="ms"};
+    private readonly PendingParameterEditor reverbPreDelayEditor=new("Pre Delay",5,2,0,200,(s,e,v,ct)=>s.SetReverbPreDelayAsync(e,v,ct)){Unit="ms"};
     private readonly PendingParameterEditor reverbLevelEditor=new("Level",5,3,0,100,(s,e,v,ct)=>s.SetReverbLevelAsync(e,v,ct));
     private readonly PendingParameterEditor reverbDecayEditor=new("Decay",5,4,0,100,(s,e,v,ct)=>s.SetReverbDecayAsync(e,v,ct));
     private readonly PendingParameterEditor reverbToneEditor=new("Tone",5,5,0,100,(s,e,v,ct)=>s.SetReverbToneAsync(e,v,ct));
@@ -52,7 +54,7 @@ public sealed partial class MainWindow
         var definition=ObservedParameterCommands.Definition(parameter);
         return new(label,definition.Position,definition.ValueIndex,definition.Minimum,definition.Maximum,
             (s,e,v,ct)=>s.SetParameterAtPositionAsync(e,ObservedParameterCommands.FindSupportedBlock(e.Blocks,parameter)?.Position??
-                throw new NotSupportedException("A unique model target is required."),parameter,v,ct)){EqSpec=EqParameters.Get(parameter)};
+                throw new NotSupportedException("A unique model target is required."),parameter,v,ct)){EqSpec=EqParameters.Get(parameter),ModSpec=ModParameters.Get(parameter),Unit=DelayParameters.Get(parameter)?.Unit??ReverbParameters.Get(parameter)?.Unit??ModParameters.Get(parameter)?.Unit};
     }
     private readonly PendingParameterEditor[] filterEditors=[
         CreateObservedEditor("Attack",ObservedParameter.TouchWahAttack),CreateObservedEditor("Peak",ObservedParameter.TouchWahPeak),
@@ -61,7 +63,10 @@ public sealed partial class MainWindow
         CreateObservedEditor("Range",ObservedParameter.AutoWahRange),CreateObservedEditor("Level",ObservedParameter.AutoWahLevel),
         CreateObservedEditor("Rate",ObservedParameter.QFilterRate),CreateObservedEditor("Q",ObservedParameter.QFilterQ),CreateObservedEditor("Mix",ObservedParameter.QFilterMix)];
     private readonly PendingParameterEditor[] eqEditors=EqParameters.All.Select(s=>CreateObservedEditor(s.Name,s.Parameter)).ToArray();
-    private IEnumerable<PendingParameterEditor> AdditionalEditors=>new[]{noiseLevelEditor,gainEditor,volumeEditor,ampGainEditor,bassEditor,midEditor,trebleEditor,presenceEditor,ampMasterEditor,delayLevelEditor,delayFeedbackEditor,delayTimeEditor,reverbPreDelayEditor,reverbLevelEditor,reverbDecayEditor,reverbToneEditor}.Concat(dynaEditors).Concat(filterEditors).Concat(eqEditors);
+    private readonly PendingParameterEditor[] delayEditors=DelayParameters.All.Where(s=>s.Profile!=4).Select(s=>CreateObservedEditor(s.Name,s.Parameter)).ToArray();
+    private readonly PendingParameterEditor[] reverbEditors=ReverbParameters.All.Where(s=>s.Profile!=5).Select(s=>CreateObservedEditor(s.Name,s.Parameter)).ToArray();
+    private readonly PendingParameterEditor[] modEditors=ModParameters.All.Select(s=>CreateObservedEditor(s.Name,s.Parameter)).ToArray();
+    private IEnumerable<PendingParameterEditor> AdditionalEditors=>new[]{noiseLevelEditor,gainEditor,volumeEditor,ampGainEditor,bassEditor,midEditor,trebleEditor,presenceEditor,ampMasterEditor,delayLevelEditor,delayFeedbackEditor,delayTimeEditor,reverbPreDelayEditor,reverbLevelEditor,reverbDecayEditor,reverbToneEditor}.Concat(dynaEditors).Concat(filterEditors).Concat(eqEditors).Concat(delayEditors).Concat(reverbEditors).Concat(modEditors);
 
     private void InitializeAdditionalEditors()
     {
@@ -73,10 +78,16 @@ public sealed partial class MainWindow
                 editor.Slider.ToolTip=$"{eq.Name} · {eq.Format(eq.WireValues[0])}–{eq.Format(eq.WireValues[^1])} {eq.Unit} · Release to apply. Arrow keys select the next supported step.";
                 System.Windows.Automation.AutomationProperties.SetName(editor.Slider,$"Pending {eq.Name}, {eq.Format(eq.WireValues[0])} to {eq.Format(eq.WireValues[^1])} {eq.Unit}");
             }
+            else if(editor.ModSpec is {} mod) {
+                editor.Input.MaxLength=Math.Max(mod.Format(mod.Minimum).Length,mod.Format(mod.Maximum).Length)+2;
+                editor.Slider=CreateParameterSlider(editor.Input,editor.Label,editor.Minimum,editor.Maximum,()=>ApplyAdditionalParameterAsync(editor),mod.Format,text=>mod.TryParse(text,out var wire)?wire:null);
+                editor.Slider.ToolTip=$"{mod.Name} · {mod.Format(mod.Minimum)}–{mod.Format(mod.Maximum)} {mod.Unit} · Release to apply.";
+                System.Windows.Automation.AutomationProperties.SetName(editor.Slider,$"Pending {mod.Name}, {mod.Format(mod.Minimum)} to {mod.Format(mod.Maximum)} {mod.Unit}");
+            }
             else editor.Slider=CreateParameterSlider(editor.Input,editor.Label,editor.Minimum,editor.Maximum,()=>ApplyAdditionalParameterAsync(editor));
             editor.Input.TextChanged+=(_,_)=>UpdateAdditionalEditorStates();
             editor.Apply.Click+=async(_,_)=>await ApplyAdditionalParameterAsync(editor);
-            System.Windows.Automation.AutomationProperties.SetName(editor.Input,$"Pending {editor.Label}, {editor.Minimum} to {editor.Maximum}");
+            System.Windows.Automation.AutomationProperties.SetName(editor.Input,editor.ModSpec is {} modSpec?$"Pending {editor.Label}, {modSpec.Format(editor.Minimum)} to {modSpec.Format(editor.Maximum)} {modSpec.Unit}":$"Pending {editor.Label}, {editor.Minimum} to {editor.Maximum}");
         }
     }
     private void DetachAdditionalEditorControls()
@@ -92,7 +103,7 @@ public sealed partial class MainWindow
     {
         Panel host=effectDetails;string? previousGroup=null;
         foreach(var setting in EffectPresentation.From(displayed).Parameters) {
-            if(displayed.TypeCode==1 && displayed.Values.Count==5 && displayed.Values[1]==3 && setting.ValueIndex==3) {
+            if(OdParameters.IsKnownLayout(displayed) && setting.ValueIndex==3) {
                 toneInput.Text=PendingParameterText(displayed,3);
                 AddMobileParameterSlider(toneSlider,toneInput,"Tone",EffectPresentation.From(displayed).Color);
                 var toneActions=new WrapPanel();toneActions.Children.Add(toneInput);applyTone.Margin=new Thickness(12,0,0,0);toneActions.Children.Add(applyTone);
@@ -112,7 +123,7 @@ public sealed partial class MainWindow
                 }
                 previousGroup=group;
             }
-            AddMobileParameterSlider(editor.Slider,editor.Input,editor.Label,EffectPresentation.From(displayed).Color,host,editor.EqSpec?.Unit);
+            AddMobileParameterSlider(editor.Slider,editor.Input,editor.Label,EffectPresentation.From(displayed).Color,host,editor.EqSpec?.Unit??editor.Unit);
             var actions=new WrapPanel();actions.Children.Add(editor.Input);editor.Apply.Margin=new Thickness(12,0,0,0);actions.Children.Add(editor.Apply);
             host.Children.Add(actions);editor.Message.Margin=new Thickness(0,7,0,0);host.Children.Add(editor.Message);
         }
@@ -125,7 +136,7 @@ public sealed partial class MainWindow
         6=>FindEditableParameterBlock(ObservedParameter.RedCompSensitivity),7=>FindEditableParameterBlock(ObservedParameter.YellowCompAttack),
         8=>FindEditableParameterBlock(ObservedParameter.IntelReducerThreshold),9=>FindEditableParameterBlock(ObservedParameter.TouchWahAttack),
         10=>FindEditableParameterBlock(ObservedParameter.AutoWahRate),11=>FindEditableParameterBlock(ObservedParameter.QFilterRate),
-        12=>FindEditableParameterBlock(ObservedParameter.Eq100Hz),13=>FindEditableParameterBlock(ObservedParameter.CustomEqBand1Gain),_=>null
+        12=>FindEditableParameterBlock(ObservedParameter.Eq100Hz),13=>FindEditableParameterBlock(ObservedParameter.CustomEqBand1Gain),_=>DelayParameters.All.FirstOrDefault(s=>s.Profile==editor.ProfilePosition) is {} delay?FindEditableParameterBlock(delay.Parameter):ReverbParameters.All.FirstOrDefault(s=>s.Profile==editor.ProfilePosition) is {} reverb?FindEditableParameterBlock(reverb.Parameter):ModParameters.All.FirstOrDefault(s=>s.Profile==editor.ProfilePosition) is {} mod?FindEditableParameterBlock(mod.Parameter):null
     };
     private PresetEffectBlock? EditableAmpBass()
     {
@@ -149,7 +160,7 @@ public sealed partial class MainWindow
             editor.Input.IsEnabled=supported && operation is null;
             editor.Apply.IsEnabled=supported && operation is null && editor.TryValue(out var value) && value!=block!.Values[editor.ParameterIndex];
             editor.Message.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
-                !supported?"Read a supported V1.1.9 configuration before applying.":!editor.TryValue(out value)?editor.EqSpec is {} eq?$"Enter a supported step from {eq.Format(eq.WireValues[0])} to {eq.Format(eq.WireValues[^1])} {eq.Unit}.":$"Enter a whole number from {editor.Minimum} to {editor.Maximum}.":
+                !supported?"Read a supported V1.1.9 configuration before applying.":!editor.TryValue(out value)?editor.EqSpec is {} eq?$"Enter a supported step from {eq.Format(eq.WireValues[0])} to {eq.Format(eq.WireValues[^1])} {eq.Unit}.":editor.ModSpec is {} mod?$"Enter a supported value from {mod.Format(mod.Minimum)} to {mod.Format(mod.Maximum)} {mod.Unit}.":$"Enter a whole number from {editor.Minimum} to {editor.Maximum}.":
                 value==block!.Values[editor.ParameterIndex]?"Matches confirmed snapshot · Other values are preserved.":
                 $"Pending {editor.Format(value)} · Confirmed {editor.Format(block.Values[editor.ParameterIndex])} · Release the slider or choose Apply. Nothing is saved.";
         }

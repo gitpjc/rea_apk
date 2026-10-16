@@ -29,7 +29,7 @@ public class ReverbParameterTests
     {
         var target=ObservedParameterCommands.Definition(parameter).Minimum;
         foreach(var index in new[]{0,1,6,7,8,9}) {
-            var values=Baseline.Values.ToArray();values[index]++;
+            var values=Baseline.Values.ToArray();values[index]=index==1?ushort.MaxValue:(ushort)(values[index]+1);
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,target));
         }
         foreach(var other in new[]{ObservedParameter.ReverbPreDelay,ObservedParameter.ReverbLevel,ObservedParameter.ReverbDecay,ObservedParameter.ReverbTone}) {

@@ -25,7 +25,7 @@ public class DelayParameterTests
     {
         var target=ObservedParameterCommands.Definition(parameter).Minimum;
         foreach(var index in new[]{0,1,5,6,7}) {
-            var values=Baseline.Values.ToArray();values[index]++;
+            var values=Baseline.Values.ToArray();values[index]=index==1?ushort.MaxValue:(ushort)(values[index]+1);
             Assert.Throws<NotSupportedException>(()=>ObservedParameterCommands.Create(Baseline with {Values=values},parameter,target));
         }
         foreach(var index in new[]{2,3,4}) {

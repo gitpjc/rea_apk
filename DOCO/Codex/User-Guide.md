@@ -1,16 +1,16 @@
 # Running the current iAMP Desktop build
 
-Updated 15 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
+Updated 16 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
 
-Current release: **1.30.0**. There are now 59 supported parameter controls across thirteen verified V1.1.9 model profiles, including all Dyna, Filter and preset EQ models. Most use **0–100**; EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Hall Pre Delay uses **0–200 ms** and Analog Delay Time uses **40–2500 ms**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
+Current release: **1.40.0**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
 The compact preset dropdown sits beside Presets, with search on the right and responsive wrapping. Entries show amplifier labels **0A–19D** and actual names. A blue left-side checkmark (**#4385ff**) identifies the active preset inside the open list; the selected-item field has no check. Search shows a right-side × only when it contains text. See [Preset-Browser.md](Preset-Browser.md).
 
-Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable effect** / **Disable effect** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History and Ctrl+F focuses search.
+Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable effect** / **Disable effect** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History, Ctrl+3 opens Mixer and Ctrl+F focuses search.
 
-**Compare snapshot** and **Export diagnostics** remain available. Supported editing ranges are unchanged. Developers can run `bash scripts/build-desktop.sh` without a connected phone or amplifier; see [Build-and-Release.md](Build-and-Release.md).
+**Compare snapshot** and **Export diagnostics** remain available. Supported edits remain explicit and verified. Developers can run `bash scripts/build-desktop.sh` without a connected phone or amplifier; see [Build-and-Release.md](Build-and-Release.md).
 
 To compare values, first read the amplifier or open a snapshot, choose **Compare snapshot**, and select an exported `.iamp-snapshot.json`. The read-only dialog shows **FILE** and **DISPLAYED** values. Your displayed snapshot and pending inputs stay unchanged; nothing is sent to the amplifier. Matching snapshots do not prove current live or saved state. See [Snapshot-Comparison.md](Snapshot-Comparison.md).
 
@@ -25,6 +25,12 @@ If a connection problem occurs, choose **Export diagnostics** before closing the
 
 Control uses Windows Bluetooth LE. USB charging or the vendor utility's USB connection is a separate connection. A successful connection stays open and shows Connected. Current state refreshes every three seconds; **Refresh amplifier** performs an explicit reread. Choose **Disconnect** before reconnecting phone iAMP. Disconnection retains the displayed snapshot but disables edits. Use one control app at a time. Connect is disabled until a valid target is available.
 
+## Mixer
+
+Choose **Mixer** in the sidebar after connecting through Amplifier Settings. The page has Bluetooth, USB REC, Instrument and Master vertical faders. The first three range from −36.0 to 0.0 dB; Master ranges from −30.0 to +6.0 dB, all in 0.5 dB steps. Release a dragged fader or an adjustment key to apply, or enter a value and choose Apply/press Enter.
+
+Use the speaker icon to mute or unmute. Muted faders turn grey and remain adjustable, matching the phone app. Changes preserve unsaved effect edits and pending effect inputs; they do not save or recall a preset. Mixer is unavailable for local snapshots, unsupported firmware or an unconfirmed connection. See [Mixer-Editing.md](Mixer-Editing.md).
+
 ## Filter presets by effect
 
 After connecting, choose an effect from the **Effect** dropdown beside the preset search. It lists all 124 built-in models using their mobile names, prefixed by category to distinguish similar names. Type a model name while the dropdown is focused to jump to it. Presets match even when that effect is disabled.
@@ -37,7 +43,7 @@ The first connection builds a local effect cache. Later connections and normal *
 
 The sidebar displays the current desktop application version beneath **DESKTOP COMPANION**. Choose **Version History** to see dated release summaries, then select an entry to open its full details. Choose **Amplifier Settings** to return to your existing snapshot and pending inputs. History is loaded from the accompanying `assets/version_history.json` file; keep it with the published application.
 
-The current build supports the verified Dyna/Filter/EQ/OD808/PLX 100/Hall Reverb/Analog Delay profiles below through slider release and explicit Apply controls. Device writes use a fresh full-snapshot check and complete readback. All tested changes were restored through an independent connection. Parameter editing for other models remains unavailable.
+The current build supports all 124 built-in Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models, plus the Mixer. Device writes use a fresh full-snapshot check and complete readback. All tested changes were restored through an independent connection. GIR&IR is excluded.
 
 | Feature | Current support |
 | --- | --- |
@@ -52,9 +58,16 @@ The current build supports the verified Dyna/Filter/EQ/OD808/PLX 100/Hall Reverb
 | Custom EQ | Low, Low Mid, High Mid and High groups, each with Gain/Freq/Q; Low Cut, High Cut and Level below. See [EQ-Model-Editing.md](EQ-Model-Editing.md) for ranges/steps. |
 | Noise Killer Threshold | Explicit Apply, values 0–100, matching the verified model profile at its current position |
 | Noise Killer Level | Explicit Apply, values 0–100; may be combined with Threshold 0–100 |
-| 808 Gain | Explicit Apply, values 0–100; verified OD808 profile only |
-| 808 Tone | Explicit Apply, values 0–100; all three OD808 values may coexist |
+| Amp models added in 1.31.0 | 65 US DLX, 65 US TW, 59 US Bass, US Sonic, US Blues CL, US Blues OD, E650 CL, Powerbell CL and Blacknight CL: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. See [Amp-Model-Editing.md](Amp-Model-Editing.md). |
+| Amp models added in 1.32.0 | Mark III CL, Mark V CL, Tri Rec CL, Rockvrb CL, Dr Zee 18 JR, Dr Zee Reck, Jet 100H CL, Jazz 120, UK 30 CL: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. |
+| Amp models added in 1.33.0 | UK 30 OD, HWT 103, PV 5050 CL, Regal Tone CL, Regal Tone OD1, Carol CL, Cardeff, EV 5050 CL, HT Club CL: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. |
+| Amp models added in 1.34.0 | Hugen CL, Koche OD, J800, J900, E650 DS, Powerbell DS, Blacknight DS, Mark III DS, Mark V DS: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. |
+| Amp models added in 1.35.0 | Tri Rec DS, Rockvrb DS, Citrus 30, Citrus 50, Slow 100 CR, Slow 100 DS, Jet 100H OD, PV 5050 DS, Regal Tone OD2, Carol OD, EV 5050 DS, HT Club DS, Hugen OD, Hugen DS, Koche DS, Mvrkbass 500, Ampog SVT 4, Akuila 750 CL: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. All 55 built-in Amp models are now supported. |
+| All OD models | All 22 built-in OD models: Gain, Tone and Vol; all 0–100 in mobile order. On/off and reordered/duplicate-instance controls supported. See [OD-Model-Editing.md](OD-Model-Editing.md). |
+| All Delay models | All 12 built-in models: Level, Feedback and Time, plus each model’s additional mobile controls. Sweep Range is 300–4000; only Time has an ms unit. On/off and reordered/duplicate-instance controls supported. See [Delay-Model-Editing.md](Delay-Model-Editing.md). |
 | PLX 100 Bass | Explicit Apply, values 0–100; all six supported Amp values may coexist |
+| All Mod models | All 17 built-in models, each model’s controls and physical values in mobile order. On/off and reordered/duplicate-instance controls supported. See [Mod-Model-Editing.md](Mod-Model-Editing.md). |
+| All Reverb models | All nine built-in models, including Shimmer: Pre Delay, Level, Decay, Tone and each model’s additional settings in mobile order. On/off and reordered/duplicate-instance controls supported. See [Reverb-Model-Editing.md](Reverb-Model-Editing.md). |
 | Hall Reverb Pre Delay | Explicit Apply, values 0–200 ms |
 | Hall Reverb Level | Explicit Apply, values 0–100 |
 | Hall Reverb Decay | Explicit Apply, values 0–100; no time unit inferred |
@@ -67,16 +80,15 @@ The current build supports the verified Dyna/Filter/EQ/OD808/PLX 100/Hall Reverb
 | PLX 100 Treble | Explicit Apply, values 0–100; all six supported Amp values may coexist |
 | PLX 100 Presence | Explicit Apply, values 0–100; all six supported Amp values may coexist |
 | PLX 100 Mid | Explicit Apply, values 0–100; all six supported Amp values may coexist |
-| 808 Volume | Explicit Apply, values 0–100; verified OD808 profile only |
 | Preset selection | Dropdown recall for all 80 presets, 0A–19D, with a left-side blue checkmark on the active preset |
-| Effect on/off | All Dyna, Filter and preset EQ models, OD808, PLX 100, Analog Delay and Hall Reverb on V1.1.9; grey disabled icons and Enable/Disable controls |
+| Effect on/off | All Dyna, Filter and preset EQ models, all 22 OD models, all 55 Amp models, all 12 Delay models and all nine Reverb models on V1.1.9; grey disabled icons and Enable/Disable controls |
 | Chain editing | Reorder, add/remove repeated models and Change model in place; all 124 built-in models listed; no automatic saving |
 | Other effect parameters | Corroborated fields are displayed read-only; unsupported fields are omitted |
 | Local snapshots | Export/open `.iamp-snapshot.json` files for offline inspection |
 | Save current preset | Same-slot save at 0D / British Lead Solo, Threshold 25 or 26 only, all other original values unchanged |
 | Other-slot save, rename, mixer, applying imports | Still in development |
 
-Hardware parameter writes are validated on **V1.1.9** for the captured Red Comp, Yellow Comp, Noise Killer, Intel Reducer, Touch Wah, Auto Wah, Q-Filter, 5 Bands EQ, Custom EQ, OD808, PLX 100, Analog Delay and Hall Reverb profiles and the table’s supported ranges. All listed limits match the observed mobile sliders for those captured profiles. Physical units are shown only where established. Fresh snapshot/layout checks reject unfamiliar configurations, and all-slot recall does not broaden parameter or saving support.
+Hardware parameter writes are validated on **V1.1.9** for the captured Red Comp, Yellow Comp, Noise Killer, Intel Reducer, Touch Wah, Auto Wah, Q-Filter, 5 Bands EQ, Custom EQ, all 22 OD models, all 55 Amp models, all 12 Delay models and all nine Reverb models profiles and the table’s supported ranges. All listed limits match the observed mobile sliders for those captured profiles. Physical units are shown only where established. Fresh snapshot/layout checks reject unfamiliar configurations, and all-slot recall does not broaden parameter or saving support.
 
 ## Apply a supported parameter
 

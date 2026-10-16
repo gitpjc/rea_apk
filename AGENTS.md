@@ -22,8 +22,8 @@ This is some documentation about this Mobile application
 
 ## Security Issue
 
-- Codex may take screenshots of its own application window including the preview browser.  
-- Codex must never take screenshots of my computer screen or any other windows (besides the Codex application window) without my explicit permission.   
+- Codex may take screenshots of its own application window including the preview browser and applications it is developing for me.  
+- Codex must never take screenshots of my computer screen or any other windows (besides the Codex application window and applications it is developing for me) without my explicit permission.   
 
 ## Command usage
 

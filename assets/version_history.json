@@ -1,5 +1,71 @@
 [
   {
+    "version": "1.40.0",
+    "changedAt": "2026-10-16T08:09:12.071Z",
+    "summary": "Add the mobile Mixer with four live level and mute controls.",
+    "details": "Add a Mixer sidebar page and Ctrl+3 shortcut with Bluetooth, USB REC, Instrument and Master vertical faders. Match mobile ranges, 0.5 dB steps, channel/master colors and mute behavior: grey muted faders remain adjustable. Commit on pointer/key release or explicit Apply. Preserve pending effect inputs and unsaved effect edits; keep controls stable during background polling. Require fresh full-state validation, exact acknowledgement and unchanged preset details, with no automatic retry or save. Retain 173 successful mobile state changes and physical-value evidence. All 176 affected protocol/read/queue/save cases, focused four-channel WPF/five-size checks and actual Windows transport/desktop-handler tests pass. Complete original mixer and preset settings independently restored after each capture/test and finally. Existing save restrictions remain; GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.39.1",
+    "changedAt": "2026-10-16T07:24:50.640Z",
+    "summary": "Correct the outdated supported-effects note in Amplifier Settings.",
+    "details": "Replace the obsolete eighteen-control/other-models-unavailable note with the current support for all built-in Dyna, Filter, EQ, Amp, OD, Delay, Reverb and Mod models. Preserve the explicit existing save and rename limitations. Refresh the feature matrix summary and record Mixer as the next Phase 5 task, pending authorized phone access and command/range evidence. No amplifier behavior changes; no device writes, recalls or saves. GIR&IR and Phase 6 remain excluded."
+  },
+  {
+    "version": "1.39.0",
+    "changedAt": "2026-10-16T07:03:54.720Z",
+    "summary": "Complete controls for all 17 Mod models.",
+    "details": "Complete all 17 Mod models with mobile-order controls, on/off and physical-value JSON, bringing verified built-in support to 124 models. Preserve model-specific layouts and signed/decimal mappings established by visible endpoints, defaults and interior values. Retain 144 independent endpoint/power frames and complete stable-bottom scrolled views. All 331 affected protocol cases, focused model-specific WPF/JSON/five-size checks and actual Windows boundary/default, off/on and reordered-position tests pass. Complete fresh original preset/global state independently restored after every test and finally. Strengthened iAMP-only phone capture guards pass ten focused tests. Existing save restrictions remain; nothing saved or recalled. GIR&IR and Phase 6 remain excluded."
+  },
+  {
+    "version": "1.38.0",
+    "changedAt": "2026-10-16T02:33:55.392Z",
+    "summary": "Complete controls for all nine Reverb models.",
+    "details": "Complete all nine Reverb models with verified mobile-order controls, on/off and JSON. Common controls are Pre Delay 0–200 ms and Level, Decay and Tone 0–100. Additional controls: Fl-Reverb: Rate, Feedback, Mod Delay, Mod Level; Dist Reverb: Gain, Dist Level; all use 0–100. Fresh successful Shimmer selection and command captures establish its current availability. Retain 102 independent endpoint/power frames and complete scrolled layouts. All 295 affected protocol tests and focused model-specific WPF/JSON/five-size checks pass. Actual Windows boundary/default, off/on and moved-position tests pass for every model. Complete fresh original preset/global state independently restored after each and finally; existing save restrictions remain and nothing saved or recalled. Mod next. GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.37.0",
+    "changedAt": "2026-10-16T01:52:42.600Z",
+    "summary": "Complete controls for all 12 Delay models.",
+    "details": "Complete all 12 Delay models with verified mobile-order controls, on/off and JSON. Level/Feedback use 0–100 and Time 40–2500 ms. Crystal/Rainbow include Depth and Rate; Vintage Delay includes Bit and S-Rate; Galaxy Delay includes Mod Rate and Mod Depth; Sweep includes Rate and Range (300–4000, no displayed unit). Retain 116 independent endpoint/power frames plus full scrolled layouts. All 289 affected protocol tests and focused model-specific WPF/JSON/five-size checks pass. Actual Windows boundary/default, off/on and moved-position tests pass for every model; Feedback is tested with Level muted. Complete fresh original preset/global state independently restored after each and finally. Existing save restrictions remain; nothing saved or recalled. Reverb next. GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.36.0",
+    "changedAt": "2026-10-16T01:12:12.627Z",
+    "summary": "Complete parameter and on/off controls for all 22 OD models.",
+    "details": "Complete all 22 OD models with verified Gain, Tone and Vol (0–100), on/off and mobile-order JSON. Retain 176 independent phone endpoint/power frames and full scrolled layout evidence. Reuse shared Gain/Vol and legacy Tone controls coherently; use generic OD accessibility/status text and preserve pending inputs for same/different models and reordered instances. All 337 affected protocol tests and focused 22-model WPF/JSON checks pass. Actual Windows boundary/default, off/on and moved-position tests pass for all 22 models, with complete fresh original preset/global state independently restored after each and finally. Preserve existing save restrictions; nothing saved or recalled. OD complete; Delay next. GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.35.0",
+    "changedAt": "2026-10-15T13:23:52.467Z",
+    "summary": "Complete parameter and on/off support for all 55 Amp models.",
+    "details": "Complete all 55 built-in Amp models by adding Tri Rec DS, Rockvrb DS, Citrus 30, Citrus 50, Slow 100 CR, Slow 100 DS, Jet 100H OD, PV 5050 DS, Regal Tone OD2, Carol OD, EV 5050 DS, HT Club DS, Hugen OD, Hugen DS, Koche DS, Mvrkbass 500, Ampog SVT 4, Akuila 750 CL. Each supports verified Gain, Bass, Mid, Treble, Presence and Master (0–100), on/off and mobile-order JSON. Retain 775 independent mobile frame cases. All 970 affected protocol tests, focused 55-model WPF/JSON and actual Windows boundary/default, on/off and reordered-position tests for the final 18 models pass. Retain prior Windows proofs for the first 37 models. Complete fresh original preset/global state independently restored after every phone/Windows model and finally. Preserve per-instance pending inputs and existing save restrictions; nothing saved or recalled. Amp category complete; OD is next. GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.34.0",
+    "changedAt": "2026-10-15T12:10:04.470Z",
+    "summary": "Add nine more Amp models, including J800 and J900.",
+    "details": "Add Gain, Bass, Mid, Treble, Presence and Master (0–100), on/off and mobile-order JSON for Hugen CL, Koche OD, J800, J900, E650 DS, Powerbell DS, Blacknight DS, Mark III DS, Mark V DS. Retain 523 independent mobile frame cases across 37 verified Amp models. All 682 affected protocol tests, focused 37-model WPF/JSON and actual Windows boundary/default, on/off and reordered-position checks pass. Complete fresh original preset/global state independently restored after every phone/Windows test and finally. Preserve per-instance pending values and save restrictions. Nothing saved or recalled. Continue the remaining 18 Amp models (IDs 37–54) before OD. GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.33.0",
+    "changedAt": "2026-10-15T11:42:43.198Z",
+    "summary": "Add nine more Amp models, including UK 30 OD and HT Club CL.",
+    "details": "Add Gain, Bass, Mid, Treble, Presence and Master (0–100), on/off and mobile-order JSON for UK 30 OD, HWT 103, PV 5050 CL, Regal Tone CL, Regal Tone OD1, Carol CL, Cardeff, EV 5050 CL, HT Club CL. Retain 397 independent mobile frame cases across 28 verified Amp models. The 538 affected protocol tests and focused 28-model WPF/JSON checks pass. Actual Windows boundary/default, off/on and reordered-position checks passed for all nine new models, restoring and independently verifying every original preset/global byte after each and finally. Preserve the current five-effect chain, per-instance pending values and existing save restrictions. Nothing saved or recalled. Continue the remaining 27 Amp models (IDs 27–30 and 32–54) before OD. GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.32.0",
+    "changedAt": "2026-10-15T08:52:23.419Z",
+    "summary": "Add nine more Amp models, including Mark III CL and Jazz 120.",
+    "details": "Add verified Gain, Bass, Mid, Treble, Presence and Master controls and on/off for Mark III CL, Mark V CL, Tri Rec CL, Rockvrb CL, Dr Zee 18 JR, Dr Zee Reck, Jet 100H CL, Jazz 120, UK 30 CL. All six settings use 0–100 in mobile/editor/JSON order. Preserve per-position pending inputs, identical/different model handling and existing save restrictions. Retain 271 independent mobile frame cases across 19 supported Amp models. The 394 affected protocol cases and focused 19-model WPF/JSON checks pass. Actual Windows 0/100/default, off/on and moved-position tests passed for all nine new models; complete original state/detail independently restored after each and finally. Earlier Windows proofs remain retained for the first ten models. Nothing saved or recalled. Continue the remaining 36 Amp models (IDs 18–30 and 32–54) before OD. GIR&IR and Phase 6 excluded."
+  },
+  {
+    "version": "1.31.0",
+    "changedAt": "2026-10-15T07:56:22.015Z",
+    "summary": "Add parameter and on/off controls for nine more Amp models.",
+    "details": "Add verified Gain, Bass, Mid, Treble, Presence and Master controls for 65 US DLX, 65 US TW, 59 US Bass, US Sonic, US Blues CL, US Blues OD, E650 CL, Powerbell CL and Blacknight CL, alongside PLX 100. All six settings use 0–100 and follow mobile order in the editor and JSON. Preserve independent pending values for identical/different Amp instances, disabled/re-enable states, explicit physical-position targeting and existing save restrictions. Retain 145 independent mobile frames and top/bottom capture hashes; 250 affected protocol cases and focused WPF/JSON checks pass. Actual Windows boundary/default, off/on and moved-position tests passed for all ten models. Complete original amplifier state/detail restored after each model and independently at the end; nothing saved or recalled. This is the first Amp release batch: 45 Amp models remain for verification before OD. GIR&IR and Phase 6 remain excluded."
+  },
+  {
     "version": "1.30.0",
     "changedAt": "2026-10-15T07:02:17.024Z",
     "summary": "Add both preset EQ models with grouped controls and JSON.",
