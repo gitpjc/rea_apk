@@ -1,6 +1,6 @@
 # Implementation progress
 
-Updated 17 October 2026. Current published release: **1.41.2**. The core editor is implemented; broader reliability/usability/deployment acceptance remains open. [Current-Status.md](Current-Status.md) is the support summary, [Plan.md](Plan.md) the task ledger and [Feature-Matrix.md](Feature-Matrix.md) the acceptance matrix.
+Updated 17 October 2026. Current published release: **1.41.5**. The core editor is implemented; broader reliability/usability/deployment acceptance remains open. [Current-Status.md](Current-Status.md) is the support summary, [Plan.md](Plan.md) the task ledger and [Feature-Matrix.md](Feature-Matrix.md) the acceptance matrix.
 
 ## Completed core work
 
@@ -10,9 +10,29 @@ Updated 17 October 2026. Current published release: **1.41.2**. The core editor 
 - Four-channel Mixer; Amplifier Information with battery percentage; readable preset JSON; local snapshot inspection/comparison; diagnostics and Version History.
 - Physical power-cycle persistence and **P5.8 clean/rhythm/lead workflows passed**, including both actual save dialogs, reconnect, mobile Amp comparison and user-confirmed amplifier bank/name. All original settings were restored after every case. See [Musician-Workflow.md](Musician-Workflow.md).
 
+## Physical-panel checks and dropdown correction — 1.41.3
+
+The initial physical preset round trip and pending-input conflict protection passed, with independent complete original restoration after each. A final return reported a connection loss, so P3.4 remains open. Fixed the separate stale closed-dropdown selection; focused `--preset-sync` WPF checks pass. See [Physical-Panel-Sync.md](Physical-Panel-Sync.md).
+
+## Read-race correction — 1.41.4
+
+Captured a complete state/detail/state mismatch during a physical preset switch; the generic polling catch had labelled the consistency rejection as connection loss. Retry only complete inconsistent reads, at most three attempts; preserve terminal transport/write/save protections. All60 affected tests and focused dropdown checks pass. The fixed production reader followed a physical round trip over 19 snapshots, with independent complete original restoration. The hardware round trip did not require a retry; deterministic scripted tests exercise that branch. Normal published-desktop UI acceptance subsequently passed, with both preset fields following physical 0D→0C→0D and the app remaining connected. Independent complete original restoration passes; P3.4 is complete for the tested setup.
+
+## Physical Master boundary — 17 October 2026
+
+A valid physical MASTER0→10→0 observation produced no current-state/effect-detail changes; the desktop Mixer stayed+6dB. The earlier lowering request was a no-op at0, and the initial assumption that the controls matched was withdrawn. Physical-knob protocol readback remains unestablished; no speculative mapping or write was added. The user restored0 and complete Bluetooth-visible original state/detail equality was independently verified. No application changes or suite rerun; version stays1.41.4.
+
+## Physical Master mobile parity completed
+
+Guarded ADB observation confirms mobile iAMP’s Mixer Master also stays+6dB during physical0→10→0. Desktop behavior matches in this bounded test; no physical mapping or audio-stage cause is inferred. Phone closed, physical0 user-restored and complete original snapshot independently verified. P4.5c is complete; broader reconciliation remains open. No app change or suite rerun.
+
+## Mobile launcher icon — 1.41.5
+
+Extract the exact highest-density launcher PNG from the supplied APK, build a multi-size Windows ICO, and embed it in the executable/WPF window. Source hashes and regeneration instructions are in assets/app/README.md. No amplifier or phone activity is needed.
+
 ## Next authorized work
 
-Connection-failure and physical-panel-change acceptance, desktop DPI/accessibility/performance, then deployment/license/signing and clean-PC acceptance. Applying imported presets/vendor backups to the amplifier remains unsupported. Phase 6 is deferred and GIR&IR excluded. Keep one desktop instance and one connected controller during tests. GitHub automation stays disabled.
+Investigate/retest the observed physical-return connection loss, then complete connection-failure and physical parameter/global-control acceptance, desktop DPI/accessibility/performance, then deployment/license/signing and clean-PC acceptance. Applying imported presets/vendor backups to the amplifier remains unsupported. Phase 6 is deferred and GIR&IR excluded. Keep one desktop instance and one connected controller during tests. GitHub automation stays disabled.
 
 No hardware tests or complete software suite were rerun for this documentation reconciliation. Current package/history consistency is checked separately; historical run counts remain historical.
 
@@ -319,3 +339,11 @@ See `Plan.md` for task checkboxes and `Feature-Matrix.md` for separate implement
 ## Historical next core work: guarded effect-model selection
 
 Read-only mobile model browsing is recorded in `Model-Browser.md`, with a partial UI catalog and complete independent unchanged-baseline verification. Display ordinals differ from the five known wire values, and Shimmer is greyed out. No alternate-model writes are enabled. P5.5u tracks the required capture/default-layout/exact-restoration proof before adding a guarded Windows model picker. Phase 6 stays excluded.
+
+## 17 October 2026 — Inno Setup script (1.41.6)
+
+Create and compile installers/iamp-desktop.iss against the version-checked self-contained x64 package. Use the mobile icon, assembly-derived version, stable upgrade identity, per-user installation, optional desktop shortcut and registered uninstall without deleting settings/exports/backups. No installer execution or amplifier/phone operation; install/upgrade/uninstall, signing and clean-PC acceptance remain open. See [installer instructions](../../installers/README.md).
+
+## 17 October 2026 — Installer output directory (1.41.7)
+
+Write the generated Setup.exe into installers beside iamp-desktop.iss, update build instructions and ignore generated installers in Git. Source/staged version checks and Inno compilation pass; installation is not run. The usual desktop launch folder remains 1.41.5 and the older artifacts/installers output is retained.

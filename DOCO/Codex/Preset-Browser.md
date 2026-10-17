@@ -2,7 +2,7 @@
 
 ## Scope at 17 October 2026 — current application 1.41.2
 
-The current browser is a compact dropdown on the same row as Presets and search, with a blue #4385ff check only inside its popup beside the active preset. Search has a conditional clear icon. Amplifier cards moved to **Amplifier Information**; the main page is **Amplifier Settings**. Choosing a preset recalls it; merely browsing does not. Current state polls approximately every three seconds. All 80 names/labels and all 79 alternative recalls were verified. General saving now supports all 80 destinations; the original five-interval/two-value-save limits below are superseded.
+Version 1.41.3 corrects the closed dropdown to follow the confirmed active preset after polling/refresh, while preserving open-popup browsing. See [Physical-Panel-Sync.md](Physical-Panel-Sync.md) for bounded physical preset/conflict checks and the unresolved return disconnect. The current browser is a compact dropdown on the same row as Presets and search, with a blue #4385ff check only inside its popup beside the active preset. Search has a conditional clear icon. Amplifier cards moved to **Amplifier Information**; the main page is **Amplifier Settings**. Choosing a preset recalls it; merely browsing does not. Current state polls approximately every three seconds. All 80 names/labels and all 79 alternative recalls were verified. General saving now supports all 80 destinations; the original five-interval/two-value-save limits below are superseded.
 
 See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
 

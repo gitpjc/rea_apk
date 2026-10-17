@@ -1,6 +1,6 @@
 # Windows build, focused checks and release packaging
 
-Updated 17 October 2026. Published release: **1.41.2**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
+Updated 17 October 2026. Staged installer release: **1.41.7**; usual desktop launch folder: **1.41.5**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
 
 ## Routine changes
 
@@ -54,3 +54,19 @@ The GitHub workflow is disabled at the user's request. Its reference definition 
 The 1.41.2 folder and its 66 history entries have recorded source/package consistency checks. P5.8 production-code-host musician workflows pass; [Musician-Workflow.md](Musician-Workflow.md) documents their exact scope and different build revision metadata. Those checks are not a byte-identity or clean-PC test of that host against the published executable.
 
 Historical 1.2.2 validation passed 76 then-existing tests and preview/binary comparisons at that milestone; those figures are not current suite counts or a new run. No full suite is claimed for 1.41.2's wording-only change or this documentation pass. Installer/MSIX selection, signing, upgrade/uninstall/user-data preservation, licensing and clean-machine actual-amplifier acceptance remain P7.5–P7.8. No final distributed-release acceptance is implied.
+
+## 1.41.3 focused validation
+
+The closed-preset synchronization fix uses `--preset-sync` in the WPF UI-check executable. It covers external adoption, marker consistency, filtering and an actually opened popup. Build and publish only the affected application/check projects; no full-suite rerun is required for this UI correction. Source/staging/published checks verify 67 history entries. Original physical-panel results and the unresolved disconnect are recorded separately in [Physical-Panel-Sync.md](Physical-Panel-Sync.md).
+
+## 1.41.4 read-race validation
+
+Run affected CurrentPresetReadGuardTests, StablePresetReadTests, WorkflowQueueTests, CommandSessionTests and PresetSaveTests (60 cases), plus WPF `--preset-sync`. Build the affected projects and publish the self-contained application; no complete-suite rerun was needed. Source/staging/published consistency checks verify 68 history entries. Hardware evidence uses the production reader; normal published-desktop physical-preset UI acceptance subsequently passes, recorded separately in Physical-Panel-Sync.md.
+
+## Application icon — 1.41.5
+
+Use assets/app/iamp.ico for ApplicationIcon and the embedded WPF window icon. The original mobile PNG, source hashes and developer-only regeneration command are in [icon provenance](../../assets/app/README.md). The future Inno Setup script can reuse the ICO; the user reports Inno Setup is installed, but no installer is created by this icon change. Packaging checks verify69 version-history entries. Remaining interruption/sleep reliability tests are deferred by the user and are not a prerequisite for preparing the installer script; unexecuted acceptance stays documented.
+
+## Inno Setup installer — 1.41.7
+
+The script is [installers/iamp-desktop.iss](../../installers/iamp-desktop.iss); see [installer instructions](../../installers/README.md) for publishing and compilation. It derives its version from the built assembly and packages the self-contained x64 folder, preserving user data during uninstall. Source/staging checks verify 71 history entries. Inno compilation passes; the installer has not been run and the usual desktop folder remains 1.41.5. Installation/upgrade/uninstall lifecycle, actual data preservation, signing and clean-PC acceptance remain open. No full software suite or hardware tests are needed for this packaging-only change.

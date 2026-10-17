@@ -1,5 +1,7 @@
 namespace Iamp.Protocol;
 
+public sealed class CurrentPresetChangedException(string message) : IOException(message);
+
 /// <summary>Validates the state/detail/state read sequence without interpreting unknown state fields.</summary>
 public static class CurrentPresetReadGuard
 {
@@ -16,9 +18,29 @@ public static class CurrentPresetReadGuard
         ValidateState(after);
         var preset = PresetDataParser.Parse(detail);
         if (preset.WireIndex != before[1])
-            throw new IOException("Preset details do not match the selected preset; refresh the snapshot.");
+            throw new CurrentPresetChangedException("Preset details do not match the selected preset; refresh the snapshot.");
         if (!before.SequenceEqual(after))
-            throw new IOException("The amplifier state changed during the read; refresh the snapshot before editing.");
+            throw new CurrentPresetChangedException("The amplifier state changed during the read; refresh the snapshot before editing.");
         return preset;
+    }
+
+    /// <summary>Retry only a completely received but inconsistent read; never replay mutations or transport failures.</summary>
+    public static async Task<(byte[] State, byte[] Detail, DecodedPreset Preset)> ReadStableAsync(
+        Func<CancellationToken, Task<byte[]>> readState,
+        Func<byte, CancellationToken, Task<byte[]>> readDetail, CancellationToken ct)
+    {
+        for(var attempt=0; ; attempt++)
+        {
+            ct.ThrowIfCancellationRequested();
+            var before=await readState(ct);ValidateState(before);
+            var detail=await readDetail(before[1],ct);
+            var after=await readState(ct);
+            ct.ThrowIfCancellationRequested();
+            try {return (before,detail,Validate(before,detail,after));}
+            catch(CurrentPresetChangedException) when(attempt<2)
+            {
+                await Task.Delay(100,ct);
+            }
+        }
     }
 }

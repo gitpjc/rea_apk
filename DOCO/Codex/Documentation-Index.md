@@ -1,9 +1,10 @@
 # Documentation index
 
-Reconciled 17 October 2026 against application **1.41.2**. Start with [Current-Status.md](Current-Status.md), then [Plan.md](Plan.md) for checked tasks and remaining acceptance. Current behavior takes precedence over earlier milestone limits. Dates/version numbers, captured values and test counts in reports identify the original evidence, not newly rerun tests. No hardware work was performed for this documentation reconciliation.
+Reconciled 17 October 2026 against application **1.41.5**. Start with [Current-Status.md](Current-Status.md), then [Plan.md](Plan.md) for checked tasks and remaining acceptance. Current behavior takes precedence over earlier milestone limits. Dates/version numbers, captured values and test counts in reports identify the original evidence, not newly rerun tests. The original documentation reconciliation performed no hardware work. Subsequent physical-panel checks and the 1.41.3 dropdown correction are recorded separately below.
 
 ## Current guides and development status
 
+- [Installer instructions](../../installers/README.md) — Inno Setup compilation and lifecycle validation boundary for 1.41.7; usual desktop remains 1.41.5.
 - [Current-Status.md](Current-Status.md) — Current development status
 - [Plan.md](Plan.md) — Windows iAMP companion: implementation plan
 - [Feature-Matrix.md](Feature-Matrix.md) — Windows iAMP feature and acceptance matrix
@@ -18,6 +19,8 @@ Reconciled 17 October 2026 against application **1.41.2**. Start with [Current-S
 - [Effect-Cache.md](Effect-Cache.md) — Effect cache, explicit refresh and reset — 1.23.0
 - [ADB-Testing.md](ADB-Testing.md) — Authorized Android iAMP testing
 - [Backup-Baseline.md](Backup-Baseline.md) — F15i baseline backup and recovery route
+
+- [Physical-Panel-Sync.md](Physical-Panel-Sync.md) — physical preset/conflict results, exact restoration, captured read race, 1.41.4 bounded retry, completed normal desktop acceptance, physical Master readback boundary/mobile parity and 1.41.3 dropdown regression.
 
 ## Current technical references with dated evidence
 
@@ -91,6 +94,7 @@ Each document has a current scope note. Preserve the original observations, hash
 - [Initial_Prompt.md](Initial_Prompt.md) — original user request; preserved as source context.
 - [Versioning.md](../Versioning.md) — user versioning instructions; preserved.
 - [README.md](../../README.md) — project entry point and labelled original research notes.
+- [Application icon provenance](../../assets/app/README.md) — exact APK launcher source, hashes, Windows frames and regeneration.
 - [Effect icon provenance](../../assets/effects/README.md) — source members and hashes; licensing approval remains a separate release gate.
 - [Artifact inventory](Artifact-Inventory.json) — recorded artifact metadata, not an assertion of current live device state.
 - [Application version history](../../assets/version_history.json) — application changes and documentation audits; independent of readable JSON schema 3.0.0 and snapshot/cache schema 1.

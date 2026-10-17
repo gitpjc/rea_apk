@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Markup;
 using Iamp.Transport.Windows;
 using Iamp.Protocol;
@@ -56,6 +57,7 @@ public sealed partial class MainWindow : Window
     {
         this.preview = preview;
         Title = "iAMP Desktop · Amplifier Settings"; Width = Math.Min(1280,SystemParameters.WorkArea.Width); Height = Math.Min(900,SystemParameters.WorkArea.Height); MinWidth = 620; MinHeight = 320;
+        Icon = BitmapFrame.Create(new Uri("pack://application:,,,/Iamp.Desktop;component/assets/app/iamp.ico"));
         Background = BackgroundBrush; Foreground = Brushes.White; FontFamily = new FontFamily("Segoe UI"); FontSize = 14;
         var root = new Grid(); root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(212) });
         root.ColumnDefinitions.Add(new ColumnDefinition()); Content = root;
@@ -374,13 +376,16 @@ public sealed partial class MainWindow : Window
         $"Snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · {(connectedSession is null?"Disconnected":"Connected")}{(liveEditUnsaved?" · Live edit verified; not saved":"")}" : "No snapshot · Disconnected";
     private static string ReadError(Exception error)=>error switch {
         TransferStateChangedException => "The amplifier reported a transfer-state change. This session was stopped; reconnect only when the amplifier is stable.",
+        CurrentPresetChangedException => "The amplifier kept changing while reading. Leave its controls still and try again.",
         TimeoutException => "No response. Disconnect the phone app and try reading again.",
         FormatException => "This amplifier’s response is not supported by this version.",
         _ => "Could not read the amplifier. Check Bluetooth, the address and the phone app connection."
     };
     private void Filter()
     {
-        var selectedIndex=(presets.SelectedItem as PresetName)?.WireIndex;
+        // Keep an in-progress popup choice; the closed field must follow confirmed amp state.
+        var selectedIndex=presets.IsDropDownOpen?(presets.SelectedItem as PresetName)?.WireIndex:
+            currentSnapshot?.WireIndex??(presets.SelectedItem as PresetName)?.WireIndex;
         var term=search.Text.Trim();var filtered=names.Where(p=>PresetEffectSearch.MatchesText(p.WireIndex,p.Name,term) && MatchesEffectFilter(p)).Select(p=>p with {IsCurrent=p.WireIndex==currentSnapshot?.WireIndex}).ToArray();
         presets.ItemsSource=filtered;presets.SelectedItem=filtered.FirstOrDefault(p=>p.WireIndex==(selectedIndex??currentSnapshot?.WireIndex));count.Text=$"{filtered.Length} of {names.Count} presets";
     }

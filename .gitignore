@@ -36,6 +36,7 @@ tmp/
 **/bin/
 **/obj/
 artifacts/
+/installers/*-Setup-x64.exe
 .vs/
 
 # Locally exported connection diagnostics

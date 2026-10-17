@@ -7,9 +7,11 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <AssemblyName>Iamp.Desktop</AssemblyName>
+    <ApplicationIcon>../../assets/app/iamp.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../Iamp.Transport.Windows/Iamp.Transport.Windows.csproj" /></ItemGroup>
   <ItemGroup>
+    <Resource Include="../../assets/app/iamp.ico" Link="assets/app/iamp.ico" />
     <Content Include="../../assets/version_history.json" Link="assets/version_history.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="../../assets/effects/*.png" Link="assets/effects/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>

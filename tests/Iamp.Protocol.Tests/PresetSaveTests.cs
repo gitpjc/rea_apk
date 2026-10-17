@@ -73,7 +73,7 @@ public sealed class PresetSaveTests
         foreach(byte slot in new byte[]{0,81,255})Assert.Throws<ArgumentOutOfRangeException>(()=>PresetSaveCommand.Create("V1.1.9",state,detail,slot,"Test"));
         Assert.Throws<NotSupportedException>(()=>PresetSaveCommand.Create("V1.1.2",state,detail,4,"Test"));
         Assert.Throws<FormatException>(()=>PresetSaveCommand.Create("V1.1.9",state[..^1],detail,4,"Test"));
-        var wrong=detail.ToArray();wrong[1]=5;Assert.Throws<IOException>(()=>PresetSaveCommand.Create("V1.1.9",state,wrong,4,"Test"));
+        var wrong=detail.ToArray();wrong[1]=5;Assert.Throws<CurrentPresetChangedException>(()=>PresetSaveCommand.Create("V1.1.9",state,wrong,4,"Test"));
         var unknown=detail.ToArray();unknown[23]=0xFE;Assert.Throws<NotSupportedException>(()=>PresetSaveCommand.Create("V1.1.9",state,unknown,4,"Test"));
     }
 }

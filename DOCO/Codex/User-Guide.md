@@ -2,7 +2,7 @@
 
 Updated 17 October 2026. The core F15i editor is implemented; broader connection, usability and deployment acceptance remains open. See [Current-Status.md](Current-Status.md) for scope and [Musician-Workflow.md](Musician-Workflow.md) for the completed clean/rhythm/lead checks.
 
-Current release: **1.41.2**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
+Current release: **1.41.5**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
@@ -133,3 +133,11 @@ bash scripts/run-desktop.sh
 ```
 
 See [Progress.md](Progress.md) for validation results and [Plan.md](Plan.md) for the remaining tasks.
+
+## Physical controls and preset display
+
+The closed preset dropdown follows the confirmed active preset after polling or Refresh; an open popup keeps your browsing choice. Conflicting physical changes preserve unapplied input and block edits until Refresh. A physical preset switch can overlap a read. Version 1.41.4 retries a complete inconsistent read up to three times. If the amplifier keeps changing, leave the controls still and reconnect. Genuine transport failures still require reconnect; writes and saves are never replayed. See [Physical-Panel-Sync.md](Physical-Panel-Sync.md).
+
+## Physical Master knob and Mixer Master
+
+The Mixer Master value should not be treated as the amplifier’s physical knob display. In the verified physical0→10→0 test, both desktop and mobile iAMP kept Mixer Master at+6dB. The desktop matches that observed mobile behavior; no general physical-to-Mixer mapping is established. See [Physical-Panel-Sync.md](Physical-Panel-Sync.md).

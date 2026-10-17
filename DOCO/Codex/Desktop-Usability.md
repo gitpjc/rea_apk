@@ -59,3 +59,7 @@ The duplicate large-value summary row is removed across effect editors. All para
 ## Stronger setting-label emphasis — 1.24.2
 
 All setting labels now use 14-point extra-bold white Segoe UI rather than 12-point bold muted text. Shared slider headings and read-only rows receive the same treatment. Existing focused all-18/five-size WPF checks pass; no hardware access.
+
+## User interaction policy — 17 October 2026
+
+Ask for help or approval directly in Codex. Before initiating Windows UI automation that would require a new app-permission window, explain and ask here first. Do not repeatedly trigger confusing permission windows; use command-line or user-operated checks when automation access is unavailable. This does not imply that tool permission controls can be suppressed or bypassed.

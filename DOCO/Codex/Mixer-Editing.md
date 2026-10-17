@@ -40,3 +40,11 @@ Focused protocol tests cover the retained mobile frames, all 73 levels at all 80
 All 176 affected protocol/read/queue/save cases and focused four-channel WPF checks pass, including five viewport sizes, navigation, local/preview guards, invalid inputs and asymmetric Master. Actual desktop fader-release, mute and muted-level handlers pass for all four channels while preserving an unsaved Threshold 26 and local pending Threshold 27 input. Final original Threshold 25 and every mixer/preset byte are independently restored. GIR&IR and Phase 6 remain excluded.
 
 The self-contained Windows x64 release is published to `artifacts/Iamp.Desktop`. Source/package versions and all 62 history entries pass the version checker; Desktop, Transport and Protocol DLL SHA-256 hashes match staging. Release builds have no warnings or errors. The final polling fix is covered by the focused gesture-eligibility check and reviewed against serialized transport and poll-delivery guards.
+
+## Physical MASTER knob boundary — 17 October 2026
+
+A user-confirmed physical MASTER display change **0→10→0** left every current-state/effect-detail byte unchanged; the normal desktop Mixer Master remained+6dB with paired raw levels72. The first attempt to lower from0 was a no-op and is not used as mapping evidence. Do not interpret the implemented Mixer Master dB value as the physical-knob display. The physical control’s protocol mapping, units and readback remain unestablished; no analog/separate-query explanation is claimed as fact. The physical original0 was restored by the user, and full Bluetooth-visible state/detail equality was independently verified. See [Physical-Panel-Sync.md](Physical-Panel-Sync.md).
+
+## Mobile parity follow-up
+
+A guarded ADB check confirmed mobile iAMP’s Mixer Master also stays+6.0dB during a user-confirmed physical MASTER0→10→0 change, including a five-second settled observation. The desktop matches that observed behavior. No physical-to-Mixer mapping or audio-stage explanation is inferred, and no slider adjustment is added to the desktop on that basis. Phone iAMP was closed, physical0 was user-restored, and full original Bluetooth-visible state/detail equality was independently verified. See [Physical-Panel-Sync.md](Physical-Panel-Sync.md).

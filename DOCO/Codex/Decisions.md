@@ -1,6 +1,6 @@
 # Implementation decisions and unresolved evidence
 
-Updated 17 October 2026 for **1.41.2**. [Current-Status.md](Current-Status.md) summarizes support; [Plan.md](Plan.md) records completion and [Feature-Matrix.md](Feature-Matrix.md) records bounded acceptance.
+Updated 17 October 2026 for **1.41.4**. [Current-Status.md](Current-Status.md) summarizes support; [Plan.md](Plan.md) records completion and [Feature-Matrix.md](Feature-Matrix.md) records bounded acceptance.
 
 ## Decision record
 
@@ -12,7 +12,7 @@ Updated 17 October 2026 for **1.41.2**. [Current-Status.md](Current-Status.md) s
 | D04 | Adopted and implemented for BLE | FFF0 service, FFF2 notifications and FFF3 writes; discover handles per connection. | BLE is the live control transport. USB Audio/HID metadata and vendor framing are separate evidence, not desktop USB-control support. |
 | D05 | Implemented core scope | Offline preset/effect/Mixer editor with read-only local tools. | Phase 6 requires explicit authorization; GIR&IR is excluded. No implied expansion into cloud/media or maintenance operations. |
 | D06 | Adopted | Keep pending, confirmed-current and saved state distinct; use independently versioned JSON formats. | Readable effects JSON 3.0.0; raw snapshot archive 1 and effect cache 1. Imports are inspection-only. General device save is verified; Unicode and vendor-format device apply are not. |
-| D07 | Required | Fresh reads, quiet tests, exact restoration after each case, terminal failed sessions and no blind write/save replay. | A chain-token retry is permitted only after an exact successful read proves no change; saves are never retried. One read-only save recovery is distinct from replay. |
+| D07 | Required | Fresh reads, quiet tests, exact restoration after each case, terminal failed sessions and no blind write/save replay. | A chain-token retry is permitted only after an exact successful read proves no change. Fully received inconsistent state/detail/state reads may settle within three complete attempts; transport failures and saves are never retried. One read-only save recovery is distinct from replay. |
 | D08 | Required | Preserve APK/version/certificate provenance and firmware-specific evidence. | Supplied APK 1.6.1/code 42 and phone 1.6.1/code 43 share publisher identity but differ. V1.1.2 observations are historical; current control evidence targets V1.1.9. |
 | D09 | Adopted | Use pinned REA 6.4.0 and actual available schemas. | REA Android and native vendor analysis succeeded. No Flutter/AOT operation is exposed by the recorded 170-tool release; bounded triage and runtime captures supplied the implemented protocol. Full Dart source recovery is not claimed. |
 | D10 | Required | Keep APKs/private captures/toolchains outside runtime; redact identifiers/raw user data in public evidence. | Effect icon provenance is documented, but licensing/redistribution review and signing remain P7.6/P7.7. |

@@ -93,6 +93,12 @@ public sealed partial class MainWindow
             currentPreset.Text=$"{current.SlotLabel} · {current.Name}";SetEffects(current.Blocks);Filter();snapshot.Text=SnapshotLabel();
             status.Text=$"Current preset · {current.SlotLabel} · {current.Name}";
         }
+        catch(Iamp.Protocol.CurrentPresetChangedException) {
+            if(connectedSession==session) {
+                await ReleaseConnectionAsync();editSnapshotValid=false;UpdateThresholdState();snapshot.Text=SnapshotLabel();
+                status.Text="Amplifier kept changing while reading · Leave its controls still and reconnect.";
+            }
+        }
         catch(Exception) {
             if(connectedSession==session) {
                 await ReleaseConnectionAsync();editSnapshotValid=false;UpdateThresholdState();snapshot.Text=SnapshotLabel();

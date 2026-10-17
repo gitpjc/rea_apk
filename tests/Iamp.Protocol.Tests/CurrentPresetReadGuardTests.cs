@@ -35,7 +35,7 @@ public class CurrentPresetReadGuardTests
         {
             var after = state.ToArray();
             after[offset] ^= 1;
-            Assert.Throws<IOException>(() => CurrentPresetReadGuard.Validate(state, detail, after));
+            Assert.Throws<CurrentPresetChangedException>(() => CurrentPresetReadGuard.Validate(state, detail, after));
         }
     }
 
@@ -44,9 +44,9 @@ public class CurrentPresetReadGuardTests
     {
         var (state, detail) = Captured();
         var switched = state.ToArray(); switched[1] = 17;
-        Assert.Throws<IOException>(() => CurrentPresetReadGuard.Validate(state, detail, switched));
+        Assert.Throws<CurrentPresetChangedException>(() => CurrentPresetReadGuard.Validate(state, detail, switched));
         var otherDetail = detail.ToArray(); otherDetail[1] = 17;
-        Assert.Throws<IOException>(() => CurrentPresetReadGuard.Validate(state, otherDetail, state));
+        Assert.Throws<CurrentPresetChangedException>(() => CurrentPresetReadGuard.Validate(state, otherDetail, state));
     }
 
     [Theory]

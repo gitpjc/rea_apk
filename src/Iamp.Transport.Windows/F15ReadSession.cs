@@ -171,14 +171,11 @@ public sealed partial class F15ReadSession : IAsyncDisposable
 
     private async Task<CurrentPresetSnapshot> ReadCurrentPresetCoreAsync(CancellationToken ct)
     {
-        var state = await QueryAsync(new byte[] { 0x11 }, p => p.Length >= 2 && p[0] == 0x12, ct);
-        CurrentPresetReadGuard.ValidateState(state);
-        var index = state[1];
-        // State/detail/state consistency for the live preset; library reads use a separate guarded workflow.
-        var detail = await QueryAsync(new byte[] { 0x21, index }, p => p.Length >= 22 && p[0] == 0x22 && p[1] == index, ct);
-        var after = await QueryAsync(new byte[] { 0x11 }, p => p.Length >= 2 && p[0] == 0x12, ct);
-        var decoded = CurrentPresetReadGuard.Validate(state, detail, after);
-        return new CurrentPresetSnapshot(index, decoded.Name, Convert.ToHexString(state), Convert.ToHexString(detail), decoded.Blocks);
+        var read = await CurrentPresetReadGuard.ReadStableAsync(
+            token => QueryAsync(new byte[] { 0x11 }, p => p.Length >= 2 && p[0] == 0x12, token),
+            (index, token) => QueryAsync(new byte[] { 0x21, index }, p => p.Length >= 22 && p[0] == 0x22 && p[1] == index, token), ct);
+        return new CurrentPresetSnapshot(read.State[1], read.Preset.Name, Convert.ToHexString(read.State),
+            Convert.ToHexString(read.Detail), read.Preset.Blocks);
     }
 
     /// <summary>One observed live effect update, followed by complete current-preset read-back. Does not save.</summary>

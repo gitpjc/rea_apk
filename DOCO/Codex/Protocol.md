@@ -1,6 +1,6 @@
 # F15i Li protocol evidence ledger
 
-Reconciled 17 October 2026 for desktop 1.41.2 and F15i V1.1.9. This is a bounded implementation/evidence ledger, not a complete vendor specification. [Current-Status.md](Current-Status.md) states delivered scope; per-feature documents and sanitized fixtures contain the detailed commands and tests. The original V1.1.2 capture is retained in the historical section below.
+Reconciled 17 October 2026 for desktop 1.41.4 and F15i V1.1.9. This is a bounded implementation/evidence ledger, not a complete vendor specification. [Current-Status.md](Current-Status.md) states delivered scope; per-feature documents and sanitized fixtures contain the detailed commands and tests. The original V1.1.2 capture is retained in the historical section below.
 
 ## Implemented command families
 
@@ -10,7 +10,7 @@ All opcodes below are hexadecimal payload bytes, excluding the AA55 envelope. Wi
 | --- | --- | --- |
 | 01 01 → 02 | Identity, firmware and reported capacities | Windows reads corroborated Android capture. Current writes require V1.1.9 and appropriate supported capability/layout. |
 | 29 start end → 2A | Names 1–40 and 41–80 | All 80 names and bank labels verified; names are not an effect snapshot. |
-| 11 →12, 21 index →22 | Current state and indexed effect detail | Read state/detail/state as one serialized workflow; require matching state and detail index. A live snapshot alone does not prove saved storage. |
+| 11 →12, 21 index →22 | Current state and indexed effect detail | Read state/detail/state as one serialized workflow; require matching state and detail index. From 1.41.4, retry only fully received inconsistent reads, at most three attempts with 100 ms settling; never retry transport failures or mutations. A live snapshot alone does not prove saved storage. |
 | 25 + full effect record → observed 26 01 | Parameter and enabled-state changes at an explicit position | All 124 requested model layouts have evidence. Complete readback, not ATT delivery or the observed acknowledgement alone, establishes success. See the eight model documents. |
 | 2D token operation ... | Add/remove/move/replace effects | Operations 1/3/4/2 respectively, with captured positional layouts and process-wide token bands. See [Effect-Chain-Editing.md](Effect-Chain-Editing.md). No unknown-operation fuzzing. |
 | 13 + full state →14 01 | Preset recall and the separately verified Mixer fields | Preserve all unrelated bytes; check full state/detail after the operation. All 80 recall destinations and four Mixer channels have bounded hardware evidence. |
@@ -24,7 +24,7 @@ The current-state Mixer offsets/conversions are documented in [Mixer-Editing.md]
 
 The frame envelope uses AA55, a little-endian payload length and big-endian CRC-16/GSM over length plus payload. Fragmentation and checksums are covered by retained independent fixtures and bounded parsers. Original capture counts below are historical, not the entire current fixture corpus.
 
-The production command dispatcher serializes requests; WorkflowQueue serializes complete identity/read/compare/write/readback transactions. Active cancellation, timeout, disconnect, disposal, transfer status and workflow failure stop that session. Queued cancellation is isolated. A new session is required after terminal failure; cross-process coordination is a user/testing policy, not a claimed system-wide lock.
+The production command dispatcher serializes requests; WorkflowQueue serializes complete identity/read/compare/write/readback transactions. Active cancellation, timeout, disconnect, disposal, transfer status and workflow failure stop that session. Queued cancellation is isolated. A complete-read consistency mismatch may settle within three read-only attempts before leaving the workflow. Exhaustion and genuine command failures remain terminal. A new session is required after terminal failure; cross-process coordination is a user/testing policy, not a claimed system-wide lock.
 
 The desktop polls current state about every 3 seconds and battery about every 30 seconds while connected and eligible. Pending inputs are separate from confirmed values. External changes that conflict with pending input preserve that input and stop editing until refresh. Unsolicited physical-panel-originated synchronization remains an acceptance task.
 

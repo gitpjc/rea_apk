@@ -1,5 +1,35 @@
 [
   {
+    "version": "1.41.7",
+    "changedAt": "2026-10-17T10:27:01.750Z",
+    "summary": "Write the installer executable beside its Inno Setup script.",
+    "details": "Change OutputDir to the script directory so compilation creates installers/iAMP-Desktop-<version>-Setup-x64.exe. Update build instructions and ignore generated installer executables in Git. Rebuild the versioned staging package and compile the installer to verify the new location. No installation, application behavior or amplifier/phone operation; existing usual launch folder and older installer output retained."
+  },
+  {
+    "version": "1.41.6",
+    "changedAt": "2026-10-17T10:15:25.155Z",
+    "summary": "Add the Inno Setup Windows installer script.",
+    "details": "Add installers/iamp-desktop.iss and build instructions. Package the complete self-contained Windows x64 app with its mobile icon, derive the installer version from the built assembly, use a stable upgrade identity and per-user installation without elevation, provide Start menu and optional desktop shortcuts, and register automatic uninstall. Preserve user settings, exports and backups. Compile the installer and validate source/package versions; no installer execution, upgrade/uninstall lifecycle, signing or clean-PC acceptance is claimed. No amplifier or phone operations; GIR&IR excluded and Phase 6 and remaining interruption/sleep testing deferred."
+  },
+  {
+    "version": "1.41.5",
+    "changedAt": "2026-10-17T10:05:59.322Z",
+    "summary": "Use the mobile iAMP launcher icon on Windows.",
+    "details": "Extract the exact192px highest-density launcher PNG from the supplied iAMP1.6.1/code42 APK, confirmed by manifest/AAPT resource evidence. Preserve the artwork and produce11 Windows ICO sizes16–256px, with256 explicitly upscaled. Embed the ICO in the native executable and WPF MainWindow; retain provenance hashes and a developer-only regeneration script for the future Inno Setup installer. Validate image frames/alpha, native PE icon resources, WPF loading and focused UI checks, then publish and visually inspect the normal desktop. No amplifier/phone commands or full-suite rerun. Record the user’s deferral of remaining interruption/sleep reliability tests; Inno Setup is selected but its script is not created in this change. GIR&IR excluded and Phase6 deferred."
+  },
+  {
+    "version": "1.41.4",
+    "changedAt": "2026-10-17T09:29:55.948Z",
+    "summary": "Keep physical preset changes from causing false connection-loss errors.",
+    "details": "Capture a physical-switch state/detail/state mismatch after every Bluetooth query completed. Retry only fully received inconsistent snapshots, at most three read-only attempts with 100 ms settling, inside the serialized workflow. Preserve terminal transport, malformed-response, transfer and cancellation handling; never replay mutations or saves. Give specific guidance on repeated changes instead of claiming Bluetooth loss. All60 affected protocol/session/save tests and focused preset-sync WPF checks pass; builds have zero warnings/errors. Fixed production-reader hardware round trip passes over19 snapshots and independent complete original state/detail equality is verified; no saves or restoration writes. The physical round trip did not itself exercise retry; scripted tests deterministically cover it. Normal post-fix desktop UI acceptance remains open because computer-use access was not approved. Record direct-in-Codex approval/help preference; no repeated permission windows. No complete-suite, GIR&IR or Phase6 work. Subsequent normal published-desktop acceptance completes P3.4: the agent controls the explicitly authorized usual iAMP Desktop, the user physically changes 0D→0C→0D, both dropdown/current card follow and the connection remains active without Refresh or desktop recall. After Disconnect, a fresh independent connection verifies complete original raw state/detail equality; nothing saved or restored by writes. Record visual observations separately from stale accessibility text. App remains open/disconnected. Documentation/history updated without another code/version change or suite rerun; physical parameter/global-control and broad fault acceptance remain open. Physical Master observation: the initial lowering request was a no-op at original0. A subsequent user-confirmed0→10→0 change left every current-state/effect-detail byte unchanged; normal desktop Mixer stayed+6dB, paired raw72. Do not infer a physical-knob mapping or analog/separate-query cause. Withdraw the initial assumption that the controls matched. User restores original physical0; final independent raw equality verifies all Bluetooth-visible originals. No Apply/save/restoration write, application code/version change, suite rerun or new opcode/advanced-function investigation. Document this unestablished physical readback boundary; P4.5 remains open. Guarded mobile comparison completes P4.5c: iAMP1.6.1 Mixer Master stays+6dB during physical0→10→0, including a five-second settled observation, matching desktop behavior. No missing desktop slider update is demonstrated in this case; physical mapping/audio-stage relationship remains unestablished. No fader/mute/preset/save touched. Close phone iAMP, user restores physical0, independently verify full original raw snapshot. Record capture hashes/evidence and update guides. No application code/version change or software-suite rerun; USB stay-awake retained for the ongoing authorized session."
+  },
+  {
+    "version": "1.41.3",
+    "changedAt": "2026-10-17T09:15:39.087Z",
+    "summary": "Keep the preset dropdown aligned with amplifier changes.",
+    "details": "Make the closed preset dropdown follow confirmed active state after polling or explicit refresh, preserving open-popup browsing and search behavior. Focused real WPF popup/filter/current-marker checks pass; release builds have zero warnings/errors. Physical 0D→0C→0D and unapplied Threshold conflict checks pass with independent complete original restoration after each and no saves or restoration writes. A final physical return reported connection loss; record it as unresolved, not fixed by this presentation change. Update current documentation and remaining P3.4 scope. No full-suite rerun, GIR&IR or Phase 6 work."
+  },
+  {
     "version": "1.41.2",
     "changedAt": "2026-10-16T23:55:00+11:00",
     "summary": "Clarify the settings being saved in preset dialogs.",
