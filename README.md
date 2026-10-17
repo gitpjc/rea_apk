@@ -1,8 +1,8 @@
 # rea_apk
 
-## Windows desktop development — 1.41.7
+## Windows desktop development — 1.41.8
 
-Core editing for all 124 requested built-in models, Mixer and general preset save/rename are implemented. Clean/rhythm/lead workflow acceptance is complete; broader fault/usability/deployment gates remain open. The [Inno Setup script](installers/README.md) compiles the 1.41.7 installer; the usual desktop launch folder remains 1.41.5, and installer lifecycle acceptance remains open. Start with the [current status](DOCO/Codex/Current-Status.md) and [documentation index](DOCO/Codex/Documentation-Index.md). GIR&IR is excluded; Phase 6 remains deferred.
+Core editing for all 124 requested built-in models, Mixer and general preset save/rename are implemented. Clean/rhythm/lead workflow acceptance is complete; broader fault/usability/deployment gates remain open. The [Inno Setup script](installers/README.md) compiles the 1.41.8 installer; the usual desktop launch folder remains 1.41.5, and installer lifecycle acceptance remains open. Start with the [current status](DOCO/Codex/Current-Status.md) and [documentation index](DOCO/Codex/Documentation-Index.md). GIR&IR is excluded; Phase 6 remains deferred.
 
 For a justified complete release check, run `bash scripts/build-desktop.sh` from Git Bash for the offline build, tests and self-contained Windows x64 package. Routine changes use affected checks, as described in the build guide; documentation-only updates need no application test suite. Output is staged at `artifacts/Iamp.Desktop.next`; the usual app launch folder is `artifacts/Iamp.Desktop`. This software check needs no phone, amplifier, APK, REA or Python. See [build and release instructions](DOCO/Codex/Build-and-Release.md), [implementation plan](DOCO/Codex/Plan.md) and [user guide](DOCO/Codex/User-Guide.md).
 

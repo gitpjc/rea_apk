@@ -1,6 +1,6 @@
 # Windows build, focused checks and release packaging
 
-Updated 17 October 2026. Staged installer release: **1.41.7**; usual desktop launch folder: **1.41.5**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
+Updated 17 October 2026. Staged installer release: **1.41.8**; usual desktop launch folder: **1.41.5**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
 
 ## Routine changes
 
@@ -67,6 +67,6 @@ Run affected CurrentPresetReadGuardTests, StablePresetReadTests, WorkflowQueueTe
 
 Use assets/app/iamp.ico for ApplicationIcon and the embedded WPF window icon. The original mobile PNG, source hashes and developer-only regeneration command are in [icon provenance](../../assets/app/README.md). The future Inno Setup script can reuse the ICO; the user reports Inno Setup is installed, but no installer is created by this icon change. Packaging checks verify69 version-history entries. Remaining interruption/sleep reliability tests are deferred by the user and are not a prerequisite for preparing the installer script; unexecuted acceptance stays documented.
 
-## Inno Setup installer — 1.41.7
+## Inno Setup installer — 1.41.8
 
-The script is [installers/iamp-desktop.iss](../../installers/iamp-desktop.iss); see [installer instructions](../../installers/README.md) for publishing and compilation. It derives its version from the built assembly and packages the self-contained x64 folder, preserving user data during uninstall. Source/staging checks verify 71 history entries. Inno compilation passes; the installer has not been run and the usual desktop folder remains 1.41.5. Installation/upgrade/uninstall lifecycle, actual data preservation, signing and clean-PC acceptance remain open. No full software suite or hardware tests are needed for this packaging-only change.
+The script is [installers/iamp-desktop.iss](../../installers/iamp-desktop.iss); see [installer instructions](../../installers/README.md) for publishing and compilation. It derives its version from the built assembly and packages the self-contained x64 folder, preserving user data during uninstall. Source/staging checks verify 72 history entries. Inno compilation passes; the installer has not been run and the usual desktop folder remains 1.41.5. Installation/upgrade/uninstall lifecycle, actual data preservation, signing and clean-PC acceptance remain open. No full software suite or hardware tests are needed for this packaging-only change.

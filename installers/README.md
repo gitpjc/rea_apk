@@ -29,7 +29,9 @@ Installer compilation does not install, uninstall, launch or connect the app.
 - Windows x64, Windows 10 build 19041 or newer; ARM64 acceptance is not claimed.
 - Per-user installation to `%LOCALAPPDATA%\Programs\iAMP Desktop`, without an
   administrator prompt. The directory can be changed in Setup.
-- Start menu shortcut, optional desktop shortcut and Windows installed-apps entry.
+- An iAMP Desktop Start menu folder containing iAMP Desktop and Uninstall iAMP
+  Desktop shortcuts, an optional desktop shortcut and a Windows installed-apps entry.
+  Upgrades remove the previous standalone Start menu shortcut.
 - Original mobile iAMP artwork on Setup, the application and its shortcuts.
 - Stable AppId and remembered install location support upgrades in place.
   Close the running app when Setup requests it; automatic restart is disabled.

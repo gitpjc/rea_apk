@@ -4,7 +4,7 @@ Reconciled 17 October 2026 against application **1.41.5**. Start with [Current-S
 
 ## Current guides and development status
 
-- [Installer instructions](../../installers/README.md) — Inno Setup compilation and lifecycle validation boundary for 1.41.7; usual desktop remains 1.41.5.
+- [Installer instructions](../../installers/README.md) — Inno Setup compilation and lifecycle validation boundary for 1.41.8; usual desktop remains 1.41.5.
 - [Current-Status.md](Current-Status.md) — Current development status
 - [Plan.md](Plan.md) — Windows iAMP companion: implementation plan
 - [Feature-Matrix.md](Feature-Matrix.md) — Windows iAMP feature and acceptance matrix

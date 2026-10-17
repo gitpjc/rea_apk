@@ -51,8 +51,13 @@ Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{userprograms}\iAMP Desktop"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"
+Name: "{group}\iAMP Desktop"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"
+Name: "{group}\Uninstall iAMP Desktop"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\iAMP Desktop"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"; Tasks: desktopicon
+
+[InstallDelete]
+; Replace the single root shortcut created by releases before 1.41.8.
+Type: files; Name: "{userprograms}\iAMP Desktop.lnk"
 
 [Run]
 Filename: "{app}\{#AppExe}"; Description: "Launch iAMP Desktop"; Flags: nowait postinstall skipifsilent unchecked

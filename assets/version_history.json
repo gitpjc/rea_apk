@@ -1,5 +1,11 @@
 [
   {
+    "version": "1.41.8",
+    "changedAt": "2026-10-17T10:42:21.481Z",
+    "summary": "Group application and uninstall shortcuts in the Start menu.",
+    "details": "Create an iAMP Desktop Start menu folder with iAMP Desktop and Uninstall iAMP Desktop shortcuts using the registered Inno uninstaller. Remove only the legacy standalone iAMP Desktop.lnk during upgrade. Retain the optional desktop shortcut, stable installation identity and user-data preservation. Publish the versioned staging package and compile the installer; no installer execution or lifecycle acceptance by the agent, full-suite rerun, or amplifier/phone operation."
+  },
+  {
     "version": "1.41.7",
     "changedAt": "2026-10-17T10:27:01.750Z",
     "summary": "Write the installer executable beside its Inno Setup script.",

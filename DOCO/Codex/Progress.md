@@ -347,3 +347,7 @@ Create and compile installers/iamp-desktop.iss against the version-checked self-
 ## 17 October 2026 — Installer output directory (1.41.7)
 
 Write the generated Setup.exe into installers beside iamp-desktop.iss, update build instructions and ignore generated installers in Git. Source/staged version checks and Inno compilation pass; installation is not run. The usual desktop launch folder remains 1.41.5 and the older artifacts/installers output is retained.
+
+## 17 October 2026 — Start menu folder (1.41.8)
+
+Create application/uninstall shortcuts in the iAMP Desktop Start menu folder. Remove only the legacy standalone shortcut during upgrade. Version/staging checks and Inno compilation pass; the agent does not run Setup or uninstall. User data remains excluded from cleanup. No hardware operations or full-suite rerun.

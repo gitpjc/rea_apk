@@ -1,6 +1,6 @@
 # Current development status
 
-Reconciled 17 October 2026. Installer package: **1.41.7**; the usual desktop launch folder remains **1.41.5**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
+Reconciled 17 October 2026. Installer package: **1.41.8**; the usual desktop launch folder remains **1.41.5**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
 
 ## Implemented
 
@@ -26,7 +26,7 @@ Reconciled 17 October 2026. Installer package: **1.41.7**; the usual desktop lau
 | Reverb | 9 | [Reverb-Model-Editing.md](Reverb-Model-Editing.md) |
 | Mod | 17 | [Mod-Model-Editing.md](Mod-Model-Editing.md) |
 
-There are **126 shared effect parameter types**. The readable preset-effects JSON schema is **3.0.0**; the separate raw snapshot archive and search-only effect cache each use schema **1**. These format versions are independent of application version 1.41.7. Opening a snapshot does not apply it to the amplifier. Mixer is not included as effect settings in the readable preset JSON.
+There are **126 shared effect parameter types**. The readable preset-effects JSON schema is **3.0.0**; the separate raw snapshot archive and search-only effect cache each use schema **1**. These format versions are independent of application version 1.41.8. Opening a snapshot does not apply it to the amplifier. Mixer is not included as effect settings in the readable preset JSON.
 
 ## Verified milestones and remaining acceptance
 
@@ -38,7 +38,7 @@ This is not final product acceptance. Remaining work includes physical parameter
 
 **GIR&IR is excluded by the user. Phase 6 is deferred unless explicitly authorized.** USB charging/vendor maintenance does not establish desktop USB control. Vendor-format device import/restore, cloud/accounts, tuner/drums/looper and other advanced operations are not implemented. The user reported a successful MOOER Studio restore; no independent custom backup-format or exhaustive vendor-restore validation is claimed.
 
-The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.41.7 installer compiles; installation/upgrade/uninstall, user-data preservation, signing and clean-PC acceptance remain open.
+The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.41.8 installer compiles; installation/upgrade/uninstall, user-data preservation, signing and clean-PC acceptance remain open.
 
 ## Development and testing policy
 
