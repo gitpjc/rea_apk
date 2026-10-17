@@ -1,5 +1,14 @@
 # OD808 Gain, Tone and Volume 0–100 — 1.17.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026, F15i V1.1.9, second-position type 1/model 3/five-word enabled OD808 profile. Phase 5 only; Phase 6 excluded.
 
 ADB inspection establishes mobile Gain, Tone and Vol slider limits at **0–100**. Separate endpoint tests preserve the other parameters and restore Gain **39**, Tone **100**, Vol **100**. Exact complete-block commands corroborate direct integers at words 2/3/4. After closing phone iAMP, a fresh Windows connection matched every original state/detail byte. The first phone connection attempt returned to the home screen; retrying the same device row succeeded. No mobile stability check was requested.

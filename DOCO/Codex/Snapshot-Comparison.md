@@ -1,5 +1,8 @@
 # Read-only snapshot comparison
 
+This reference remains applicable to application 1.41.2. Version labels and test counts below identify the original implementation/evidence runs; they do not claim a new test run. See [Current-Status.md](Current-Status.md) for full delivered scope and open acceptance gates.
+
+
 Updated 14 October 2026; introduced in version 1.4.0.
 
 Read the amplifier or open a local snapshot, then choose **Compare snapshot** beside **Open snapshot**. Select a previously exported `.iamp-snapshot.json` file. The dialog lists differences with the chosen file on the left and the currently displayed snapshot on the right. Close or Escape returns to the existing editor state. Comparison does not refresh the amplifier, apply the file, recall a preset or save anything.

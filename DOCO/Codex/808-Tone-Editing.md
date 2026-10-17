@@ -1,5 +1,14 @@
 # 808 Tone controlled mapping and restoration
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 13 October 2026. The phone's **808 Tone** control was changed **100 → 97 → 100** on preset wire index **4**, firmware **V1.1.9**. The user confirmed that the amplifier was quiet and nothing was playing before this controlled test. The observed writes establish **Tone = Values[3]** in the type-1/model-3 five-value block at chain position 2. Windows independently read back the complete restored state and preset detail.
 
 The phone capture establishes the mapping; subsequent Windows API and actual desktop-handler tests establish the restricted control implementation. No preset save or power-cycle persistence test is claimed.

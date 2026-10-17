@@ -1,5 +1,14 @@
 # Compact layout and keyboard navigation
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+Current navigation is Amplifier Settings, Amplifier Information, Mixer and Version History. Presets use the compact dropdown/search/filter row, not the original fixed table; checkmarks appear only in the popup. Effects have centered icon labels, grey/color state, no redundant On/Off text and half-width mobile-style colored sliders with clearly bold titles. The duplicated value-summary row is removed. Current full-model and save dialogs are described in User-Guide.md. Earlier layout/test counts below are dated evidence; actual DPI, Narrator, long-session/performance and clean-PC acceptance remain open.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Updated 14 October 2026; introduced in version 1.5.0.
 
 The main window now starts within the available Windows work area and allows resizing down to 620×320 logical pixels. The library remains vertically scrollable, and the sidebar also scrolls when the window is short. At narrow widths the title badge and preset search move below their headings, connection inputs shrink and action buttons wrap. Information cards use four, two or one column according to available space. Preset names use the table's available width; the existing 64-pixel index column and index alignment are preserved.

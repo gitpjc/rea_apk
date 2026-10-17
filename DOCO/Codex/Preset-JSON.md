@@ -1,6 +1,6 @@
-# Current preset JSON — 1.30.0
+# Current preset JSON — application 1.41.2, schema 3.0.0
 
-Choose **Show preset JSON** beside Save current preset. A modal dialog displays pretty-printed JSON in a scrollable ListView. **Copy JSON** has a copy icon and copies the entire document; **Save JSON…** uses Windows' standard Save As dialog, including an overwrite confirmation. The default filename includes the full preset bank/letter label and name, for example `0D British Lead Solo.json` or `19D My Tone.json`. Invalid filename characters are replaced with underscores.
+Choose **Show preset JSON** beside **Save / rename preset…**. A modal dialog displays pretty-printed JSON in a scrollable ListView. **Copy JSON** has a copy icon and copies the entire document; **Save JSON…** uses Windows' standard Save As dialog, including an overwrite confirmation. The default filename includes the full preset bank/letter label and name, for example `0D British Lead Solo.json` or `19D My Tone.json`. Invalid filename characters are replaced with underscores.
 
 Opening the dialog captures the displayed preset snapshot. The view, copied text and saved UTF-8 file all use the same frozen JSON. Unapplied typed values are excluded and identified in the source metadata and dialog notice. Background snapshot reads do not change an already-open JSON document. Viewing, copying and saving do not send amplifier commands.
 
@@ -15,9 +15,11 @@ The schema version is `3.0.0`. This version adds a nullable `group` to every set
 | `source` | `kind`, `firmware`, `readAt`, `confirmedSnapshot`, `hasUnappliedInputs` |
 | `effects` | Ordered array of nonempty effect modules, preserving duplicate categories/models and disabled effects |
 
-Each effect contains `position`, `category`, `name`, `enabled` and `settings`. Unknown enabled states use JSON null. Verified settings contain only `name`, `value`, `unit` and `group`. Values are JSON numbers in physical units, except an EQ cut at its Off position exports `"value": "Off", "unit": null`. Other units are null, `ms`, `dB` or `Hz`; Q values have no unit. Units appear only in `unit`: for example, `"name": "Pre Delay", "unit": "ms"`. Groups are null except for the Custom EQ band settings, which use `Low`, `Low Mid`, `High Mid` and `High`. The properties `unmappedValues`, `rawValues`, `rawValueIndex`, `typeCode` and `modelId` are excluded throughout. Unknown models retain their category/name and an empty settings array until their setting names have been verified.
+Each effect contains `position`, `category`, `name`, `enabled` and `settings`. Unknown enabled states use JSON null. Verified settings contain only `name`, `value`, `unit` and `group`. Values are JSON numbers in physical units, except an EQ cut at its Off position exports `"value": "Off", "unit": null`. Other units are null, `ms`, `dB`, `Hz` or `Cent`; Mod Detune uses `Cent`. Q and Mod Poly Shift Pitch have no unit; Pitch is a signed decimal value. Do not infer an unverified unit. Units appear only in `unit`: for example, `"name": "Pre Delay", "unit": "ms"`. Groups are null except for the Custom EQ band settings, which use `Low`, `Low Mid`, `High Mid` and `High`. The properties `unmappedValues`, `rawValues`, `rawValueIndex`, `typeCode` and `modelId` are excluded throughout. Unknown models retain their category/name and an empty settings array until their setting names have been verified.
 
 `effects` follows the desktop/mobile chain order. `settings` follows the verified presentation order shared with desktop editor construction:
+
+The examples below illustrate ordering. All 124 requested built-in models now have verified ordered settings; the category specifications linked from [Current-Status.md](Current-Status.md) give each model’s complete order. Always inspect the entire mobile page, scrolling where necessary. Unknown or incompatible shapes still use an empty settings array.
 
 | Model | Settings order |
 | --- | --- |

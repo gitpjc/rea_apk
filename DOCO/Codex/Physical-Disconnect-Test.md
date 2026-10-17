@@ -1,5 +1,14 @@
 # Physical power-off and reconnect check
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The following dated report records the specific disconnect/read-only checks and their outcomes, not complete fault coverage or a request to rerun them. Core retained-session editing and saving are now implemented. Physical-panel changes, sleep/adapter/permission failures and the broader reconnect/fault matrix remain open in Plan.md. Historical phone-stability observations do not require repeated checks; only perform those when the user asks.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026; version 1.5.3, F15i Li firmware V1.1.9. The user approved the read-only power-off/reconnect test, disconnected phone iAMP and closed MOOER Studio.
 
 The new explicit DeviceProbe command `read-disconnect-check ADDRESS NEW-BASELINE.json` records a full identity/current-preset baseline, then sends identity queries at two-second intervals until the first failure or a 90-second overall deadline. It does not retry after failure. A passing result requires a real Windows Disconnected callback and a subsequent API call blocked without another transport command. The final helper validates the exact original stock profile before announcing readiness; its use of the save-command factory is offline validation only and the returned bytes are never transmitted. Existing baseline files are refused.

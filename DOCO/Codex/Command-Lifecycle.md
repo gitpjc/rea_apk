@@ -1,5 +1,8 @@
 # Shared command lifecycle
 
+This reference remains applicable to application 1.41.2. Version labels and test counts below identify the original implementation/evidence runs; they do not claim a new test run. See [Current-Status.md](Current-Status.md) for full delivered scope and open acceptance gates. Current mutation workflows include general save/rename: a failed terminal session is disposed, one read-only recovery may reload actual state, human confirmation time is excluded from the device deadline, and saves are never replayed. See [Preset-Save-Rename.md](Preset-Save-Rename.md).
+
+
 Updated 14 October 2026; implemented in version 1.2.4.
 
 Follow-up: version 1.5.2 adds per-session serialization of complete public workflows around this command dispatcher. See `Workflow-Serialization.md` for concurrency tests and read-only hardware acceptance. Later diagnostics and normal hardware read/handoff results are in `Diagnostics.md` and `Read-Only-Regression.md`; original scope/results below are historical.

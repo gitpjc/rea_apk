@@ -1,5 +1,14 @@
 # Bounded Analog Delay editing — 1.14.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026, F15i V1.1.9 / 0D British Lead Solo, fourth-position type 7/model 1/eight-word block. Phase 5 only; Phase 6 remains excluded.
 
 Level **16–17**, Feedback **24–25** and Time **499–500 ms** can be applied explicitly, individually or together. Enable/model flags and all trailing zero words must match the observed profile. These are verified experimental intervals; no full hardware range, tempo/tap semantics or other-model support is claimed.

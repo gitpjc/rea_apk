@@ -1,5 +1,14 @@
 # Parameter sliders — 1.21.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The initial slider milestone below covered 18 controls. Current shared controls cover 126 parameter types across all 124 requested built-in models, with mobile-style half-width colored tracks, bold titles, right-aligned values and release application. Numeric Apply controls retain guarded pending-input behavior. Consult the category specifications for non-0–100 physical ranges.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 All 18 verified Noise Killer, OD808, PLX 100, Analog Delay and Hall Reverb parameters now have integer sliders. The range is the already verified model-specific range; Time supports 40–2500 ms and Hall Pre Delay 0–200 ms. Numeric entry remains available.
 
 Slider movement updates pending input only. Existing explicit Apply handlers perform fresh snapshot validation, write and complete readback. Sliders never create a Bluetooth session or update confirmed state. Numeric input updates the slider only when valid; blank, malformed and out-of-range entries remain visible for correction and disable Apply. Accessibility names state parameter/range. Arrows step by one; Page Up/Page Down by ten; Home/End select limits. Sliders inherit input availability for busy, invalid, unsupported, preview and bypassed states.

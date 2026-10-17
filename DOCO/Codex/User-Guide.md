@@ -1,8 +1,8 @@
 # Running the current iAMP Desktop build
 
-Updated 16 October 2026. This is an experimental companion for the MOOER F15i Li. The complete editor is still in development.
+Updated 17 October 2026. The core F15i editor is implemented; broader connection, usability and deployment acceptance remains open. See [Current-Status.md](Current-Status.md) for scope and [Musician-Workflow.md](Musician-Workflow.md) for the completed clean/rhythm/lead checks.
 
-Current release: **1.41.1**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
+Current release: **1.41.2**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
@@ -18,7 +18,7 @@ If a connection problem occurs, choose **Export diagnostics** before closing the
 
 ## Start and read the amplifier
 
-1. Open `artifacts/Iamp.Desktop/Iamp.Desktop.exe`. Keep all accompanying files together; the published Windows x64 build does not require a separate .NET installation.
+1. Open artifacts/Iamp.Desktop/Iamp.Desktop.exe. Keep only one desktop instance running, including during development tests. Keep all accompanying files together; the published Windows x64 build does not require a separate .NET installation.
 2. Switch on the amplifier and disconnect the Android iAMP app from it.
 3. Choose **Scan Bluetooth**. If one amplifier is found it connects automatically; otherwise select the amplifier. Alternatively, enter a valid **Manual Bluetooth address** and choose **Connect amplifier**.
 4. Browse/search all 80 bank-labelled presets. Choose an entry from the dropdown to recall it; the active preset has a blue checkmark on its left. Escape closes the dropdown without recalling a browsed entry. Select effect cards to inspect supported details.
@@ -47,72 +47,48 @@ The current build supports all 124 built-in Dyna, Filter, preset EQ, Amp, OD, De
 
 | Feature | Current support |
 | --- | --- |
-| Information | Firmware, capacity counts, preset names and current-preset details |
-| Red Comp | Sensitivity, Level; each 0–100 |
-| Yellow Comp | Attack, Ratio, Threshold, Level; each 0–100 |
-| Intel Reducer | Threshold, Depth, Level; each 0–100 |
-| Touch Wah | Attack, Peak, Sensitivity, Level; each 0–100 |
-| Auto Wah | Rate, Peak, Range, Level; each 0–100 |
-| Q-Filter | Rate, Q, Mix; each 0–100 |
-| 5 Bands EQ | Five gains −16.0…16.0 dB in 0.5 steps; Level 0–100 |
-| Custom EQ | Low, Low Mid, High Mid and High groups, each with Gain/Freq/Q; Low Cut, High Cut and Level below. See [EQ-Model-Editing.md](EQ-Model-Editing.md) for ranges/steps. |
-| Noise Killer Threshold | Explicit Apply, values 0–100, matching the verified model profile at its current position |
-| Noise Killer Level | Explicit Apply, values 0–100; may be combined with Threshold 0–100 |
-| Amp models added in 1.31.0 | 65 US DLX, 65 US TW, 59 US Bass, US Sonic, US Blues CL, US Blues OD, E650 CL, Powerbell CL and Blacknight CL: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. See [Amp-Model-Editing.md](Amp-Model-Editing.md). |
-| Amp models added in 1.32.0 | Mark III CL, Mark V CL, Tri Rec CL, Rockvrb CL, Dr Zee 18 JR, Dr Zee Reck, Jet 100H CL, Jazz 120, UK 30 CL: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. |
-| Amp models added in 1.33.0 | UK 30 OD, HWT 103, PV 5050 CL, Regal Tone CL, Regal Tone OD1, Carol CL, Cardeff, EV 5050 CL, HT Club CL: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. |
-| Amp models added in 1.34.0 | Hugen CL, Koche OD, J800, J900, E650 DS, Powerbell DS, Blacknight DS, Mark III DS, Mark V DS: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. |
-| Amp models added in 1.35.0 | Tri Rec DS, Rockvrb DS, Citrus 30, Citrus 50, Slow 100 CR, Slow 100 DS, Jet 100H OD, PV 5050 DS, Regal Tone OD2, Carol OD, EV 5050 DS, HT Club DS, Hugen OD, Hugen DS, Koche DS, Mvrkbass 500, Ampog SVT 4, Akuila 750 CL: Gain, Bass, Mid, Treble, Presence, Master; all 0–100. All 55 built-in Amp models are now supported. |
-| All OD models | All 22 built-in OD models: Gain, Tone and Vol; all 0–100 in mobile order. On/off and reordered/duplicate-instance controls supported. See [OD-Model-Editing.md](OD-Model-Editing.md). |
-| All Delay models | All 12 built-in models: Level, Feedback and Time, plus each model’s additional mobile controls. Sweep Range is 300–4000; only Time has an ms unit. On/off and reordered/duplicate-instance controls supported. See [Delay-Model-Editing.md](Delay-Model-Editing.md). |
-| PLX 100 Bass | Explicit Apply, values 0–100; all six supported Amp values may coexist |
-| All Mod models | All 17 built-in models, each model’s controls and physical values in mobile order. On/off and reordered/duplicate-instance controls supported. See [Mod-Model-Editing.md](Mod-Model-Editing.md). |
-| All Reverb models | All nine built-in models, including Shimmer: Pre Delay, Level, Decay, Tone and each model’s additional settings in mobile order. On/off and reordered/duplicate-instance controls supported. See [Reverb-Model-Editing.md](Reverb-Model-Editing.md). |
-| Hall Reverb Pre Delay | Explicit Apply, values 0–200 ms |
-| Hall Reverb Level | Explicit Apply, values 0–100 |
-| Hall Reverb Decay | Explicit Apply, values 0–100; no time unit inferred |
-| Hall Reverb Tone | Explicit Apply, values 0–100; all four supported Hall values may coexist |
-| Analog Delay Level | Explicit Apply, values 0–100 |
-| Analog Delay Feedback | Explicit Apply, values 0–100 |
-| Analog Delay Time | Explicit Apply, values 40–2500 ms; all three supported Delay values may coexist |
-| PLX 100 Gain | Explicit Apply, values 0–100; all six supported Amp values may coexist |
-| PLX 100 Master | Explicit Apply, values 0–100; all six supported Amp values may coexist |
-| PLX 100 Treble | Explicit Apply, values 0–100; all six supported Amp values may coexist |
-| PLX 100 Presence | Explicit Apply, values 0–100; all six supported Amp values may coexist |
-| PLX 100 Mid | Explicit Apply, values 0–100; all six supported Amp values may coexist |
-| Preset selection | Dropdown recall for all 80 presets, 0A–19D, with a left-side blue checkmark on the active preset |
-| Effect on/off | All Dyna, Filter and preset EQ models, all 22 OD models, all 55 Amp models, all 12 Delay models and all nine Reverb models on V1.1.9; grey disabled icons and Enable/Disable controls |
-| Chain editing | Reorder, add/remove repeated models and Change model in place; all 124 built-in models listed; no automatic saving |
-| Other effect parameters | Corroborated fields are displayed read-only; unsupported fields are omitted |
-| Local snapshots | Export/open `.iamp-snapshot.json` files for offline inspection |
-| Save current preset | Same-slot save at 0D / British Lead Solo, Threshold 25 or 26 only, all other original values unchanged |
-| Other-slot save, rename, mixer, applying imports | Still in development |
+| Information | Firmware, reported capacity counts, battery percentage/read time and confirmed current preset. Charging-state meaning remains unverified. |
+| Dyna: 4 models | Red Comp Sensitivity/Level; Yellow Comp Attack/Ratio/Threshold/Level; Noise Killer Threshold/Level; Intel Reducer Threshold/Depth/Level. Each 0–100. |
+| Filter: 3 models | Touch Wah, Auto Wah and Q-Filter with their verified 0–100 settings. See [Filter-Model-Editing.md](Filter-Model-Editing.md). |
+| Preset EQ: 2 models | 5 Bands EQ and Custom EQ, signed dB, stepped frequencies, decimal Q and Off cuts. Four Custom EQ groups are retained in controls and JSON. See [EQ-Model-Editing.md](EQ-Model-Editing.md). |
+| Amp: 55 models | Gain, Bass, Mid, Treble, Presence, Master; all 0–100. See [Amp-Model-Editing.md](Amp-Model-Editing.md). |
+| OD: 22 models | Gain, Tone, Vol; all 0–100 in mobile order. See [OD-Model-Editing.md](OD-Model-Editing.md). |
+| Delay: 12 models | Level/Feedback 0–100, Time 40–2500 ms and each model's extra controls. Sweep Range 300–4000 has no inferred unit. See [Delay-Model-Editing.md](Delay-Model-Editing.md). |
+| Reverb: 9 models | Pre Delay 0–200 ms, Level/Decay/Tone 0–100 and each model's extra settings, including Shimmer. See [Reverb-Model-Editing.md](Reverb-Model-Editing.md). |
+| Mod: 17 models | Model-specific settings, including signed decimal Poly Shift Pitch and signed Detune Cent values. See [Mod-Model-Editing.md](Mod-Model-Editing.md). |
+| Effect on/off and chain | All 124 requested model profiles; grey disabled icons, Enable/Disable, reorder/add/remove/replace and repeated instances. Parameter writes require an enabled supported layout. |
+| Presets | All 80 bank labels 0A–19D, recall with discard protection, effect/text filtering and persistent search index. |
+| Save/rename/Save As | All 80 destinations, 1–20 printable ASCII names, fresh checks, themed confirmation and full readback. Unicode remains unsupported. |
+| Mixer | Bluetooth, USB REC, Instrument and Master level/mute, including adjustment while muted. |
+| Readable JSON | View, copy and save the current preset's effects in chain/editor order. No device writes or Mixer effect properties. |
+| Local snapshot files | Raw export/open/comparison for offline inspection. Applying imports to the amplifier and vendor-backup restore are unsupported. |
+| Unknown layouts | No guessed controls; unsupported fields/layouts remain omitted or read-only. |
 
-Hardware parameter writes are validated on **V1.1.9** for the captured Red Comp, Yellow Comp, Noise Killer, Intel Reducer, Touch Wah, Auto Wah, Q-Filter, 5 Bands EQ, Custom EQ, all 22 OD models, all 55 Amp models, all 12 Delay models and all nine Reverb models profiles and the table’s supported ranges. All listed limits match the observed mobile sliders for those captured profiles. Physical units are shown only where established. Fresh snapshot/layout checks reject unfamiliar configurations, and all-slot recall does not broaden parameter or saving support.
+All 124 model families and the indicated ranges have retained V1.1.9 parameter/on-off evidence. Fresh snapshot/layout checks still reject unfamiliar records. General save support is verified separately; readable exports and matching snapshots alone do not prove stored state.
 
 ## Apply a supported parameter
 
 Pending values remain while you browse other effect cards or apply another parameter. Hidden pending values still protect against accidental recall or effect toggling. An unchanged amplifier refresh retains them; loading another preset/import or refreshing changed hardware data starts from that new snapshot.
 
-Each setting has a larger, extra-bold white label above its slider, without a duplicate summary row. The half-width slider shows the value on its right, with the filled track matching the effect icon. Tap or drag anywhere on the track, then release to apply the final value to the amplifier. The value display follows movement immediately; the edit is confirmed only after checked readback. Escape cancels an active pointer drag. Arrow keys adjust a focused slider by one; Page Up/Page Down by ten; Home/End select its limits. Keyboard adjustments apply on key release. Slider and numeric entry stay synchronized. Disabled effects, offline/preview snapshots, busy operations and unsupported configurations cannot be edited.
+Each setting has a larger, extra-bold white label above its slider, without a duplicate summary row. The half-width slider shows the value on its right, with the filled track matching the effect icon. Tap or drag anywhere on the track, then release to apply the final value to the amplifier. The value display follows movement immediately; the edit is confirmed only after checked readback. Escape cancels an active pointer drag. Arrow keys adjust a focused slider by one supported step; Page Up/Page Down by ten steps; Home/End select its limits. Keyboard adjustments apply on key release. Slider and numeric entry stay synchronized. Disabled effects, offline/preview snapshots, busy operations and unsupported configurations cannot be edited.
 
-Numeric entry remains available for precise changes: type a whole number and choose Apply. Typing alone changes a pending value and does not send a command. Both slider release and Apply use the same fresh complete-snapshot check, verified command and full readback. Successful readback confirms the value; pending or unconfirmed edits remain marked.
+Numeric entry remains available for precise changes: enter a supported value and choose Apply. Most controls use integers; EQ/Mod also accept the verified signed/decimal forms, and EQ cuts accept Off. Typing alone changes a pending value and does not send a command. Both slider release and Apply use the same fresh complete-snapshot check, verified command and full readback. Successful readback confirms the value; pending or unconfirmed edits remain marked.
 
 Apply controls make **live, unsaved edits**. Returning all changed values to their original snapshot values clears the snapshot-difference indicator. Recalling another preset with known live unsaved edits or pending input asks whether to discard them; No is the default. If an external change conflicts with typed input, the app preserves that input, stops automatic refresh and disables editing until you explicitly refresh. Matching a read snapshot alone does not prove that the preset is saved.
 
 ## Rearrange, add or remove effects
 
-On F15i V1.1.9, drag an effect icon to the blue insertion line between icons, or use the selected effect’s Move left/Move right buttons. The line shows the exact placement before you drop. Select + to browse the mobile-style category list and choose a model; search the model list if needed, then choose Add effect. Multiple effects from the same category and repeated identical models can be added, as in mobile iAMP. Each instance has its own chain position and pending parameter values. GIR&IR is listed with an explanation that library access is not yet supported. The amplifier supplies the new effect’s default values. Select Remove effect to delete the selected module.
+On F15i V1.1.9, drag an effect icon to the blue insertion line between icons, or use the selected effect’s Move left/Move right buttons. The line shows the exact placement before you drop. Select + to browse the mobile-style category list and choose a model; search the model list if needed, then choose Add effect. Multiple effects from the same category and repeated identical models can be added, as in mobile iAMP. Each instance has its own chain position and pending parameter values. GIR&IR may appear as an unavailable library category; it is excluded at your request and is not planned current work. The amplifier supplies the new effect’s default values. Select Remove effect to delete the selected module.
 
-Moves preserve the effect’s values. Previously supported parameter editors continue working at the new position. Newly added models show their names, with parameter editing available only for verified layouts. Apply or clear pending parameter inputs before changing the chain. Every change is checked against a fresh preset and verified by readback. Chain changes are live and unsaved; the restricted save workflow below still applies.
+Moves preserve the effect’s values. Previously supported parameter editors continue working at the new position. Newly added models show their names, with parameter editing available only for verified layouts. Apply or clear pending parameter inputs before changing the chain. Every change is checked against a fresh preset and verified by readback. Chain changes affect the current amplifier settings and are unsaved until you explicitly use the general Save / rename preset workflow below.
 
 Choose **Change model…** to replace the selected effect without changing its position. The picker starts on its current category/model and lets you choose another built-in model, including another category. Replacement loads the new model’s default values; changing back to the original model also loads defaults rather than recovering its previous settings. The currently selected model cannot be reapplied accidentally. See [Dyna-Model-Editing.md](Dyna-Model-Editing.md) for the newly supported Dyna settings.
 
-## Save the supported preset
+## Preset JSON and saving
 
 ### View, copy or save preset JSON
 
-Choose **Show preset JSON** beside Save current preset. The dialog shows verified current-snapshot effect settings in chain order, with settings ordered like the mobile/desktop editor. Disabled and repeated effects are included. Setting names omit units, which have their own `unit` property; internal IDs and raw/unmapped values are excluded. Scroll vertically or horizontally, use the **Copy JSON** icon/button to copy the complete document, or **Save JSON…** to choose a file location with Windows Save As. The default filename is the preset prefix and name, such as `0D British Lead Solo.json`.
+Choose **Show preset JSON** beside **Save / rename preset…**. The dialog shows verified current-snapshot effect settings in chain order, with settings ordered like the mobile/desktop editor. Disabled and repeated effects are included. Setting names omit units, which have their own `unit` property; internal IDs and raw/unmapped values are excluded. Scroll vertically or horizontally, use the **Copy JSON** icon/button to copy the complete document, or **Save JSON…** to choose a file location with Windows Save As. The default filename is the preset prefix and name, such as `0D British Lead Solo.json`.
 
 The dialog captures the displayed snapshot when opened. Unapplied input values are excluded, and the dialog identifies them if present. Copy and Save contain exactly the JSON shown. These actions do not change the amplifier. See [Preset-JSON.md](Preset-JSON.md) for the consistent schema.
 
@@ -120,9 +96,9 @@ The dialog captures the displayed snapshot when opened. Unapplied input values a
 
 Choose **Save / rename preset…** in the current-preset card. Apply or clear pending effect/Mixer inputs first. Edit the name and choose any bank-labelled destination from **0A–19D**. Keep the current destination to save or rename it; choose another to save a copy. Names currently support **1–20 printable ASCII characters**, including spaces and punctuation; Unicode is not supported yet.
 
-Choose **Save**, then review the source, fresh destination name, new name and overwrite warning in the matching dark confirmation dialog. Choose **Save** to confirm or **Cancel** to stop; Cancel is the default. On confirmation the app saves once, recalls the destination and verifies its complete content. The saved destination becomes active, its name/effect filter update immediately and the unsaved marker clears. Rename saves your live settings as well as the new name, matching mobile behavior. Save As preserves the source slot’s stored contents.
+Choose **Save**. A short Bluetooth check reads the current source and destination before the confirmation opens; this is not an intentional pause. Then review the source, fresh destination name, new name and overwrite warning in the matching dark confirmation dialog. Choose **Save** to confirm or **Cancel** to stop; Cancel is the default. On confirmation the app saves once, recalls the destination and verifies its complete content. The saved destination becomes active, its name/effect filter update immediately and the unsaved marker clears. Rename saves your current amplifier settings as well as the new name, matching mobile behavior. Save As preserves the source slot’s stored contents.
 
-Mobile and actual Windows same-slot rename and cross-slot edited-chain saves pass recall/reconnect checks; every original preset was restored after testing. The edited saved copy also survived a physical amplifier power cycle; all 80 original presets and global settings were subsequently restored. See [Preset-Save-Rename.md](Preset-Save-Rename.md).
+The clean/rhythm/lead workflows additionally passed both desktop dialogs, reconnect, scrolled mobile Amp comparisons and user-confirmed amplifier bank/name displays; see [Musician-Workflow.md](Musician-Workflow.md). Mobile and actual Windows same-slot rename and cross-slot edited-chain saves pass recall/reconnect checks; every original preset was restored after testing. The edited saved copy also survived a physical amplifier power cycle; all 80 original presets and global settings were subsequently restored. See [Preset-Save-Rename.md](Preset-Save-Rename.md).
 
 An unconfirmed save may have changed storage. The app discards the failed connection and attempts one read-only reconnection to reload actual settings and restore controls. It shows the outcome beside Save and never repeats the save automatically. If recovery fails or the amplifier reports a transfer-state change, use Connect / Refresh amplifier before another action. Time spent reviewing the confirmation does not consume the device deadline. Local snapshot files cannot enable saving.
 
@@ -146,7 +122,7 @@ Use the vendor MOOER Studio utility for whole-device backups; the verified devel
 
 Development tests record the original state, restore every changed parameter and the originally selected preset, then compare complete state/detail payloads. The opt-in hardware test command in [Environment.md](Environment.md) performs temporary changes; normal app startup and preview commands do not run that test.
 
-All 80 slots were recalled in the 1.6.0 Windows check, with original 0D restored and all original bytes verified after each test. Phone iAMP was stable when the user reconnected afterward. This does not resolve the earlier loop cause. Phase 6 advanced functions remain excluded unless separately requested.
+All 80 slots were recalled in the 1.6.0 Windows check, with original 0D restored and all original bytes verified after each test. Phone iAMP was stable when the user reconnected afterward. This does not resolve the earlier loop cause. Phase 6 advanced functions remain deferred unless separately requested; GIR&IR is excluded entirely. No further mobile-screen stability confirmation is requested unless you ask.
 
 ## Build from source
 

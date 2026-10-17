@@ -1,5 +1,14 @@
 # Preset-selection evidence
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 13 October 2026. A phone-driven selection round trip on firmware **V1.1.9** establishes the observed request structure for **wire index 4 → 5 → 4**. A separate Windows API round trip now confirms selection and complete observed restoration for the same pair. This document's investigation decoded retained evidence only and did not send hardware commands. Desktop selection UI writes have not been separately tested on hardware.
 
 The user requires **every test change to be restored**. Independent Windows reads confirm that the phone round trip returned the complete observed state and preset-detail payload to baseline. Selecting a different preset can discard unsaved current-preset edits; a test must not assume that recalling the original index alone restores those edits.

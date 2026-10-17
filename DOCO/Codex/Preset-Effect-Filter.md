@@ -1,5 +1,14 @@
 # Preset effect filter — 1.22.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The filter includes disabled effects as present and combines with text search. All 124 built-in model labels are local. A persistent per-device/firmware cache indexes all 80 presets; connection reuses it, and **Refresh effect names** explicitly refreshes it. **Reset** restores All effects and is disabled at All effects. Active live reads and successful saves update the index; Save As refreshes stored source identities. See Effect-Cache.md. Earlier always-reread/partial-model limitations below are superseded; all requested built-in controls are implemented.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 15 October 2026. The Effect dropdown combines with the existing name/bank/index search. All effects clears only the effect choice; search × clears only text. Disabled effects count as present: matching uses category/type and model identity, never the enable flag or a fixed chain position. Duplicate display names are disambiguated by category. All 124 captured built-in models are listed, including models that the desktop does not edit. Filtering never enables new hardware writes.
 
 ## Catalog evidence

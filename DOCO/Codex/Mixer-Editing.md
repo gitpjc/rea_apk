@@ -1,5 +1,8 @@
 # Mixer
 
+This reference remains applicable to application 1.41.2. Version labels and test counts below identify the original implementation/evidence runs; they do not claim a new test run. See [Current-Status.md](Current-Status.md) for full delivered scope and open acceptance gates. Mixer values are separate global settings and are not included in effect-settings JSON. P5.8 is recorded in [Musician-Workflow.md](Musician-Workflow.md); it is not an audio-listening test.
+
+
 Version 1.40.0 adds the four mobile Mixer controls to a separate desktop page. Connect through **Amplifier Settings**, then choose **Mixer** or press **Ctrl+3**. The same live Bluetooth connection serves both pages.
 
 | Channel | Level range | Step | Mobile color |

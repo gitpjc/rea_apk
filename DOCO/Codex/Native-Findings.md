@@ -1,5 +1,14 @@
 # Vendor utility native protocol findings
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This retained native/protocol evidence supports the reconstruction; subsequent runtime model and save checks supersede initial unknown-core-command limits. The current bounded command ledger is Protocol.md. REA native analysis succeeded with 71 retained evidence records; this does not imply full Dart recovery, USB control or advanced-function implementation.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Inspected 13 October 2026 with REA MCP and Ghidra 12.1.4. Target: the read-only local copy `analysis/generated/vendor/MooerStudioForF40i.exe`, SHA-256 `56e2cafe196e6f0da378066af5a4c38ec38da1691c5874ade6a696b42a120462`. No vendor executable was run and no USB request was sent during this analysis. Addresses below are Ghidra virtual addresses, not file offsets. Decompiled names beginning `FUN_` are generated analysis labels.
 
 ## Established framing

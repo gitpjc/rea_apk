@@ -1,5 +1,14 @@
 # Effect-chain editing — 1.25.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+Add/remove/reorder and in-place model replacement are implemented, including repeated categories/models. A blue insertion line shows the drag destination; move buttons remain available. The picker lists the nine mobile categories; GIR&IR is explicitly unavailable/excluded, while all 124 built-in models in the other eight categories have verified controls. Added/removed records update immediately after complete readback. Routine polling does not flash-disable chain actions; writes, pending inputs and invalid state still guard them. All 124 models have parameter/on-off/moved-position evidence, but exhaustive combinations, capacity limits and rejection cases remain open. Model replacement loads device defaults, so restoring a model alone does not restore its prior values. General save/rename is explicit and separate; nothing is saved automatically. The Boolean Amp ninth-word side effect is bounded to observed chain/on-off transitions, not an independently understood control.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 ## In-place model replacement — 1.27.0
 
 Select an effect and choose **Change model…**. The shared picker retains the mobile category order and all 124 built-in models, including other categories and models already in the chain. It starts on the current category/model. The current choice cannot be reapplied accidentally, because doing so would reset its values. Choosing another model replaces the selected record in the same position with amplifier-supplied defaults. No save is sent. GIR&IR remains listed with the existing unavailable-library explanation; Phase 6 remains excluded.

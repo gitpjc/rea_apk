@@ -19,3 +19,7 @@ Data from other presets reflects the last cache refresh. After changing effects 
 Actual read-only Windows checks use an isolated cache directory: a cold connection issues **83** detail queries (80 library entries plus initial/before/after live details); a newly created window/store reuses the saved file and issues **1** live detail query, with **zero** library queries; explicit Refresh effect names issues **82** detail queries (80 plus before/after). A pending Threshold input survives manual refresh and is returned locally to its confirmed value without Apply. Reset is disabled on All effects and preserves a British text search. After disconnect, cached filtering remains available while the refresh button disables. A separate fresh BLE read verifies every original state/detail byte unchanged. Private report: analysis/private/effect-cache-windows-report.json, passed=true, baselineRestored=true, failure=null.
 
 This changes filtering/cache behavior only. No parameter changes, preset recalls, saves, sample transfers or Phase 6 work.
+
+## General save integration — current 1.41.2
+
+Successful save/rename updates the destination’s name and effect identities immediately. Save As also rereads the source slot’s stored identities: its abandoned unsaved chain must not remain indexed as stored content. Unconfirmed source data invalidates that entry and requires refresh. This schema-1 search cache stores identities, not parameter values or edit authority; the active preset always receives a fresh complete read.

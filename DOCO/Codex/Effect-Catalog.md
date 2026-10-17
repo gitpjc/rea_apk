@@ -1,5 +1,14 @@
 # Effect catalog investigation
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The current local catalog is assets/effect_catalog.json: 124 built-in models across Dyna 4, Filter 3, EQ 2, Amp 55, OD 22, Delay 12, Reverb 9 and Mod 17. All have verified parameter/on-off controls and JSON ordering, including Shimmer. Current model specifications are linked from Current-Status.md. Manual serial numbers were not used as wire identifiers. The manual-only unknowns, initial missing-catalog triage and read-only follow-ups below are historical discovery steps, superseded by later runtime evidence. GIR&IR is excluded; advanced global/tuner/sample semantics remain outside implemented scope.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 13 October 2026; runtime evidence updated 14 October 2026. **No trusted wire parameter-ID/range/unit catalog was recovered from the bounded packaged-resource search.** The manual provides useful effect names and presentation ordering, but its serial numbers must not be used as protocol identifiers. Controlled runtime evidence and separately marked baseline correspondences establish limited mappings outside this negative resource-search result.
 
 ## Confirmed runtime mappings

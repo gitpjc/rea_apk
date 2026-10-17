@@ -1,5 +1,14 @@
 # PLX 100 six-control 0–100 ranges — 1.18.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026, F15i V1.1.9, third-position type 2/model 31/nine-word enabled PLX 100 profile. Phase 5 only; Phase 6 excluded.
 
 ADB inspection establishes **Gain, Bass, Mid, Treble, Presence and Master: 0–100**. Each phone slider was moved to both endpoints and restored before testing the next. Original values remain **100,35,43,40,45,75**. Exact complete-block commands corroborate direct integer words 2–7 while preserving enabled/model/linked flags. After closing phone iAMP, a fresh independent Windows read matched every original state/detail byte. No recalls or saves.

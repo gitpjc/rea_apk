@@ -22,22 +22,24 @@ The supplied `DOCO/MOOER/F15i Li_Manual_EN_V01_2025.06.19.pdf`, printed pp.64-65
 2. Open the utility's Backup section. The manual identifies the backup/restore file-management area beneath the backup control.
 3. For an explicitly intended recovery, use the vendor utility's restore operation for the selected compatible backup, following its displayed instructions. A firmware-update prompt is a separate operation and is not part of this recovery baseline.
 
-The user exercised backup creation only. The recovery route is documented; **restore compatibility, completeness, interruption handling and successful hardware round trip remain untested**. Keep the original vendor file and verified copy. Do not introduce a custom restore encoder based on the observed header.
+The initial 13 October baseline exercised backup creation only. Later, the user reported that the MOOER Studio restore succeeded after troubleshooting a failure that occurred after progress started. This is a user-reported successful vendor restore, not independent verification of completeness, interruption handling or the custom file/transfer format. Keep the original vendor file and verified copy. Do not introduce a custom restore encoder based on the observed header.
 
 ## Firmware and current-state boundary
 
 Earlier independent Windows BLE reads reported firmware V1.1.2 and current preset wire index 16 / Cali MK3 Lead. These remain valid historical observations, not the current state.
 
-Fresh `analysis/private/phone-reconnect-logcat.txt` reports firmware **V1.1.9** (line166), `British Lead Solo` (lines189 and408), with current slot **0D** reported by the coordinator's phone-state observation. This new session differs from the earlier baseline. Codex performed no firmware update; the cause/timing of the version change is not inferred from these logs. Refresh Windows read-only state and annotate subsequent experiments with the fresh firmware/session before reusing earlier fixtures as universal claims.
+Fresh `analysis/private/phone-reconnect-logcat.txt` reports firmware **V1.1.9** (line166), `British Lead Solo` (lines189 and408), with current slot **0D** reported by the coordinator's phone-state observation. This new session differs from the earlier baseline. Codex performed no firmware update; the cause/timing of the version change is not inferred from these logs. Subsequent independent Windows reads and core editing/save tests verified V1.1.9. Always record a fresh current baseline before another experiment; neither this original slot nor its values may be assumed current.
 
 ## Task status
 
 - [x] F15i/phone/USB/Bluetooth access established for the development baseline.
 - [x] User-created vendor backup source and private copy recorded with matching hashes.
 - [x] Vendor-documented recovery route recorded.
-- [ ] Vendor restore tested on hardware.
+- [x] User-reported successful vendor restore recorded.
+- [ ] Independent exhaustive vendor-restore/completeness/interruption acceptance.
 - [ ] Full vendor-utility workflow/feature evaluation completed (Plan P0.6).
 - [ ] Custom backup/restore file format and transfer semantics validated (P6.6).
-- [ ] Hardware editing and reconnect/save gates completed (P3/P5).
+- [x] Bounded core editing, reconnect, general save and physical power-cycle persistence checks completed; P5.8 clean/rhythm/lead acceptance completed.
+- [ ] Remaining broad fault, usability and deployment gates in Plan.md.
 
-Plan P0.5 is complete because access, baseline backup and a documented recovery route exist. It does not imply restore execution, full utility evaluation or full hardware control.
+Plan P0.5 is complete because access, baseline backup and a documented recovery route exist. It does not imply independent exhaustive restore validation, full utility evaluation or USB control. Custom backup/restore remains deferred under Phase 6; GIR&IR is excluded.

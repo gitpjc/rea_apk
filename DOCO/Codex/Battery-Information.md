@@ -1,5 +1,8 @@
 # Read-only battery information — 1.9.0
 
+This reference remains applicable to application 1.41.2. Version labels and test counts below identify the original implementation/evidence runs; they do not claim a new test run. See [Current-Status.md](Current-Status.md) for full delivered scope and open acceptance gates. Charging-state semantics remain unknown; showing battery percentage does not implement an advanced charging control.
+
+
 Phase 5 P5.3, validated 14 October 2026 on F15i firmware V1.1.9. Phase 6 remains excluded.
 
 ## Protocol evidence

@@ -1,6 +1,6 @@
 # Development environment
 
-Verified on 13 October 2026. Run commands in Git Bash from the repository root:
+Tool inventory established on 13 October 2026; current support/setup status reconciled 17 October 2026 for 1.41.2. Selected Node 24.19.0, .NET 10.0.401, ADB 36.0.2 and Windows 10.0.26200.9711 were reread locally for this documentation pass. This did not rerun hardware discovery or reinstall tools. See [Current-Status.md](Current-Status.md) for delivered features. Run commands in Git Bash from the repository root:
 
 ```bash
 cd /d/A_A_Codex/rea_apk
@@ -32,13 +32,13 @@ This exercises the actual Open/Export handlers, verifies disabled hardware contr
 
 | Component | Selected version/location | Status |
 | --- | --- | --- |
-| Windows | x64, build 26200 reported by ADB; Windows 11 | Running |
+| Windows | Windows 11 x64, current local version 10.0.26200.9711 (native ver and ADB host-version output) | Running |
 | System Node/npm | Node 22.16.0, npm 10.9.2, `C:/Program Files/nodejs` | Node too old for REA; left unchanged |
 | Selected Node | 24.19.0, portable `.tools/node` | Compatible and checksum verified; system installation unchanged |
-| REA | 6.4.0, `.tools/rea/node_modules/rea-agents` | CLI and separate MCP client smoke test passed |
+| REA | 6.4.0, `.tools/rea/node_modules/rea-agents` | CLI/separate-client inspection and subsequent actual REA native analysis recorded |
 | Java | Full OpenJDK 21.0.1, `D:/JAVA_STUFF/OpenJDK/jdk-21.0.1` | `jdk.compiler` present |
 | JADX engine | 0.7.1, `.tools/jadx/jadx-headless-mcp-0.7.1-all.jar` | Official release SHA-256 verified |
-| ADB | 36.0.2-14143358, `D:/JAVA_STUFF/Android/Sdk/platform-tools` | Wireless phone connection established; endpoint changes observed |
+| ADB | 36.0.2-14143358, `D:/JAVA_STUFF/Android/Sdk/platform-tools` | USB ADB reference tests verified; earlier wireless endpoints were unstable |
 | Android build tools | 36.0.0, `D:/JAVA_STUFF/Android/Sdk/build-tools/36.0.0` | AAPT metadata and apksigner verification passed |
 | .NET SDK | 10.0.401, `.tools/dotnet` | Official Windows ZIP SHA-512 verified; probe builds without warnings |
 | Visual Studio | Community 18 installed | Not modified; installed workloads not fully audited |
@@ -49,15 +49,15 @@ This exercises the actual Open/Export handlers, verifies disabled hardware contr
 
 - Amplifier: Windows USB product `F15i`, VID `34DB`, PID `000B`.
 - Interfaces: USB Audio (`MI_00`) and HID (`MI_03`). Probe measured 65-byte input and output reports, no feature reports, usage page 1, usage 0. This establishes report metadata, not an application packet format or firmware version.
-- No named F15i/MOOER BLE advertisement was observed in the initial 15-second scan. This is a bounded negative observation, not proof that the amplifier lacks BLE.
+- The initial 15-second scan saw no named advertisement. Later actual Windows discovery and retained-session BLE control succeeded repeatedly; the early negative result is historical.
 - Phone: model `M2012K11AG`, Android 13; USB ADB now works reliably. Prior Wi-Fi ports changed repeatedly and one connection went offline. The phone's iAMP app was stopped to release its BLE connection for Windows testing; it can be reopened when another reference capture is needed.
-- Amplifier firmware: initial independent Windows BLE information queries matched the phone's V1.1.2 report and returned all 80 preset names. Fresh `analysis/private/phone-reconnect-logcat.txt` reports V1.1.9 and British Lead Solo (phone slot 0D); independent Windows refresh is pending. No firmware update was performed by Codex. User-created vendor backup and private copy were hash-verified; `Backup-Baseline.md` records the recovery route. Restore remains untested.
+- Amplifier firmware: initial independent Windows BLE information queries matched the phone's V1.1.2 report and returned all 80 preset names. Repeated independent Windows reads and all implemented control proofs now target V1.1.9. Original/current selected presets are per-test baselines, not a fixed 0D assumption. No firmware update was performed by Codex. User-created vendor backup and private copy were hash-verified; `Backup-Baseline.md` records the recovery route. The user later reported a successful vendor restore; independent custom-format/full vendor-restore acceptance remains unproven.
 
 ## Emulator
 
 An isolated `Iamp_Analysis` virtual device was created under `.tools/avd` using the already-installed Android 34 Google APIs x86-64 image. It has approximately 5 GiB free after initialization. The existing Pixel 8 virtual device was left intact.
 
-The standalone APK initially crashed on x86-64 because `libhtdemucs_native.so` is missing from that ABI in the supplied package. Reinstalling with `--abi arm64-v8a` uses the emulator's installed ARM translation and successfully starts iAMP (home screen visually verified). The emulator is running without a window for ADB-based inspection and does not replace the physical amplifier's Bluetooth connection.
+The standalone APK initially crashed on x86-64 because `libhtdemucs_native.so` is missing from that ABI in the supplied package. Reinstalling with `--abi arm64-v8a` uses the emulator's installed ARM translation and successfully starts iAMP (home screen visually verified). The emulator was run without a window during initial ADB inspection; its current running state was not checked and does not replace the physical amplifier's Bluetooth connection.
 
 ## Python policy
 
@@ -69,7 +69,7 @@ Setup changed only the Codex registration and installed its matching REA skill. 
 
 The server now launches portable `.tools/node/node.exe` and the project-local public REA launcher with `mcp`. `JAVA_HOME` and `REA_JADX_MCP_JAR` are configured in the server environment, not just in a terminal. A scoped setup reapplied the registration after portable Node installation and the Codex doctor check passed.
 
-`scripts/rea-mcp-smoke.mjs` connected a separate MCP client, discovered 170 tools and successfully inspected the phone base APK. This verifies the server's MCP workflow; the current Codex chat still needs a restart/reconnection to load the new registration. P1.4 remains open until tools are present in the actual chat.
+`scripts/rea-mcp-smoke.mjs` connected a separate MCP client, discovered 170 tools and successfully inspected the phone base APK. That was the initial separate-client check. Subsequent actual REA/Ghidra vendor analysis and 71 exported evidence records establish actual MCP use; P1.4 is complete. After any future registration change, restart/reconnect Codex and repeat the relevant smoke test. See [Native-Findings.md](Native-Findings.md).
 
 Published 6.4.0 does not advertise `identify_flutter_build` or `inspect_dart_aot`; their CLI spellings also return `COMMAND_NOT_FOUND`. Do not use repository-main examples as though they were available in this release.
 
@@ -116,12 +116,12 @@ JADX 0.7.1 is downloaded only when absent from the official GitHub release and c
 
 Only `bash scripts/bootstrap.sh --configure-codex` applies the Codex-only REA setup and Android environment. It first saves a dry-run preview, preserves unrelated client entries through REA's scoped setup, and uses the existing environment helper. This explicit mode is needed when intentionally refreshing registration after switching from bundled to portable Node; the default bootstrap does not silently repair global configuration. Restart/reconnect the actual chat afterward.
 
-`bash scripts/check.sh` runs strict Codex registration doctor, APK hashes/signature inventory, bounded Flutter-token triage, a separate MCP-client Android inspection and Release solution build. It sends no amplifier commands. A failed Codex doctor fails the default check; optional provider diagnostics are retained in `analysis/generated/rea-doctor.json`. For a deliberately independent software check during registration repair, `SKIP_CODEX_DOCTOR=1 bash scripts/check.sh` explicitly skips that gate and labels it skipped; it does not establish registered-chat readiness. Actual hardware control, backup and current-chat tool availability remain separate plan tasks.
+`bash scripts/check.sh` runs strict Codex registration doctor, APK hashes/signature inventory, bounded Flutter-token triage, a separate MCP-client Android inspection and Release solution build. It sends no amplifier commands. A failed Codex doctor fails the default check; optional provider diagnostics are retained in `analysis/generated/rea-doctor.json`. For a deliberately independent software check during registration repair, `SKIP_CODEX_DOCTOR=1 bash scripts/check.sh` explicitly skips that gate and labels it skipped; it does not establish registered-chat readiness. Hardware acceptance and current-session tool availability are separate from this setup script; current feature proofs are linked in Current-Status.md.
 
 Validation on 13 October 2026: strict `bash scripts/check.sh` passed after the coordinator refreshed the Codex registration for portable Node. All five APK signatures verified; separate MCP smoke discovered 170 tools and inspected the phone base APK; Release build completed with zero warnings/errors. Final bootstrap repeat passed; invoking the .NET helper separately reused the retained 10.0.401 archive after checking the official Microsoft SHA-512, without another SDK download. Bash syntax checks and `git diff --check` passed.
-## Explicit hardware validation commands
+## Historical narrow hardware validation command
 
-The default desktop launch and `--preview` do not execute control tests. The following opt-in command **does change the amplifier temporarily**. It requires the captured V1.1.9 slot-4 baseline and runs actual UI handlers through preset 4 -> 5 -> 4, Threshold 25 -> 26 -> 25, Level 50 -> 48 -> 50, 808 Gain 39 -> 37 -> 39, Tone 100 -> 98 -> 100 and Volume 100 -> 98 -> 100. It also changes all five parameters together and restores them. A separate bounded cleanup connection verifies complete state/detail restoration. Stop further mutations if its report does not confirm restoration.
+The default desktop launch and --preview do not execute control tests. Keep one desktop instance at a time and one connected phone/Windows controller. The opt-in command below is a retained narrow-baseline QA tool, not the current musician acceptance procedure; see [Musician-Workflow.md](Musician-Workflow.md). Read a fresh baseline and verify its exact preconditions before considering any replay. The following opt-in command **does change the amplifier temporarily**. It requires the captured V1.1.9 slot-4 baseline and runs actual UI handlers through preset 4 -> 5 -> 4, Threshold 25 -> 26 -> 25, Level 50 -> 48 -> 50, 808 Gain 39 -> 37 -> 39, Tone 100 -> 98 -> 100 and Volume 100 -> 98 -> 100. It also changes all five parameters together and restores them. A separate bounded cleanup connection verifies complete state/detail restoration. Stop further mutations if its report does not confirm restoration.
 
 ```bash
 source scripts/env.sh
@@ -131,4 +131,4 @@ artifacts/Iamp.Desktop/Iamp.Desktop.exe \
   analysis/private/desktop-ui-hardware.png
 ```
 
-It writes the screenshot and matching `.roundtrip.json` privately. Exit 0 requires the UI workflow to pass and the original baseline to be restored exactly. The initial test passed on 13 October; the expanded five-control test passed on 14 October in `desktop-five-controls-hardware.roundtrip.json`. It is a development validation tool, not a general preset-repair or backup-restore feature.
+It writes the screenshot and matching `.roundtrip.json` privately. Exit 0 requires the UI workflow to pass and the original baseline to be restored exactly. The initial test passed on 13 October; the expanded five-control test passed on 14 October in `desktop-five-controls-hardware.roundtrip.json`. It is a historical development validation tool, not a general preset-repair/backup-restore feature. No hardware command was run for this documentation update.

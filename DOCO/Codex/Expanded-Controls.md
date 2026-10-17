@@ -1,5 +1,14 @@
 # Controlled mappings: Noise Killer Level, 808 Gain and Vol
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026. Three additional phone controls were changed individually and restored on firmware **V1.1.9**, preset wire index **4**. The evidence establishes **Noise Killer Level = Values[3]**, **808 Gain = Values[2]**, and **808 Vol = Values[4]**. Eight screenshots were independently inspected, the transmitted frames reconstructed from target-attributed HCI traffic, and separate Windows reads confirm complete final state/detail restoration.
 
 This investigation analyzed retained evidence only. Subsequent separate **Windows API and actual desktop-handler round trips now pass**, with complete observed baseline restoration. Existing Threshold and Tone proofs are documented in [Parameter-Editing.md](Parameter-Editing.md) and [808-Tone-Editing.md](808-Tone-Editing.md).

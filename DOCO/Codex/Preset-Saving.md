@@ -1,5 +1,14 @@
 # Observed phone same-slot save and edited-value recall retention
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Current implementation: version1.41.0 adds verified general save/rename/save-as; see [Preset-Save-Rename.md](Preset-Save-Rename.md). The narrow historical observations and limitations below describe the original1.2.0 stage.
 
 14 October 2026. The user explicitly approved one unchanged phone-app save of **0D / wire index 4 / British Lead Solo** on firmware **V1.1.9**. The actual Save dialog displayed that exact name and destination; neither field was edited. Save was opened once and Done was confirmed once. No other slot, parameter, name or firmware was changed.

@@ -1,5 +1,14 @@
 # PLX 100 Mid editing — 1.11.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Validated 14 October 2026 on V1.1.9 / 0D British Lead Solo. Phase 5 only; Phase 6 remains excluded.
 
 The independent baseline has enabled PLX 100 `[1,31,100,35,43,40,45,75,1]`. Phone command logs confirm Mid is word 4 (zero-based), using the existing complete-block opcode 25. Exact Mid 42 and restored 43 frames are regression-tested. The user's slider briefly traversed 44–46; those values remain unsupported in Windows.

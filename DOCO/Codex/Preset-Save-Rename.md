@@ -36,8 +36,14 @@ The public fixture `tests/fixtures/f15-preset-save-observations.json` retains in
 
 **Power-cycle persistence passed.** After the user switched the amplifier off, waited five seconds and restarted it, an independent Windows read found 19D / Windows Save 80 with the exact complete saved detail: Threshold 27, Tone 99, disabled OD and duplicate Dyna. The original 19D was rebuilt, saved and recalled; all 80 original details, original 0D selection and complete global state then matched the baseline independently. The final source-filter-cache regression also passed with complete restoration. Evidence hashes and the actual post-restart state/detail are retained in the public fixture. GIR&IR and Phase 6 remain excluded.
 
-The self-contained Windows x64 release is published to `artifacts/Iamp.Desktop`. Version 1.41.1 and all 65 history entries pass source/package checks. Release builds have zero warnings/errors; the published Desktop, Transport and Protocol DLL hashes match staging. The GitHub workflow remains disabled locally, with no commit or push performed.
+The self-contained Windows x64 release is published to `artifacts/Iamp.Desktop`. Version 1.41.2 and all 66 history entries pass source/package checks. Release builds have zero warnings/errors; the published Desktop, Transport and Protocol DLL hashes match staging. The GitHub workflow remains disabled locally, with no commit or push performed.
 
 ## 1.41.1 save failure regression
 
 The reported original failure before confirmation did not recur in direct Windows dialog checks. An intentionally stale source reproduced the failed-session/disabled-state path: it sent no save command, discarded the terminal session, reconnected read-only and enabled Save with the actual settings. An exact unchanged 0D British Lead Solo copy to19D succeeded and immediately updated the desktop name. All80 saved details and the fresh original active19D/global state were independently restored. Focused checks cover both themed confirmation actions, three sizes, Cancel default and review time exceeding a shortened device deadline.
+
+## Current wording and workflow acceptance — 1.41.2
+
+Both save dialogs describe **Current amplifier settings**. This means the amplifier’s currently applied chain and values, including unsaved edits; unapplied desktop inputs are excluded. The initial Save action rereads the destination and source before opening confirmation, so Bluetooth verification can take several seconds. It is not a fixed three-second confirmation timer. The themed confirmation defaults to Cancel; saves are never replayed.
+
+The completed [Musician-Workflow.md](Musician-Workflow.md) P5.8 checks extend the earlier results above with clean/rhythm/lead copies, actual desktop dialogs, reconnect, scrolled mobile comparisons, physical display confirmation and independent full restoration after every case. They do not close the broader fault, accessibility or clean-PC gates.

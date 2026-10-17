@@ -1,5 +1,14 @@
 # Pending parameter inputs — 1.21.1
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+Pending values are guarded per effect instance/position, including repeated categories/models. Current controls cover all 124 built-in models rather than the original 18 fields. External conflicting changes preserve pending input and require explicit refresh; save/chain actions cannot silently commit pending inputs. Earlier feature/test counts and narrow-save rules below are historical.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Effect-card navigation previously reset inputs to their confirmed values, silently discarding un-applied changes. Selecting an already initialized effect now reuses its valid or invalid numeric text and slider position. Pending detection includes initialized hidden effect editors, preserving recall confirmation, effect-toggle blocking and polling conflict protection.
 
 After a verified individual parameter write, all previously initialized input text is restored against the new confirmed snapshot. The applied value is now confirmed, while other pending changes remain. An explicit amplifier refresh preserves inputs only if device address, firmware and complete state/detail payloads are unchanged. New presets, imports and changed refresh snapshots initialize new inputs instead; ambiguous writes still invalidate editing and require a fresh read. This is session-local UI state, not persistence or automatic write replay.

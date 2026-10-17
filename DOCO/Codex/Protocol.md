@@ -1,14 +1,46 @@
 # F15i Li protocol evidence ledger
 
-Updated 13 October 2026. This is a partial reconstruction. The initial V1.1.2 capture analysis below was offline; subsequent V1.1.9 phone captures and bounded Windows hardware tests established two restricted control operations. This is not a complete protocol specification.
+Reconciled 17 October 2026 for desktop 1.41.2 and F15i V1.1.9. This is a bounded implementation/evidence ledger, not a complete vendor specification. [Current-Status.md](Current-Status.md) states delivered scope; per-feature documents and sanitized fixtures contain the detailed commands and tests. The original V1.1.2 capture is retained in the historical section below.
 
-## Subsequent V1.1.9 control proofs
+## Implemented command families
 
-- [Parameter-Editing.md](Parameter-Editing.md): payload `25` followed by a complete effect record changed the first-position Noise Killer threshold. Windows verified 25 -> 26 -> 25 and restored the complete preset-detail payload. The initial implementation supports only the captured model/configuration and values 25-28. Response `26 01` is a candidate acknowledgement; its semantic meaning remains unknown. Read-back establishes the actual result.
-- [Preset-Selection.md](Preset-Selection.md): a 92-byte state copy with discriminator `13` and the desired preset index recalled slots 4/5. Windows verified 4 -> 5 -> 4, preserving the other state fields and restoring both full state and preset-detail payloads exactly. Exact current-preset detail hashes guard against discarding unfamiliar edits. Response `14 01` semantics remain unknown.
-- No preset save, arbitrary global-state write, firmware update or backup-restore command has been established. All test changes must return to the recorded baseline and originally selected preset, with read-back verification.
+All opcodes below are hexadecimal payload bytes, excluding the AA55 envelope. Wire preset indices 1–80 map to 0A–19D. Current state is 92 bytes; detail includes a 20-byte name and 20 positional records with variable-length values plus preserved trailer bytes. Outgoing effect records encode values little-endian; incoming preset detail words are parsed big-endian. Do not infer wire identifiers from manual serial numbers.
 
-The following sections retain the initial capture's provenance and unresolved boundaries; their V1.1.2 measurements are historical rather than the current amplifier baseline.
+| Request → observed reply | Implemented use | Evidence and boundary |
+| --- | --- | --- |
+| 01 01 → 02 | Identity, firmware and reported capacities | Windows reads corroborated Android capture. Current writes require V1.1.9 and appropriate supported capability/layout. |
+| 29 start end → 2A | Names 1–40 and 41–80 | All 80 names and bank labels verified; names are not an effect snapshot. |
+| 11 →12, 21 index →22 | Current state and indexed effect detail | Read state/detail/state as one serialized workflow; require matching state and detail index. A live snapshot alone does not prove saved storage. |
+| 25 + full effect record → observed 26 01 | Parameter and enabled-state changes at an explicit position | All 124 requested model layouts have evidence. Complete readback, not ATT delivery or the observed acknowledgement alone, establishes success. See the eight model documents. |
+| 2D token operation ... | Add/remove/move/replace effects | Operations 1/3/4/2 respectively, with captured positional layouts and process-wide token bands. See [Effect-Chain-Editing.md](Effect-Chain-Editing.md). No unknown-operation fuzzing. |
+| 13 + full state →14 01 | Preset recall and the separately verified Mixer fields | Preserve all unrelated bytes; check full state/detail after the operation. All 80 recall destinations and four Mixer channels have bounded hardware evidence. |
+| 2F destination name[20] →30 01 | Save current live content, rename, or Save As | Name is 1–20 printable ASCII characters, padded to 20 bytes. Source/destination freshly checked; one save, post-save 13/14 recall, exact expected state/detail. No automatic save replay. |
+| 91 →92 | Battery percentage | Percentage byte is corroborated on V1.1.9; power-state/charging semantics stay opaque. |
+| unsolicited 9B | Defensive transfer-state detection | Invalidate the session, inspect complete notification batches and block later/queued writes. The historical mobile route-loop trigger is unresolved; no root-cause fix is claimed. |
+
+The current-state Mixer offsets/conversions are documented in [Mixer-Editing.md](Mixer-Editing.md). They do not establish global EQ/input gain or other Phase 6 settings. Parameter families are Dyna (type 4), Filter(5), OD(1), Amp(2), preset EQ(9), Mod(6), Delay(7) and Reverb(8); together 124 models and 126 shared parameter types. Opaque/reserved words are retained, not guessed. The observed Boolean Amp ninth-word side effect has only the bounded allowances described in the chain/on-off documents.
+
+## State, persistence and failure policy
+
+The frame envelope uses AA55, a little-endian payload length and big-endian CRC-16/GSM over length plus payload. Fragmentation and checksums are covered by retained independent fixtures and bounded parsers. Original capture counts below are historical, not the entire current fixture corpus.
+
+The production command dispatcher serializes requests; WorkflowQueue serializes complete identity/read/compare/write/readback transactions. Active cancellation, timeout, disconnect, disposal, transfer status and workflow failure stop that session. Queued cancellation is isolated. A new session is required after terminal failure; cross-process coordination is a user/testing policy, not a claimed system-wide lock.
+
+The desktop polls current state about every 3 seconds and battery about every 30 seconds while connected and eligible. Pending inputs are separate from confirmed values. External changes that conflict with pending input preserve that input and stop editing until refresh. Unsolicited physical-panel-originated synchronization remains an acceptance task.
+
+A query of the active preset can describe live unsaved values. Save proof and restoration must distinguish active/live from stored content, preserving the user's fresh original state. General saving uses PresetSaveCommand and F15ReadSession.SavePresetAsync, defined in F15ReadSession.PresetSave.cs; the older ObservedPresetSaveCommand/SaveObservedThresholdAsync are retained legacy narrow APIs, not current desktop save restrictions. A full save request contains destination/name, not reconstructed effect bytes: the amplifier stores its current chain.
+
+Save failure recovery may create one new read-only session to reload actual state and restore controls. It never repeats a save. Transfer-state changes and unsuccessful recovery require explicit reconnect. Human time in the overwrite dialog does not consume the device-operation deadline. Chain commands alone permit one fresh-token attempt after a successful exact read proves **no change**; no failed or ambiguous read allows that retry.
+
+## Current verification and remaining scope
+
+All 80 recalls, all 124 per-model parameter/on-off profiles, representative repeated/moved/replaced chains, four-channel Mixer, general save/rename/save-as, saved edited-copy physical power-cycle persistence and P5.8 clean/rhythm/lead workflows have retained evidence with exact restoration. P5.8 used both actual desktop save dialogs and compares mobile parameters plus user-confirmed amplifier bank/name; see [Musician-Workflow.md](Musician-Workflow.md).
+
+Remaining limits include reserved fields, broad fault/late-reply behavior, physical-panel-originated changes, exhaustive chain rejection/limits, other firmware and USB control. GIR&IR is excluded; Phase 6 requires explicit authorization. Drum/looper/global settings/cloud/backup transfer commands are not implemented or authorized by this ledger. User-reported vendor restore is not a custom-format implementation proof.
+
+## Historical V1.1.2 capture — 13October 2026
+
+The sections below preserve the original single-session interpretation and open questions at that date. Their “candidate”, “unknown” and unchecked items describe that evidence only; later core mappings are summarized above. They are not current task authorization or a replay list.
 
 ## Sources and reproduction
 
@@ -64,7 +96,7 @@ These associations are grounded in outgoing requests followed by coherent respon
 
 iAMP logs report firmware `V1.1.2`, 80 presets, 10 GIR slots, 10 GNR slots, 70 drums and 10 looper files. These counts are firmware-reported/session observations, not hardcoded product-wide guarantees. Responses beginning `66` follow requests beginning `65` and include “Empty” or drum names; record layouts and category meanings remain partially inferred.
 
-## Remaining work and limits
+## Historical remaining work at the initial capture
 
 - [x] Decode the retained capture with connection attribution and length checks.
 - [x] Extract sanitized outgoing fixtures and establish the checksum across all observed logged writes.

@@ -1,5 +1,8 @@
 # Local connection diagnostics
 
+This reference remains applicable to application 1.41.2. Version labels and test counts below identify the original implementation/evidence runs; they do not claim a new test run. See [Current-Status.md](Current-Status.md) for full delivered scope and open acceptance gates.
+
+
 Updated 14 October 2026; introduced in desktop version 1.3.0.
 
 Use **Export diagnostics** in the sidebar after a connection problem, before closing the desktop app. Choose a destination for the `.iamp-diagnostics.json` file. Export does not connect to the amplifier or change presets. A new file is staged beside the destination and moved into place only after a successful write; the save dialog confirms overwriting an existing file. Export is disabled while another operation is active.

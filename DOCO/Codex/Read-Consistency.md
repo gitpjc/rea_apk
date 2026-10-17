@@ -1,5 +1,8 @@
 # Current-preset read consistency
 
+This reference remains applicable to application 1.41.2. Version labels and test counts below identify the original implementation/evidence runs; they do not claim a new test run. See [Current-Status.md](Current-Status.md) for full delivered scope and open acceptance gates. Current mutation workflows include general save/rename: a failed terminal session is disposed, one read-only recovery may reload actual state, human confirmation time is excluded from the device deadline, and saves are never replayed. See [Preset-Save-Rename.md](Preset-Save-Rename.md).
+
+
 Updated 14 October 2026; implemented in version 1.2.3.
 
 The production read sequence remains: query current state (`11` → `12`), query the selected preset's details (`21 index` → `22 index`), then query current state again. Previously, only the selected index was compared between state replies. A global setting could therefore change while the preset index stayed the same, allowing an inconsistent snapshot to be accepted.

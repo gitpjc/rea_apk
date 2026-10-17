@@ -1,5 +1,14 @@
 # Read-only model browser investigation
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The shared picker now supports add and in-place replacement, all 124 built-in models and repeated categories/models. All model parameter controls are implemented, including Shimmer. GIR&IR remains unavailable and is excluded by the user. The read-only/partial-control limitations and future model-selection work below describe the earlier milestone.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026, current desktop release 1.21.1, connected F15i V1.1.9. Authorized ADB screenshots inspect the mobile effect-model browser without selecting any model row. Only category navigation and list scrolling are performed. A fresh independent Windows read matches every original state/detail byte afterward. No saves, recalls, effect changes or parameter changes.
 
 The picker has a category column and numbered model rows. The Amp category also has an Amp dropdown header; its alternate options were not opened. Captured categories are Dyna, OD, Amp, Delay and Reverb. This is a **bounded partial UI catalog**, not a protocol catalog or proof of all available models. Names and displayed ordinals are preserved in tests/fixtures/f15-model-browser-observations.json with capture digests. Raw phone images/logs remain private.

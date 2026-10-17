@@ -1,5 +1,14 @@
 # Mobile transfer-screen loop: recovered, cause unresolved
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The historical phone transfer-screen loop trigger remains unresolved. Recovery/stability observations below do not prove its cause or permanent resolution. The desktop treats transfer notifications as terminal guarded state and requires a fresh connection as appropriate. Do not request another mobile-screen stability check unless the user asks.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026. After the approved Windows save test and publication, the user reported that iAMP repeatedly alternated between its home/connected-device screen and a PC/USB illustration. Restarting iAMP alone did not resolve it. No preset edits, saves or amplifier commands were sent during this diagnosis; Windows BLE connections were deliberately avoided after the recovery restart.
 
 ## Observed evidence

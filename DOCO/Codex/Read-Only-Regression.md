@@ -1,5 +1,14 @@
 # Current Windows read-only regression
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The following dated report records the specific disconnect/read-only checks and their outcomes, not complete fault coverage or a request to rerun them. Core retained-session editing and saving are now implemented. Physical-panel changes, sleep/adapter/permission failures and the broader reconnect/fault matrix remain open in Plan.md. Historical phone-stability observations do not require repeated checks; only perform those when the user asks.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026; desktop version 1.5.1, amplifier firmware V1.1.9. The user confirmed the amplifier was on, phone iAMP disconnected and MOOER Studio closed. USB metadata showed the amplifier interface; no desktop amp applications were running. No phone setting was changed.
 
 The sequence was an independent DeviceProbe current-state read, the actual desktop Read handler, then a fresh independent DeviceProbe read. Each opened/disposed its own session using the current shared dispatcher. The desktop also read all 80 preset names. No parameter update, preset recall or save command was sent. Discovery by scan and forced disconnect/power-cycle behavior were not tested; connection used the known Bluetooth address.

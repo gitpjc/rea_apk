@@ -1,5 +1,14 @@
 # Runtime effect labels and bounded field correspondences
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+All 124 requested built-in models now have runtime-verified controls and ordered physical JSON, with 126 shared parameter types. The five-model readings/nearby intervals below record the initial mapping milestone and do not limit current support. Use the category specifications linked from Current-Status.md for full settings/ranges. Opaque bytes remain preserved rather than assigned speculative meanings.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Original baseline inspection: 13 October 2026. Updated 14 October 2026 with separate controlled Level/Gain/Vol evidence. Five original screenshots were independently inspected and correlated with the retained Windows preset-4 snapshot on firmware **V1.1.9**. That original label inspection performed no parameter writes or model changes. Subsequent controlled experiments are identified separately below.
 
 The phone visibly identifies the selected preset as **0D British Lead Solo**, wire index **4** in the Windows snapshot. Controlled phone experiments now establish **808 Gain/Tone/Vol = Values[2]/[3]/[4]** and **Noise Killer Level = Values[3]**, with restoration evidence in [Expanded-Controls.md](Expanded-Controls.md) and [808-Tone-Editing.md](808-Tone-Editing.md). Hall Tone is now resolved through controlled ADB/Windows tests in `Reverb-Editing.md`. This is not a complete effect catalog.

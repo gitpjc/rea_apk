@@ -1,5 +1,14 @@
 # Dyna model editing — 1.28.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The model settings/order/ranges and dated device results below remain the category specification. Application 1.41.2 completes all eight requested categories (124 models total), including Mod, and general save/rename/Save As. Any “next category”, narrower save guard or other-models-pending wording records this milestone’s chronology, not current backlog. All values/groups must be checked across the entire scrolled mobile page. Broader fault/combination and deployment acceptance remains open; GIR&IR is excluded and Phase 6 deferred.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 The desktop now provides parameter editing and confirmed on/off controls for all four built-in Dyna models. This extends the existing Noise Killer implementation with Red Comp, Yellow Comp and Intel Reducer, keeping the mobile parameter order, half-width orange sliders, numeric entry and explicit Apply behavior. Changes are live and unsaved on the verified F15i V1.1.9 profile.
 
 ## Observed mobile settings

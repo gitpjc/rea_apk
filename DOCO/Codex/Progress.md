@@ -1,10 +1,30 @@
 # Implementation progress
 
+Updated 17 October 2026. Current published release: **1.41.2**. The core editor is implemented; broader reliability/usability/deployment acceptance remains open. [Current-Status.md](Current-Status.md) is the support summary, [Plan.md](Plan.md) the task ledger and [Feature-Matrix.md](Feature-Matrix.md) the acceptance matrix.
+
+## Completed core work
+
+- All 124 built-in Dyna/Filter/preset-EQ/Amp/OD/Delay/Reverb/Mod models, 126 shared parameter types, on/off, chain add/remove/reorder/replacement and repeated instances.
+- All 80 preset labels/names and recalls, combined text/effect filtering, disabled-effect inclusion and persistent manually refreshed effect index.
+- General save, rename and Save As with themed confirmation, ASCII names, complete readback, no save replay and failed-session read-only recovery.
+- Four-channel Mixer; Amplifier Information with battery percentage; readable preset JSON; local snapshot inspection/comparison; diagnostics and Version History.
+- Physical power-cycle persistence and **P5.8 clean/rhythm/lead workflows passed**, including both actual save dialogs, reconnect, mobile Amp comparison and user-confirmed amplifier bank/name. All original settings were restored after every case. See [Musician-Workflow.md](Musician-Workflow.md).
+
+## Next authorized work
+
+Connection-failure and physical-panel-change acceptance, desktop DPI/accessibility/performance, then deployment/license/signing and clean-PC acceptance. Applying imported presets/vendor backups to the amplifier remains unsupported. Phase 6 is deferred and GIR&IR excluded. Keep one desktop instance and one connected controller during tests. GitHub automation stays disabled.
+
+No hardware tests or complete software suite were rerun for this documentation reconciliation. Current package/history consistency is checked separately; historical run counts remain historical.
+
+## Historical progress through the original 1.24.2 ledger
+
+The retained entries below document what was supported and still missing at each earlier milestone. Their obsolete limits, future-work lists, initial REA reconnect requirement and “latest” wording do not describe 1.41.2. They are evidence, not instructions to replay hardware tests. Later results are linked above and in Plan.md/version history.
+
 Updated 14 October 2026. The full editor is not complete.
 
 Scope update, 14 October: the user explicitly excluded all Phase 6 work unless separately instructed. No Phase 6 investigation, implementation or hardware test is authorized by a general request to continue. Remaining core MVP, connection reliability and release verification work stays in scope. That scope restriction remains in effect for subsequent versions.
 
-## Latest: stronger setting-label emphasis in 1.24.2
+## Historical milestone: stronger setting-label emphasis in 1.24.2
 
 Make every effect setting label clearly prominent with 14-point extra-bold Segoe UI and white text, replacing the smaller muted labels. Apply consistently to all sliders and read-only parameter rows. Focused offline WPF checks cover all 18 controls and five window sizes; no amplifier commands or behavior changes.
 
@@ -282,7 +302,7 @@ Published executable opt-in `--hardware-roundtrip-preview` passed actual UI hand
 
 The user's explicit policy is to restore **every changed preset value and the originally selected preset after every test**, and verify the result by read-back. Record the baseline first; use complete raw state/detail comparisons where available. If restoration fails or cannot be verified, stop additional mutations and report the unresolved state. Keep the verified vendor backup. No implicit factory reset, firmware update, save or untested backup restore may stand in for exact cleanup.
 
-## Pending prerequisites and next actions
+## Historical prerequisites and next actions
 
 1. Preserve the verified vendor backup and private copy; complete the broader MOOER Studio workflow evaluation separately. Do not equate a documented restore route with a tested restore.
 2. Reconnect the actual Codex chat to load the registered REA tools; the scoped setup and external-client readiness checks have passed.
@@ -296,6 +316,6 @@ No Python installation was performed. Existing bundled Python is permitted only 
 
 See `Plan.md` for task checkboxes and `Feature-Matrix.md` for separate implementation/hardware acceptance.
 
-## Next core work: guarded effect-model selection
+## Historical next core work: guarded effect-model selection
 
 Read-only mobile model browsing is recorded in `Model-Browser.md`, with a partial UI catalog and complete independent unchanged-baseline verification. Display ordinals differ from the five known wire values, and Shimmer is greyed out. No alternate-model writes are enabled. P5.5u tracks the required capture/default-layout/exact-restoration proof before adding a guarded Windows model picker. Phase 6 stays excluded.

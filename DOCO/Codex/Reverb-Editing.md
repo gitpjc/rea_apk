@@ -1,5 +1,14 @@
 # Bounded Hall Reverb editing — 1.15.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026, F15i V1.1.9 / 0D British Lead Solo, fifth-position type 8/model 1/ten-word block. Phase 5 only; Phase 6 remains excluded.
 
 Pre Delay **18–20 ms**, Level **23–24**, Decay **34–35** and Tone **0–1** can be applied explicitly, individually or together. The enabled/model flags and final four zero words must match the observed profile. Full ranges, other models and physical units for Decay/Tone are not inferred.

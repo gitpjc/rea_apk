@@ -1,5 +1,14 @@
 # Proposed unchanged same-slot preset save test
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026. **The explicitly approved bounded phone test is now complete.** Save was opened once and Done confirmed once with the existing unchanged **0D / wire index 4 / British Lead Solo**, on firmware **V1.1.9**. Complete original state/detail were independently verified afterward. See [Preset-Saving.md](Preset-Saving.md). Approval did not authorize another destination, renaming, parameter changes, raw Windows save packets, firmware operations or backup restoration.
 
 ## Approval boundary and rejected action

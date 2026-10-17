@@ -1,5 +1,14 @@
 # Read-only current-state and preset format
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The raw layout observations below remain evidence, not a universal vendor specification. Current live controls target V1.1.9 and all 124 requested built-in models; the earlier V1.1.2/unknown-model interpretations are historical. Readable preset JSON schema 3.0.0 is documented separately in Preset-JSON.md and excludes raw/internal fields. Raw snapshot archives use schema 1 and cannot be applied to the device.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Updated 13 October 2026. This records one F15i V1.1.2 preset and supporting phone/UI evidence, not a complete preset or editing specification. No hardware commands were sent by this offline analysis. All offsets below are **payload offsets**, excluding the four-byte AA55/length header and two-byte CRC trailer.
 
 ## Sources and verification

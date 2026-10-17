@@ -1,5 +1,14 @@
 # Bounded PLX 100 Gain and Master — 1.13.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026, F15i V1.1.9 / 0D British Lead Solo. Phase 5 only; Phase 6 remains excluded.
 
 Gain **99–100** and Master **74–75** are now editable alongside Bass **34–35**, Mid **42–43**, Treble **39–40** and Presence **44–45**. All six bounded intervals may coexist. The enabled third-position PLX 100 model and linked flag remain required. Full parameter ranges and other models are not established by these tests.

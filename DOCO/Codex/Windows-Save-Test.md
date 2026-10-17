@@ -1,5 +1,14 @@
 # Windows same-slot save test passed
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026. The user explicitly approved the Windows save-and-restore test. Version **1.2.0** passed the actual Windows Apply/Save handlers and is now published in `artifacts/Iamp.Desktop`. Original Threshold 25 and every original byte were independently restored and verified after recall.
 
 Automatic approval review rejected the proposed Windows `--save-roundtrip-preview` command because the prior explicit approval covered the phone-app persistence experiment, not the new Windows save path. The entire rejected shell command did not execute, including its preliminary read. No Windows save or parameter edit occurred in that attempt. No workaround or alternative write path was attempted.

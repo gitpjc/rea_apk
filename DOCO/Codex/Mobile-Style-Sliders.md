@@ -1,5 +1,14 @@
 # Mobile-style effect sliders — 1.24.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+Current effect sliders use half-width tracks, the effect category color for the set portion, white thumbs, bold titles and right-aligned values. The duplicated summary row is removed across effects. Slider-release application and pending numeric input use current shared editor guards; the initial explicit-Apply-only description below is historical. All 124 requested built-in models now have controls, including physical EQ and signed Mod values.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 15 October 2026. All 18 supported parameter sliders now measure exactly half the effect-details panel width, aligned left. Their grey track and coloured filled portion are rounded, and the white circular thumb has an effect-coloured centre. The colour comes from the same EffectPresentation colour as the effect icon; Delay uses mobile-style green (#52DC38). Disabled controls use the existing muted colour. Parameter labels appear above the track, with live values right-aligned and milliseconds shown for the two verified time controls.
 
 ## Interaction

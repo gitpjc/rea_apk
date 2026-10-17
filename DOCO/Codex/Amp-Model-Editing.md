@@ -1,5 +1,14 @@
 # Amp model editing — 1.35.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The model settings/order/ranges and dated device results below remain the category specification. Application 1.41.2 completes all eight requested categories (124 models total), including Mod, and general save/rename/Save As. Any “next category”, narrower save guard or other-models-pending wording records this milestone’s chronology, not current backlog. All values/groups must be checked across the entire scrolled mobile page. Broader fault/combination and deployment acceptance remains open; GIR&IR is excluded and Phase 6 deferred.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 The Amp category follows completed Dyna, Filter and preset EQ work. The mobile catalogue contains 55 built-in Amp models, IDs 0–54. PLX 100 was already supported. Other Amp models are enabled individually only after their actual controls and command layouts have been captured. Version 1.31.0 completes the first batch: **65 US DLX, 65 US TW, 59 US Bass, US Sonic, US Blues CL, US Blues OD, E650 CL, Powerbell CL and Blacknight CL**, plus regression testing of **PLX 100**. Version **1.32.0** adds the next nine: **Mark III CL, Mark V CL, Tri Rec CL, Rockvrb CL, Dr Zee 18 JR, Dr Zee Reck, Jet 100H CL, Jazz 120, UK 30 CL**. Version **1.33.0** adds **UK 30 OD, HWT 103, PV 5050 CL, Regal Tone CL, Regal Tone OD1, Carol CL, Cardeff, EV 5050 CL, HT Club CL**. Version **1.34.0** adds **Hugen CL, Koche OD, J800, J900, E650 DS, Powerbell DS, Blacknight DS, Mark III DS, Mark V DS**. Version **1.35.0** adds the final 18: **Tri Rec DS, Rockvrb DS, Citrus 30, Citrus 50, Slow 100 CR, Slow 100 DS, Jet 100H OD, PV 5050 DS, Regal Tone OD2, Carol OD, EV 5050 DS, HT Club DS, Hugen OD, Hugen DS, Koche DS, Mvrkbass 500, Ampog SVT 4, Akuila 750 CL**. All **55** built-in Amp models now have verified parameter and on/off controls. The complete Amp category is checked in Plan.md; OD is next.
 
 ## Verified shared controls

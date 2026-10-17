@@ -1,5 +1,14 @@
 # Installed MOOER Studio: static inventory
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The static inventory below records the original 13 October investigation and does not establish desktop USB control. Later user-reported MOOER Studio restore succeeded after troubleshooting; independent exhaustive restore validation and the broader vendor-utility evaluation remain open. Windows BLE core editing/save is now verified independently. No custom vendor-format restore, firmware update or new USB experiment is authorized by this report.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Inspected 13 October 2026. This report inventories only `C:/Program Files (x86)/Mooer Audio Corp/Mooer Studio For Future Series`. The utility was not executed, installed, updated or connected to hardware during this inspection. Program Files was read only.
 
 ## Identity and framework

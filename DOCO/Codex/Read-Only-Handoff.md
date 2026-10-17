@@ -1,5 +1,14 @@
 # Read-only Windows-to-phone handoff checks
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The following dated report records the specific disconnect/read-only checks and their outcomes, not complete fault coverage or a request to rerun them. Core retained-session editing and saving are now implemented. Physical-panel changes, sleep/adapter/permission failures and the broader reconnect/fault matrix remain open in Plan.md. Historical phone-stability observations do not require repeated checks; only perform those when the user asks.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026. These bounded checks followed recovery of the [mobile transfer-screen loop](Mobile-Transfer-Loop.md). They used existing version **1.2.0** production components before the defensive 1.2.1 patch. No preset selection, parameter edit or save was performed. Windows information requests and notification subscription/disposal were exercised; phone initialization issued its usual information/catalog requests.
 
 | Windows operation / amp USB condition | Phone BLE connection / effects screen time | Final passive connection / frames | Result |

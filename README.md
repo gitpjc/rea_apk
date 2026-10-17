@@ -1,17 +1,21 @@
 # rea_apk
 
-## Windows desktop development
+## Windows desktop development — 1.41.2
 
-Run `bash scripts/build-desktop.sh` from Git Bash for the offline build, tests and self-contained Windows x64 package. Output is staged at `artifacts/Iamp.Desktop.next`; the usual app launch folder is `artifacts/Iamp.Desktop`. This software check needs no phone, amplifier, APK, REA or Python. See [build and release instructions](DOCO/Codex/Build-and-Release.md), [implementation plan](DOCO/Codex/Plan.md) and [user guide](DOCO/Codex/User-Guide.md).
+Core editing for all 124 requested built-in models, Mixer and general preset save/rename are implemented. Clean/rhythm/lead workflow acceptance is complete; broader fault/usability/deployment gates remain open. Start with the [current status](DOCO/Codex/Current-Status.md) and [documentation index](DOCO/Codex/Documentation-Index.md). GIR&IR is excluded; Phase 6 remains deferred.
 
-## Pay Store `iAMP` App
+For a justified complete release check, run `bash scripts/build-desktop.sh` from Git Bash for the offline build, tests and self-contained Windows x64 package. Routine changes use affected checks, as described in the build guide; documentation-only updates need no application test suite. Output is staged at `artifacts/Iamp.Desktop.next`; the usual app launch folder is `artifacts/Iamp.Desktop`. This software check needs no phone, amplifier, APK, REA or Python. See [build and release instructions](DOCO/Codex/Build-and-Release.md), [implementation plan](DOCO/Codex/Plan.md) and [user guide](DOCO/Codex/User-Guide.md).
+
+## Supplied Android iAMP artifact
 
 [iAMP](https://play.google.com/store/apps/details?id=com.mooer.iamp)  
 
-Current version: `1.6.1 `(Last update: 26 Jun 20026)
+Supplied artifact version: `1.6.1` (dated 26 June 2026). The installed phone build shares version 1.6.1 but has a different version code. This is recorded artifact information, not a claim about the current Play Store release.
 Required OS: Android 7.0 and up    
 
-## Codex Prompts
+## Historical research notes and original prompts
+
+The following Q&A and extraction commands preserve early research context. They are not current setup requirements or instructions to rerun captures; consult Environment.md and the build guide for the verified local setup.
 
 Can REA: https://github.com/morluto/rea/ be used to reverse engineer an Android APK?
 
@@ -73,7 +77,9 @@ while IFS= read -r apk; do
 done < <(adb shell pm path com.mooer.iamp)
 ```
 
-## Setting up REA (TODO)  
+## REA setup
+
+Setup and native analysis have been completed; see [Environment.md](DOCO/Codex/Environment.md) and [Native-Findings.md](DOCO/Codex/Native-Findings.md). Full Dart recovery is not claimed.
 
 ## iAMP Desktop App
 
@@ -83,4 +89,3 @@ The app being developed is available here:
 D:\A_A_Codex\rea_apk\artifacts\Iamp.Desktop\Iamp.Desktop.exe
 
 ```
-

@@ -1,5 +1,14 @@
 # Effect enabled/bypassed state — 1.7.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+All 124 requested built-in models now have verified on/off controls. Icons and centered labels use category color when enabled and grey when disabled, with no On/Off text on the icons. The details status says **Enabled** or **Disabled** and provides Enable/Disable effect. The five-model scope, Off indicators and restricted-save statements below describe earlier milestones. General saving and edited-copy power-cycle persistence are now verified; every model-specific persistence combination remains untested.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 Validated 14 October 2026 on F15i firmware V1.1.9. Phase 5 only; Phase 6 remains excluded.
 
 ## Presentation update — 1.7.1

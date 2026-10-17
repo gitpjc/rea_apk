@@ -1,5 +1,14 @@
 # Completed edited-value phone save, recall and restoration test
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+This is a retained early bounded experiment/procedure and its original results, not a current feature limit or instruction to rerun a device command. All 124 requested built-in models now have verified controls; all 80 destinations support general save/rename/Save As, with edited-copy power-cycle persistence and P5.8 workflow evidence. See Current-Status.md, Preset-Save-Rename.md and the category specifications. Earlier fixed 0D baselines, restricted intervals, test counts, next steps and unexecuted procedure checkboxes remain historical; always record a new baseline and preserve every original setting before authorized testing.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 14 October 2026. **Explicitly approved by the user with “proceed”; the bounded phone save/recall experiment and original-value restoration are complete.** Threshold 26 remained present after the phone saved slot 4 and recalled 5 → 4. Threshold 25 was then restored and saved back, with exact complete final state/detail equality. The final original-value recall used the existing guarded Windows selection workflow rather than the proposed phone recall; that deviation is recorded below. No Windows save packet, other-slot save, rename or power cycle was performed.
 
 ## Preconditions and scope

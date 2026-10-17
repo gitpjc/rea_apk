@@ -1,5 +1,14 @@
 # Mod model editing — 1.39.0
 
+## Scope at 17 October 2026 — current application 1.41.2
+
+The model settings/order/ranges and dated device results below remain the category specification. Application 1.41.2 completes all eight requested categories (124 models total), including Mod, and general save/rename/Save As. Any “next category”, narrower save guard or other-models-pending wording records this milestone’s chronology, not current backlog. All values/groups must be checked across the entire scrolled mobile page. Broader fault/combination and deployment acceptance remains open; GIR&IR is excluded and Phase 6 deferred.
+
+See [Current-Status.md](Current-Status.md) and [Documentation-Index.md](Documentation-Index.md) for current support and remaining gates.
+
+## Retained specification and milestone evidence
+
+
 All 17 built-in Mod models are verified on F15i firmware V1.1.9. GIR&IR and Phase 6 remain excluded.
 
 | Model | Settings in phone, desktop and JSON order |

@@ -1,40 +1,56 @@
-# Windows build and release checks
+# Windows build, focused checks and release packaging
 
-Updated 14 October 2026; introduced in desktop version 1.2.2.
+Updated 17 October 2026. Published release: **1.41.2**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
 
-From the repository root in Git Bash, run:
+## Routine changes
 
-```bash
+Run the affected tests and build the changed projects. A documentation-only update needs link/consistency/version-history checks; it does not require a software-suite or hardware rerun. For an affected save UI change, for example:
+
+~~~bash
+source scripts/env.sh
+dotnet build tools/Iamp.Desktop.UiChecks/Iamp.Desktop.UiChecks.csproj -c Release --no-restore
+dotnet tools/Iamp.Desktop.UiChecks/bin/Release/net10.0-windows10.0.19041.0/Iamp.Desktop.UiChecks.dll --save
+node scripts/check-version.mjs
+~~~
+
+Use an appropriate dotnet test filter for changed protocol behavior. Existing UI groups include --save, --mixer, --eq, --amp, --od, --delay, --reverb and --mod. Source identifies the exact scope of each group. Do not open a second desktop instance for UI QA while the user's app is still running.
+
+## Complete release check
+
+~~~bash
 bash scripts/build-desktop.sh
-```
+~~~
 
-This uses the existing local Node/.NET runtimes when present, or tools already on PATH. A Windows machine with Git Bash, Node and the SDK selected by `global.json` is required. NuGet access is needed on the first restore. No APK, Python, Java, ADB, REA, phone or amplifier is required. The script sources the shared environment but does not execute its analysis tools or access hardware.
+This is an explicit **complete-suite** build/test/package command, not the default for every small edit. Use it when requested or when the scope justifies broad release verification. The script validates semantic version/history, runs the capture-parser tests, restores locked dependencies, builds the solution, runs all discovered .NET tests and publishes a self-contained Windows x64 folder to artifacts/Iamp.Desktop.next. Test counts grow; use the command's actual output rather than the historical 71-test count from 1.2.2. It does not run the separate WPF UI-check executable or hardware acceptance automatically.
 
-The command checks the semantic version in `Directory.Build.props` and the latest entry in `assets/version_history.json`, validates every history entry, runs the five capture-parser and 71 .NET tests, and builds Release with warnings treated as errors. It restores with locked NuGet dependencies and publishes a self-contained Windows x64 package to `artifacts/Iamp.Desktop.next`. Windows desktop/transport projects explicitly declare the x64 runtime already present in their lock files. The package check verifies the application version in its dependency manifest and exact equality of the shipped history asset.
+The script stops on failure. It neither promotes the package to the launch folder nor uploads, commits or saves amplifier presets. Keep the complete output directory together; the executable alone is insufficient. First-time setup/restore may need network access; warmed local checks use existing dependencies.
 
-The script stops on failure. It does not replace the normal launch folder, run device probes, save presets, upload a release or commit files. Keep all files in the output directory together. When preparing a distributable ZIP, archive the complete output directory; the executable alone is insufficient.
+## Staging and promotion
 
-The GitHub workflow is disabled at the user's request (repository version 1.40.1, included with desktop 1.41.0). Its definition is retained as `.github/workflows/windows-build.yml.disabled`, which GitHub Actions does not load. Commit and push this change to remove its triggers from the hosted repository. No hosted disable action or push was performed. The local Bash build command remains available. Do not re-enable GitHub automation unless the user requests it.
+After relevant checks and any required restoration, close the user's desktop before opening a staging preview. Run one desktop process at a time. The Version History preview exits when complete and uses demo data only:
 
-After successful software checks, close the desktop app before promoting a package. Run the actual offline Version History preview and inspect its output:
-
-```bash
+~~~bash
 artifacts/Iamp.Desktop.next/Iamp.Desktop.exe --version-history-preview analysis/private/version-history-staging.png
-```
+node scripts/check-version.mjs artifacts/Iamp.Desktop.next
+~~~
 
-Promote the package only after checking the result:
+Review the app-only preview when needed, then promote:
 
-```bash
+~~~bash
 set -euo pipefail
 cp -a artifacts/Iamp.Desktop.next/. artifacts/Iamp.Desktop/
 node scripts/check-version.mjs artifacts/Iamp.Desktop
-cmp artifacts/Iamp.Desktop.next/Iamp.Desktop.exe artifacts/Iamp.Desktop/Iamp.Desktop.exe
 cmp artifacts/Iamp.Desktop.next/Iamp.Desktop.dll artifacts/Iamp.Desktop/Iamp.Desktop.dll
 cmp artifacts/Iamp.Desktop.next/Iamp.Transport.Windows.dll artifacts/Iamp.Desktop/Iamp.Transport.Windows.dll
 cmp artifacts/Iamp.Desktop.next/Iamp.Protocol.dll artifacts/Iamp.Desktop/Iamp.Protocol.dll
-artifacts/Iamp.Desktop/Iamp.Desktop.exe --version-history-preview analysis/private/version-history-published.png
-```
+~~~
 
-These steps do not establish hardware acceptance. For changes to device behavior, follow the relevant hardware test and exact restoration procedure separately. No hardware behavior changed in 1.2.2, and no phone or amplifier command was sent during this increment.
+Do not replace locked running binaries. A documentation-only history change may synchronize just assets/version_history.json into staging/published assets without rebuilding production code; rerun the version checker. Application code/config changes require an appropriate semantic version bump. Record all changes in the example history schema. Readable JSON schema 3.0.0 and snapshot/cache schema 1 are independent format versions.
 
-Validation: the complete build command passed locally, with zero build warnings/errors, all 76 existing tests passing and package/history consistency confirmed. Staging and published Version History checks passed at 1.2.2 with four entries and preserved library state. The staging view was visually inspected. Published executable and Desktop/Transport/Protocol DLLs match staging byte for byte. Evidence images: `analysis/private/version-122-staging.png` and `version-122-published.png`.
+## Automation and acceptance
+
+The GitHub workflow is disabled at the user's request. Its reference definition is .github/workflows/windows-build.yml.disabled; GitHub Actions does not load that filename. Do not re-enable it. This documentation pass does not push, change hosted settings or verify remote workflow state.
+
+The 1.41.2 folder and its 66 history entries have recorded source/package consistency checks. P5.8 production-code-host musician workflows pass; [Musician-Workflow.md](Musician-Workflow.md) documents their exact scope and different build revision metadata. Those checks are not a byte-identity or clean-PC test of that host against the published executable.
+
+Historical 1.2.2 validation passed 76 then-existing tests and preview/binary comparisons at that milestone; those figures are not current suite counts or a new run. No full suite is claimed for 1.41.2's wording-only change or this documentation pass. Installer/MSIX selection, signing, upgrade/uninstall/user-data preservation, licensing and clean-machine actual-amplifier acceptance remain P7.5–P7.8. No final distributed-release acceptance is implied.

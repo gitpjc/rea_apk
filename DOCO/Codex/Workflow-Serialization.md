@@ -1,5 +1,8 @@
 # Complete workflow serialization
 
+This reference remains applicable to application 1.41.2. Version labels and test counts below identify the original implementation/evidence runs; they do not claim a new test run. See [Current-Status.md](Current-Status.md) for full delivered scope and open acceptance gates. Current mutation workflows include general save/rename: a failed terminal session is disposed, one read-only recovery may reload actual state, human confirmation time is excluded from the device deadline, and saves are never replayed. See [Preset-Save-Rename.md](Preset-Save-Rename.md).
+
+
 14 October 2026; implemented and read-only hardware-verified in version 1.5.2.
 
 The command dispatcher serializes individual requests. That alone allowed a concurrent API caller to insert commands between a fresh-state check, mutation and readback. `F15ReadSession` now uses `WorkflowQueue` around each public identity/name/current-preset read, supported parameter edit, recall and save. Internal nested reads call private core methods rather than re-entering the non-reentrant queue. Current-preset state/detail/state reads stay together, as do both name ranges and each complete guarded mutation workflow.
