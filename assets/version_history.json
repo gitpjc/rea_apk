@@ -3,7 +3,7 @@
     "version": "1.41.8",
     "changedAt": "2026-10-17T10:42:21.481Z",
     "summary": "Group application and uninstall shortcuts in the Start menu.",
-    "details": "Create an iAMP Desktop Start menu folder with iAMP Desktop and Uninstall iAMP Desktop shortcuts using the registered Inno uninstaller. Remove only the legacy standalone iAMP Desktop.lnk during upgrade. Retain the optional desktop shortcut, stable installation identity and user-data preservation. Publish the versioned staging package and compile the installer; no installer execution or lifecycle acceptance by the agent, full-suite rerun, or amplifier/phone operation."
+    "details": "Create an iAMP Desktop Start menu folder with iAMP Desktop and Uninstall iAMP Desktop shortcuts using the registered Inno uninstaller. Remove only the legacy standalone iAMP Desktop.lnk during upgrade. Retain the optional desktop shortcut, stable installation identity and user-data preservation. Publish the versioned staging package and compile the installer; no installer execution or lifecycle acceptance by the agent, full-suite rerun, or amplifier/phone operation. Documentation-only follow-up: record the user-reported successful installation/uninstall and Start menu shortcuts. User declines additional proposed release checks in the current scope. Mark MOOER F4 Wireless Footswitch support as the next task for 18 October 2026: establish mobile connection/pairing/status/configuration, implement supported desktop parity and verify F4-triggered updates. Narrow authorization covers only the footswitch part of P6.5; other Phase 6 work remains deferred. No F4 work starts today, no hardware operations or application version change."
   },
   {
     "version": "1.41.7",

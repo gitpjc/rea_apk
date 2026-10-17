@@ -351,3 +351,7 @@ Write the generated Setup.exe into installers beside iamp-desktop.iss, update bu
 ## 17 October 2026 — Start menu folder (1.41.8)
 
 Create application/uninstall shortcuts in the iAMP Desktop Start menu folder. Remove only the legacy standalone shortcut during upgrade. Version/staging checks and Inno compilation pass; the agent does not run Setup or uninstall. User data remains excluded from cleanup. No hardware operations or full-suite rerun.
+
+## 17 October 2026 — Next task agreed
+
+User reports install/uninstall and Start menu shortcuts work; proposed additional release checks are not required in current scope. Next on 18 October: MOOER F4 Wireless Footswitch connection/mobile behavior investigation, supported desktop parity and preset/effect synchronization. Only the footswitch portion of P6.5 is authorized; other Phase 6 work remains deferred. Do not start today. Documentation/history only; app remains 1.41.8, installer not recompiled, no device operations.

@@ -1,5 +1,11 @@
 # Current development status
 
+## Next task
+
+Resume **MOOER F4 Wireless Footswitch support on 18 October 2026**, as agreed with the user on 17 October. Establish how mobile iAMP connects/configures the user's F4, then implement supported desktop parity and verify preset/effect synchronization. Do not assume direct Windows pairing. Only the footswitch portion of P6.5 is authorized; factory tone-library and other Phase 6 work remain deferred. No F4 testing or implementation has started.
+
+The user reports successful installation and uninstall, including Start menu shortcuts. Further upgrade/license/clean-PC checks are outside the current requested scope and are not claimed as tested.
+
 Reconciled 17 October 2026. Installer package: **1.41.8**; the usual desktop launch folder remains **1.41.5**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
 
 ## Implemented
@@ -36,7 +42,7 @@ Physical-panel testing on 17 October verified an initial 0D→0C→0D round trip
 
 This is not final product acceptance. Remaining work includes physical parameter/global-control-originated changes, the broader connection fault matrix and unresolved historical mobile transfer-loop trigger, exhaustive chain limits/rejections, actual DPI/Narrator/performance checks, installer/signing/license review and clean-PC operation. P5.8 used a host built from production code; it does not establish clean-machine acceptance of the distributed executable. Test counts in milestone reports describe those recorded runs, not a newly run complete suite.
 
-**GIR&IR is excluded by the user. Phase 6 is deferred unless explicitly authorized.** USB charging/vendor maintenance does not establish desktop USB control. Vendor-format device import/restore, cloud/accounts, tuner/drums/looper and other advanced operations are not implemented. The user reported a successful MOOER Studio restore; no independent custom backup-format or exhaustive vendor-restore validation is claimed.
+**GIR&IR is excluded by the user. Phase 6 is deferred except for the explicitly authorized next F4 footswitch task above.** USB charging/vendor maintenance does not establish desktop USB control. Vendor-format device import/restore, cloud/accounts, tuner/drums/looper and other advanced operations are not implemented. The user reported a successful MOOER Studio restore; no independent custom backup-format or exhaustive vendor-restore validation is claimed.
 
 The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.41.8 installer compiles; installation/upgrade/uninstall, user-data preservation, signing and clean-PC acceptance remain open.
 

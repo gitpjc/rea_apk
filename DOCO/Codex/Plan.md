@@ -1,5 +1,9 @@
 # Windows iAMP companion: implementation plan
 
+**Next task — agreed 17 October 2026, resume 18 October 2026:** MOOER F4 Wireless Footswitch support. The user owns an F4. First establish its connection path and the pairing/status/configuration exposed by mobile iAMP, then reproduce supported behavior in iAMP Desktop and verify that F4 preset/effect changes are reflected correctly. Do not assume a direct F4-to-Windows connection. This is a narrow exception for the footswitch portion of P6.5; factory tone-library access and all other Phase 6 work remain deferred. Do not start hardware work today. Preserve and restore original settings/pairings for any later tests. No F4 implementation or hardware result is claimed yet.
+
+**Installer acceptance — user report, 17 October 2026:** Installation and uninstall, including the requested Start menu application/uninstall shortcuts, are tested and working. The user does not require the proposed additional upgrade, license-review or clean-PC checks in the current scope; these are not the next task and are not claimed as tested.
+
 **User scope restriction — 14 October 2026:** Do not perform any Phase 6 task unless the user explicitly instructs it. This includes investigation, implementation and hardware experiments for P6.1–P6.9. General instructions to continue development do not authorize Phase 6. Continue with the remaining core application and verification work outside that phase.
 
 **User desktop testing policy — 17 October 2026:** Keep only one iAMP desktop instance running at a time. Close an existing instance before opening a temporary test host; finish its exact cleanup and close it before starting another.
@@ -386,7 +390,7 @@ Configure those environment variables for the registered server before the Codex
 - [ ] P6.2 Implement tuner mode, note/deviation updates, reference pitch and mute/bypass behavior; confirm how exiting restores prior audio state.
 - [ ] P6.3 Implement drum/metronome pattern, tempo, tap tempo, level and play/stop; use a verified catalog rather than assuming manual counts remain fixed.
 - [ ] P6.4 Implement looper recording/overdub/play/pause/undo/redo/clear, level and drum sync. Display hardware-reported state; do not infer recording completion from a UI timer alone.
-- [ ] P6.5 Implement supported footswitch pairing/status and factory tone-library access. Provide confirmations for operations that interrupt connection or change pairing.
+- [ ] P6.5 **Next: F4 footswitch portion only, resume 18 October 2026.** Establish mobile iAMP pairing/status/configuration and the actual connection path; implement supported desktop parity and verify F4-triggered preset/effect updates. Preserve/restore original settings and pairing. Provide confirmations for operations that interrupt connection or change pairing. Factory tone-library access remains deferred; no other Phase 6 task is authorized by this exception.
 - [ ] P6.6 Deferred vendor-backup/restore format and transfer/recovery work only if explicitly authorized. GIR&IR remains excluded from this plan, including investigation and imports. Add custom backup restores only after proven backed-up round trips; retain the vendor utility for unsupported operations.
 - [ ] P6.7 Assess cloud/account functionality independently: supported access, login flow, credential storage, service dependency and preset compatibility. Keep offline editing functional when services are unavailable; do not ship extracted credentials or APK-embedded secrets.
 - [ ] P6.8 Inventory newer media/AI features against APK 1.6.1 and decide separately whether to implement, integrate or defer each. Do not expand the controller into an audio workstation by implication.
