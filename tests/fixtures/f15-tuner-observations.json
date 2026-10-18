@@ -1,0 +1,513 @@
+{
+  "schema": 1,
+  "firmware": "V1.1.9",
+  "mobile": "iAMP 1.6.1",
+  "observedOn": "2026-10-18",
+  "sourceSha256": [
+    "5fc84ba69910da8b77842691a07f97152a289ee9c40a3f6d4adda6ef942a358c",
+    "e0e2727c53711f4bf0259ffa5c1400dd56473df9fac6c2cf7a314ad897fb4391"
+  ],
+  "baselineStatePayloadHex": "1204001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000A01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001",
+  "frames": [
+    {
+      "direction": "incoming",
+      "frameHex": "AA5502004900A5C3",
+      "payloadHex": "4900"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA5502004A01E0B1",
+      "payloadHex": "4A01"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA55020041013C4B",
+      "payloadHex": "4101"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55020042016918",
+      "payloadHex": "4201"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA55020041020C28",
+      "payloadHex": "4102"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000B01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001CB0A",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000B01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA5502001401CD01",
+      "payloadHex": "1401"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000C01003C0100FF003C0100460014000100180018001800010028003200320019010001000101140064000000014800017FEF",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000C01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000D01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001950E",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000D01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000E01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001BA0C",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000E01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000F01003C0100FF003C01004600140001001800180018000100280032003200190100010001011400640000000148000150ED",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000F01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000A01003C0100FF003C01004600140001001800180018000100280032003200190100010001011400640000000148000121EB",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000A01003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000901003C0100FF003C0100460014000100180018001800010028003200320019010001000101140064000000014800010EE9",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000901003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000801003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001E408",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000801003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000701003C0100FF003C0100460014000100180018001800010028003200320019010001000101140064000000014800017702",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000701003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000601003C0100FF003C0100460014000100180018001800010028003200320019010001000101140064000000014800019DE3",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000601003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000501003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001B2E1",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000501003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000401003C0100FF003C0100460014000100180018001800010028003200320019010001000101140064000000014800015800",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000401003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000301003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001ECE5",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000301003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000201003C0100FF003C0100460014000100180018001800010028003200320019010001000101140064000000014800010604",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000201003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000101003C0100FF003C0100460014000100180018001800010028003200320019010001000101140064000000014800012906",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000101003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000001003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001C3E7",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000001003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA555C001304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000A02003C0100FF003C01004600140001001800180018000100280032003200190100010001011400640000000148000167EC",
+      "payloadHex": "1304001818181809FF463135694631356900000000000000000000000000480048004800014848003C6400000A02003C0100FF003C010046001400010018001800180001002800320032001901000100010114006400000001480001"
+    },
+    {
+      "direction": "outgoing",
+      "frameHex": "AA55020041002C6A",
+      "payloadHex": "4100"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045060C8C5A",
+      "payloadHex": "45060C"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045060BFCBD",
+      "payloadHex": "45060B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045060AEC9C",
+      "payloadHex": "45060A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450609DCFF",
+      "payloadHex": "450609"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045060D9C7B",
+      "payloadHex": "45060D"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045060EAC18",
+      "payloadHex": "45060E"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450000E770",
+      "payloadHex": "450000"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA5503004506105FE7",
+      "payloadHex": "450610"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045020E60DC",
+      "payloadHex": "45020E"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045070CBF6B",
+      "payloadHex": "45070C"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045070BCF8C",
+      "payloadHex": "45070B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045070DAF4A",
+      "payloadHex": "45070D"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045080CAF55",
+      "payloadHex": "45080C"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045080BDFB2",
+      "payloadHex": "45080B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045090C9C64",
+      "payloadHex": "45090C"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045090BEC83",
+      "payloadHex": "45090B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045090AFCA2",
+      "payloadHex": "45090A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450A0BB9D0",
+      "payloadHex": "450A0B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450A0AA9F1",
+      "payloadHex": "450A0A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450A099992",
+      "payloadHex": "450A09"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450A0889B3",
+      "payloadHex": "450A08"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045091BFEB2",
+      "payloadHex": "45091B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B0CFA06",
+      "payloadHex": "450B0C"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B0A9AC0",
+      "payloadHex": "450B0A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B09AAA3",
+      "payloadHex": "450B09"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B08BA82",
+      "payloadHex": "450B08"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450C0C6391",
+      "payloadHex": "450C0C"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450C0A0357",
+      "payloadHex": "450C0A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450C093334",
+      "payloadHex": "450C09"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450C082315",
+      "payloadHex": "450C08"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA5503004509036D8B",
+      "payloadHex": "450903"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045010C15CD",
+      "payloadHex": "45010C"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045010B652A",
+      "payloadHex": "45010B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045010A750B",
+      "payloadHex": "45010A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045020A2058",
+      "payloadHex": "45020A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045020B3079",
+      "payloadHex": "45020B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045030A1369",
+      "payloadHex": "45030A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045030B0348",
+      "payloadHex": "45030B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450309230A",
+      "payloadHex": "450309"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA5503004504064B72",
+      "payloadHex": "450406"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA5503004504057B11",
+      "payloadHex": "450405"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045040A8AFE",
+      "payloadHex": "45040A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045040B9ADF",
+      "payloadHex": "45040B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045050AB9CF",
+      "payloadHex": "45050A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045070ADFAD",
+      "payloadHex": "45070A"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA5503004507160C10",
+      "payloadHex": "450716"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450A0CC937",
+      "payloadHex": "450A0C"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B0B8AE1",
+      "payloadHex": "450B0B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450C0B1376",
+      "payloadHex": "450C0B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA55030045050BA9EE",
+      "payloadHex": "45050B"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B0EDA44",
+      "payloadHex": "450B0E"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B1029BB",
+      "payloadHex": "450B10"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B0FCA65",
+      "payloadHex": "450B0F"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B11399A",
+      "payloadHex": "450B11"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B1209F9",
+      "payloadHex": "450B12"
+    },
+    {
+      "direction": "incoming",
+      "frameHex": "AA550300450B1DF816",
+      "payloadHex": "450B1D"
+    }
+  ],
+  "limitations": [
+    "Passive target-attributed Android captures; device identifiers and unrelated traffic omitted.",
+    "Raw meter bytes are not established cents or frequency measurements.",
+    "Guitar input establishes UI correspondence, not a calibrated pitch accuracy measurement.",
+    "Raw16 is center,15/17 show green center-adjacent pairs,18/29 show High at6/1 and14 shows Low at10. Pair bins reserve the center region; direct raw-as-segment and simple raw/2 projections are incorrect. Captures establish representative UI correspondence, not calibrated cents or exhaustive every-byte physical coverage."
+  ],
+  "displayObservations": [
+    {
+      "payloadHex": "450609",
+      "label": "Low!",
+      "litSegments": [
+        12
+      ],
+      "evidence": "Stable E raw9/10 interval and retained mobile lower-meter screen; raw9 is not segment9."
+    },
+    {
+      "payloadHex": "450B0F",
+      "label": "Perfect!",
+      "litSegments": [
+        8,
+        9
+      ],
+      "evidence": "Fresh 18 October mobile capture, repeated A raw15; green Perfect and two center-adjacent segments."
+    },
+    {
+      "payloadHex": "450B10",
+      "label": "Perfect!",
+      "litSegments": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "evidence": "Fresh 18 October mobile capture, repeated A raw16; green Perfect and all meter segments."
+    },
+    {
+      "payloadHex": "450B12",
+      "label": "High!",
+      "litSegments": [
+        6
+      ],
+      "evidence": "Mobile reference438Hz stable raw18; screen139/140 shows High at segment6."
+    },
+    {
+      "payloadHex": "450B1D",
+      "label": "High!",
+      "litSegments": [
+        1
+      ],
+      "evidence": "Mobile reference430Hz raw28/29; screens142–144 show red High at segment1."
+    },
+    {
+      "payloadHex": "450B0E",
+      "label": "Low!",
+      "litSegments": [
+        10
+      ],
+      "evidence": "Mobile reference441Hz raw13/14; screens148/150 show Low at segment10."
+    },
+    {
+      "payloadHex": "450B11",
+      "label": "Perfect!",
+      "litSegments": [
+        7,
+        8
+      ],
+      "evidence": "Device-timed mobile upper-center capture044 at439Hz shows green Perfect and upper pair7/8; window packets16/17, with16 independently established as the full meter."
+    }
+  ],
+  "displaySourceSha256": [
+    "b7da63368d526ceb40a60fa5f6b9c9ec9e3f007d4d185821ed6d414e0129f32c",
+    "6d4c512aef747a3c80c4722093e95d50a38ba2cfd2d2af05119cf19fdf20a6e8",
+    "884fdf905f11c641889283e29beb69d13f972e133b0dc3be1a27defb3c0cf2fa",
+    "937bcb5f0e8ee1d1ba0b201c157e83c8228128954156f4c45d9b20ed6a1bacb5",
+    "bb3ee3bb08817997391489d3d0c1f726751182152c58ccf91bf460be6a4dc2bc",
+    "9e3c4251a39c1ab267a576611f4718e3ca780fb1971f39115524d592e33e1000",
+    "e7bce03d593684c23f30908d3c923f1455ebca0a45f447e6ba90266debeaacce",
+    "8025867a8f01a4dad24cc3d77e7c351203efa6cb98a65dbd51a3a013fc3f791f",
+    "7be5ba93bc732df3236f85f188f5cca7b1ece20af96506279c6c911e162141c0",
+    "c09e16dd5db85023e51a6e44e26e0ce807feacb94b8f04681adaa298c176d5f8"
+  ],
+  "meterColors": {
+    "perfect": "#5CE600",
+    "near": "#FFC001",
+    "middle": "#ED7D31",
+    "far": "#E90000"
+  }
+}

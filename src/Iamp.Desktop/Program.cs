@@ -11,6 +11,17 @@ internal static class Program
     public static int Main(string[] args)
     {
         var app = new Application();
+        if(args.Length==3 && args[0]=="--tuner-check") {
+            app.ShutdownMode=ShutdownMode.OnExplicitShutdown;
+            var tunerWindow=new MainWindow();tunerWindow.Show();
+            _=app.Dispatcher.InvokeAsync(async()=> {
+                var code=0;
+                try {await tunerWindow.RunTunerCheckAsync(args[1],args[2]);}
+                catch(Exception error){Console.Error.WriteLine(error);code=2;}
+                finally {await tunerWindow.ReleasePreviewConnectionAsync();tunerWindow.Close();app.Shutdown(code);}
+            });
+            return app.Run();
+        }
         if(args.Length==3 && args[0] is "--preset-browser-check" or "--connection-sync-check" or "--scan-connect-check") {
             app.ShutdownMode=ShutdownMode.OnExplicitShutdown;
             var browserWindow=new MainWindow();

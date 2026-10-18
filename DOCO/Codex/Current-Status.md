@@ -1,12 +1,14 @@
 # Current development status
 
+**Current status — 18 October 2026:** Tuner P6.2 is implemented for F15i V1.1.9 in **1.42.7**. The user confirmed corrected desktop/amplifier in-tune agreement in 1.42.6; subsequent direct mobile observations correct sharp/flat segment spacing and verify both green neighbors and meter colors. All 39 affected tuner tests and focused WPF checks pass; complete original state/detail independently verified after every comparison. See [Tuner.md](Tuner.md). F4 is next; other Phase 6 work remains deferred and GIR&IR excluded.
+
 ## Next task
 
 Resume **MOOER F4 Wireless Footswitch support on 18 October 2026**, as agreed with the user on 17 October. Establish how mobile iAMP connects/configures the user's F4, then implement supported desktop parity and verify preset/effect synchronization. Do not assume direct Windows pairing. Only the footswitch portion of P6.5 is authorized; factory tone-library and other Phase 6 work remain deferred. No F4 testing or implementation has started.
 
 The user reports successful installation and uninstall, including Start menu shortcuts. Further upgrade/license/clean-PC checks are outside the current requested scope and are not claimed as tested.
 
-Reconciled 17 October 2026. Installer package: **1.41.8**; the usual desktop launch folder remains **1.41.5**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
+Reconciled 18 October 2026. Installer and usual desktop launch folder: **1.42.7**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
 
 ## Implemented
 
@@ -17,6 +19,7 @@ Reconciled 17 October 2026. Installer package: **1.41.8**; the usual desktop lau
 | Effects | Add/remove/reorder, insertion marker, in-place model replacement and repeated categories/models. All 124 requested built-in models have verified parameter/on-off controls and ordered JSON. | [Effect-Chain-Editing.md](Effect-Chain-Editing.md) |
 | Saving | Same-slot save/rename and Save As to all 80 destinations; 1–20 printable ASCII characters; fresh source/destination checks, themed Save/Cancel confirmation, single save and complete readback. Both dialogs say “Current amplifier settings”. | [Preset-Save-Rename.md](Preset-Save-Rename.md) |
 | Save failures | Discard the failed session and, where appropriate, attempt one read-only reconnect. Show the outcome beside Save; never replay a save. Transfer-state changes or unsuccessful recovery require an explicit fresh connection. | [Preset-Save-Rename.md](Preset-Save-Rename.md) |
+| Tuner | Live note and mobile-matched Perfect/High/Low meter, 430–445 Hz reference, Mute/Bypass and verified exit; Ctrl+4. | [Tuner.md](Tuner.md) |
 | Mixer | Bluetooth, USB REC, Instrument and Master levels/mutes, including adjustment while muted. Physical MASTER0→10→0 leaves both mobile and desktop Mixer Master at+6dB in the observed test; desktop parity is confirmed. The physical knob mapping remains unestablished. | [Mixer-Editing.md](Mixer-Editing.md) |
 | Information | Firmware/capacity cards and battery percentage/read time on Amplifier Information. Charging-state semantics remain opaque. | [Battery-Information.md](Battery-Information.md) |
 | Local tools | Preset JSON view/copy/native Save As; versioned snapshot export/open/comparison for inspection; local redacted diagnostics; Version History. | [Preset-JSON.md](Preset-JSON.md), [Snapshot-Comparison.md](Snapshot-Comparison.md), [Diagnostics.md](Diagnostics.md) |
@@ -32,7 +35,7 @@ Reconciled 17 October 2026. Installer package: **1.41.8**; the usual desktop lau
 | Reverb | 9 | [Reverb-Model-Editing.md](Reverb-Model-Editing.md) |
 | Mod | 17 | [Mod-Model-Editing.md](Mod-Model-Editing.md) |
 
-There are **126 shared effect parameter types**. The readable preset-effects JSON schema is **3.0.0**; the separate raw snapshot archive and search-only effect cache each use schema **1**. These format versions are independent of application version 1.41.8. Opening a snapshot does not apply it to the amplifier. Mixer is not included as effect settings in the readable preset JSON.
+There are **126 shared effect parameter types**. The readable preset-effects JSON schema is **3.0.0**; the separate raw snapshot archive and search-only effect cache each use schema **1**. These format versions are independent of application version 1.42.7. Opening a snapshot does not apply it to the amplifier. Mixer is not included as effect settings in the readable preset JSON.
 
 ## Verified milestones and remaining acceptance
 
@@ -42,9 +45,9 @@ Physical-panel testing on 17 October verified an initial 0D→0C→0D round trip
 
 This is not final product acceptance. Remaining work includes physical parameter/global-control-originated changes, the broader connection fault matrix and unresolved historical mobile transfer-loop trigger, exhaustive chain limits/rejections, actual DPI/Narrator/performance checks, installer/signing/license review and clean-PC operation. P5.8 used a host built from production code; it does not establish clean-machine acceptance of the distributed executable. Test counts in milestone reports describe those recorded runs, not a newly run complete suite.
 
-**GIR&IR is excluded by the user. Phase 6 is deferred except for the explicitly authorized next F4 footswitch task above.** USB charging/vendor maintenance does not establish desktop USB control. Vendor-format device import/restore, cloud/accounts, tuner/drums/looper and other advanced operations are not implemented. The user reported a successful MOOER Studio restore; no independent custom backup-format or exhaustive vendor-restore validation is claimed.
+**GIR&IR is excluded by the user. Tuner P6.2 bounded display parity is verified; Phase 6 remains deferred except for the authorized F4 task above.** USB charging/vendor maintenance does not establish desktop USB control. Vendor-format device import/restore, cloud/accounts, drums/looper and other advanced operations are not implemented. The user reported a successful MOOER Studio restore; no independent custom backup-format or exhaustive vendor-restore validation is claimed.
 
-The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.41.8 installer compiles; installation/upgrade/uninstall, user-data preservation, signing and clean-PC acceptance remain open.
+The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.42.7 installer compiles. The user accepted installation/uninstall and Start menu shortcuts on 1.41.8; further upgrade, signing and clean-PC acceptance are not claimed.
 
 ## Development and testing policy
 

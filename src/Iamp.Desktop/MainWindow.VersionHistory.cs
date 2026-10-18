@@ -13,7 +13,7 @@ public sealed partial class MainWindow
 
     private void ConfigureNavigation()
     {
-        foreach(var button in new[]{libraryNavigation,informationNavigation,mixerNavigation,historyNavigation}) {
+        foreach(var button in new[]{libraryNavigation,informationNavigation,mixerNavigation,tunerNavigation,historyNavigation}) {
             button.HorizontalContentAlignment=HorizontalAlignment.Left;
             button.HorizontalAlignment=HorizontalAlignment.Stretch;
             button.Padding=new Thickness(14,12,14,12);button.Margin=new Thickness(0,0,0,5);
@@ -21,13 +21,14 @@ public sealed partial class MainWindow
         libraryNavigation.Click+=(_,_)=>NavigateToHistory(false);
         informationNavigation.Click+=(_,_)=>NavigateToPage(informationScroll);
         mixerNavigation.Click+=(_,_)=>NavigateToPage(mixerScroll);
+        tunerNavigation.Click+=(_,_)=>NavigateToPage(tunerScroll);
         historyNavigation.Click+=(_,_)=>NavigateToHistory(true);
         SetNavigationColors(libraryScroll);
     }
 
     private void SetNavigationColors(ScrollViewer selected)
     {
-        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(mixerNavigation,mixerScroll),(historyNavigation,historyScroll)}) {
+        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(mixerNavigation,mixerScroll),(tunerNavigation,tunerScroll),(historyNavigation,historyScroll)}) {
             button.Background=page==selected?Brush("#203B5C"):System.Windows.Media.Brushes.Transparent;
             button.Foreground=page==selected?BlueBrush:MutedBrush;
         }
@@ -36,13 +37,17 @@ public sealed partial class MainWindow
     private void NavigateToHistory(bool history)
         =>NavigateToPage(history?historyScroll:libraryScroll);
 
-    private void NavigateToPage(ScrollViewer selected)
+    private async void NavigateToPage(ScrollViewer selected)
     {
+        if(tunerStarting || (operation is not null && tunerActive))return;
+        if(selected!=tunerScroll && tunerActive && !await StopTunerAsync())return;
         if(selected==historyScroll && historyScroll.Content is null)BuildVersionHistory();
-        foreach(var page in new[]{libraryScroll,informationScroll,mixerScroll,historyScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
+        foreach(var page in new[]{libraryScroll,informationScroll,mixerScroll,tunerScroll,historyScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
         if(selected==mixerScroll)UpdateMixerState();
+        if(selected==tunerScroll)UpdateTunerState();
         SetNavigationColors(selected);
-        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":selected==mixerScroll?"Mixer":"Amplifier Settings");
+        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":selected==mixerScroll?"Mixer":selected==tunerScroll?"Tuner":"Amplifier Settings");
+        if(selected==tunerScroll && tunerStart.IsEnabled)await StartTunerAsync();
     }
 
     private void BuildVersionHistory()

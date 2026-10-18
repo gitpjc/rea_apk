@@ -355,3 +355,11 @@ Create application/uninstall shortcuts in the iAMP Desktop Start menu folder. Re
 ## 17 October 2026 — Next task agreed
 
 User reports install/uninstall and Start menu shortcuts work; proposed additional release checks are not required in current scope. Next on 18 October: MOOER F4 Wireless Footswitch connection/mobile behavior investigation, supported desktop parity and preset/effect synchronization. Only the footswitch portion of P6.5 is authorized; other Phase 6 work remains deferred. Do not start today. Documentation/history only; app remains 1.41.8, installer not recompiled, no device operations.
+
+## 18 October 2026 — Tuner accepted (1.42.5)
+
+Implement P6.2 with mobile Tools/Tuner handshake, session-owned peer request replies, 430–445 Hz, Mute/Bypass, note/discrete meter and verified exit. Fix invalid two-second note expiry and delayed amplifier mode reset using a tested quiet startup interval. Actual normal desktop trace receives 115 updates; user confirms both displays respond, and explicit No signal follows guitar volume off. Actual desktop reference/output changes remain active; fresh independent exit read matches every original state/detail byte. 132 affected tests and focused WPF checks pass; no complete-suite run. Package the self-contained desktop and installer, reconcile current documentation. F4 next; other Phase 6 deferred and GIR&IR excluded. See Tuner.md.
+
+## 18 October 2026 — Correct tuner display parity (1.42.7)
+
+The user reports amp in tune but desktop Low; reopen premature P6.2 display acceptance. A Windows trace mostly receives raw 15/16. Fresh mobile captures show these as green Perfect, exposing the raw-as-segment error. User confirms the corrected normal desktop 1.42.6 agrees with the amp;68 updates and explicit no-signal recorded, exact original state/detail independently restored. Mobile reference sweep verifies sharp/flat spacing, and device-timed upper-center capture confirms green pair7/8. Correct outward pair bins and measured colors in 1.42.7;39 affected tests and focused WPF checks pass. Retain 80 captured frames and seven independent display observations. Restore440 Hz and every original byte after all comparisons. Record mobile-first verification policy in Plan.md; package1.42.7. Other Phase 6 deferred, GIR&IR excluded, F4 next.

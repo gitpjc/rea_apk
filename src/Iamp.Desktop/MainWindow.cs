@@ -67,6 +67,7 @@ public sealed partial class MainWindow : Window
         Grid.SetColumn(historyScroll,1);root.Children.Add(historyScroll);
         Grid.SetColumn(informationScroll,1);root.Children.Add(informationScroll);
         Grid.SetColumn(mixerScroll,1);root.Children.Add(mixerScroll);BuildMixerPage();
+        Grid.SetColumn(tunerScroll,1);root.Children.Add(tunerScroll);BuildTunerPage();
         var page = new StackPanel { Margin = new Thickness(32, 20, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
@@ -248,7 +249,7 @@ public sealed partial class MainWindow : Window
         side.Children.Add(Text("iAMP",36)); side.Children.Add(Text("DESKTOP COMPANION",10,MutedBrush,new Thickness(0,2,0,0)));
         side.Children.Add(Text($"Version {DesktopVersion.Current}",12,MutedBrush,new Thickness(0,7,0,26)));
         ConfigureNavigation();
-        side.Children.Add(libraryNavigation);side.Children.Add(informationNavigation);side.Children.Add(mixerNavigation);side.Children.Add(historyNavigation);
+        side.Children.Add(libraryNavigation);side.Children.Add(informationNavigation);side.Children.Add(mixerNavigation);side.Children.Add(tunerNavigation);side.Children.Add(historyNavigation);
         side.Children.Add(Text("F15i Li",17,Brush("#D5DCE8"),new Thickness(14,30,0,5)));
         side.Children.Add(Text("Bluetooth connection",12,MutedBrush,new Thickness(14,0,0,0)));
         side.Children.Add(Text("Snapshot viewer",12,MutedBrush,new Thickness(14,22,0,0)));
@@ -298,6 +299,7 @@ public sealed partial class MainWindow : Window
         UpdateComparisonState();UpdateConnectionControls();
         UpdateThresholdState();
         UpdateEffectFilterState();
+        UpdateTunerState();
     }
     private void End()
     {
@@ -306,9 +308,11 @@ public sealed partial class MainWindow : Window
         UpdateComparisonState();UpdateConnectionControls();
         UpdateThresholdState();
         UpdateEffectFilterState();
+        UpdateTunerState();
     }
     private async Task ScanAsync()
     {
+        if(tunerActive || tunerStarting || operation is not null || preview)return;
         Begin("Scanning Bluetooth…");
         try { await ReleaseConnectionAsync();editSnapshotValid=false;var found=await F15DeviceDiscovery.ScanAsync(operation!.Token); devices.ItemsSource=found; if(found.Count>0)devices.SelectedIndex=0;
             status.Text=found.Count>0?$"Found {found.Count} amplifier(s)":"No amplifier found. Scan again or enter an address."; }
@@ -319,7 +323,7 @@ public sealed partial class MainWindow : Window
     }
     private async Task ReadAsync()
     {
-        if(operation is not null || preview)return;
+        if(operation is not null || preview || tunerActive || tunerStarting)return;
         lastReadSucceeded=false;
         editSnapshotValid=false;UpdateThresholdState();
         var input=address.Text.Replace(":","").Replace("-","").Replace(" ","");
@@ -513,6 +517,7 @@ public sealed partial class MainWindow : Window
         UpdateSaveState();
         UpdateEffectPowerState();
         UpdateMixerState();
+        UpdateTunerState();
     }
     private PresetEffectBlock? Editable808Tone()
     {
@@ -560,7 +565,7 @@ public sealed partial class MainWindow : Window
     private void UpdatePresetSelectionState()
     {
         var selected=presets.SelectedItem as PresetName;
-        presets.IsEnabled=operation is null && names.Count>0;
+        presets.IsEnabled=operation is null && !tunerActive && !tunerStarting && names.Count>0;
 
         var supported=!preview && operation is null && editSnapshotValid && snapshotAddress.HasValue &&
             snapshotFirmware=="V1.1.9" && currentSnapshot?.WireIndex is >=1 and <=80 && selected?.WireIndex is >=1 and <=80;

@@ -1,5 +1,53 @@
 [
   {
+    "version": "1.42.7",
+    "changedAt": "2026-10-18T03:21:22.627Z",
+    "summary": "Match mobile tuner alignment, segment spacing and colors.",
+    "details": "Direct mobile screenshots and passive Bluetooth captures replace guessed meter mappings. Raw 16 is center;15/17 show the lower/upper green Perfect pairs, and16 lights the full green meter. Reserve center spacing when grouping outward raw steps: observed18/29 show High at segments 6/1, 14 shows Low at10, 9 Low at12. Use measured mobile green/yellow/orange/red colors. Device-timed upper-center capture confirms the upper pair rather than relying on symmetry alone. Retain 80 captured frames and seven independent display observations;39 affected decoding/capture tests and focused WPF checks pass. User confirms corrected normal desktop 1.42.6 agrees with physical amp, with 68 live updates and explicit no-signal. Complete original state/detail independently verified after every comparison, including restored440 Hz; no saves or recalls. Record mobile-first verification policy, reconcile documentation and package1.42.7. No complete-suite, calibrated cents or exhaustive physical sweep claim. F4 next; other Phase 6 deferred, GIR&IR excluded."
+  },
+  {
+    "version": "1.42.6",
+    "changedAt": "2026-10-18T03:01:10.862Z",
+    "summary": "Correct tuner raw-scale interpretation and mobile Perfect display.",
+    "details": "User confirms physical amplifier in tune while desktop says Low. Actual Windows capture mostly receives raw 15/16, not the assumed center 8. Fresh mobile screenshots and passive Bluetooth capture confirm A/15 is green Perfect with segments 8/9 and A/16 is green Perfect with all 17 segments. Correct raw 16 center, reverse/two-step projection onto17 segments, near-center Perfect band and green note/meter. Preserve raw bytes and existing notification/session behavior. Add independent display observations and affected protocol/WPF regressions. Full original state/detail independently verified after both comparison runs; no saves or recalls. Correct prior premature acceptance. 36 affected tests and focused WPF checks pass. User confirms corrected actual desktop agreement;68 updates, explicit no-signal and independent complete original restoration pass. Later mobile sharp/flat spacing correction is delivered in 1.42.7; no claim of calibrated cents or exhaustive physical range comparison."
+  },
+  {
+    "version": "1.42.5",
+    "changedAt": "2026-10-18T02:43:59.432Z",
+    "summary": "Complete live tuner support with stable entry and verified controls.",
+    "details": "Implement Tuner navigation (Ctrl+4), live note and 17-segment tuning meter, 430–445 Hz reference and Mute/Bypass for F15i V1.1.9. Answer observed startup/Tools requests in order, pause competing polling and wait a tested three-second quiet interval before entry to prevent delayed amplifier exit. Hold steady readings until explicit no-signal instead of imposing an invalid two-second expiry. Actual desktop receives 115 updates; user confirms amplifier and desktop respond. Actual reference 440→441→440 and Mute→Bypass→Mute stay active. Verified exit and a fresh independent connection confirm every original state/detail byte, with no saves or recalls. 132 affected tests and focused WPF checks pass; no full-suite claim. Reconcile current documentation and package the x64 installer. Other firmware, calibrated audio and interruption/sleep acceptance remain outside this result. F4 next; GIR&IR excluded. Acceptance reopened after user reports physical amplifier in tune while desktop says Low. Prior live-update acceptance did not prove physical display classification parity; exact-middle-only classification is being checked against a simultaneous capture."
+  },
+  {
+    "version": "1.42.4",
+    "changedAt": "2026-10-18T02:28:13.190Z",
+    "summary": "Compare tuner entry using the identity already verified on the connection.",
+    "details": "Unreleased development; live tuner acceptance remains unresolved. The 1.42.3 trace still receives amplifier mode 43 00 about 2.45 seconds after entry, despite the captured 03 follow-up; exact original state/detail restoration passes. Retain the verified identity per F15ReadSession and require that same-connection V1.1.9 identity for tuner entry instead of issuing another identity request. Continue fresh complete current-state checks and the captured setup/Tools handshake. Run the actual desktop trace without asking for guitar input to isolate the redundant-identity difference; no necessity or complete fix is claimed yet. No presets saved or recalled and no installer produced."
+  },
+  {
+    "version": "1.42.3",
+    "changedAt": "2026-10-18T02:25:57.446Z",
+    "summary": "Investigate amplifier-reported tuner exit after desktop entry.",
+    "details": "Unreleased development; hardware acceptance remains pending. The actual desktop trace confirms the amplifier emits 43 00 about 2.5 seconds after acknowledged entry without any desktop exit command, while no note packets arrive. Complete original state/detail are independently verified after the traced run. Add the captured 03/04 mobile setup follow-up immediately after the tuner preflight identity query for the next isolated check; do not claim its necessity established yet. Forward observed 43 mode reports to the Tuner page, replace the misleading active claim with a clear amplifier-left-tuner notice, block settings while reported inactive, and accept fresh readings only after reported active. Add setup-schema, diagnostic and focused UI regression checks. No saves, recalls, installer compilation or new guitar request until the traced entry remains stable."
+  },
+  {
+    "version": "1.42.2",
+    "changedAt": "2026-10-18T02:22:32.901Z",
+    "summary": "Trace actual desktop tuner entry and signal delivery for unresolved live failures.",
+    "details": "Development diagnostics only; tuner remains unaccepted and no installer is produced. User reports 1.42.1 still displays No signal while playing. Add allowlisted tuner entry/exit/request/reply, reported-mode, incoming-signal and UI-signal event categories without addresses, presets or raw packets in normal diagnostics. Add an explicit developer --tuner-check mode using the normal desktop connection/navigation handlers, with a ten-minute bound, up to 2048 private tuner readings/display transitions, local diagnostic snapshots, verified exit and fresh independent full original comparison. This enables targeted investigation without desktop screenshots or repeated blind signal checks. Keep the steady-note correction and startup handshake, preserve all settings, never save or recall a preset. Actual traced-run results remain pending."
+  },
+  {
+    "version": "1.42.1",
+    "changedAt": "2026-10-18T02:15:29.266Z",
+    "summary": "Keep a steady tuner note visible until the amp reports no signal.",
+    "details": "Development correction; final hardware acceptance and installer packaging remain pending. Remove the desktop two-second reading expiry. Two independent mobile captures contain 299 and 332 readings with no adjacent identical note/meter packets, including a 2711 ms gap between valid readings. Preserve the last valid note/meter while connected, and clear on explicit no-signal, invalid data, stop or connection loss. Expose the live note and indicator through accessibility names. Add focused WPF regression coverage beyond the old expiry and retain explicit no-signal/disconnect clearing. The user reports live A briefly appears after page re-entry, then incorrectly becomes No signal. Preserve 1.42.0 startup/Tools request handling and all original settings; no preset saves or recalls."
+  },
+  {
+    "version": "1.42.0",
+    "changedAt": "2026-10-18T00:54:59.791Z",
+    "summary": "Develop tuner controls and live notification support; hardware entry remains under investigation.",
+    "details": "Unreleased P6.2 development. Add tuner page, Ctrl+4 navigation, note/meter display, reference pitch and Mute/Bypass controls, serialized settings/readback, unsolicited notifications and polling/edit guards. Retain 74 captured frames; 105 affected protocol tests and focused WPF tuner, preset-sync and Mixer checks pass. Windows settings round trips and isolated mobile-order live probes pass with exact original state/detail restoration. Battery polling alone and direct entry fail. Tools request/reply sequencing works in isolation, but the initial normal desktop check still left the amplifier on its preset screen. Handle the previously discarded startup 49 00 request using a session-owned ToolRequestResponder, with the same serialized 4A 01 reply observed on mobile; cover startup/Tools order, queue, disposal and failures. Updated normal desktop live acceptance remains pending. Do not compile an installer or mark P6.2 complete until accepted. F4 stays queued; other Phase 6 deferred and GIR&IR excluded. No presets saved or recalled."
+  },
+  {
     "version": "1.41.8",
     "changedAt": "2026-10-17T10:42:21.481Z",
     "summary": "Group application and uninstall shortcuts in the Start menu.",

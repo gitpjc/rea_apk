@@ -23,10 +23,13 @@ public sealed partial class MainWindow
     }
     private void UpdateConnectionControls()
     {
-        read.IsEnabled=!preview && operation is null && TryReadTarget(out _);
+        scan.IsEnabled=devices.IsEnabled=address.IsEnabled=!preview && operation is null && !tunerActive && !tunerStarting;
+        read.IsEnabled=!preview && operation is null && !tunerActive && !tunerStarting && TryReadTarget(out _);
         read.Content=connectedSession is null?"Connect amplifier":"Refresh amplifier";
         disconnect.IsEnabled=connectedSession is not null && operation is null;
         UpdateEffectFilterState();
+        if(tunerActive || tunerStarting)scan.IsEnabled=devices.IsEnabled=address.IsEnabled=false;
+        UpdateTunerState();
     }
     private void InitializeConnection()
     {
@@ -45,12 +48,25 @@ public sealed partial class MainWindow
         Closing+=async(_,e)=> {
             if(closing)return;
             if(connectedSession is null && operation is null)return;
-            e.Cancel=true;operation?.Cancel();await ReleaseConnectionAsync();closing=true;Close();
+            e.Cancel=true;
+            if(tunerCloseRequested)return;
+            tunerCloseRequested=true;
+            try {
+                if(tunerStarting || tunerActive) {
+                    // Complete the bounded transition; cancelling it would make a safe exit impossible.
+                    while(operation is not null)await Task.Delay(40);
+                    if(tunerActive && !await StopTunerAsync())return;
+                } else operation?.Cancel();
+                await ReleaseConnectionAsync();closing=true;Close();
+            }
+            finally {tunerCloseRequested=false;}
         };
         UpdateConnectionControls();
     }
     private async Task ReleaseConnectionAsync()
     {
+        if(tunerActive && operation is null)await StopTunerAsync();
+        ResetTunerUiForDisconnect();
         refreshTimer.Stop();pollCancellation?.Cancel();
         var session=connectedSession;connectedSession=null;connectedAddress=null;
         if(session is not null)await session.DisposeAsync();
@@ -71,15 +87,15 @@ public sealed partial class MainWindow
     }
     private async Task PollCurrentPresetAsync()
     {
-        if(polling || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
+        if(tunerStarting || tunerActive || polling || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
         polling=true;var previous=currentSnapshot;
         using var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(20));pollCancellation=timeout;
         try {
             var current=await session.ReadCurrentPresetAsync(timeout.Token);
-            if(operation is not null || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+            if(tunerStarting || tunerActive || operation is not null || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
             if(snapshotFirmware=="V1.1.9" && batteryReadAt is {} batteryTime && DateTimeOffset.UtcNow-batteryTime>=TimeSpan.FromSeconds(30)) {
                 var battery=await session.ReadBatteryAsync(timeout.Token);
-                if(operation is not null || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
+                if(tunerStarting || tunerActive || operation is not null || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || connectedSession!=session || !ReferenceEquals(previous,currentSnapshot))return;
                 SetBatteryDisplay(battery);
             }
             if(current.RawStatePayloadHex==previous?.RawStatePayloadHex && current.RawDetailPayloadHex==previous.RawDetailPayloadHex){snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();return;}

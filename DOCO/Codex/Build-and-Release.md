@@ -1,6 +1,6 @@
 # Windows build, focused checks and release packaging
 
-Updated 17 October 2026. Staged installer release: **1.41.8**; usual desktop launch folder: **1.41.5**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
+Updated 18 October 2026. Installer and usual desktop launch folder: **1.42.7**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
 
 ## Routine changes
 
@@ -13,7 +13,7 @@ dotnet tools/Iamp.Desktop.UiChecks/bin/Release/net10.0-windows10.0.19041.0/Iamp.
 node scripts/check-version.mjs
 ~~~
 
-Use an appropriate dotnet test filter for changed protocol behavior. Existing UI groups include --save, --mixer, --eq, --amp, --od, --delay, --reverb and --mod. Source identifies the exact scope of each group. Do not open a second desktop instance for UI QA while the user's app is still running.
+Use an appropriate dotnet test filter for changed protocol behavior. Existing UI groups include --save, --mixer, --eq, --amp, --od, --delay, --reverb, --mod and --tuner. Source identifies the exact scope of each group. Do not open a second desktop instance for UI QA while the user's app is still running.
 
 ## Complete release check
 
@@ -70,3 +70,11 @@ Use assets/app/iamp.ico for ApplicationIcon and the embedded WPF window icon. Th
 ## Inno Setup installer — 1.41.8
 
 The script is [installers/iamp-desktop.iss](../../installers/iamp-desktop.iss); see [installer instructions](../../installers/README.md) for publishing and compilation. It derives its version from the built assembly and packages the self-contained x64 folder, preserving user data during uninstall. Source/staging checks verify 72 history entries. Inno compilation passes; the installer has not been run and the usual desktop folder remains 1.41.5. Installation/upgrade/uninstall lifecycle, actual data preservation, signing and clean-PC acceptance remain open. No full software suite or hardware tests are needed for this packaging-only change.
+
+## Tuner — 1.42.5
+
+132 affected protocol/session/tuner/queue/diagnostic tests and focused WPF `--tuner` checks pass. The normal desktop hardware trace, reference/output controls, verified exit and independent complete baseline equality pass; see [Tuner.md](Tuner.md). No complete-suite rerun is claimed. Source, staging and launch-folder version/history checks pass; compile the current self-contained folder with the existing Inno script. Installation/uninstall acceptance remains the user’s 1.41.8 result.
+
+## Mobile tuner parity correction — 1.42.7
+
+The 1.42.5 raw-as-segment assumption was incorrect;1.42.6 fixes the center and the user confirms actual desktop/amplifier agreement. Direct mobile captures then establish non-linear center spacing, upper/lower Perfect pairs, representative High/Low positions and actual meter colors. Run only TunerReadingTests, TunerCapturedFrameTests (39 cases) and WPF `--tuner` for this display correction. Eighty captured frames and seven independent display observations are retained. Whole state/detail restoration passes after every live comparison; no saves or recalls. No complete-suite rerun or exhaustive physical sweep is claimed. Current source/staging/launch folder and installer use1.42.7.

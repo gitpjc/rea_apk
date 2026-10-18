@@ -108,3 +108,7 @@ iAMP logs report firmware `V1.1.2`, 80 presets, 10 GIR slots, 10 GNR slots, 70 d
 - [ ] Investigate USB separately: this Bluetooth capture establishes no USB control protocol.
 
 App “write successful” logging and ATT write responses only establish transmission/GATT acceptance. They do not prove a command has no side effects, was semantically accepted, or completed a device operation. No complete protocol, firmware update procedure, or safe restore workflow is claimed.
+
+## Tuner — verified 18 October 2026
+
+See [Tuner.md](Tuner.md) for observed Tools entry `4101`, request/reply `4900/4A01`, tuner entry `4102`, exit `4100`, acknowledgement `4201`, reported modes `4300/4302`, note/meter notifications `45` and whole-state settings offsets 44/45. Production uses a tested three-second quiet guard before entry; this is not a decoded firmware timing constant. Readings are change-driven and explicit `450000` clears the display. No cents mapping is established.

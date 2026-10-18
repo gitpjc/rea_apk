@@ -15,9 +15,11 @@ public sealed partial class F15ReadSession : IAsyncDisposable
     private readonly GattCharacteristic notify;
     private readonly GattCharacteristic write;
     private readonly CommandSession commands;
+    private readonly ToolRequestResponder toolRequests;
     private readonly WorkflowQueue workflows = new();
     private int disposed;
     private readonly DiagnosticJournal? diagnostics;
+    private F15Identity? confirmedIdentity;
 
     private F15ReadSession(BluetoothLEDevice device, GattDeviceService service,
         GattCharacteristic notify, GattCharacteristic write, DiagnosticJournal? diagnostics)
@@ -31,6 +33,8 @@ public sealed partial class F15ReadSession : IAsyncDisposable
                 GattWriteOption.WriteWithResponse).AsTask(ct);
             Require(result.Status, "Amplifier command");
         }, diagnostics: diagnostics);
+        toolRequests = new ToolRequestResponder(commands);
+        commands.UnsolicitedPayloadReceived += OnUnsolicitedPayload;
         notify.ValueChanged += OnValueChanged;
         device.ConnectionStatusChanged += OnConnectionStatusChanged;
     }
@@ -115,7 +119,7 @@ public sealed partial class F15ReadSession : IAsyncDisposable
         var payload = await QueryAsync(new byte[] { 0x01, 0x01 }, p => p.Length >= 3 && p[0] == 0x02, ct);
         if (payload.Length != 16 || payload[9] != 0 || payload[10] != 5)
             throw new FormatException("Identity schema differs from captured firmware; retain raw evidence before supporting this device.");
-        return new F15Identity(payload[1], payload[2], Encoding.ASCII.GetString(payload, 3, 6),
+        return confirmedIdentity = new F15Identity(payload[1], payload[2], Encoding.ASCII.GetString(payload, 3, 6),
             payload[11], payload[12], payload[13], payload[14], payload[15], Convert.ToHexString(payload));
     }
 
@@ -371,14 +375,20 @@ public sealed partial class F15ReadSession : IAsyncDisposable
     private Task<byte[]> QueryAsync(byte[] request, Func<byte[], bool> match, CancellationToken ct)
         => commands.QueryAsync(request, match, ct);
 
-    private Task<T> RunWorkflowAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct)
-        => workflows.RunAsync(async token =>
+    private async Task<T> RunWorkflowAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct)
+    {
+        var outcome = await workflows.RunAsync(async token =>
         {
             commands.ThrowIfUnavailable();
+            // Reject competing work without poisoning the workflow queue needed to exit tuner.
+            if (IsTunerActive) return (Rejected: true, Value: default(T)!);
             var result = await action(token);
             commands.ThrowIfUnavailable();
-            return result;
+            return (Rejected: false, Value: result);
         }, ct);
+        if (outcome.Rejected) throw new InvalidOperationException("Exit the tuner before reading or editing the amplifier.");
+        return outcome.Value;
+    }
 
     private void OnValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
     {
@@ -407,6 +417,8 @@ public sealed partial class F15ReadSession : IAsyncDisposable
         if (Interlocked.Exchange(ref disposed, 1) != 0) return;
         diagnostics?.Record(DiagnosticOperation.Connection, DiagnosticOutcome.Disposed);
         workflows.Dispose();
+        toolRequests.Dispose();
+        commands.UnsolicitedPayloadReceived -= OnUnsolicitedPayload;
         commands.Dispose();
         notify.ValueChanged -= OnValueChanged;
         device.ConnectionStatusChanged -= OnConnectionStatusChanged;

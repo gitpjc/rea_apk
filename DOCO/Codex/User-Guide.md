@@ -1,14 +1,14 @@
 # Running the current iAMP Desktop build
 
-Updated 17 October 2026. The core F15i editor is implemented; broader connection, usability and deployment acceptance remains open. See [Current-Status.md](Current-Status.md) for scope and [Musician-Workflow.md](Musician-Workflow.md) for the completed clean/rhythm/lead checks.
+Updated 18 October 2026. The core F15i editor is implemented; broader connection, usability and deployment acceptance remains open. See [Current-Status.md](Current-Status.md) for scope and [Musician-Workflow.md](Musician-Workflow.md) for the completed clean/rhythm/lead checks.
 
-Current release: **1.41.5**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
+Current release: **1.42.7**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
 The compact preset dropdown sits beside Presets, with search on the right and responsive wrapping. Entries show amplifier labels **0A–19D** and actual names. A blue left-side checkmark (**#4385ff**) identifies the active preset inside the open list; the selected-item field has no check. Search shows a right-side × only when it contains text. See [Preset-Browser.md](Preset-Browser.md).
 
-Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable effect** / **Disable effect** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History, Ctrl+3 opens Mixer and Ctrl+F focuses search.
+Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable effect** / **Disable effect** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History, Ctrl+3 opens Mixer, Ctrl+4 opens Tuner and Ctrl+F focuses search.
 
 **Compare snapshot** and **Export diagnostics** remain available. Supported edits remain explicit and verified. Developers can run `bash scripts/build-desktop.sh` without a connected phone or amplifier; see [Build-and-Release.md](Build-and-Release.md).
 
@@ -141,3 +141,9 @@ The closed preset dropdown follows the confirmed active preset after polling or 
 ## Physical Master knob and Mixer Master
 
 The Mixer Master value should not be treated as the amplifier’s physical knob display. In the verified physical0→10→0 test, both desktop and mobile iAMP kept Mixer Master at+6dB. The desktop matches that observed mobile behavior; no general physical-to-Mixer mapping is established. See [Physical-Panel-Sync.md](Physical-Panel-Sync.md).
+
+## Tuner
+
+Open **Tuner** or press **Ctrl+4** while connected. Entry includes a three-second quiet interval before activation. Play one note with guitar volume on. **Low!** means flat; **High!** means sharp; green **Perfect!** indicates in tune. At the exact center the whole meter turns green; near-center readings show two green segments. The meter matches observed mobile segment spacing and colors; it does not report cents. A steady note remains visible until the amplifier reports no signal; turning guitar volume off should clear it.
+
+Use **− / +** to set reference pitch from **430 to 445 Hz**. **Mute / Bypass** selects tuner output behavior. **Stop tuner**, leaving the page or closing the app exits tuner mode and verifies state before normal editing resumes. No preset is saved automatically. Settings and entry support are verified for F15i V1.1.9. See [Tuner.md](Tuner.md).

@@ -1,10 +1,12 @@
 # Documentation index
 
-Reconciled 17 October 2026 against application **1.41.5**. Start with [Current-Status.md](Current-Status.md), then [Plan.md](Plan.md) for checked tasks and remaining acceptance. Current behavior takes precedence over earlier milestone limits. Dates/version numbers, captured values and test counts in reports identify the original evidence, not newly rerun tests. The original documentation reconciliation performed no hardware work. Subsequent physical-panel checks and the 1.41.3 dropdown correction are recorded separately below.
+Reconciled 18 October 2026 against application **1.42.7**. Start with [Current-Status.md](Current-Status.md), then [Plan.md](Plan.md) for checked tasks and remaining acceptance. Current behavior takes precedence over earlier milestone limits. Dates/version numbers, captured values and test counts in reports identify the original evidence, not newly rerun tests. The original documentation reconciliation performed no hardware work. Subsequent physical-panel checks and the 1.41.3 dropdown correction are recorded separately below.
 
 ## Current guides and development status
 
-- [Installer instructions](../../installers/README.md) — Inno Setup compilation and lifecycle validation boundary for 1.41.8; usual desktop remains 1.41.5.
+- [Tuner.md](Tuner.md) — 1.42.7 tuner correction, observed mobile mappings/colors, user-confirmed center agreement and exact original restoration.
+
+- [Installer instructions](../../installers/README.md) — Inno Setup compilation and lifecycle validation boundary for 1.42.7; user installation/uninstall acceptance remains recorded at 1.41.8.
 - [Current-Status.md](Current-Status.md) — Current development status
 - [Plan.md](Plan.md) — Windows iAMP companion: implementation plan
 - [Feature-Matrix.md](Feature-Matrix.md) — Windows iAMP feature and acceptance matrix

@@ -5,7 +5,7 @@ namespace Iamp.Desktop;
 
 public sealed partial class MainWindow
 {
-    private readonly RoutedCommand libraryShortcut=new(),historyShortcut=new(),searchShortcut=new(),mixerShortcut=new();
+    private readonly RoutedCommand libraryShortcut=new(),historyShortcut=new(),searchShortcut=new(),mixerShortcut=new(),tunerShortcut=new();
     private void InitializeKeyboardNavigation()
     {
         void Bind(RoutedCommand command, Key key, Action action)
@@ -16,6 +16,8 @@ public sealed partial class MainWindow
         Bind(libraryShortcut,Key.D1,()=>NavigateToHistory(false));
         Bind(historyShortcut,Key.D2,()=>NavigateToHistory(true));
         Bind(mixerShortcut,Key.D3,()=>NavigateToPage(mixerScroll));
+        Bind(tunerShortcut,Key.D4,()=>NavigateToPage(tunerScroll));
+        tunerNavigation.ToolTip="Tuner · Ctrl+4";
         Bind(searchShortcut,Key.F,()=>{NavigateToHistory(false);search.BringIntoView();search.Focus();search.SelectAll();});
         libraryNavigation.ToolTip="Amplifier Settings · Ctrl+1";historyNavigation.ToolTip="Version History · Ctrl+2";
         search.ToolTip="Search preset names or indices · Ctrl+F";

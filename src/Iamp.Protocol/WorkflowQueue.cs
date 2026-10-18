@@ -11,6 +11,8 @@ public sealed class WorkflowQueue : IDisposable
     private Exception? failure;
     private bool disposed;
 
+    public bool IsAvailable { get { lock (gate) return !disposed && failure is null; } }
+
     public async Task<T> RunAsync<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(action);

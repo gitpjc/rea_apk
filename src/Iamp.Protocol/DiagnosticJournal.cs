@@ -4,7 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace Iamp.Protocol;
 
-public enum DiagnosticOperation { Connection, Session, IdentityRead, PresetNamesRead, CurrentStateRead, PresetDetailRead, LiveUpdate, PresetRecall, PresetSave, OtherCommand }
+public enum DiagnosticOperation { Connection, Session, IdentityRead, PresetNamesRead, CurrentStateRead, PresetDetailRead, LiveUpdate, PresetRecall, PresetSave, OtherCommand,
+    ToolsEntry, TunerEntry, TunerExit, ToolsRequest, ToolsReply, BatteryRead, TunerReportedActive, TunerReportedInactive, TunerSignal, TunerNoSignal, TunerUiSignal, TunerUiNoSignal, ProtocolSetupRead }
 public enum DiagnosticOutcome { Started, Completed, Failed, Cancelled, TimedOut, Disconnected, TransferState, Disposed, Rejected, InvalidResponse }
 public sealed record DiagnosticEvent(long Sequence, DateTimeOffset At, DiagnosticOperation Operation,
     DiagnosticOutcome Outcome, long ElapsedMilliseconds);
@@ -57,8 +58,25 @@ public sealed class DiagnosticJournal
         0x01 => DiagnosticOperation.IdentityRead, 0x29 => DiagnosticOperation.PresetNamesRead,
         0x11 => DiagnosticOperation.CurrentStateRead, 0x21 => DiagnosticOperation.PresetDetailRead,
         0x25 => DiagnosticOperation.LiveUpdate, 0x13 => DiagnosticOperation.PresetRecall,
-        0x2F => DiagnosticOperation.PresetSave, _ => DiagnosticOperation.OtherCommand
+        0x2F => DiagnosticOperation.PresetSave,
+        0x41 when payload.Length == 2 && payload[1] == 1 => DiagnosticOperation.ToolsEntry,
+        0x41 when payload.Length == 2 && payload[1] == 2 => DiagnosticOperation.TunerEntry,
+        0x41 when payload.Length == 2 && payload[1] == 0 => DiagnosticOperation.TunerExit,
+        0x4A when payload.Length == 2 && payload[1] == 1 => DiagnosticOperation.ToolsReply,
+        0x91 when payload.Length == 1 => DiagnosticOperation.BatteryRead,
+        0x03 when payload.Length == 1 => DiagnosticOperation.ProtocolSetupRead,
+        _ => DiagnosticOperation.OtherCommand
     };
+
+    public static DiagnosticOperation? TunerNotificationKind(ReadOnlySpan<byte> payload)
+    {
+        if (payload.SequenceEqual(new byte[] { 0x49, 0x00 })) return DiagnosticOperation.ToolsRequest;
+        if (payload.SequenceEqual(new byte[] { 0x43, 0x00 })) return DiagnosticOperation.TunerReportedInactive;
+        if (payload.SequenceEqual(new byte[] { 0x43, 0x02 })) return DiagnosticOperation.TunerReportedActive;
+        if (TunerReading.TryParse(payload, out var reading))
+            return reading!.Value.HasSignal ? DiagnosticOperation.TunerSignal : DiagnosticOperation.TunerNoSignal;
+        return null;
+    }
 
     public static DiagnosticOutcome OutcomeFor(Exception error, bool timedOut = false) => error switch
     {

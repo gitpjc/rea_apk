@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <None Include="../fixtures/f15-tuner-observations.json" Link="fixtures/f15-tuner-observations.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-reverb-model-observations.json" Link="fixtures/f15-reverb-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-delay-model-observations.json" Link="fixtures/f15-delay-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../fixtures/f15-od-model-observations.json" Link="fixtures/f15-od-model-observations.json" CopyToOutputDirectory="PreserveNewest" />
