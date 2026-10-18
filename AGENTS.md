@@ -12,6 +12,10 @@ This is some documentation about this Mobile application
 
 .\DOCO\MOOER\F15i Li_Manual_EN_V01_2025.06.19.pdf
 
+## Mobile iAMP App
+
+Always use the implementation of iAMP Mobile app as the the source of truth. Do not waste time guessing how things work, always confirm exactly how it works based on the iAMP Mobile app implementation.    
+
 ## Documentation References
 
 [REA: Reverse Engineer Anything (GitHub Repo)](https://github.com/morluto/rea)     
