@@ -1,17 +1,31 @@
 
-On the Drum screen I want a nicer way to select the rhythm patterns
+ To the right of the Prests drop down please add a button called 'Preset/Effect Details'
 
-There are 7 different styles and each style has 10 patterns
+ When I press that button please provide a report that lists all the presets and Effects available, for example something llike this:
 
-Pop
-Rock
-Blues
-Funk
-Jazz
-Metal
-Metronome
+Presets
 
-What is a better way to allow me to selet what rhythm pattern I want to play
+  0A-0D
+    - 0A British J800 Clean
+    - 0B British OverDrive
+    .....
+
+  1A-1D 
+    - etc...
+    - etc...
+
+Effects
+
+  Dyna 
+    - Red Comp
+    - Yellow Comp
+    .....
+
+  Filter
+    = Touch Wah
+    = Auto Wah
+
+Also provide a copy icon so I can copy the report
 
 Do you understand what I want?
 

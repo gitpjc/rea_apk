@@ -1,5 +1,23 @@
 [
   {
+    "version": "1.46.1",
+    "changedAt": "2026-10-18T09:36:08.501Z",
+    "summary": "Style report section headings and copy the report as Markdown.",
+    "details": "Display Presets/Effects section headings at16px bold and bank/effect-category headers at15px bold, with report items remaining13px normal in a read-only rich text view. Copy report exports the equivalent Markdown with level-two section headings, level-three bank/category headings and bullet lists. Escape Markdown punctuation in preset/model names; include all entries and cached-data notes, independent of visible scroll position. Update copy tooltip, accessibility and feedback to identify Markdown. Focused report checks verify styled headings, complete text/Markdown export, escaping, clipboard contention and responsive placement. Rebuild the self-contained app and installer."
+  },
+  {
+    "version": "1.46.0",
+    "changedAt": "2026-10-18T09:28:56.072Z",
+    "summary": "Cache last-read preset names for offline browsing and reports.",
+    "details": "Persist the last complete 80-slot preset-name library in the local user profile and load it at startup for offline dropdown browsing and Preset/Effect Details. Mark cached names as last-read data; cache does not imply a current preset, connection or edit permission. Refresh on successful amplifier reads and update after confirmed save/rename; imported snapshots and demo data do not overwrite the live cache. Use bounded validated JSON and atomic replacement, retaining the previous full list on incomplete data or failed writes. Rename the Presets title beside the dropdown to Preset. Run focused cache, report, save/rename and preset-sync checks without hardware mutations; rebuild and package1.46.0."
+  },
+  {
+    "version": "1.45.0",
+    "changedAt": "2026-10-18T09:16:53.463Z",
+    "summary": "Add a copyable report of all preset names and available effect models.",
+    "details": "Add Preset/Effect Details immediately to the right of the Presets dropdown, retaining adjacent responsive placement. Open a themed, scrollable read-only text report listing all loaded presets by numeric bank (0A–0D through19A–19D) and every available built-in effect model by category in catalogue order. Search/effect filters do not restrict the report; unloaded names are explained rather than invented. Use the existing loaded data and verified desktop catalogue; no amplifier reads, recalls, edits or saves. Add a copy icon that copies the complete report and handles clipboard-busy feedback. Run focused report/layout and affected preset-navigation checks; package1.45.0."
+  },
+  {
     "version": "1.44.2",
     "changedAt": "2026-10-18T08:49:05.245Z",
     "summary": "Restore the original color of the Current rhythm prefix.",

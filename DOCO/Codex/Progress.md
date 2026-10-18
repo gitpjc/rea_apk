@@ -371,3 +371,11 @@ Implement user-authorized P6.3 ahead of F4. Observe all 70 mobile pattern labels
 ## 18 October 2026 — Drum styles and compact sidebar (1.44.0)
 
 User requests seven-style dropdown and ten numbered pattern buttons, plus reduced sidebar spacing. Implement immediate selection using the existing verified command path, current-pattern highlight/label and browsing without amplifier edits. Keep Tuner above Drum; reduce row padding and Tools section margins. Focused offline selector/navigation tests cover all70 mappings and responsive layout. No hardware mutations or complete-suite rerun.
+
+## 18 October 2026 — Preset/Effect Details report (1.45.0)
+
+Add the requested button beside Presets, with a themed scrollable report grouping unfiltered loaded presets by numeric bank and124 available built-in models by category. Add a copy icon for the complete report and clipboard-busy feedback. Focused offline report/layout and preset-sync checks pass; no amplifier or user clipboard mutations. Update documentation and package1.45.0.
+
+## 18 October 2026 — Offline preset names (1.46.0)
+
+Persist the last complete80-slot preset-name list and load it on startup for offline browsing/reporting. Mark cached data without inventing current/live state; refresh on successful reads and confirmed save/rename. Reject incomplete or corrupt caches and preserve previous data with atomic replacement. Rename the title beside the dropdown from Presets to Preset. Focused cache/report/save/preset-sync checks pass without hardware or user-cache mutation; package1.46.0.

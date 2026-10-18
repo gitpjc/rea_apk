@@ -137,7 +137,7 @@ public sealed partial class MainWindow
             presetCount.Text=libraryCount.Text=rhythmCount.Text="—";
             SetPresetEffectIndex(new[]{new DecodedPreset((byte)loaded.WireIndex,loaded.Name,loaded.Blocks,Array.Empty<byte>())});
             effectCacheNote.Text="Local snapshot · One preset";
-            names=new[]{new PresetName(loaded.WireIndex,loaded.Name)};Filter();
+            names=new[]{new PresetName(loaded.WireIndex,loaded.Name)};presetNamesAreCached=false;Filter();
             currentPreset.Text=$"{loaded.SlotLabel} · {loaded.Name}";SetEffects(loaded.Blocks);
             snapshot.Text=SnapshotLabel();status.Text="LOCAL SNAPSHOT · OFFLINE · Read the amplifier before editing · No amplifier changes";
             return true;

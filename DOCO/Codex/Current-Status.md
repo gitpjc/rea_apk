@@ -1,6 +1,6 @@
 # Current development status
 
-**Current status — 18 October 2026:** **1.44.0** implements Drum P6.3 for F15i V1.1.9. Tools contains **Tuner above Drum**, as requested. Drum has all 70 observed mobile patterns, a 40–260 BPM circular dial, interval-based TAP, Play/Pause and a vertical volume popup. The user-requested selector uses seven styles and ten numbered buttons; sidebar rows and section gaps are compact. Normal desktop handler checks and the Drum–Tuner–Drum roundtrip pass; complete original state/detail and stopped playback were independently restored. Eighteen affected protocol/Tools tests and focused Drum, Tuner, Mixer and preset-sync UI checks pass. See [Drum.md](Drum.md). Tuner P6.2 remains implemented with the mobile-verified 1.42.7 display mapping; see [Tuner.md](Tuner.md). F4 is next; other Phase 6 work remains deferred and GIR&IR excluded.
+**Current status — 18 October 2026:** **1.46.1** adds bold, larger report headings and Markdown clipboard export. Version **1.46.0** caches the last complete preset-name library for offline dropdown/report viewing, refreshes it on successful reads and confirmed rename/save, and labels the dropdown title Preset. Focused persistence and affected UI checks pass without hardware mutations. Version **1.45.0** adds the Preset/Effect Details report beside the preset dropdown: bank-grouped loaded names, category-grouped models and complete clipboard copy. Focused report/layout and preset-sync checks pass; no hardware mutations. See [Preset-Effect-Details.md](Preset-Effect-Details.md). Version **1.43.0** implements Drum P6.3 for F15i V1.1.9. Tools contains **Tuner above Drum**, as requested. Drum has all 70 observed mobile patterns, a 40–260 BPM circular dial, interval-based TAP, Play/Pause and a vertical volume popup. The user-requested selector uses seven styles and ten numbered buttons; sidebar rows and section gaps are compact. Normal desktop handler checks and the Drum–Tuner–Drum roundtrip pass; complete original state/detail and stopped playback were independently restored. Eighteen affected protocol/Tools tests and focused Drum, Tuner, Mixer and preset-sync UI checks pass. See [Drum.md](Drum.md). Tuner P6.2 remains implemented with the mobile-verified 1.42.7 display mapping; see [Tuner.md](Tuner.md). F4 is next; other Phase 6 work remains deferred and GIR&IR excluded.
 
 ## Next task
 
@@ -8,7 +8,7 @@ Resume **MOOER F4 Wireless Footswitch support on 18 October 2026**, as agreed wi
 
 The user reports successful installation and uninstall, including Start menu shortcuts. Further upgrade/license/clean-PC checks are outside the current requested scope and are not claimed as tested.
 
-Reconciled 18 October 2026. Installer and usual desktop launch folder: **1.44.0**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
+Reconciled 18 October 2026. Installer and usual desktop launch folder: **1.46.1**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
 
 ## Implemented
 
@@ -48,7 +48,7 @@ This is not final product acceptance. Remaining work includes physical parameter
 
 **GIR&IR is excluded by the user. Tuner P6.2 and Drum P6.3 have bounded implementation/acceptance evidence; other Phase 6 work remains deferred except for the authorized F4 task above.** USB charging/vendor maintenance does not establish desktop USB control. Vendor-format device import/restore, cloud/accounts, Looper and other deferred advanced operations are not implemented. The user reported a successful MOOER Studio restore; no independent custom backup-format or exhaustive vendor-restore validation is claimed.
 
-The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.44.0 installer compiles. The user accepted installation/uninstall and Start menu shortcuts on 1.41.8; further upgrade, signing and clean-PC acceptance are not claimed.
+The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.46.1 installer compiles. The user accepted installation/uninstall and Start menu shortcuts on 1.41.8; further upgrade, signing and clean-PC acceptance are not claimed.
 
 ## Development and testing policy
 

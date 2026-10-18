@@ -1,6 +1,6 @@
 # Windows build, focused checks and release packaging
 
-Updated 18 October 2026. Installer and usual desktop launch folder: **1.44.0**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
+Updated 18 October 2026. Installer and usual desktop launch folder: **1.46.1**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
 
 ## Routine changes
 
@@ -86,3 +86,11 @@ Run the affected Drum, TunerEntry and ToolRequest protocol tests (18 cases) plus
 ## Drum style selector and compact navigation — 1.44.0
 
 Run focused WPF --drum, --tuner and --preset-sync checks for the changed selector/navigation. All 70 button IDs are checked against the captured catalogue; browsing sends no commands. Protocol/transport behavior is unchanged, so no hardware mutation or complete-suite rerun is needed. Publish self-contained x64 and compile the existing Inno script beside its output.
+
+## Preset/Effect Details — 1.45.0
+
+Run WPF --preset-effect-report and affected --preset-sync checks. Report formatting, all catalogue models, clipboard copy/error handling and four responsive layouts are checked offline. No hardware or full-suite rerun is required. The report uses existing loaded names and the verified built-in catalogue.
+
+## Offline preset names — 1.46.0
+
+Run WPF --preset-name-cache, --preset-effect-report, --save and --preset-sync for persistence/startup, reports, save/rename updates and navigation. These checks use temporary caches and do not connect to hardware or modify the user cache. Publish self-contained x64 and compile the existing Inno installer.

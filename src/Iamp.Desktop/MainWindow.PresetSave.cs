@@ -129,6 +129,7 @@ public sealed partial class MainWindow
             names=names.Where(n=>n.WireIndex!=storedSource.WireIndex).Append(new PresetName(storedSource.WireIndex,storedSource.Name)).OrderBy(n=>n.WireIndex).ToArray();
             updated[storedSource.WireIndex]=storedSource.Blocks;
         }
+        if(persistCache)CacheLivePresetNames();
         if(persistCache && snapshotAddress is {} target && snapshotFirmware is {} version && names.Count==80 && presetEffectIndex.Count==80) {
             var records=names.Select(n=>new DecodedPreset((byte)n.WireIndex,n.Name,presetEffectIndex[n.WireIndex],Array.Empty<byte>()));
             effectCacheNote.Text=effectCacheStore.Save(target,version,records)?"Effects cached · Saved preset updated":"Preset saved · Effect cache could not be updated";

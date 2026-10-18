@@ -53,9 +53,12 @@ public sealed partial class MainWindow : Window
     private readonly bool preview;
     private readonly ScrollViewer libraryScroll=new() {VerticalScrollBarVisibility=ScrollBarVisibility.Auto};
 
-    public MainWindow(bool preview = false)
+    public MainWindow(bool preview = false):this(preview,new PresetNameCacheStore()){}
+
+    internal MainWindow(bool preview,PresetNameCacheStore nameCacheStore)
     {
         this.preview = preview;
+        presetNameCacheStore=nameCacheStore;
         Title = "iAMP Desktop · Amplifier Settings"; Width = Math.Min(1280,SystemParameters.WorkArea.Width); Height = Math.Min(900,SystemParameters.WorkArea.Height); MinWidth = 620; MinHeight = 320;
         Icon = BitmapFrame.Create(new Uri("pack://application:,,,/Iamp.Desktop;component/assets/app/iamp.ico"));
         Background = BackgroundBrush; Foreground = Brushes.White; FontFamily = new FontFamily("Segoe UI"); FontSize = 14;
@@ -110,7 +113,7 @@ public sealed partial class MainWindow : Window
         var bar = new Grid(); bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         bar.ColumnDefinitions.Add(new ColumnDefinition());bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
-        var label = new StackPanel(); label.Children.Add(Text("Presets", 22)); label.Children.Add(count); bar.Children.Add(label);
+        var label = new StackPanel(); label.Children.Add(Text("Preset", 22)); label.Children.Add(count); bar.Children.Add(label);
         var searchPanel = new StackPanel(); searchPanel.Children.Add(Text("Search name or preset", 12, MutedBrush));
         var searchField = new Grid(); searchField.Children.Add(search);
         clearSearch.Width=24;clearSearch.Height=26;clearSearch.Padding=new Thickness(0);
@@ -186,8 +189,14 @@ public sealed partial class MainWindow : Window
         presets.ItemContainerStyle=rowStyle;
         InitializeEffectFilter();
         presets.MinHeight=42;presets.Width=440;presets.HorizontalAlignment=HorizontalAlignment.Left;
-        presets.VerticalAlignment=VerticalAlignment.Center;presets.Margin=new Thickness(16,0,20,0);
-        Grid.SetColumn(presets,1);bar.Children.Add(presets);
+        presets.VerticalAlignment=VerticalAlignment.Center;presets.Margin=new Thickness(0);
+        var presetChooser=new Grid {HorizontalAlignment=HorizontalAlignment.Left,Margin=new Thickness(16,0,20,0)};
+        presetChooser.ColumnDefinitions.Add(new ColumnDefinition());presetChooser.ColumnDefinitions.Add(new ColumnDefinition {Width=GridLength.Auto});
+        presetChooser.Children.Add(presets);Grid.SetColumn(presetEffectDetails,1);presetChooser.Children.Add(presetEffectDetails);
+        presetEffectDetails.Width=180;presetEffectDetails.Margin=new Thickness(10,0,0,0);presetEffectDetails.VerticalAlignment=VerticalAlignment.Center;
+        presetEffectDetails.Click+=(_,_)=> {var dialog=CreatePresetEffectDetailsDialog(CreatePresetEffectReport());dialog.Owner=this;dialog.ShowDialog();};
+        System.Windows.Automation.AutomationProperties.SetName(presetEffectDetails,"Preset/Effect Details");
+        Grid.SetColumn(presetChooser,1);bar.Children.Add(presetChooser);
         System.Windows.Automation.AutomationProperties.SetName(presets,"Choose amplifier preset");
         page.SizeChanged+=(_,_)=> {
             var available=Math.Max(120,page.ActualWidth);
@@ -196,10 +205,11 @@ public sealed partial class MainWindow : Window
             Grid.SetRow(badge,compact?1:0);Grid.SetColumn(badge,compact?0:1);Grid.SetColumnSpan(badge,compact?2:1);
             badge.HorizontalAlignment=compact?HorizontalAlignment.Left:HorizontalAlignment.Right;
             badge.Margin=new Thickness(0,compact?10:0,0,0);
-            var wrapSearch=available<1120;var wrapPreset=available<420;
-            Grid.SetRow(presets,wrapPreset?1:0);Grid.SetColumn(presets,wrapPreset?0:1);Grid.SetColumnSpan(presets,wrapPreset?3:1);
-            presets.Margin=new Thickness(wrapPreset?0:16,wrapPreset?10:0,wrapSearch?0:20,0);
-            presets.Width=Math.Min(440,Math.Max(120,available-(wrapPreset?0:Math.Max(100,label.ActualWidth)+16)-(wrapSearch?0:592)));
+            var wrapSearch=available<1330;var wrapPreset=available<520;
+            Grid.SetRow(presetChooser,wrapPreset?1:0);Grid.SetColumn(presetChooser,wrapPreset?0:1);Grid.SetColumnSpan(presetChooser,wrapPreset?3:1);
+            presetChooser.Margin=new Thickness(wrapPreset?0:16,wrapPreset?10:0,wrapSearch?0:20,0);
+            presetChooser.Width=Math.Min(630,Math.Max(310,available-(wrapPreset?0:Math.Max(100,label.ActualWidth)+16)-(wrapSearch?0:612)));
+            presets.Width=presetChooser.Width-190;
             Grid.SetRow(filtersPanel,wrapPreset?2:wrapSearch?1:0);Grid.SetColumn(filtersPanel,wrapSearch?0:2);Grid.SetColumnSpan(filtersPanel,wrapSearch?3:1);
             filtersPanel.Width=wrapSearch?available:572;filtersPanel.Margin=new Thickness(0,wrapSearch?10:0,0,0);
             filtersPanel.HorizontalAlignment=wrapSearch?HorizontalAlignment.Left:HorizontalAlignment.Right;
@@ -240,7 +250,7 @@ public sealed partial class MainWindow : Window
             }
         };
         Closed += (_,_) => operation?.Cancel();
-        if (preview) SetDemo();
+        if (preview) SetDemo();else LoadCachedPresetNames();
         UpdatePresetSelectionState();
     }
 
@@ -371,6 +381,7 @@ public sealed partial class MainWindow : Window
             currentSnapshot=current;snapshotAddress=selected;snapshotFirmware=identity.Firmware;editSnapshotValid=true;
             UpdateMixerState(resetPending:!preservePending);
             localSnapshotSource=false;sourceBadge.Text="EXPERIMENTAL EDIT";
+            CacheLivePresetNames();
             if(preservePending)SetEffectsPreservingPending(current.Blocks);else SetEffects(current.Blocks);
             snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();Filter();status.Text="Connected · Presets loaded";lastReadSucceeded=true;refreshTimer.Start();
         }
@@ -401,7 +412,7 @@ public sealed partial class MainWindow : Window
         var selectedIndex=presets.IsDropDownOpen?(presets.SelectedItem as PresetName)?.WireIndex:
             currentSnapshot?.WireIndex??(presets.SelectedItem as PresetName)?.WireIndex;
         var term=search.Text.Trim();var filtered=names.Where(p=>PresetEffectSearch.MatchesText(p.WireIndex,p.Name,term) && MatchesEffectFilter(p)).Select(p=>p with {IsCurrent=p.WireIndex==currentSnapshot?.WireIndex}).ToArray();
-        presets.ItemsSource=filtered;presets.SelectedItem=filtered.FirstOrDefault(p=>p.WireIndex==(selectedIndex??currentSnapshot?.WireIndex));count.Text=$"{filtered.Length} of {names.Count} presets";
+        presets.ItemsSource=filtered;presets.SelectedItem=filtered.FirstOrDefault(p=>p.WireIndex==(selectedIndex??currentSnapshot?.WireIndex));count.Text=$"{filtered.Length} of {names.Count} presets"+(presetNamesAreCached?" · Cached":"");
     }
     private void ResetDropdownToCurrent()
     {
@@ -409,7 +420,7 @@ public sealed partial class MainWindow : Window
     }
     private async Task RecallDropdownSelectionAsync()
     {
-        if(preview)return;
+        if(preview || presetNamesAreCached && !editSnapshotValid)return;
         await SelectPresetAsync();
         // A declined or failed recall must not present the requested slot as active.
         ResetDropdownToCurrent();
@@ -582,7 +593,7 @@ public sealed partial class MainWindow : Window
         selectPreset.IsEnabled=supported && selected!.WireIndex!=currentSnapshot!.WireIndex;
         selectionMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
             liveEditUnsaved?"Recall will discard live unsaved edits only after confirmation.":
-            !editSnapshotValid||snapshotFirmware!="V1.1.9"?"Connect to load the presets first.":
+            !editSnapshotValid||snapshotFirmware!="V1.1.9"?presetNamesAreCached?"Cached names · Connect to refresh names and recall a preset.":"Connect to load the presets first.":
             selected is null?"Choose a preset from the dropdown.":
             selected.WireIndex==currentSnapshot!.WireIndex?"Already the current preset.":$"Recall {selected.SlotLabel} · Nothing is saved.";
     }

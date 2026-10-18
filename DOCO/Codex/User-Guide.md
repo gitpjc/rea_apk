@@ -2,7 +2,7 @@
 
 Updated 18 October 2026. The core F15i editor is implemented; broader connection, usability and deployment acceptance remains open. See [Current-Status.md](Current-Status.md) for scope and [Musician-Workflow.md](Musician-Workflow.md) for the completed clean/rhythm/lead checks.
 
-Current release: **1.44.0**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
+Current release: **1.46.1**. Report headings are bold/larger and Copy report exports Markdown. Previous release: **1.46.0**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
@@ -32,6 +32,10 @@ Choose **Tools → Drum** (Ctrl+5) after connecting through Amplifier Settings. 
 Choose a **Style**: Pop, Rock, Blues, Funk, Jazz, Metal or Metronome. Its ten numbered buttons appear below; click **01–10** to select a pattern immediately. Browsing styles does not change the playing rhythm. The selected pattern is highlighted, with its full confirmed name underneath. The mobile tenth label remains **10 POP010** in the current-rhythm label and tooltip. **Play / Pause** controls playback. The speaker opens a vertical volume popup; it does not mute. The observed mobile volume selections run from **0 to 99**.
 
 Changes are live and do not save or recall a preset. Playback continues when you leave Drum, including a visit to Tuner. Pause it explicitly when finished. Pending effect inputs are preserved. Reconnect after an unconfirmed operation; queued edits are discarded rather than replayed. See [Drum.md](Drum.md).
+
+## Preset/Effect Details
+
+Click **Preset/Effect Details** beside the **Preset** dropdown for a scrollable report of all loaded preset names grouped by bank and all available built-in effect models grouped by category. Filters do not restrict the report. Use the copy icon to copy the entire report as Markdown. It uses loaded data and does not read, recall, edit or save amplifier settings. Connect once after upgrading to populate the preset-name cache. Later launches show last-read names offline in the dropdown and report; connect to refresh them. Confirmed saves and renames update the cache. Cached names never enable amplifier editing. See [Preset-Effect-Details.md](Preset-Effect-Details.md).
 
 ## Mixer
 
