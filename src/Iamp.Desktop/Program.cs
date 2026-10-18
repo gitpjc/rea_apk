@@ -11,6 +11,19 @@ internal static class Program
     public static int Main(string[] args)
     {
         var app = new Application();
+        if(args.Length==3 && args[0]=="--drum-check") {
+            if(System.Diagnostics.Process.GetProcessesByName("Iamp.Desktop").Any(p=>p.Id!=Environment.ProcessId))
+                throw new InvalidOperationException("Close the existing iAMP Desktop before starting its single-window Drum check.");
+            app.ShutdownMode=ShutdownMode.OnExplicitShutdown;
+            var drumWindow=new MainWindow();drumWindow.Show();
+            _=app.Dispatcher.InvokeAsync(async()=> {
+                var code=0;
+                try{await drumWindow.RunDrumCheckAsync(args[1],args[2]);}
+                catch(Exception error){Console.Error.WriteLine(error);code=2;}
+                finally{await drumWindow.ReleasePreviewConnectionAsync();drumWindow.Close();app.Shutdown(code);}
+            });
+            return app.Run();
+        }
         if(args.Length==3 && args[0]=="--tuner-check") {
             app.ShutdownMode=ShutdownMode.OnExplicitShutdown;
             var tunerWindow=new MainWindow();tunerWindow.Show();

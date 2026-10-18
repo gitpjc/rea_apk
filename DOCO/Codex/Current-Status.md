@@ -1,6 +1,6 @@
 # Current development status
 
-**Current status — 18 October 2026:** Tuner P6.2 is implemented for F15i V1.1.9 in **1.42.7**. The user confirmed corrected desktop/amplifier in-tune agreement in 1.42.6; subsequent direct mobile observations correct sharp/flat segment spacing and verify both green neighbors and meter colors. All 39 affected tuner tests and focused WPF checks pass; complete original state/detail independently verified after every comparison. See [Tuner.md](Tuner.md). F4 is next; other Phase 6 work remains deferred and GIR&IR excluded.
+**Current status — 18 October 2026:** **1.44.0** implements Drum P6.3 for F15i V1.1.9. Tools contains **Tuner above Drum**, as requested. Drum has all 70 observed mobile patterns, a 40–260 BPM circular dial, interval-based TAP, Play/Pause and a vertical volume popup. The user-requested selector uses seven styles and ten numbered buttons; sidebar rows and section gaps are compact. Normal desktop handler checks and the Drum–Tuner–Drum roundtrip pass; complete original state/detail and stopped playback were independently restored. Eighteen affected protocol/Tools tests and focused Drum, Tuner, Mixer and preset-sync UI checks pass. See [Drum.md](Drum.md). Tuner P6.2 remains implemented with the mobile-verified 1.42.7 display mapping; see [Tuner.md](Tuner.md). F4 is next; other Phase 6 work remains deferred and GIR&IR excluded.
 
 ## Next task
 
@@ -8,7 +8,7 @@ Resume **MOOER F4 Wireless Footswitch support on 18 October 2026**, as agreed wi
 
 The user reports successful installation and uninstall, including Start menu shortcuts. Further upgrade/license/clean-PC checks are outside the current requested scope and are not claimed as tested.
 
-Reconciled 18 October 2026. Installer and usual desktop launch folder: **1.42.7**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
+Reconciled 18 October 2026. Installer and usual desktop launch folder: **1.44.0**. Windows x64, tested with F15i firmware **V1.1.9** and Android iAMP **1.6.1**. This page summarizes implemented behavior; [Plan.md](Plan.md) tracks tasks and [Feature-Matrix.md](Feature-Matrix.md) separates implementation from acceptance evidence.
 
 ## Implemented
 
@@ -19,6 +19,7 @@ Reconciled 18 October 2026. Installer and usual desktop launch folder: **1.42.7*
 | Effects | Add/remove/reorder, insertion marker, in-place model replacement and repeated categories/models. All 124 requested built-in models have verified parameter/on-off controls and ordered JSON. | [Effect-Chain-Editing.md](Effect-Chain-Editing.md) |
 | Saving | Same-slot save/rename and Save As to all 80 destinations; 1–20 printable ASCII characters; fresh source/destination checks, themed Save/Cancel confirmation, single save and complete readback. Both dialogs say “Current amplifier settings”. | [Preset-Save-Rename.md](Preset-Save-Rename.md) |
 | Save failures | Discard the failed session and, where appropriate, attempt one read-only reconnect. Show the outcome beside Save; never replay a save. Transfer-state changes or unsuccessful recovery require an explicit fresh connection. | [Preset-Save-Rename.md](Preset-Save-Rename.md) |
+| Drum | Tools → Drum (Ctrl+5): 70 verified patterns, 40–260 BPM dial/arrows, TAP, Play/Pause and vertical volume popup. Live edits preserve preset/effect values; playback continues when leaving Tools or visiting Tuner. | [Drum.md](Drum.md) |
 | Tuner | Live note and mobile-matched Perfect/High/Low meter, 430–445 Hz reference, Mute/Bypass and verified exit; Ctrl+4. | [Tuner.md](Tuner.md) |
 | Mixer | Bluetooth, USB REC, Instrument and Master levels/mutes, including adjustment while muted. Physical MASTER0→10→0 leaves both mobile and desktop Mixer Master at+6dB in the observed test; desktop parity is confirmed. The physical knob mapping remains unestablished. | [Mixer-Editing.md](Mixer-Editing.md) |
 | Information | Firmware/capacity cards and battery percentage/read time on Amplifier Information. Charging-state semantics remain opaque. | [Battery-Information.md](Battery-Information.md) |
@@ -45,9 +46,9 @@ Physical-panel testing on 17 October verified an initial 0D→0C→0D round trip
 
 This is not final product acceptance. Remaining work includes physical parameter/global-control-originated changes, the broader connection fault matrix and unresolved historical mobile transfer-loop trigger, exhaustive chain limits/rejections, actual DPI/Narrator/performance checks, installer/signing/license review and clean-PC operation. P5.8 used a host built from production code; it does not establish clean-machine acceptance of the distributed executable. Test counts in milestone reports describe those recorded runs, not a newly run complete suite.
 
-**GIR&IR is excluded by the user. Tuner P6.2 bounded display parity is verified; Phase 6 remains deferred except for the authorized F4 task above.** USB charging/vendor maintenance does not establish desktop USB control. Vendor-format device import/restore, cloud/accounts, drums/looper and other advanced operations are not implemented. The user reported a successful MOOER Studio restore; no independent custom backup-format or exhaustive vendor-restore validation is claimed.
+**GIR&IR is excluded by the user. Tuner P6.2 and Drum P6.3 have bounded implementation/acceptance evidence; other Phase 6 work remains deferred except for the authorized F4 task above.** USB charging/vendor maintenance does not establish desktop USB control. Vendor-format device import/restore, cloud/accounts, Looper and other deferred advanced operations are not implemented. The user reported a successful MOOER Studio restore; no independent custom backup-format or exhaustive vendor-restore validation is claimed.
 
-The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.42.7 installer compiles. The user accepted installation/uninstall and Start menu shortcuts on 1.41.8; further upgrade, signing and clean-PC acceptance are not claimed.
+The executable/title-bar icon now uses the supplied mobile APK’s launcher artwork; [icon provenance](../../assets/app/README.md) records the source and Windows sizes. The Inno Setup script and compilation instructions are available in [installers](../../installers/README.md). The 1.44.0 installer compiles. The user accepted installation/uninstall and Start menu shortcuts on 1.41.8; further upgrade, signing and clean-PC acceptance are not claimed.
 
 ## Development and testing policy
 

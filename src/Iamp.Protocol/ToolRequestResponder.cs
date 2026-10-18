@@ -18,7 +18,7 @@ public sealed class ToolRequestResponder : IDisposable
 
     private void OnRequest(byte[] payload)
     {
-        if (!payload.AsSpan().SequenceEqual(new byte[] { 0x49, 0x00 })) return;
+        if (payload.Length != 2 || payload[0] != 0x49 || payload[1] > 1) return;
         lock (gate)
         {
             if (disposed) return;

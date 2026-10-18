@@ -8,22 +8,8 @@ public static class TunerEntrySequence
     {
         var timeout = readinessTimeout ?? TimeSpan.FromSeconds(15);
         if (timeout <= TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(readinessTimeout));
-        using var ownedResponder = responder is null ? new ToolRequestResponder(commands) : null;
-        var requests = responder ?? ownedResponder!;
-        var requested = new TaskCompletionSource<Task>(TaskCreationOptions.RunContinuationsAsynchronously);
-        void OnRequest(byte[] payload)
-        {
-            if (payload.AsSpan().SequenceEqual(new byte[] { 0x49, 0x00 })) requested.TrySetResult(requests.LastAcknowledgement);
-        }
-        commands.UnsolicitedPayloadReceived += OnRequest;
-        try
-        {
-            await ChangeModeAsync(commands, [0x41, 0x01], ct);
-            var acknowledged = await requested.Task.WaitAsync(timeout, ct);
-            await acknowledged.WaitAsync(timeout, ct);
-            await ChangeModeAsync(commands, TunerCommands.CreateEnter(), ct);
-        }
-        finally { commands.UnsolicitedPayloadReceived -= OnRequest; }
+        _ = await DrumEntrySequence.EnterAsync(commands, ct, timeout, responder);
+        await ChangeModeAsync(commands, TunerCommands.CreateEnter(), ct);
     }
 
     private static async Task ChangeModeAsync(CommandSession commands, byte[] request, CancellationToken ct)

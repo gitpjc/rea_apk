@@ -30,6 +30,7 @@ public sealed partial class MainWindow
         UpdateEffectFilterState();
         if(tunerActive || tunerStarting)scan.IsEnabled=devices.IsEnabled=address.IsEnabled=false;
         UpdateTunerState();
+        UpdateDrumState();
     }
     private void InitializeConnection()
     {
@@ -66,6 +67,8 @@ public sealed partial class MainWindow
     private async Task ReleaseConnectionAsync()
     {
         if(tunerActive && operation is null)await StopTunerAsync();
+        if(drumReady && operation is null)await LeaveDrumAsync();
+        ResetDrumForDisconnect();
         ResetTunerUiForDisconnect();
         refreshTimer.Stop();pollCancellation?.Cancel();
         var session=connectedSession;connectedSession=null;connectedAddress=null;
@@ -87,7 +90,7 @@ public sealed partial class MainWindow
     }
     private async Task PollCurrentPresetAsync()
     {
-        if(tunerStarting || tunerActive || polling || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
+        if(drumStarting || drumReady || tunerStarting || tunerActive || polling || presetSaveDialogOpen || mixerGestureActive || chainDrag is not null || chainPickerOpen || operation is not null || connectedSession is not {} session || !editSnapshotValid)return;
         polling=true;var previous=currentSnapshot;
         using var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(20));pollCancellation=timeout;
         try {

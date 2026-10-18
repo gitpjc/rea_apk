@@ -4,7 +4,7 @@ Implemented and verified for F15i firmware **V1.1.9**, **1.42.7**, 18 October 20
 
 ## Desktop behavior
 
-Open **Tuner** or press **Ctrl+4** while connected. Entry pauses normal preset polling and competing edits, verifies the current preset, waits a three-second quiet interval, then performs the observed mobile Tools-to-Tuner handshake. The page shows the detected note and a 17-segment meter: **High!**, **Low!** or green **Perfect!**. Low means flat; High means sharp. No cents or measured frequency are inferred from these discrete positions.
+Open **Tools → Tuner** or press **Ctrl+4** while connected. Entry pauses normal preset polling and competing edits, verifies the current preset, waits a three-second quiet interval, then performs the observed mobile Tools-to-Tuner handshake. The page shows the detected note and a 17-segment meter: **High!**, **Low!** or green **Perfect!**. Low means flat; High means sharp. No cents or measured frequency are inferred from these discrete positions.
 
 Reference pitch supports **430–445 Hz**, in one-Hz steps. **Mute / Bypass** changes tuner output mode. Settings use serialized whole-state writes with complete readback and preserve unrelated values. No preset is saved or recalled. Stop, navigation away and window closing attempt verified exit before resuming normal operation. An amplifier-reported exit or connection failure clears the display and blocks misleading editing.
 
@@ -44,3 +44,7 @@ The explicit developer `--tuner-check <address> <private-output-prefix>` mode us
 ## Evidence limits
 
 The supplied APK is 1.6.1/code 42; the installed phone app reports code 43. REA APK identity evidence: `ev_d395beb36dce25aee008f8a641306f8fda60e19d035c384ddb206b0614b87a69`. A bounded Java-class search found no Tuner match (`ev_a93335281b3e6154f2697e20e7ccacc98e10ccf18a156c3f8f3f4df9c4d351ba`); this is not a search of all native Dart code. Sanitized observations are retained in `tests/fixtures/f15-tuner-observations.json`.
+
+## Tools integration — 1.43.0
+
+The sidebar lists Tuner above Drum. Shared Tools replies now accept both observed stopped/playing Drum statuses (49 00/01); native tuner entry still follows the ordered Tools handshake. Mobile and actual desktop Drum–Tuner–Drum checks preserve playback. Affected shared-entry and WPF tuner checks pass, with complete original restoration. Tuner meter mapping and reference/output behavior are unchanged.

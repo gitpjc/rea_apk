@@ -1,5 +1,29 @@
 [
   {
+    "version": "1.44.2",
+    "changedAt": "2026-10-18T08:49:05.245Z",
+    "summary": "Restore the original color of the Current rhythm prefix.",
+    "details": "Restore only the Current rhythm: prefix to the original muted #A3ADBD color. Keep the rhythm name #4183d1 and retain bold text and thicker pause bars. Use separate inline text runs so live pattern updates preserve both colors. Rebuild the self-contained Windows app and installer. No tests rerun for this styling-only follow-up, consistent with the user request."
+  },
+  {
+    "version": "1.44.1",
+    "changedAt": "2026-10-18T08:38:38.731Z",
+    "summary": "Emphasize the current rhythm and thicken Drum pause bars.",
+    "details": "Make the complete Current rhythm label bold and color it #4183d1. Replace the thin pause glyph with two explicit seven-pixel-wide, 24-pixel-high bars, retaining the existing icon color and accessible Play/Pause labels. Rebuild the self-contained Windows app and installer. No tests rerun, as explicitly requested for this styling-only change."
+  },
+  {
+    "version": "1.44.0",
+    "changedAt": "2026-10-18T08:24:28.701Z",
+    "summary": "Choose Drum rhythms by style and numbered patterns; compact the sidebar.",
+    "details": "Replace the long Drum pattern wheel with a themed dropdown for Pop, Rock, Blues, Funk, Jazz, Metal and Metronome and ten numbered buttons in two rows. Browsing a style sends no command; clicking a pattern uses the existing verified live selection path and preserves playback. Highlight the current pattern and retain the full confirmed rhythm label and original mobile names in tooltips. Preserve browsed styles across unrelated state updates; reconnect synchronizes the current style. Reduce sidebar row padding, row gaps and Tools section spacing, retaining Tuner above Drum. Bump to1.44.0 and update documentation. Focused offline Drum checks cover every style/button mapping, selected state, browsing without device writes, compact navigation and responsive bounds; affected Tuner/preset-sync checks pass. No hardware mutations or full-suite rerun needed for this UI-only change."
+  },
+  {
+    "version": "1.43.0",
+    "changedAt": "2026-10-18T07:54:19.141Z",
+    "summary": "Add mobile-matched Drum controls under Tools, with Tuner listed first.",
+    "details": "Implement Tools navigation with Tuner above Drum as requested. Observe all 70 mobile pattern labels and exact commands, retaining POP010; add the circular 40–260 BPM dial, interval-based TAP, immediate pattern wheel, Play/Pause and vertical volume popup (observed 0–99). The amplifier computes TAP tempo; no guessed rounding or idle threshold. Serialize preserved-state edits, coalesce rapid gestures and discard pending commands on uncertainty or disconnect. Playback continues across normal page changes and the mobile-verified Drum–Tuner–Drum roundtrip. All 18 affected Drum/shared Tools tests and focused Drum/Tuner/Mixer/preset-sync UI checks pass; actual normal desktop handlers verify dial/coalescing, volume, patterns, playback and TAP. Every original state/detail byte and stopped playback independently restored after each test, including recovery from the earlier temporary260 BPM when phone Bluetooth was off. Reconcile current documentation and package the self-contained x64 application and Inno installer. No full-suite, calibrated audio, other-firmware or installer-lifecycle rerun claim. F4 next; other Phase6 work deferred and GIR&IR excluded."
+  },
+  {
     "version": "1.42.7",
     "changedAt": "2026-10-18T03:21:22.627Z",
     "summary": "Match mobile tuner alignment, segment spacing and colors.",

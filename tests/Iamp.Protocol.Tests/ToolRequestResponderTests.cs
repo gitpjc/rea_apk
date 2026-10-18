@@ -41,16 +41,17 @@ public class ToolRequestResponderTests
     }
 
     [Fact]
-    public async Task OnlyTheExactRequestIsAcknowledgedAndDisposalUnsubscribes()
+    public async Task OnlyObservedStoppedOrPlayingRequestsAreAcknowledgedAndDisposalUnsubscribes()
     {
         List<string> writes=[];
         using var session=new CommandSession((payload,_)=>{writes.Add(Convert.ToHexString(payload));return Task.CompletedTask;});
         using var responder=new ToolRequestResponder(session);
-        foreach(var payload in new byte[][]{[0x49],[0x49,0x01],[0x49,0x00,0x00],[0x45,0x06,0x08]})session.Receive(FrameCodec.Encode(payload));
+        foreach(var payload in new byte[][]{[0x49],[0x49,0x02],[0x49,0x00,0x00],[0x45,0x06,0x08]})session.Receive(FrameCodec.Encode(payload));
         Assert.Empty(writes);
         session.Receive(FrameCodec.Encode([0x49,0x00]));await responder.LastAcknowledgement;
+        session.Receive(FrameCodec.Encode([0x49,0x01]));await responder.LastAcknowledgement;
         responder.Dispose();session.Receive(FrameCodec.Encode([0x49,0x00]));
-        Assert.Equal(new[]{"4A01"},writes);
+        Assert.Equal(new[]{"4A01","4A01"},writes);
     }
 
     [Fact]

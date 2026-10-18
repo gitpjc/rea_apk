@@ -1,6 +1,6 @@
 # Windows build, focused checks and release packaging
 
-Updated 18 October 2026. Installer and usual desktop launch folder: **1.42.7**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
+Updated 18 October 2026. Installer and usual desktop launch folder: **1.44.0**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
 
 ## Routine changes
 
@@ -13,7 +13,7 @@ dotnet tools/Iamp.Desktop.UiChecks/bin/Release/net10.0-windows10.0.19041.0/Iamp.
 node scripts/check-version.mjs
 ~~~
 
-Use an appropriate dotnet test filter for changed protocol behavior. Existing UI groups include --save, --mixer, --eq, --amp, --od, --delay, --reverb, --mod and --tuner. Source identifies the exact scope of each group. Do not open a second desktop instance for UI QA while the user's app is still running.
+Use an appropriate dotnet test filter for changed protocol behavior. Existing UI groups include --save, --mixer, --eq, --amp, --od, --delay, --reverb, --mod --tuner and --drum. Source identifies the exact scope of each group. Do not open a second desktop instance for UI QA while the user's app is still running.
 
 ## Complete release check
 
@@ -78,3 +78,11 @@ The script is [installers/iamp-desktop.iss](../../installers/iamp-desktop.iss); 
 ## Mobile tuner parity correction — 1.42.7
 
 The 1.42.5 raw-as-segment assumption was incorrect;1.42.6 fixes the center and the user confirms actual desktop/amplifier agreement. Direct mobile captures then establish non-linear center spacing, upper/lower Perfect pairs, representative High/Low positions and actual meter colors. Run only TunerReadingTests, TunerCapturedFrameTests (39 cases) and WPF `--tuner` for this display correction. Eighty captured frames and seven independent display observations are retained. Whole state/detail restoration passes after every live comparison; no saves or recalls. No complete-suite rerun or exhaustive physical sweep is claimed. Current source/staging/launch folder and installer use1.42.7.
+
+## Drum and Tools — 1.43.0
+
+Run the affected Drum, TunerEntry and ToolRequest protocol tests (18 cases) plus WPF --drum, --tuner, --mixer and --preset-sync groups. The explicit --drum-check address/private-prefix developer mode opens one normal desktop window, exercises real handlers, restores all temporary values and independently verifies original state/detail and playback. It never saves or recalls a preset. Actual acceptance includes coalesced dial updates and the mobile-observed Drum–Tuner–Drum playback roundtrip. Tests/builds pass; source and self-contained x64 package share version 1.43.0. No full-suite or installer lifecycle rerun is claimed.
+
+## Drum style selector and compact navigation — 1.44.0
+
+Run focused WPF --drum, --tuner and --preset-sync checks for the changed selector/navigation. All 70 button IDs are checked against the captured catalogue; browsing sends no commands. Protocol/transport behavior is unchanged, so no hardware mutation or complete-suite rerun is needed. Publish self-contained x64 and compile the existing Inno script beside its output.

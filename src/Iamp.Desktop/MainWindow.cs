@@ -68,6 +68,7 @@ public sealed partial class MainWindow : Window
         Grid.SetColumn(informationScroll,1);root.Children.Add(informationScroll);
         Grid.SetColumn(mixerScroll,1);root.Children.Add(mixerScroll);BuildMixerPage();
         Grid.SetColumn(tunerScroll,1);root.Children.Add(tunerScroll);BuildTunerPage();
+        Grid.SetColumn(drumScroll,1);root.Children.Add(drumScroll);BuildDrumPage();
         var page = new StackPanel { Margin = new Thickness(32, 20, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
@@ -249,7 +250,14 @@ public sealed partial class MainWindow : Window
         side.Children.Add(Text("iAMP",36)); side.Children.Add(Text("DESKTOP COMPANION",10,MutedBrush,new Thickness(0,2,0,0)));
         side.Children.Add(Text($"Version {DesktopVersion.Current}",12,MutedBrush,new Thickness(0,7,0,26)));
         ConfigureNavigation();
-        side.Children.Add(libraryNavigation);side.Children.Add(informationNavigation);side.Children.Add(mixerNavigation);side.Children.Add(tunerNavigation);side.Children.Add(historyNavigation);
+        side.Children.Add(libraryNavigation);side.Children.Add(informationNavigation);side.Children.Add(mixerNavigation);
+        var toolsSection=new StackPanel {Margin=new Thickness(0,6,0,4)};
+        System.Windows.Automation.AutomationProperties.SetName(toolsSection,"Tools");
+        toolsSection.Children.Add(Text("Tools",13,MutedBrush,new Thickness(14,0,0,4)));
+        drumNavigation.Padding=tunerNavigation.Padding=new Thickness(28,7,14,7);
+        toolsSection.Children.Add(tunerNavigation);
+        toolsSection.Children.Add(drumNavigation);side.Children.Add(toolsSection);
+        side.Children.Add(historyNavigation);
         side.Children.Add(Text("F15i Li",17,Brush("#D5DCE8"),new Thickness(14,30,0,5)));
         side.Children.Add(Text("Bluetooth connection",12,MutedBrush,new Thickness(14,0,0,0)));
         side.Children.Add(Text("Snapshot viewer",12,MutedBrush,new Thickness(14,22,0,0)));
@@ -300,6 +308,7 @@ public sealed partial class MainWindow : Window
         UpdateThresholdState();
         UpdateEffectFilterState();
         UpdateTunerState();
+        UpdateDrumState();
     }
     private void End()
     {
@@ -309,6 +318,7 @@ public sealed partial class MainWindow : Window
         UpdateThresholdState();
         UpdateEffectFilterState();
         UpdateTunerState();
+        UpdateDrumState();
     }
     private async Task ScanAsync()
     {

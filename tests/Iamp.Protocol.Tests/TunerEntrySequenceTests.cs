@@ -37,7 +37,7 @@ public class TunerEntrySequenceTests
         });
         var entry=TunerEntrySequence.EnterAsync(session,default);
         await toolsWritten.Task.WaitAsync(TimeSpan.FromSeconds(3));
-        session.Receive(FrameCodec.Encode([0x49,0x01]));
+        session.Receive(FrameCodec.Encode([0x49,0x02]));
         Assert.False(entry.IsCompleted);Assert.Equal(new[]{"4101"},writes);
         var request=FrameCodec.Encode([0x49,0x00]);session.Receive(request.AsSpan(0,4));
         Assert.False(entry.IsCompleted);Assert.Single(writes);

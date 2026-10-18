@@ -2,13 +2,13 @@
 
 Updated 18 October 2026. The core F15i editor is implemented; broader connection, usability and deployment acceptance remains open. See [Current-Status.md](Current-Status.md) for scope and [Musician-Workflow.md](Musician-Workflow.md) for the completed clean/rhythm/lead checks.
 
-Current release: **1.42.7**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
+Current release: **1.44.0**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
 The compact preset dropdown sits beside Presets, with search on the right and responsive wrapping. Entries show amplifier labels **0A–19D** and actual names. A blue left-side checkmark (**#4385ff**) identifies the active preset inside the open list; the selected-item field has no check. Search shows a right-side × only when it contains text. See [Preset-Browser.md](Preset-Browser.md).
 
-Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable effect** / **Disable effect** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History, Ctrl+3 opens Mixer, Ctrl+4 opens Tuner and Ctrl+F focuses search.
+Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable effect** / **Disable effect** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History, Ctrl+3 opens Mixer, Ctrl+4 opens Tuner, Ctrl+5 opens Drum and Ctrl+F focuses search. Tools lists Tuner above Drum.
 
 **Compare snapshot** and **Export diagnostics** remain available. Supported edits remain explicit and verified. Developers can run `bash scripts/build-desktop.sh` without a connected phone or amplifier; see [Build-and-Release.md](Build-and-Release.md).
 
@@ -24,6 +24,14 @@ If a connection problem occurs, choose **Export diagnostics** before closing the
 4. Browse/search all 80 bank-labelled presets. Choose an entry from the dropdown to recall it; the active preset has a blue checkmark on its left. Escape closes the dropdown without recalling a browsed entry. Select effect cards to inspect supported details.
 
 Control uses Windows Bluetooth LE. USB charging or the vendor utility's USB connection is a separate connection. A successful connection stays open and shows Connected. Current state refreshes every three seconds; **Refresh amplifier** performs an explicit reread. Choose **Disconnect** before reconnecting phone iAMP. Disconnection retains the displayed snapshot but disables edits. Use one control app at a time. Connect is disabled until a valid target is available.
+
+## Drum
+
+Choose **Tools → Drum** (Ctrl+5) after connecting through Amplifier Settings. Settings and playback status load automatically. Drag the circular tempo dial or use the arrows for **40–260 BPM**. Click its **TAP** center repeatedly to set the beat; the amplifier calculates tempo from tap intervals. Keyboard arrows adjust the focused dial; Enter/Space taps.
+
+Choose a **Style**: Pop, Rock, Blues, Funk, Jazz, Metal or Metronome. Its ten numbered buttons appear below; click **01–10** to select a pattern immediately. Browsing styles does not change the playing rhythm. The selected pattern is highlighted, with its full confirmed name underneath. The mobile tenth label remains **10 POP010** in the current-rhythm label and tooltip. **Play / Pause** controls playback. The speaker opens a vertical volume popup; it does not mute. The observed mobile volume selections run from **0 to 99**.
+
+Changes are live and do not save or recall a preset. Playback continues when you leave Drum, including a visit to Tuner. Pause it explicitly when finished. Pending effect inputs are preserved. Reconnect after an unconfirmed operation; queued edits are discarded rather than replayed. See [Drum.md](Drum.md).
 
 ## Mixer
 

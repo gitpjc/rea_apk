@@ -52,7 +52,7 @@ I want to have these sounds:
 
 ## TODO
 
-Work through implementing this effects in this order:
+
 
 
 
