@@ -35,7 +35,8 @@ internal static class DrumChecks
             var dial=Field<DrumTempoDial>("drumDial");
             Require(dial.Tempo==100&&!dial.IsEnabled,"Disconnected dial did not retain read value or allowed editing");
             Require(Field<Slider>("drumVolume").Value==60,"Drum volume not read from snapshot");
-            Require(Field<TextBlock>("drumPatternLabel").Text=="Current rhythm: 01 POP01","Pattern label differs");
+            var rhythmLabel=Field<TextBlock>("drumPatternLabel");
+            Require(new System.Windows.Documents.TextRange(rhythmLabel.ContentStart,rhythmLabel.ContentEnd).Text=="Current rhythm: 01 POP01","Pattern label differs");
             var style=Field<ComboBox>("drumStyle");var patterns=Field<List<Button>>("drumPatternButtons");
             Require(style.Items.Cast<string>().SequenceEqual(new[]{"Pop","Rock","Blues","Funk","Jazz","Metal","Metronome"})&&patterns.Count==10,"Style/pattern choices differ");
             for(var group=0;group<7;group++)

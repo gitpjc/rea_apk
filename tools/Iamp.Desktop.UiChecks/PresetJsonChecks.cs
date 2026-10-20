@@ -37,7 +37,7 @@ internal static class PresetJsonChecks
         var readAt=new DateTimeOffset(2026,10,15,15,0,0,TimeSpan.FromHours(11));
         string Json(CurrentPresetSnapshot p,bool pending=false)=>(string)Encode("Create",p,"V1.1.9",readAt,"amplifierSnapshot",true,pending)!;
         var json=Json(preset);using var doc=JsonDocument.Parse(json);var root=doc.RootElement;var effects=root.GetProperty("effects").EnumerateArray().ToArray();
-        Require(root.GetProperty("schemaVersion").GetString()=="3.0.0","Preset JSON schema version missing.");
+        Require(root.GetProperty("schemaVersion").GetString()=="4.0.0","Preset JSON schema version missing.");
         Require(effects.Select(e=>e.GetProperty("position").GetInt32()).SequenceEqual(new[]{1,2,3,4,5,6}),"Effect order changed or duplicates were removed.");
         Require(!effects[0].GetProperty("enabled").GetBoolean(),"Disabled effects lost their status.");
         var order=new[]{new[]{"Threshold","Level"},new[]{"Gain","Tone","Vol"},new[]{"Gain","Bass","Mid","Treble","Presence","Master"},new[]{"Level","Feedback","Time"},new[]{"Pre Delay","Level","Decay","Tone"},new[]{"Gain","Bass","Mid","Treble","Presence","Master"}};
@@ -93,12 +93,12 @@ internal static class PresetJsonChecks
         Require(effects[4].GetProperty("settings")[0].GetProperty("name").GetString()=="Pre Delay" && effects[4].GetProperty("settings")[0].GetProperty("unit").GetString()=="ms","Pre Delay repeats or loses its unit.");
         var reordered=blocks.Reverse().Select((b,i)=>b with {Position=(byte)(i+1)}).ToArray();using(var reverse=JsonDocument.Parse(Json(preset with {Blocks=reordered})))Require(reverse.RootElement.GetProperty("effects")[0].GetProperty("name").GetString()==effects[5].GetProperty("name").GetString(),"JSON did not follow reordered chain.");
         for(var slot=1;slot<=80;slot++)using(var parsed=JsonDocument.Parse(Json(preset with {WireIndex=slot,Name="Tone \"quoted\" • 日本語"}))) {
-            Require(parsed.RootElement.EnumerateObject().Select(p=>p.Name).SequenceEqual(new[]{"schemaVersion","preset","source","effects"}),"Schema differs between presets.");
+            Require(parsed.RootElement.EnumerateObject().Select(p=>p.Name).SequenceEqual(new[]{"schemaVersion","preset","source","effects","restore"}),"Schema differs between presets.");
             Require(parsed.RootElement.GetProperty("preset").GetProperty("slot").GetString()==PresetAddress.FromWireIndex(slot).Label,"Bank prefix mismatch.");
         }
-        Require((string)Encode("DefaultFileName",preset)! == "0D British Lead Solo.json","Default file name must include the preset prefix and name.");
+        Require(System.Text.RegularExpressions.Regex.IsMatch((string)Encode("DefaultFileName",preset)!,@"^Preset-0D-British-Lead-Solo_\d{4}-\d{2}-\d{2}_\d{4}\.json$"),"Default file name must include Preset prefix, hyphenated slot/name and local timestamp.");
         var invalid=(string)Encode("DefaultFileName",preset with {Name="Bad:/\\*?\"<>|\n name."})!;
-        Require(!invalid.Any(c=>System.IO.Path.GetInvalidFileNameChars().Contains(c)) && invalid.StartsWith("0D ") && invalid.EndsWith(".json"),"Default name contains invalid Windows filename characters.");
+        Require(!invalid.Any(c=>System.IO.Path.GetInvalidFileNameChars().Contains(c)) && !invalid.Contains(' ') && invalid.StartsWith("Preset-0D-") && invalid.EndsWith(".json"),"Default name contains spaces or invalid Windows filename characters.");
         var window=new MainWindow();
         try {
             Invoke(window,"UpdateSnapshotArchiveState");Require(!Field<Button>(window,"showPresetJson").IsEnabled,"JSON button enabled without a snapshot.");
@@ -112,13 +112,13 @@ internal static class PresetJsonChecks
                 var list=Named<ListView>(dialog,"PresetJsonLines");Require(string.Join("\n",list.Items.Cast<string>())==json,"Dialog does not show complete exact JSON.");
                 Require(ScrollViewer.GetVerticalScrollBarVisibility(list)==ScrollBarVisibility.Auto && ScrollViewer.GetHorizontalScrollBarVisibility(list)==ScrollBarVisibility.Auto,"JSON is not scrollable in both directions.");
                 Require(Named<Button>(dialog,"CopyPresetJson").Content is StackPanel copyContent && copyContent.Children.OfType<Grid>().Any(),"Copy icon missing.");
-                Require(Named<Button>(dialog,"SavePresetJson").Content.ToString()=="Save JSON…","Save JSON button missing.");
+                try {Named<Button>(dialog,"SavePresetJson");throw new InvalidOperationException("Save JSON remains in the viewer.");}catch(KeyNotFoundException){}
                 var feedback=Named<TextBlock>(dialog,"PresetJsonFeedback");string? copied=null;
                 typeof(MainWindow).GetMethod("CopyPresetJson",Static)!.Invoke(null,new object[]{json,(Action<string>)(text=>copied=text),feedback});
                 Require(copied==json && feedback.Text.Contains("copied"),"Copy path did not copy the whole JSON.");
                 typeof(MainWindow).GetMethod("CopyPresetJson",Static)!.Invoke(null,new object[]{json,(Action<string>)(_=>throw new COMException("busy")),feedback});
                 Require(feedback.Text.Contains("busy"),"Clipboard busy handling failed.");
-                var picker=(SaveFileDialog)typeof(MainWindow).GetMethod("CreatePresetJsonSavePicker",Static)!.Invoke(null,new object[]{"0D British Lead Solo.json"})!;
+                var picker=(SaveFileDialog)typeof(MainWindow).GetMethod("CreatePresetExportPicker",Static)!.Invoke(null,new object[]{"0D British Lead Solo.json"})!;
                 Require(picker.FileName=="0D British Lead Solo.json" && picker.AddExtension && picker.OverwritePrompt && picker.DefaultExt.TrimStart('.')=="json","Native Save As defaults differ.");
                 var view=(FrameworkElement)dialog.Content;foreach(var size in new[]{new Size(760,580),new Size(400,280)}){view.Measure(size);view.Arrange(new Rect(size));view.UpdateLayout();Require(list.ActualHeight>70 && list.ActualWidth>300,"JSON viewer collapses at small dialog sizes.");}
             }finally {dialog.Close();}
@@ -131,6 +131,6 @@ internal static class PresetJsonChecks
             Require(!System.IO.File.ReadAllBytes(file).Take(3).SequenceEqual(new byte[]{0xEF,0xBB,0xBF}),"JSON unexpectedly contains a UTF-8 BOM.");
             ((Task)Encode("SaveAsync",file,json+"\n")!).GetAwaiter().GetResult();Require(System.IO.File.ReadAllText(file)==json+"\n" && System.IO.Directory.GetFiles(directory).Length==1,"Overwrite or temporary-file cleanup failed.");
         }finally {if(System.IO.File.Exists(file))System.IO.File.Delete(file);System.IO.Directory.Delete(directory);}
-        Console.WriteLine("PASS: ordered preset JSON schema 3 across 80 slots, EQ physical values/groups/Off cuts, removed properties/clean names/separate units, disabled/duplicate/unknown models, scrolling/copy/Save As and UTF-8 files without device work.");
+        Console.WriteLine("PASS: ordered preset JSON schema 4 across 80 slots, EQ physical values/groups/Off cuts, disabled/duplicate/unknown models, scrolling/copy, export picker and UTF-8 files without device work.");
     }
 }

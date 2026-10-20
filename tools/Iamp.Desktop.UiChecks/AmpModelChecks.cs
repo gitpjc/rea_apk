@@ -98,7 +98,7 @@ internal static class AmpModelChecks
                 var off = snapshot.Blocks.ToArray(); off[0] = off[0] with { Values = disabled };
                 Load(window, snapshot with { Blocks = off }); Blocked(editors, "Disabled Amp permits parameter edits.");
                 Require(Field<Button>(window, "effectPowerButton").IsEnabled &&
-                    (string)Field<Button>(window, "effectPowerButton").Content == "Enable effect", "Disabled Amp cannot be reenabled.");
+                    (string)Field<Button>(window, "effectPowerButton").Content == "Enable", "Disabled Amp cannot be reenabled.");
                 NoHardware(window);
             }
             var preview = new MainWindow(preview: true);

@@ -75,6 +75,10 @@ internal static class PresetEffectReportChecks
                 var a=chooser.TranslatePoint(new Point(),root);var b=button.TranslatePoint(new Point(),root);
                 Require(b.X>=a.X+chooser.ActualWidth&&b.X+button.ActualWidth<=size.Width+1,"Details button is not beside preset dropdown or overflows");
                 Require(Math.Abs(a.Y+chooser.ActualHeight/2-b.Y-button.ActualHeight/2)<1,"Details button is on another line");
+                var searchBox=Field<TextBox>("search");var searchPoint=searchBox.TranslatePoint(new Point(),root);
+                if(size.Width>=911)Require(searchPoint.X>=a.X+chooser.ActualWidth&&searchPoint.X+searchBox.ActualWidth<=b.X,"Search is not between preset selector and details button");
+                if(size.Width>=911)Require(Math.Abs(searchPoint.Y+searchBox.ActualHeight/2-b.Y-button.ActualHeight/2)<1,$"Search input is not vertically aligned with Preset/Effect Details at {size}: search {searchPoint.Y}/{searchBox.ActualHeight}, button {b.Y}/{button.ActualHeight}");
+                Require(Field<TextBlock>("count").Parent is null,"Removed preset count is still in the UI");
             }
             Require(Field<CancellationTokenSource?>("operation") is null&&Field<F15ReadSession?>("connectedSession") is null,"Report started device work");
             Console.WriteLine("PASS: complete unfiltered report, numeric bank grouping, all available models/categories, scrollable dialog, full clipboard copy/busy handling and adjacent button at four viewport sizes. No device/clipboard mutations.");

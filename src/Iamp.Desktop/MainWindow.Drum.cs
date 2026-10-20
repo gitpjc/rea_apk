@@ -16,7 +16,7 @@ public sealed partial class MainWindow
     private readonly ScrollViewer drumScroll=new(){VerticalScrollBarVisibility=ScrollBarVisibility.Auto,
         HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Visibility=Visibility.Collapsed};
     private readonly DrumTempoDial drumDial=new();
-    private readonly TextBlock drumSummary=Text("Connect the amplifier from Amplifier Settings to use Drum.",13,MutedBrush),
+    private readonly TextBlock drumSummary=Text("",13,MutedBrush),
         drumVolumeLabel=Text("—",20);
     private readonly Slider drumVolume=new(){Orientation=Orientation.Vertical,Minimum=0,Maximum=DrumSettings.MaximumVolume,
         Width=48,Height=240,SmallChange=1,LargeChange=5,TickFrequency=1,IsSnapToTickEnabled=true,
@@ -40,7 +40,7 @@ public sealed partial class MainWindow
 
     private void BuildDrumPage()
     {
-        var page=new StackPanel{Margin=new Thickness(32,20,32,24)};
+        var page=new StackPanel{Margin=new Thickness(32,0,32,24)};
         page.Children.Add(Text("Drum",30));page.Children.Add(drumSummary);
         drumSummary.Margin=new Thickness(0,10,0,12);
         drumRefresh.HorizontalAlignment=HorizontalAlignment.Left;page.Children.Add(drumRefresh);
@@ -176,8 +176,9 @@ public sealed partial class MainWindow
             drumLower.IsEnabled=enabled&&drumDial.Tempo>40;drumHigher.IsEnabled=enabled&&drumDial.Tempo<260;
             drumPlay.Content=drumPlaying?drumPauseIcon:"▶";
             drumPlay.ToolTip=drumPlaying?"Pause Drum":"Play Drum";AutomationProperties.SetName(drumPlay,drumPlaying?"Pause Drum":"Play Drum");
-            drumSummary.Text=drumNotice??(drumStarting?"Reading Drum settings…":!connected?"Connect a supported amplifier from Amplifier Settings to use Drum.":
+            drumSummary.Text=drumNotice??(drumStarting?"Reading Drum settings…":!connected?"":
                 !drumReady?"Read Drum to synchronize playback and settings.":"Choose a pattern, set the tempo or tap a beat. Drum keeps playing when you leave this page.");
+            drumSummary.Visibility=string.IsNullOrWhiteSpace(drumSummary.Text)?Visibility.Collapsed:Visibility.Visible;
         }
         finally{drumUpdating=false;}
     }

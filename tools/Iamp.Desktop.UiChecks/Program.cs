@@ -20,6 +20,15 @@ internal static class Program
     {
         var app=new Application();var window=new MainWindow();
         try {
+            if(args.Length==2&&args[0]=="--validate-preset-file"){
+                var codec=typeof(MainWindow).Assembly.GetType("Iamp.Desktop.PresetJsonDocument")!;
+                try{codec.GetMethod("ParseImport",BindingFlags.NonPublic|BindingFlags.Static)!.Invoke(null,[System.IO.File.ReadAllText(args[1])]);Console.WriteLine("PASS: preset file validates completely; no amplifier commands.");return 0;}
+                catch(TargetInvocationException ex){Console.WriteLine($"Rejected: {ex.InnerException?.Message}\nCause: {ex.InnerException?.InnerException?.Message}");return 1;}
+            }
+            if(args.Contains("--effect-layout")) {EffectPanelLayoutChecks.Run();return 0;}
+            if(args.Contains("--preset-transfer")) {PresetTransferChecks.Run();PresetJsonChecks.Run();return 0;}
+            if(args.Contains("--settings")) {SettingsChecks.Run();return 0;}
+            if(args.Contains("--snapshot-workspace")) {SnapshotWorkspaceChecks.Run();return 0;}
             if(args.Contains("--snapshot-comparison")) {SnapshotComparisonChecks.Run();return 0;}
             if(args.Contains("--preset-name-cache")) {PresetNameCacheChecks.Run();return 0;}
             if(args.Contains("--preset-effect-report")) {PresetEffectReportChecks.Run();return 0;}

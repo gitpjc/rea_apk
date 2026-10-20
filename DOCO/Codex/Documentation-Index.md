@@ -1,6 +1,6 @@
 # Documentation index
 
-Reconciled 20 October 2026 against application **1.47.0**. Start with [Current-Status.md](Current-Status.md), then [Plan.md](Plan.md) for checked tasks and remaining acceptance. Current behavior takes precedence over earlier milestone limits. Dates/version numbers, captured values and test counts in reports identify the original evidence, not newly rerun tests. The original documentation reconciliation performed no hardware work. Subsequent physical-panel checks and the 1.41.3 dropdown correction are recorded separately below.
+Reconciled 20 October 2026 against application **1.50.5**. Start with [Current-Status.md](Current-Status.md), then [Plan.md](Plan.md) for checked tasks and remaining acceptance. Current behavior takes precedence over earlier milestone limits. Dates/version numbers, captured values and test counts in reports identify the original evidence, not newly rerun tests. The original documentation reconciliation performed no hardware work. Subsequent physical-panel checks and the 1.41.3 dropdown correction are recorded separately below.
 
 ## Current guides and development status
 
@@ -32,6 +32,7 @@ Reconciled 20 October 2026 against application **1.47.0**. Start with [Current-S
 
 - [Battery-Information.md](Battery-Information.md) — Read-only battery information — 1.9.0
 - [Diagnostics.md](Diagnostics.md) — Local connection diagnostics
+- [Desktop-Settings.md](Desktop-Settings.md) — Settings and preserved window size
 - [Snapshot-Comparison.md](Snapshot-Comparison.md) — Read-only snapshot comparison
 - [Mixer-Editing.md](Mixer-Editing.md) — Mixer
 - [Read-Consistency.md](Read-Consistency.md) — Current-preset read consistency
@@ -106,3 +107,5 @@ Each document has a current scope note. Preserve the original observations, hash
 - [Application version history](../../assets/version_history.json) — application changes and documentation audits; independent of readable JSON schema 3.0.0 and snapshot/cache schema 1.
 
 The vendor manuals under DOCO/MOOER are source material, not generated development status. GIR&IR is excluded by the user. Phase 6 remains deferred unless explicitly authorized.
+
+- [Preset-Import-Export.md](Preset-Import-Export.md): complete preset files, active-slot import and bounded validation.

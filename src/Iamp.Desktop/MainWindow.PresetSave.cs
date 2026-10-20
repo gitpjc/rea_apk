@@ -27,6 +27,7 @@ public sealed partial class MainWindow
     {
         var supported=!preview && !localSnapshotSource && editSnapshotValid && snapshotAddress.HasValue && SupportedSaveSnapshot();
         savePreset.IsEnabled=supported && operation is null && !presetSaveDialogOpen && !HasPendingInputs();
+        UpdatePresetTransferState();
         saveMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
             !supported?(presetSaveNotice??(!editSnapshotValid && currentSnapshot is not null?
                 "Refresh amplifier to verify its current settings before saving or renaming.":
@@ -168,7 +169,7 @@ public sealed partial class MainWindow
         snapshotFirmware="V1.1.2";RequireDisabled();snapshotFirmware=version;
         Begin("Offline busy-state check");RequireDisabled();End();
         if(!savePreset.IsEnabled)throw new InvalidOperationException("Supported synthetic Save did not recover after busy state.");
-        sourceBadge.Text="OFFLINE SAVE PREVIEW";firmware.Text=version;
+        firmware.Text=version;
         currentPreset.Text="0D · British Lead Solo";SetEffects(currentSnapshot!.Blocks);
         snapshot.Text="Synthetic general save/rename state · No device connected";
         status.Text="Offline save guard checks passed · No amplifier commands";

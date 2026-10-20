@@ -1,6 +1,6 @@
 # Implementation progress
 
-Updated 20 October 2026. Current published release: **1.47.0**. Readable snapshot comparison and descriptive export filenames are implemented; see [Snapshot-Comparison.md](Snapshot-Comparison.md). Subsequent core delivery includes Tuner, Drum, copyable preset/effect reports and offline preset-name caching. Older milestones below retain their original evidence dates. The core editor is implemented; broader reliability/usability/deployment acceptance remains open. [Current-Status.md](Current-Status.md) is the support summary, [Plan.md](Plan.md) the task ledger and [Feature-Matrix.md](Feature-Matrix.md) the acceptance matrix.
+Updated 20 October 2026. Current published release: **1.50.5**. Shared header, Presets rename and independent Snapshots page are implemented. Readable snapshot comparison and descriptive export filenames are implemented; see [Snapshot-Comparison.md](Snapshot-Comparison.md). Subsequent core delivery includes Tuner, Drum, copyable preset/effect reports and offline preset-name caching. Older milestones below retain their original evidence dates. The core editor is implemented; broader reliability/usability/deployment acceptance remains open. [Current-Status.md](Current-Status.md) is the support summary, [Plan.md](Plan.md) the task ledger and [Feature-Matrix.md](Feature-Matrix.md) the acceptance matrix.
 
 ## Completed core work
 
@@ -379,3 +379,5 @@ Add the requested button beside Presets, with a themed scrollable report groupin
 ## 18 October 2026 — Offline preset names (1.46.0)
 
 Persist the last complete80-slot preset-name list and load it on startup for offline browsing/reporting. Mark cached data without inventing current/live state; refresh on successful reads and confirmed save/rename. Reject incomplete or corrupt caches and preserve previous data with atomic replacement. Rename the title beside the dropdown from Presets to Preset. Focused cache/report/save/preset-sync checks pass without hardware or user-cache mutation; package1.46.0.
+
+Preset import/export delivery (1.50.0): complete schema 4 JSON, Export/Import controls beside the current preset, active-slot overwrite confirmation, mobile-verified chain/full-record/save command composition, exact final readback and no automatic replay. JSON viewing/copy remains; Save JSON is removed. See [Preset-Import-Export.md](Preset-Import-Export.md). Offline tests cover success and failure paths; no new hardware acceptance is claimed.

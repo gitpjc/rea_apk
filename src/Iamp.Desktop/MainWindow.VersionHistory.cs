@@ -6,14 +6,14 @@ namespace Iamp.Desktop;
 
 public sealed partial class MainWindow
 {
-    private readonly Button libraryNavigation=Button("Amplifier Settings"),informationNavigation=Button("Amplifier Information"),historyNavigation=Button("Version History");
+    private readonly Button libraryNavigation=Button("Presets"),informationNavigation=Button("Amplifier Information"),historyNavigation=Button("Version History");
     private readonly ScrollViewer informationScroll=new() {VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Visibility=Visibility.Collapsed};
     private readonly ScrollViewer historyScroll=new() {VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Visibility=Visibility.Collapsed};
     private IReadOnlyList<VersionHistoryEntry> versionEntries=Array.Empty<VersionHistoryEntry>();
 
     private void ConfigureNavigation()
     {
-        foreach(var button in new[]{libraryNavigation,informationNavigation,mixerNavigation,drumNavigation,tunerNavigation,historyNavigation}) {
+        foreach(var button in new[]{libraryNavigation,informationNavigation,mixerNavigation,drumNavigation,tunerNavigation,historyNavigation,snapshotsNavigation,settingsNavigation}) {
             button.HorizontalContentAlignment=HorizontalAlignment.Left;
             button.HorizontalAlignment=HorizontalAlignment.Stretch;
             button.Padding=new Thickness(14,7,14,7);button.Margin=new Thickness(0,0,0,2);
@@ -24,12 +24,14 @@ public sealed partial class MainWindow
         tunerNavigation.Click+=(_,_)=>NavigateToPage(tunerScroll);
         drumNavigation.Click+=(_,_)=>NavigateToPage(drumScroll);
         historyNavigation.Click+=(_,_)=>NavigateToHistory(true);
+        snapshotsNavigation.Click+=(_,_)=>NavigateToPage(snapshotsScroll);
+        settingsNavigation.Click+=(_,_)=>NavigateToPage(settingsScroll);
         SetNavigationColors(libraryScroll);
     }
 
     private void SetNavigationColors(ScrollViewer selected)
     {
-        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(mixerNavigation,mixerScroll),(drumNavigation,drumScroll),(tunerNavigation,tunerScroll),(historyNavigation,historyScroll)}) {
+        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(mixerNavigation,mixerScroll),(drumNavigation,drumScroll),(tunerNavigation,tunerScroll),(historyNavigation,historyScroll),(snapshotsNavigation,snapshotsScroll),(settingsNavigation,settingsScroll)}) {
             button.Background=page==selected?Brush("#203B5C"):System.Windows.Media.Brushes.Transparent;
             button.Foreground=page==selected?BlueBrush:MutedBrush;
         }
@@ -46,12 +48,14 @@ public sealed partial class MainWindow
         if(selected!=drumScroll && drumReady && !await LeaveDrumAsync())return;
         if(selected!=tunerScroll && tunerActive && !await StopTunerAsync())return;
         if(selected==historyScroll && historyScroll.Content is null)BuildVersionHistory();
-        foreach(var page in new[]{libraryScroll,informationScroll,mixerScroll,drumScroll,tunerScroll,historyScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
+        sharedHeader.Visibility=selected==historyScroll||selected==settingsScroll?Visibility.Collapsed:Visibility.Visible;
+        foreach(var page in new[]{libraryScroll,informationScroll,mixerScroll,drumScroll,tunerScroll,historyScroll,snapshotsScroll,settingsScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
         if(selected==mixerScroll)UpdateMixerState();
         if(selected==tunerScroll)UpdateTunerState();
         if(selected==drumScroll)UpdateDrumState();
+        if(selected==snapshotsScroll)UpdateSnapshotArchiveState();
         SetNavigationColors(selected);
-        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":selected==mixerScroll?"Mixer":selected==tunerScroll?"Tuner":selected==drumScroll?"Drum":"Amplifier Settings");
+        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":selected==mixerScroll?"Mixer":selected==tunerScroll?"Tuner":selected==drumScroll?"Drum":selected==snapshotsScroll?"Snapshots":selected==settingsScroll?"Settings":"Presets");
         if(selected==tunerScroll && tunerStart.IsEnabled)await StartTunerAsync();
         if(selected==drumScroll && drumRefresh.IsEnabled)await StartDrumAsync();
     }

@@ -34,13 +34,13 @@ public sealed partial class MainWindow
     private void AddEffectPowerControl(EffectPresentation effect)
     {
         displayedEffect=effect;
-        var row=new WrapPanel {Margin=new Thickness(0,8,0,8)};
-        row.Children.Add(Text(effect.Enabled switch {true=>"Enabled",false=>"Disabled",_=>"Enabled state not verified for this model"},13,
-            effect.Enabled==false?MutedBrush:Brush(effect.Color),new Thickness(0,8,14,0)));
-        effectPowerButton=Button(effect.Enabled==false?"Enable effect":"Disable effect");
-        System.Windows.Automation.AutomationProperties.SetName(effectPowerButton,$"{effectPowerButton.Content}: {effect.Category} {effect.Title}");
+        var row=new WrapPanel {VerticalAlignment=VerticalAlignment.Center,Margin=new Thickness(0,0,8,4)};
+        var state=Text(effect.Enabled switch {true=>"Enabled",false=>"Disabled",_=>"Enabled state not verified for this model"},13,
+            effect.Enabled switch {true=>BlueBrush,false=>Brush("#FF5C5C"),_=>MutedBrush},new Thickness(0,0,14,0));state.VerticalAlignment=VerticalAlignment.Center;row.Children.Add(state);
+        effectPowerButton=Button(effect.Enabled==false?"Enable":"Disable");
+        System.Windows.Automation.AutomationProperties.SetName(effectPowerButton,$"{(effect.Enabled==false?"Enable effect":"Disable effect")}: {effect.Category} {effect.Title}");
         effectPowerButton.Click+=async(_,_)=>await ToggleEffectAsync(effect.Source.Position);
-        row.Children.Add(effectPowerButton);effectDetails.Children.Add(row);UpdateEffectPowerState();
+        row.Children.Add(effectPowerButton);effectHeading.Children.Add(row);UpdateEffectPowerState();
     }
     private void UpdateEffectPowerState()
     {

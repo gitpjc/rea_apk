@@ -125,7 +125,7 @@ internal static class DelayModelChecks
                 }
                 var off = snapshot.Blocks.ToArray(); var disabled = values.ToArray(); disabled[0] = 0; off[0] = off[0] with { Values = disabled };
                 Load(window, snapshot with { Blocks = off }); Blocked(editors, "Disabled Delay permits parameter edits.");
-                Require(Field<Button>(window, "effectPowerButton").IsEnabled && (string)Field<Button>(window, "effectPowerButton").Content == "Enable effect", "Disabled Delay cannot be reenabled.");
+                Require(Field<Button>(window, "effectPowerButton").IsEnabled && (string)Field<Button>(window, "effectPowerButton").Content == "Enable", "Disabled Delay cannot be reenabled.");
                 VerifyJson(snapshot with { Blocks = off }); NoHardware(window);
             }
             var known = Snapshot(DelayParameters.Models[0], DelayParameters.Models[0]);

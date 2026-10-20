@@ -9,7 +9,7 @@ namespace Iamp.Desktop;
 
 public sealed partial class MainWindow
 {
-    private readonly Button addChainEffect=Button("+"),moveEffectLeft=Button("← Move left"),moveEffectRight=Button("Move right →"),removeChainEffect=Button("Remove effect"),changeEffectModel=Button("Change model…");
+    private readonly Button addChainEffect=Button("+"),moveEffectLeft=Button("← Move left"),moveEffectRight=Button("Move right →"),removeChainEffect=Button("Remove"),changeEffectModel=Button("Change");
     private bool chainControlsWired;
     private bool chainPickerOpen;
     private EffectDrag? chainDrag;
@@ -86,9 +86,11 @@ public sealed partial class MainWindow
     private void AddChainSelectionActions()
     {
         foreach(var b in new[]{changeEffectModel,moveEffectLeft,moveEffectRight,removeChainEffect})if(b.Parent is Panel parent)parent.Children.Remove(b);
-        var row=new WrapPanel {Margin=new Thickness(0,0,0,8)};
-        foreach(var b in new[]{changeEffectModel,moveEffectLeft,moveEffectRight,removeChainEffect}){b.Margin=new Thickness(0,0,8,4);row.Children.Add(b);}
-        effectDetails.Children.Add(row);UpdateChainControls();
+        effectHeading.Margin=new Thickness(0,0,0,8);
+        foreach(var b in new[]{changeEffectModel,moveEffectLeft,moveEffectRight,removeChainEffect}){
+            b.Margin=new Thickness(0,0,8,4);b.VerticalAlignment=VerticalAlignment.Center;effectHeading.Children.Add(b);
+        }
+        UpdateChainControls();
     }
     private void UpdateChainControls()
     {

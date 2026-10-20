@@ -124,7 +124,7 @@ internal static class ReverbModelChecks
                 }
                 var off = snapshot.Blocks.ToArray(); var disabled = values.ToArray(); disabled[0] = 0; off[0] = off[0] with { Values = disabled };
                 Load(window, snapshot with { Blocks = off }); Blocked(editors, "Disabled Reverb permits parameter edits.");
-                Require(Field<Button>(window, "effectPowerButton").IsEnabled && (string)Field<Button>(window, "effectPowerButton").Content == "Enable effect", "Disabled Reverb cannot be reenabled.");
+                Require(Field<Button>(window, "effectPowerButton").IsEnabled && (string)Field<Button>(window, "effectPowerButton").Content == "Enable", "Disabled Reverb cannot be reenabled.");
                 VerifyJson(snapshot with { Blocks = off }); NoHardware(window);
             }
             var known = Snapshot(ReverbParameters.Models[0], ReverbParameters.Models[0]);

@@ -47,7 +47,7 @@ public sealed partial class MainWindow
             """);
         TextSearch.SetTextPath(effectFilter,"Name");
         System.Windows.Automation.AutomationProperties.SetName(effectFilter,"Filter presets by effect, including disabled effects");
-        effectFilter.ItemsSource=new[]{new EffectFilterOption(null,null,"All effects")}
+        effectFilter.ItemsSource=new[]{new EffectFilterOption(null,null,"Any effect")}
             .Concat(PresetEffectSearch.Catalog.Select(e=>new EffectFilterOption(e.TypeCode,e.Model,e.Name,e.Category))).ToArray();
         effectFilter.SelectedIndex=0;
         effectFilter.SelectionChanged+=(_,_)=> {
@@ -55,11 +55,11 @@ public sealed partial class MainWindow
             Filter();
             UpdateEffectFilterState();
         };
-        resetEffectFilter.ToolTip="Reset effect filter to All effects; keep the text search";
+        resetEffectFilter.ToolTip="Reset effect filter to Any effect; keep the text search";
         resetEffectFilter.Click+=(_,_)=> {effectFilter.SelectedIndex=0;effectFilter.Focus();};
         refreshEffectNames.ToolTip="Reread which effects each preset uses. Built-in model names are already stored with the app.";
         refreshEffectNames.Click+=async(_,_)=>await RefreshEffectNamesAsync();
-        System.Windows.Automation.AutomationProperties.SetName(resetEffectFilter,"Reset effect filter to All effects");
+        System.Windows.Automation.AutomationProperties.SetName(resetEffectFilter,"Reset effect filter to Any effect");
         System.Windows.Automation.AutomationProperties.SetName(refreshEffectNames,"Refresh cached preset effect names from amplifier");
         UpdateEffectFilterState();
     }
@@ -70,7 +70,7 @@ public sealed partial class MainWindow
         resetEffectFilter.IsEnabled=operation is null && effectFilter.SelectedIndex>0;
         refreshEffectNames.IsEnabled=!preview && operation is null && !localSnapshotSource && editSnapshotValid &&
             snapshotFirmware=="V1.1.9" && connectedSession is not null && snapshotAddress.HasValue && snapshotAddress==connectedAddress;
-        effectFilter.ToolTip=presetEffectIndex.Count>0?"Search preset contents, including disabled effects. All effects clears this filter.":
+        effectFilter.ToolTip=presetEffectIndex.Count>0?"Search preset contents, including disabled effects. Any effect clears this filter.":
             "Connect to a V1.1.9 amplifier to load preset effects, or open a local snapshot.";
     }
 

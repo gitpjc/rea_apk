@@ -32,9 +32,9 @@ internal static class SnapshotComparisonChecks
             Require(Format(Parameter("Q",0.8m))=="0.8"&&Format(Parameter("Gain",-3.5m,"dB"))=="-3.5 dB"&&Format(Parameter("Cut",0,"Hz",true))=="Off"&&Format(Parameter("Pre Delay (ms)",25))=="25 ms","Units, signed decimals or Off formatting differs");
             var snapshot=new CurrentPresetSnapshot(1,"British J800 Clean","00","00",own);
             var fileName=(string)typeof(MainWindow).GetMethod("CreateSnapshotFileName",flags)!.Invoke(null,[snapshot])!;
-            Require(fileName=="Preset-0A-British-J800-Clean-snapshot.json","Default snapshot filename differs");
+            Require(System.Text.RegularExpressions.Regex.IsMatch(fileName,@"^Snapshot-0A-British-J800-Clean_\d{4}-\d{2}-\d{2}_\d{4}\.json$"),"Default snapshot filename must include Snapshot prefix and local timestamp");
             var badName=snapshot with {Name="Bad / name:*?"};
-            Require((string)typeof(MainWindow).GetMethod("CreateSnapshotFileName",flags)!.Invoke(null,[badName])! == "Preset-0A-Bad-name-snapshot.json","Invalid filename characters retained");
+            Require(System.Text.RegularExpressions.Regex.IsMatch((string)typeof(MainWindow).GetMethod("CreateSnapshotFileName",flags)!.Invoke(null,[badName])!,@"^Snapshot-0A-Bad-name_\d{4}-\d{2}-\d{2}_\d{4}\.json$"),"Invalid filename characters retained");
             var preset=new DecodedPreset(1,"British J800 Clean",own,Array.Empty<byte>());
             var file=new SnapshotArchive("V1.1.9",DateTimeOffset.UtcNow,[],[],preset);
             var changedValues=amp.Values.ToArray();changedValues[3]=48;
@@ -49,7 +49,7 @@ internal static class SnapshotComparisonChecks
                     foreach(var child in LogicalTreeHelper.GetChildren(node).OfType<DependencyObject>())foreach(var desc in Walk(child))yield return desc;
                 }
                 var nodes=Walk((DependencyObject)dialog.Content).ToArray();var texts=nodes.OfType<TextBlock>().ToArray();
-                foreach(var expected in new[]{"SAVED SNAPSHOT","CURRENT PRESET · LAST READ","0A · British J800 Clean","0D · British Lead Solo","Gain:","Bass:","Threshold:","Position 2 in the other preset"})
+                foreach(var expected in new[]{"COMPARISON FILE","SNAPSHOT BEING VIEWED","0A · British J800 Clean","0D · British Lead Solo","Gain:","Bass:","Threshold:","Position 2 in the other preset"})
                     Require(texts.Any(t=>t.Text==expected),"Missing readable information: "+expected);
                 Require(texts.Any(t=>t.Text=="48"&&t.FontWeight==FontWeights.Bold),"Different parameter value not highlighted");
                 Require(nodes.OfType<ScrollViewer>().Count()==2,"Each preset must scroll independently");

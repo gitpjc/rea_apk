@@ -21,7 +21,7 @@ public sealed partial class MainWindow
         Bind(drumShortcut,Key.D5,()=>NavigateToPage(drumScroll));
         drumNavigation.ToolTip="Drum · Ctrl+5";
         Bind(searchShortcut,Key.F,()=>{NavigateToHistory(false);search.BringIntoView();search.Focus();search.SelectAll();});
-        libraryNavigation.ToolTip="Amplifier Settings · Ctrl+1";historyNavigation.ToolTip="Version History · Ctrl+2";
+        libraryNavigation.ToolTip="Presets · Ctrl+1";historyNavigation.ToolTip="Version History · Ctrl+2";
         search.ToolTip="Search preset names or indices · Ctrl+F";
         System.Windows.Automation.AutomationProperties.SetName(search,"Search preset names or indices");
         System.Windows.Automation.AutomationProperties.SetName(devices,"Discovered amplifiers");
@@ -41,9 +41,9 @@ public sealed partial class MainWindow
         var root=(FrameworkElement)Content;root.Width=width;root.Height=height;
         for(var pass=0;pass<3;pass++) {root.Measure(new Size(width,height));root.Arrange(new Rect(0,0,width,height));root.UpdateLayout();}
         libraryScroll.ScrollToTop();root.UpdateLayout();
-        if(devices.ActualWidth>width-212-64-36 || search.ActualWidth>width-212-64)
+        if(search.ActualWidth>width-212-64)
             throw new InvalidOperationException("Inputs exceed compact page bounds.");
-        foreach(var control in new FrameworkElement[]{devices,read,scan,openSnapshot,compareSnapshot,search,presets}) {
+        foreach(var control in new FrameworkElement[]{devices,read,scan,search,presets}) {
             var left=control.TranslatePoint(new Point(0,0),root).X;
             if(left<212 || left+control.ActualWidth>width+1)throw new InvalidOperationException("Connection action extends outside the window.");
         }

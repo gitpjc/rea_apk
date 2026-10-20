@@ -17,7 +17,7 @@ public sealed partial class MainWindow
         VerticalScrollBarVisibility=ScrollBarVisibility.Auto,
         HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Visibility=Visibility.Collapsed
     };
-    private readonly TextBlock mixerSummary=Text("Connect the amplifier from Amplifier Settings to read the mixer.",13,MutedBrush);
+    private readonly TextBlock mixerSummary=Text("",13,MutedBrush);
     private readonly Dictionary<MixerChannel,MixerEditor> mixerEditors=new();
     private MixerState? displayedMixerState;
     private bool mixerUpdating;
@@ -76,9 +76,8 @@ public sealed partial class MainWindow
     private void BuildMixerPage()
     {
         if(mixerScroll.Content is not null)return;
-        var page=new StackPanel {Margin=new Thickness(32,20,32,24)};
+        var page=new StackPanel {Margin=new Thickness(32,0,32,24)};
         page.Children.Add(Text("Mixer",30));
-        page.Children.Add(Text("Adjust Bluetooth, USB recording, instrument and master levels.",14,MutedBrush,new Thickness(0,7,0,18)));
         page.Children.Add(mixerSummary);
         page.Children.Add(Text("Drag a fader and release to apply, or enter a level and choose Apply. Arrow keys change 0.5 dB; release the key to apply. Use the speaker button to mute or unmute.",12,MutedBrush,new Thickness(0,10,0,18)));
         var channels=new UniformGrid {Columns=4};page.Children.Add(channels);
@@ -185,9 +184,10 @@ public sealed partial class MainWindow
         try {
             var state=ReadDisplayedMixer();
             mixerSummary.Text=preview?"Preview only · No amplifier commands":operation is not null?"Mixer operation in progress…":
-                !editSnapshotValid || snapshotAddress is null?"Connect or refresh from Amplifier Settings before changing mixer levels.":
+                !editSnapshotValid || snapshotAddress is null?"":
                 snapshotFirmware!="V1.1.9" || state is null?"Mixer controls require a supported F15i V1.1.9 state.":
                 "Live mixer · Muted channels remain adjustable. Effect settings and unsaved preset edits are preserved.";
+            mixerSummary.Visibility=string.IsNullOrWhiteSpace(mixerSummary.Text)?Visibility.Collapsed:Visibility.Visible;
             foreach(var editor in mixerEditors.Values) {
                 var confirmed=state?.Get(editor.Spec.Channel);var previous=displayedMixerState?.Get(editor.Spec.Channel);
                 if(confirmed is not null && (resetPending || previous is null || state!.WireIndex!=displayedMixerState!.WireIndex ||

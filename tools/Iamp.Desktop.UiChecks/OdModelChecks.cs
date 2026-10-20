@@ -92,7 +92,7 @@ internal static class OdModelChecks
                 Load(window, snapshot); Set(window, "snapshotAddress", null); Call(window, "UpdateThresholdState"); Blocked(editors, "Missing target permits OD edits.");
                 var off = snapshot.Blocks.ToArray(); var disabled = values.ToArray(); disabled[0] = 0; off[0] = off[0] with { Values = disabled };
                 Load(window, snapshot with { Blocks = off }); Blocked(editors, "Disabled OD permits parameter edits.");
-                Require(Field<Button>(window, "effectPowerButton").IsEnabled && (string)Field<Button>(window, "effectPowerButton").Content == "Enable effect", "Disabled OD cannot be reenabled.");
+                Require(Field<Button>(window, "effectPowerButton").IsEnabled && (string)Field<Button>(window, "effectPowerButton").Content == "Enable", "Disabled OD cannot be reenabled.");
                 VerifyJson(snapshot with { Blocks = off }); NoHardware(window);
             }
             var unknown = Snapshot(ushort.MaxValue, ushort.MaxValue); Load(window, unknown); Blocked(editors, "Unknown OD permits parameter edits.");

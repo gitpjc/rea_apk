@@ -1,5 +1,203 @@
 [
   {
+    "version": "1.50.5",
+    "changedAt": "2026-10-20T09:45:46.092Z",
+    "summary": "Use hyphens instead of spaces in preset export filenames.",
+    "details": "Default preset export filenames now follow Preset-0A-British-J800-Clean_YYYY-MM-DD_HHMM.json. Replace spaces in the preset name with hyphens and use a hyphen after the slot. Keep local timestamp formatting, filename sanitization and JSON contents unchanged; existing filenames remain importable. Verify the affected filename and preset-transfer checks and rebuild the app and installer."
+  },
+  {
+    "version": "1.50.4",
+    "changedAt": "2026-10-20T09:38:22.884Z",
+    "summary": "Show Import confirmation promptly and explain invalid-file selections visibly.",
+    "details": "Show preset-file validation errors in a modal dialog naming the file, explaining the reason and offering Choose another file or Cancel; never rely only on a small notice behind the picker. Identify Snapshot files explicitly and explain that Preset Import needs a Preset export. Default the file picker to Preset-prefixed JSON, retaining All JSON for earlier valid filenames. Open the overwrite confirmation immediately after validation and perform the fresh amplifier/destination checks under its visible progress indicator after explicit confirmation. Clear stale error notices when starting a new selection. Verify the actual Import button opens confirmation without Bluetooth work, cancellation is unchanged, and the user-reported exported preset validates. The running 1.50.3 app also accepted that exact file in a no-overwrite check; its earlier generic rejection was not reproduced."
+  },
+  {
+    "version": "1.50.3",
+    "changedAt": "2026-10-20T09:21:22.994Z",
+    "summary": "Add type prefixes and local timestamps to preset and snapshot export filenames.",
+    "details": "Preset exports now default to Preset-0D British Lead Solo_YYYY-MM-DD_HHMM.json; snapshot exports use Snapshot-0A-British-J800-Clean_YYYY-MM-DD_HHMM.json. Generate timestamps from local export time with a 24-hour invariant format. Preserve preset spaces, snapshot hyphen normalization and Windows filename sanitization. Recognize new Snapshot-prefixed files in the snapshot picker while retaining legacy filename filters. Verify affected filename/JSON/snapshot checks and rebuild the app and installer."
+  },
+  {
+    "version": "1.50.2",
+    "changedAt": "2026-10-20T09:09:42.672Z",
+    "summary": "Provide explicit recovery and clear state after an import stops.",
+    "details": "A failed import now shows Import stopped and an explicit Reconnect and inspect action inside the dialog. Retain a visible Import did not complete panel on Presets with a read-only recovery action, the underlying failure details and a notice that no import is running. After reconnecting, identify the actual preset and keep the incomplete-import warning until the user reviews and dismisses it. A successful reread restores ordinary controls without claiming import success or retrying writes. Include effect-position and returned-value differences in future verification failures instead of discarding the reason. Preserve strict readback guards and existing cancellation restoration."
+  },
+  {
+    "version": "1.50.1",
+    "changedAt": "2026-10-20T08:49:41.631Z",
+    "summary": "Keep import progress visible and restore the previous preset on Cancel or Close.",
+    "details": "The import confirmation stays open while importing, with a visible progress indicator and stage messages in a fixed footer. Cancel, Escape, dialog Close and app Close request cancellation without interrupting a Bluetooth command. After complete command readback, restore and verify the captured pre-import live preset. If the import already saved, finish verifying that transaction and save the captured previous settings back; before saving, restoration preserves the existing unsaved state and does not save. Keep the dialog open throughout restoration and show the final result until Close. Connection, deadline, external-state or readback failures explicitly report that restoration was not verified; uncertain writes are not replayed."
+  },
+  {
+    "version": "1.50.0",
+    "changedAt": "2026-10-20T08:29:02.791Z",
+    "summary": "Export complete presets and import them into the active preset slot.",
+    "details": "Add Export and Import beside the current preset controls. Schema 4 JSON retains readable model/settings data plus the complete preset payload and SHA-256 integrity metadata, including all effect records and opaque words. The JSON dialog shows this format and retains Copy JSON; remove Save JSON in favor of Export. Validate file format, supported firmware/models/ranges, integrity, readable settings and compatible opaque trailer before mutation. Confirm the active slot and imported name, recheck live source/destination, compose established mobile chain and full-block commands, then save once and recall/read back every byte. Preserve global state and update names/effect caches. Block pending inputs and unsupported/busy states. Distinguish partial live changes from uncertain saved outcomes and never replay imports automatically. Cover lossless files, active-slot confirmation, malformed/old/tampered JSON and protocol success/failure paths offline; rebuild app and installer. No new hardware validation is claimed."
+  },
+  {
+    "version": "1.49.24",
+    "changedAt": "2026-10-20T08:07:21.175Z",
+    "summary": "Show Enable and Disable as the effect power actions.",
+    "details": "Correct the power button to show Enable for a disabled effect and Disable for an enabled effect. Keep the separate blue Enabled/red Disabled status, existing verified toggle workflow and centred heading layout. Check enabled-to-disabled-to-enabled rendering offline and rebuild the desktop app and installer."
+  },
+  {
+    "version": "1.49.23",
+    "changedAt": "2026-10-20T07:53:06.386Z",
+    "summary": "Align effect names with their controls and clarify disabled-state styling.",
+    "details": "Give the effect name the same bottom spacing as the action controls so their vertical centres align. Show Enabled status in blue and Disabled status in red. Display Disabled on the power button for an off effect, retaining its existing click-to-enable behavior and descriptive accessibility name. Verify focused heading alignment, both power states and independent parameter scrolling, then rebuild the desktop app and installer."
+  },
+  {
+    "version": "1.49.22",
+    "changedAt": "2026-10-20T07:43:42.679Z",
+    "summary": "Compact effect actions beside the effect power control.",
+    "details": "Move chain actions onto the selected effect heading, after the enabled state and power button. Shorten labels to Change, ← Move left, Move right →, Remove and Disable as requested. Wrap controls on compact windows while keeping parameter scrolling independent. Verify focused effect layout, compact wrapping and existing scroll boundaries, then rebuild the desktop app and installer."
+  },
+  {
+    "version": "1.49.21",
+    "changedAt": "2026-10-20T07:30:44.011Z",
+    "summary": "Keep effect scrolling inside a viewport fitted to the available page height.",
+    "details": "Remove mouse-wheel handoff from the parameter viewer to the outer Presets page. Calculate the parameter viewport from the actual page space left after headings, preset/filter controls and effect actions rather than a fixed percentage of the overall page. Recalculate after layout, resizing, wrapping and effect changes. Keep inner wheel events handled at both boundaries so the surrounding page stays stationary. A compact minimum permits ordinary outer navigation when page controls exceed a very small window. Regression checks verify the final Custom EQ Level and helper text are visible at normal size with no outer overflow, wheel input leaves the outer offset unchanged at both ends, themed thumb dragging works, and pending inputs survive effect switches. Inspect the fitted own-app render and rebuild app/installer without hardware commands."
+  },
+  {
+    "version": "1.49.20",
+    "changedAt": "2026-10-20T07:20:56.204Z",
+    "summary": "Move cached-effects text beside Refresh effect names.",
+    "details": "Move the cached-effects note from above the two filter actions to the right of Refresh effect names, vertically centered on the button row. Allow the full filter width and retain safe wrapping on compact windows. Keep cache/filter behavior unchanged. Verify affected layout and rebuild app/installer."
+  },
+  {
+    "version": "1.49.19",
+    "changedAt": "2026-10-20T07:13:22.938Z",
+    "summary": "Clarify the preset effect filter labels.",
+    "details": "Rename the filter heading from Effect to Presets using effect: and its unfiltered/default option from All effects to Any effect. Update reset tooltip, accessibility wording and current user documentation. Keep filtering semantics and disabled Reset behavior unchanged. Rebuild app/installer after an affected preset-navigation check."
+  },
+  {
+    "version": "1.49.18",
+    "changedAt": "2026-10-20T07:05:16.559Z",
+    "summary": "Use the current-preset accent color on its name and remove the small label.",
+    "details": "Remove the CURRENT PRESET label and its row spacing. Apply its existing BlueBrush accent to the preset code/name, preserving the adjacent Save / rename preset and Show preset JSON buttons. Verify affected layout and rebuild app/installer."
+  },
+  {
+    "version": "1.49.17",
+    "changedAt": "2026-10-20T07:00:15.667Z",
+    "summary": "Place current-preset actions beside the preset name.",
+    "details": "Move Save / rename preset and Show preset JSON onto the current preset name row, vertically centered beside the name. Retain wrapping on narrow windows and the save guidance below. Keep save and JSON behavior unchanged. Run affected save/layout checks and rebuild app/installer."
+  },
+  {
+    "version": "1.49.16",
+    "changedAt": "2026-10-20T06:56:07.488Z",
+    "summary": "Fix effect scrolling at nested boundaries and theme app scrollbars.",
+    "details": "Reproduce the Custom EQ final-control clipping caused by the inner parameter viewer consuming wheel input at its end while the outer page still needed scrolling. Route wheel input to the parameter list while it can move, then to the outer page at either boundary; retain physical scrolling and avoid wheel changes to parameter sliders. Add application-wide slim dark scrollbars with rounded grey thumbs, hover/drag accents, dark tracks and no arrow chrome, preserving drag/page commands in both orientations. Regression checks prove the final Custom EQ Level input is visible, wheel handoff works in both directions and themed thumb dragging works. Focused comparison and affected EQ/Dyna/Filter/JSON/reordered parameter checks pass; inspect the own-app scroll-end render and rebuild app/installer without hardware commands."
+  },
+  {
+    "version": "1.49.15",
+    "changedAt": "2026-10-20T06:41:45.710Z",
+    "summary": "Compact effect controls and independently scroll the parameter section.",
+    "details": "Place effect enabled status and Enable/Disable effect beside the selected effect name, wrapping on compact windows. Rename Change model to Change effect and the move buttons to Move effect left/right with direction arrows. Keep the title, power and chain actions outside a dedicated vertically scrolling parameter area, bounded to the available page size. Preserve existing parameter hosts, order, grouped EQ, slider widths and pending-input behavior. Focused effect-panel checks verify independent scrolling, fixed controls, requested labels, compact bounds and pending input; affected EQ/Dyna/Filter/Amp/JSON/reordered-editor checks pass. Inspect own-app render, update documentation and rebuild app/installer without hardware commands."
+  },
+  {
+    "version": "1.49.14",
+    "changedAt": "2026-10-20T06:24:12.326Z",
+    "summary": "Remove the gap below the shared amplifier header on all applicable pages.",
+    "details": "Remove the 20-pixel page top margin beneath the amplifier header on Presets, Amplifier Information, Mixer, Tuner, Drum and Snapshots. Retain the standalone top spacing on Settings and Version History, which hide that header. Keep horizontal padding and page behavior unchanged; verify affected navigation/layout and rebuild app/installer."
+  },
+  {
+    "version": "1.49.13",
+    "changedAt": "2026-10-20T06:19:01.696Z",
+    "summary": "Remove highlighted preset-effects and firmware guidance.",
+    "details": "Remove the Select an effect to view its snapshot sentence beneath Preset effects and the V1.1.9 capabilities/name-limit paragraph at the bottom of Presets. Remove their spacing with the text. Retain effect reordering guidance, parameter controls and behavior. Rebuild app/installer with focused navigation/layout checks."
+  },
+  {
+    "version": "1.49.12",
+    "changedAt": "2026-10-20T06:14:53.668Z",
+    "summary": "Remove excess spacing below the Presets heading.",
+    "details": "Remove the 27-pixel top margin before the preset/search controls so the form follows the Presets heading without the highlighted empty gap. Retain label/control alignment and compact wrapping. Rebuild application/installer with focused layout checks."
+  },
+  {
+    "version": "1.49.11",
+    "changedAt": "2026-10-20T06:07:50.135Z",
+    "summary": "Vertically align preset search with the details button.",
+    "details": "Give the preset chooser a separate label row and align the preset dropdown, search input and Preset/Effect Details button in the controls row. Keep the search label above its input and retain compact wrapping. Focused layout checks verify the search input and details button share a vertical center at normal window sizes. Rebuild app/installer."
+  },
+  {
+    "version": "1.49.10",
+    "changedAt": "2026-10-20T06:03:24.212Z",
+    "summary": "Move preset search beside the selector and remove its redundant heading/count.",
+    "details": "Remove the Preset label and visible preset count beneath the Presets page title. Move Search name or preset onto the preset-selector row, between the selector and Preset/Effect Details. Keep the Effect selector and cached-note/action group below. On compact windows search wraps below while preserving the selector/details pair and safe bounds. Preserve filtering and automatic recall. Focused workspace, report/search placement and preset-sync checks pass; visually inspect the own-app render and rebuild app/installer."
+  },
+  {
+    "version": "1.49.9",
+    "changedAt": "2026-10-20T05:49:45.631Z",
+    "summary": "Place the cached-effects timestamp directly above its action buttons.",
+    "details": "Move the cached-effects note into the same column as Reset and Refresh effect names, directly above the two buttons and to the right of the Effect selector. Keep the note and buttons together when wrapping on narrow windows. Preserve cache/filter behavior, update documentation and rebuild app/installer after focused layout checks."
+  },
+  {
+    "version": "1.49.8",
+    "changedAt": "2026-10-20T05:44:25.937Z",
+    "summary": "Fix the selected amplifier label and remove preset guidance lines.",
+    "details": "Bind the custom amplifier selector directly to SelectedItem.DisplayName so its closed value matches the dropdown rows: device name, hexadecimal Bluetooth address and signal strength. Prevent the internal F15DiscoveredDevice record string from being displayed. Remove the highlighted preset-recall warning and bank-label explanation beneath the filters. Retain recall confirmations and behavior. Add a focused regression check using an actual discovered-device record in offline preview mode, plus workspace/report checks; rebuild app/installer."
+  },
+  {
+    "version": "1.49.7",
+    "changedAt": "2026-10-20T05:37:13.212Z",
+    "summary": "Place effect filter actions beside the dropdown and remove the redundant recall row.",
+    "details": "Move Reset and Refresh effect names to the right of the Effect dropdown, keeping the cached-effects note below it. Resize the responsive filter group so the actions remain beside the selector when space permits and wrap safely on narrow windows. Remove the redundant Select preset on amp / Already the current preset row; the existing dropdown recall workflow and state guards remain unchanged. Focused workspace, preset synchronization and report layout checks pass; visually inspect the own-app render and rebuild application/installer."
+  },
+  {
+    "version": "1.49.6",
+    "changedAt": "2026-10-20T05:28:15.432Z",
+    "summary": "Center the amplifier selector and remove the dynamic header status line.",
+    "details": "Use an explicit amplifier ComboBox template with vertically centered selected text and a surface that fills the same height as the adjacent Scan Bluetooth button, avoiding native-template sizing/padding differences. Retain selection, keyboard/dropdown behavior and disabled styling. Remove the entire dynamic status TextBlock from the header rather than hiding only the successful-connect message. Keep internal operation status data and existing page-specific notices. Focused offline workspace layout checks verify equal heights, centered text and no status element; rebuild app/installer."
+  },
+  {
+    "version": "1.49.5",
+    "changedAt": "2026-10-20T05:19:20.932Z",
+    "summary": "Match the amplifier dropdown height to its buttons and hide redundant connected status.",
+    "details": "Bind the shared amplifier selector height to Scan Bluetooth, reduce its vertical padding and align row margins so the dropdown matches adjacent action buttons. Collapse the Connected / Presets loaded status line, including its margin, after a successful read; retain operation progress and failure feedback when needed. Focused offline workspace checks verify equal heights at three sizes, collapsed successful status and visible failure feedback. Rebuild application/installer."
+  },
+  {
+    "version": "1.49.4",
+    "changedAt": "2026-10-20T04:59:50.604Z",
+    "summary": "Remove the four highlighted page instructions.",
+    "details": "Remove the introductory subtitles under Presets, Tuner and Mixer and the disconnected Drum connection instruction. Collapse the empty Drum summary line while retaining synchronization, playback and error notices. Leave the separate Mixer fader instructions and page controls intact. Rebuild the application and installer and check affected page layout/navigation offline."
+  },
+  {
+    "version": "1.49.3",
+    "changedAt": "2026-10-20T04:55:25.751Z",
+    "summary": "Remove the redundant Mixer connection instruction.",
+    "details": "Remove the Mixer instruction to connect or refresh using the header before changing levels. Collapse the empty summary line and retain progress, supported-state and live-mixer notices. Keep channel edit guards unchanged. Includes the preceding Tuner instruction removal and right-aligned Preserve window size switch. Run focused offline Mixer checks and rebuild the combined application/installer."
+  },
+  {
+    "version": "1.49.2",
+    "changedAt": "2026-10-20T04:54:36.200Z",
+    "summary": "Remove the redundant Tuner connection instruction.",
+    "details": "Remove the disconnected Tuner instruction to connect a supported F15i V1.1.9 amplifier using the header. Collapse the empty status line, retaining active-tuner, progress, readiness and error/refresh notices. Shared header still provides connection controls. Include the preceding right-aligned reference-themed Preserve window size switch. Run the focused offline Tuner checks and rebuild app/installer."
+  },
+  {
+    "version": "1.49.1",
+    "changedAt": "2026-10-20T04:53:30.158Z",
+    "summary": "Use a right-aligned switch for Preserve window size.",
+    "details": "Replace the left checkbox presentation with a right-aligned rounded Material-style switch next to the setting title and description. Match the Flutter launcher dark theme: blue #64B5F6 selected track, dark #062B45 selected thumb, grey #35414B unselected track and #8995A3 outline/thumb. Preserve native toggle accessibility, Space/Tab keyboard support, visible focus and disabled state. Keep persistence behavior unchanged. Focused settings checks verify both thumb positions and label/switch placement at three sizes; inspect offscreen on/off renders and rebuild application/installer."
+  },
+  {
+    "version": "1.49.0",
+    "changedAt": "2026-10-20T04:49:32.653Z",
+    "summary": "Add Settings with preserved window size and remove the experimental badge.",
+    "details": "Remove the EXPERIMENTAL EDIT badge from Presets. Add Settings directly below Export diagnostics, with a local Preserve window size preference matching the Flutter launcher source: enabled by default, startup size/maximized restoration and 350ms resize debounce. Persist the final normal size and normal/maximized state on real window close; do not reopen minimized. Disabling keeps the current window unchanged, stops geometry writes and uses default dimensions on next startup. Clamp restored sizes to app minimum and available work area. Use bounded validated schema1 settings JSON, atomic replacement, safe defaults and inline write-failure feedback. Settings hides the amplifier header like Version History; previews do not save geometry. Isolated settings/layout checks, all-eight-page snapshot workspace checks and affected save/cache checks pass without real profile writes or hardware actions. Update documentation and rebuild app/installer."
+  },
+  {
+    "version": "1.48.1",
+    "changedAt": "2026-10-20T04:20:30.329Z",
+    "summary": "Hide the shared amplifier header on Version History.",
+    "details": "Collapse the shared amplifier header when navigating to Version History so the page uses the available height without an empty header gap. Restore it on the other six pages; retain connection state, active operations, current preset and snapshot viewing context. Extend focused workspace checks to verify visibility across all seven pages and a zero-height header row on Version History at three viewport sizes. Rebuild the application and installer."
+  },
+  {
+    "version": "1.48.0",
+    "changedAt": "2026-10-20T04:14:38.725Z",
+    "summary": "Share amplifier controls across pages and give Snapshots its own workspace.",
+    "details": "Rename Amplifier Settings to Presets. Add a fixed shared amplifier header across all seven pages with connection status, last-confirmed/current or disconnected last-read preset, selector, Scan Bluetooth then Disconnect and Connect/Refresh on the same wrapping row, expandable manual address and busy-only Cancel. Replace the inert Snapshot viewer caption with working Snapshots navigation. Give snapshots independent capture/file state, named effect settings, preset/source/time context, fixed captures and observed amplifier-change notices. Capture reads the connected current preset without replacing pending editor values; changed data marks the editor for refresh. Open a validated file without disconnecting or replacing editor state, names/cache, battery or edit target. Export/compare use the fixed viewed snapshot and work offline; retain schema1 and descriptive filenames. Focused all-page workspace/layout, comparison, preset-sync, Mixer, Tuner, Drum, save/cache and report checks plus production preview paths pass; correct the Drum check to inspect its styled inline text. Update documentation and rebuild the app/installer. No hardware writes or phone actions."
+  },
+  {
     "version": "1.47.0",
     "changedAt": "2026-10-20T03:34:54.988Z",
     "summary": "Make snapshot comparisons readable and name exports after the preset.",

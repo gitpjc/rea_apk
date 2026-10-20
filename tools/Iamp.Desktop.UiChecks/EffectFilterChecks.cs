@@ -40,7 +40,7 @@ internal static class EffectFilterChecks
             search.Text="not present";Require(presets.Items.Count==0 && Field<TextBlock>(w,"count").Text=="0 of 4 presets","Empty result/count differs.");
             Field<Button>(w,"clearSearch").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Require(presets.Items.Count==2,"Search clear lost the effect filter.");
             filter.SelectedItem=Choice(5,0);Require(presets.Items.Count==1&&((PresetName)presets.Items[0]).WireIndex==80,"Filter category model did not match.");
-            reset.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Require(presets.Items.Count==4 && filter.SelectedIndex==0 && !reset.IsEnabled,"Reset did not select All effects and disable itself.");
+            reset.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Require(presets.Items.Count==4 && filter.SelectedIndex==0 && !reset.IsEnabled,"Reset did not select Any effect and disable itself.");
             filter.SelectedItem=Choice(4,2);search.Text="clean";reset.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Require(search.Text=="clean" && presets.Items.Count==1,"Reset cleared the independent text search.");search.Clear();
             Require(ReferenceEquals(snapshot,Field<CurrentPresetSnapshot>(w,"currentSnapshot")) && Field<F15ReadSession?>(w,"connectedSession") is null && Field<CancellationTokenSource?>(w,"operation") is null,"Filtering started device work or changed confirmed state.");
             var root=(FrameworkElement)w.Content;var scroll=Field<ScrollViewer>(w,"libraryScroll");
@@ -57,7 +57,7 @@ internal static class EffectFilterChecks
             filter.SelectedItem=Choice(4,2);
             Call(w,"SetPresetEffectIndex",(object)Array.Empty<DecodedPreset>());
             Require(!filter.IsEnabled && filter.SelectedIndex==0 && presets.Items.Count==4,"Empty index stranded a selected effect filter.");
-            Console.WriteLine("PASS: effect dropdown catalog, disabled-effect inclusion, combined name/bank search, All effects/search reset, active marker, empty results, no device work, busy/empty index and five-size header layout.");
+            Console.WriteLine("PASS: effect dropdown catalog, disabled-effect inclusion, combined name/bank search, Any effect/search reset, active marker, empty results, no device work, busy/empty index and five-size header layout.");
         }
         finally {w.Close();}
     }

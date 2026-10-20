@@ -1,14 +1,14 @@
 # Running the current iAMP Desktop build
 
-Updated 18 October 2026. The core F15i editor is implemented; broader connection, usability and deployment acceptance remains open. See [Current-Status.md](Current-Status.md) for scope and [Musician-Workflow.md](Musician-Workflow.md) for the completed clean/rhythm/lead checks.
+Updated 20 October 2026. The core F15i editor is implemented; broader connection, usability and deployment acceptance remains open. See [Current-Status.md](Current-Status.md) for scope and [Musician-Workflow.md](Musician-Workflow.md) for the completed clean/rhythm/lead checks.
 
-Current release: **1.47.0**. Snapshot comparisons show each preset’s named effects/settings in separate columns, highlighting differing comparable values. Exports default to `Preset-0A-British-J800-Clean-snapshot.json`. Report headings are bold/larger and Copy report exports Markdown. Previous release: **1.46.0**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change model…** to replace the selected effect in its current chain position using amplifier defaults.
+Current release: **1.50.5**. Settings includes Preserve window size; the Presets experimental badge is removed. The shared amplifier header is visible on every amplifier-related page; Presets replaces Amplifier Settings and Snapshots has its own fixed viewing state. Snapshot comparisons show each preset’s named effects/settings in separate columns, highlighting differing comparable values. Exports default to `Snapshot-0A-British-J800-Clean_2026-10-20_1909.json`. Report headings are bold/larger and Copy report exports Markdown. Previous release: **1.46.0**. There are 126 parameter control types across 124 verified V1.1.9 models, including all Dyna, Filter, preset EQ, Amp, OD, Delay, Reverb and Mod models. Most use **0–100**; Mod also includes signed decimal Pitch and Detune cents. EQ supports signed dB, decimal Q, stepped Hz and Off cut values. Reverb Pre Delay uses **0–200 ms** and all Delay Time controls use **40–2500 ms**; Sweep Range uses **300–4000**. Choose **Change** to replace the selected effect in its current chain position using amplifier defaults.
 
 Use **Amplifier Settings** to connect, choose presets and edit effects. Scan/select loads the library and current preset automatically; a live connection refreshes current state about every three seconds. Disconnect phone iAMP before connecting from Windows. **Amplifier Information**, directly below Settings, shows firmware, capacity cards, battery percentage and read time. Local snapshot imports clear live battery data; navigation preserves the connection and pending inputs.
 
 The compact preset dropdown sits beside Presets, with search on the right and responsive wrapping. Entries show amplifier labels **0A–19D** and actual names. A blue left-side checkmark (**#4385ff**) identifies the active preset inside the open list; the selected-item field has no check. Search shows a right-side × only when it contains text. See [Preset-Browser.md](Preset-Browser.md).
 
-Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable effect** / **Disable effect** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History, Ctrl+3 opens Mixer, Ctrl+4 opens Tuner, Ctrl+5 opens Drum and Ctrl+F focuses search. Tools lists Tuner above Drum.
+Select an effect icon to inspect it. Category labels are centered, grey icons indicate disabled effects, and details show **Enabled** or **Disabled**. Use **Enable** / **Disable** or a supported parameter's explicit **Apply** button for a verified live change; nothing is saved automatically. Ctrl+1 opens Settings, Ctrl+2 opens Version History, Ctrl+3 opens Mixer, Ctrl+4 opens Tuner, Ctrl+5 opens Drum and Ctrl+F focuses search. Tools lists Tuner above Drum.
 
 **Compare snapshot** and **Export diagnostics** remain available. Supported edits remain explicit and verified. Developers can run `bash scripts/build-desktop.sh` without a connected phone or amplifier; see [Build-and-Release.md](Build-and-Release.md).
 
@@ -47,7 +47,7 @@ Use the speaker icon to mute or unmute. Muted faders turn grey and remain adjust
 
 After connecting, choose an effect from the **Effect** dropdown beside the preset search. It lists all 124 built-in models using their mobile names, prefixed by category to distinguish similar names. Type a model name while the dropdown is focused to jump to it. Presets match even when that effect is disabled.
 
-The effect choice and name/bank/index search work together. Click **Reset** to select **All effects**; Reset is disabled while All effects is already selected. Reset leaves the text search unchanged, and the search-field × clears only text. The preset count reflects both filters. Filtering sends no recall, edit or save commands.
+The effect choice and name/bank/index search work together. Click **Reset** to select **Any effect**; Reset is disabled while Any effect is already selected. Reset leaves the text search unchanged, and the search-field × clears only text. The preset count reflects both filters. Filtering sends no recall, edit or save commands.
 
 The first connection builds a local effect cache. Later connections and normal **Refresh amplifier** reuse it, including after restarting the desktop app. The active preset is still read live. Click **Refresh effect names** to update the full preset-effect cache when you want, for example after changing effect models in the phone app. This requires a connected supported amplifier and offers progress/Cancel; pending parameter inputs are preserved. Cached results remain searchable after disconnecting. A local snapshot searches only its one loaded preset. Built-in effect names are already bundled with the app.
 
@@ -90,17 +90,17 @@ Apply controls make **live, unsaved edits**. Returning all changed values to the
 
 ## Rearrange, add or remove effects
 
-On F15i V1.1.9, drag an effect icon to the blue insertion line between icons, or use the selected effect’s Move left/Move right buttons. The line shows the exact placement before you drop. Select + to browse the mobile-style category list and choose a model; search the model list if needed, then choose Add effect. Multiple effects from the same category and repeated identical models can be added, as in mobile iAMP. Each instance has its own chain position and pending parameter values. GIR&IR may appear as an unavailable library category; it is excluded at your request and is not planned current work. The amplifier supplies the new effect’s default values. Select Remove effect to delete the selected module.
+On F15i V1.1.9, drag an effect icon to the blue insertion line between icons, or use the selected effect’s Move left/Move right buttons. The line shows the exact placement before you drop. Select + to browse the mobile-style category list and choose a model; search the model list if needed, then choose Add effect. Multiple effects from the same category and repeated identical models can be added, as in mobile iAMP. Each instance has its own chain position and pending parameter values. GIR&IR may appear as an unavailable library category; it is excluded at your request and is not planned current work. The amplifier supplies the new effect’s default values. Select Remove to delete the selected module.
 
 Moves preserve the effect’s values. Previously supported parameter editors continue working at the new position. Newly added models show their names, with parameter editing available only for verified layouts. Apply or clear pending parameter inputs before changing the chain. Every change is checked against a fresh preset and verified by readback. Chain changes affect the current amplifier settings and are unsaved until you explicitly use the general Save / rename preset workflow below.
 
-Choose **Change model…** to replace the selected effect without changing its position. The picker starts on its current category/model and lets you choose another built-in model, including another category. Replacement loads the new model’s default values; changing back to the original model also loads defaults rather than recovering its previous settings. The currently selected model cannot be reapplied accidentally. See [Dyna-Model-Editing.md](Dyna-Model-Editing.md) for the newly supported Dyna settings.
+Choose **Change** to replace the selected effect without changing its position. The picker starts on its current category/model and lets you choose another built-in model, including another category. Replacement loads the new model’s default values; changing back to the original model also loads defaults rather than recovering its previous settings. The currently selected model cannot be reapplied accidentally. See [Dyna-Model-Editing.md](Dyna-Model-Editing.md) for the newly supported Dyna settings.
 
 ## Preset JSON and saving
 
 ### View, copy or save preset JSON
 
-Choose **Show preset JSON** beside **Save / rename preset…**. The dialog shows verified current-snapshot effect settings in chain order, with settings ordered like the mobile/desktop editor. Disabled and repeated effects are included. Setting names omit units, which have their own `unit` property; internal IDs and raw/unmapped values are excluded. Scroll vertically or horizontally, use the **Copy JSON** icon/button to copy the complete document, or **Save JSON…** to choose a file location with Windows Save As. The default filename is the preset prefix and name, such as `0D British Lead Solo.json`.
+Choose **Show preset JSON** beside **Save / rename preset…**. The dialog shows verified current-snapshot effect settings in chain order, with settings ordered like the mobile/desktop editor. Disabled and repeated effects are included. Setting names omit units, which have their own `unit` property; the readable effects list is accompanied by a lossless restore payload with an integrity checksum. Scroll vertically or horizontally, use the **Copy JSON** icon/button to copy the complete document, and close the dialog as before. Use **Export** on the Presets screen to save the complete JSON file. The default filename is the preset prefix and name, such as `Preset-0D-British-Lead-Solo_2026-10-20_1909.json`.
 
 The dialog captures the displayed snapshot when opened. Unapplied input values are excluded, and the dialog identifies them if present. Copy and Save contain exactly the JSON shown. These actions do not change the amplifier. See [Preset-JSON.md](Preset-JSON.md) for the consistent schema.
 
@@ -120,9 +120,15 @@ If reading fails with service discovery **Unreachable** while Android iAMP is co
 
 ## Save and open local snapshots
 
-After reading the amplifier, choose **Export snapshot** to preserve the displayed preset and its raw state in a `Preset-<code>-<preset-name>-snapshot.json` file (legacy `.iamp-snapshot.json` files remain supported) on this PC. Choose **Open snapshot** to inspect an exported file offline; opening it releases the live connection. Exporting records the last confirmed snapshot; pending typed values are not included.
+Choose **Snapshots** in the sidebar. **Capture current preset** reads the connected amplifier into a separate, fixed capture; pending editor inputs are excluded. **Open snapshot…** loads an exported file for viewing without changing the amplifier connection, preset editor, preset names or pending inputs. The viewing context identifies the preset, source and capture time; an amplifier capture remains unchanged when the amplifier switches presets, with a notice once that change is observed.
 
-An opened file is marked **LOCAL SNAPSHOT / OFFLINE** and all amplifier editing controls are disabled until a fresh **Connect amplifier** (or **Refresh amplifier** when connected) succeeds. Only that snapshot's preset is listed; capacity counts are unknown. Files are versioned and integrity-checked, with a 64 KiB limit. Invalid files leave the previous displayed snapshot intact. These files cannot currently be applied to the amplifier and are separate from MOOER Studio backups.
+**Export this snapshot…** saves the viewed capture in a `Preset-<code>-<preset-name>-snapshot.json` file; legacy `.iamp-snapshot.json` files remain supported. **Compare with file…** compares another file against that fixed capture, showing named effects/settings in each chain's own order. Opening, exporting and comparing work offline. Files retain schema/integrity validation and a 64 KiB limit; invalid files preserve the previous view. There is no apply/restore action. To store amplifier settings in a slot, use **Save / rename preset** on **Presets**. See [Snapshot-Comparison.md](Snapshot-Comparison.md).
+
+## Shared amplifier header
+
+Version History and Settings hide the amplifier header and uses the full content height. Returning to another screen restores the header without changing the connection.
+
+Every amplifier-related screen has the same amplifier header; Version History and Settings omit it. It shows the connection and last confirmed active preset; retained disconnected data says **Last read preset**. Use the selector, **Scan Bluetooth**, **Disconnect** and **Connect amplifier / Refresh amplifier** on the same wrapping row. **Manual Bluetooth address** expands when needed; Cancel appears during an operation. Keep phone iAMP disconnected while the desktop controls the amplifier. The former **Amplifier Settings** page is now **Presets**. The header describes the amplifier, while Snapshots separately describes the capture/file being viewed.
 
 ## Backups and testing
 
@@ -159,3 +165,33 @@ The Mixer Master value should not be treated as the amplifier’s physical knob 
 Open **Tuner** or press **Ctrl+4** while connected. Entry includes a three-second quiet interval before activation. Play one note with guitar volume on. **Low!** means flat; **High!** means sharp; green **Perfect!** indicates in tune. At the exact center the whole meter turns green; near-center readings show two green segments. The meter matches observed mobile segment spacing and colors; it does not report cents. A steady note remains visible until the amplifier reports no signal; turning guitar volume off should clear it.
 
 Use **− / +** to set reference pitch from **430 to 445 Hz**. **Mute / Bypass** selects tuner output behavior. **Stop tuner**, leaving the page or closing the app exits tuner mode and verifies state before normal editing resumes. No preset is saved automatically. Settings and entry support are verified for F15i V1.1.9. See [Tuner.md](Tuner.md).
+
+## Desktop settings
+
+Open **Settings** below **Export diagnostics**. Use the switch on the right of **Preserve window size**, enabled by default, and remembers normal size and maximized state between sessions. Turning it off leaves the current window unchanged and uses the default size on the next launch. Preferences save automatically on this computer; saved sizes fit the current work area and app minimum. See [Desktop-Settings.md](Desktop-Settings.md).
+
+Version 1.49.7 places Reset and Refresh effect names beside the Effect dropdown (wrapping on narrow windows). The redundant manual recall/status row is removed; choose a preset through the dropdown to recall it.
+
+The cached-effects timestamp sits to the right of Refresh effect names, centered on the button row; the group wraps on compact windows.
+
+Preset search is beside the preset selector, before Preset/Effect Details. The redundant Preset heading/count has been removed; search wraps below on compact windows.
+
+The selected effect’s enabled status and Enable/Disable button sit beside its name. Change, ← Move left, Move right → and Remove sit beside the power control, wrapping on narrow windows. The active effect’s power button says Disable; when the effect is off it says Enable and can be clicked to enable it again. Enabled status is blue and Disabled status is red. The effect name is vertically centred with these controls. All actions stay outside the parameter scroll area. Long parameter lists scroll independently, with mobile order and Custom EQ groups preserved; browsing effects retains pending values.
+
+The effect parameter viewport fits the space left after the other page controls. Wheel scrolling inside it stays inside at both ends and never moves the outer page; its final setting and helper text are reachable without parameter overflow at normal window sizes. Other page areas can still scroll normally on compact windows. The application uses slim dark scrollbars with rounded thumbs; drag a thumb or click the track to scroll. Scrollbar hover and drag colors identify the active control.
+
+## Export and import presets
+
+Use **Export** beside Show preset JSON to save a complete preset, including its name, chain order, models, disabled effects and every stored effect word. Apply or clear pending inputs first. The JSON viewer displays the same schema 4 format and retains Copy JSON; its Save JSON button is replaced by Export.
+
+Select the destination preset on the amplifier, then choose **Import** and an exported JSON file. Review the active destination and replacement name, then choose **Import and overwrite**. Import restores and saves into that active slot; the original file slot does not select the destination. For example, importing a 0A British J800 Clean export while 19C New Patch is active creates 19C British J800 Clean. The original 0A is unchanged. Mixer and other global settings are preserved.
+
+Old display-only JSON is rejected because it lacks complete restore data. Import/export currently supports verified F15i V1.1.9 built-in models. Files with differing unsupported preset trailer fields are rejected before editing. On interruption, inspect the reported outcome and refresh; imports are never automatically repeated. See [Preset-Import-Export.md](Preset-Import-Export.md) for implementation and validation limits.
+
+### Import progress and cancellation
+
+The import confirmation stays open while importing, with a visible progress indicator and stage messages in a fixed footer. Cancel, Escape, dialog Close and app Close request cancellation without interrupting a Bluetooth command. After complete command readback, restore and verify the captured pre-import live preset. If the import already saved, finish verifying that transaction and save the captured previous settings back; before saving, restoration preserves the existing unsaved state and does not save. Keep the dialog open throughout restoration and show the final result until Close. Connection, deadline, external-state or readback failures explicitly report that restoration was not verified; uncertain writes are not replayed.
+
+### If an import stops
+
+Choose **Reconnect and inspect** in the Import stopped dialog or the Presets recovery panel. This reads the amplifier’s current live settings without saving, recalling a different preset or repeating import. Review the actual effects shown afterward. The notice continues to say the import was incomplete; dismiss it after review. If reconnecting fails, check amp power and disconnect phone iAMP before trying the read again. Expand Failure details to see why verification stopped.

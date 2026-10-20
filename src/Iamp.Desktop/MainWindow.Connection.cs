@@ -31,6 +31,8 @@ public sealed partial class MainWindow
         if(tunerActive || tunerStarting)scan.IsEnabled=devices.IsEnabled=address.IsEnabled=false;
         UpdateTunerState();
         UpdateDrumState();
+        UpdateSharedHeader();
+        UpdateImportRecoveryControls();
     }
     private void InitializeConnection()
     {
@@ -48,6 +50,7 @@ public sealed partial class MainWindow
         };
         Closing+=async(_,e)=> {
             if(closing)return;
+            if(activePresetImportDialog is {Running:true} importing){e.Cancel=true;importing.RequestCancel();return;}
             if(connectedSession is null && operation is null)return;
             e.Cancel=true;
             if(tunerCloseRequested)return;
@@ -103,6 +106,7 @@ public sealed partial class MainWindow
             }
             if(current.RawStatePayloadHex==previous?.RawStatePayloadHex && current.RawDetailPayloadHex==previous.RawDetailPayloadHex){snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();return;}
             if(HasPendingInputs()) {
+                observedAmplifierPreset=current;
                 editSnapshotValid=false;refreshTimer.Stop();UpdateThresholdState();
                 status.Text="Amplifier changed · Pending inputs preserved. Refresh amplifier before editing.";return;
             }
@@ -124,7 +128,7 @@ public sealed partial class MainWindow
                 status.Text="Amplifier connection lost · Reconnect to refresh the preset.";
             }
         }
-        finally {if(pollCancellation==timeout)pollCancellation=null;polling=false;UpdateEffectPowerState();UpdateMixerState();}
+        finally {if(pollCancellation==timeout)pollCancellation=null;polling=false;UpdateEffectPowerState();UpdateMixerState();UpdateSharedHeader();}
     }
     private void SetBatteryDisplay(Iamp.Protocol.BatteryStatus battery)
     {

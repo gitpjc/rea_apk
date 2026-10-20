@@ -22,9 +22,11 @@ public sealed partial class MainWindow : Window
     private readonly TextBlock batterySummary=Text("Battery · Not read",14,MutedBrush,new Thickness(0,12,0,0));
     private DateTimeOffset? batteryReadAt;
     private readonly TextBlock currentPreset = Text("Read the amplifier to see its current preset.", 20);
-    private readonly TextBlock sourceBadge = Text("EXPERIMENTAL EDIT",11,BlueBrush);
     private readonly WrapPanel effectChain = new();
     private readonly StackPanel effectDetails = new();
+    private readonly StackPanel effectSelectionDetails=new();
+    private readonly WrapPanel effectHeading=new();
+    private readonly ScrollViewer effectParameterScroll=new(){VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,MaxHeight=480};
     private readonly TextBox thresholdInput = new() { Width=90, MaxLength=3 };
     private readonly Button applyThreshold = Button("Apply threshold to amp");
     private readonly TextBlock thresholdMessage = Text("",12,MutedBrush);
@@ -53,18 +55,26 @@ public sealed partial class MainWindow : Window
     private readonly bool preview;
     private readonly ScrollViewer libraryScroll=new() {VerticalScrollBarVisibility=ScrollBarVisibility.Auto};
 
-    public MainWindow(bool preview = false):this(preview,new PresetNameCacheStore()){}
+    public MainWindow(bool preview = false):this(preview,new PresetNameCacheStore(),new DesktopSettingsStore()){}
 
-    internal MainWindow(bool preview,PresetNameCacheStore nameCacheStore)
+    internal MainWindow(bool preview,PresetNameCacheStore nameCacheStore):this(preview,nameCacheStore,new DesktopSettingsStore()){}
+
+    internal MainWindow(bool preview,PresetNameCacheStore nameCacheStore,DesktopSettingsStore settingsStore)
     {
         this.preview = preview;
         presetNameCacheStore=nameCacheStore;
-        Title = "iAMP Desktop · Amplifier Settings"; Width = Math.Min(1280,SystemParameters.WorkArea.Width); Height = Math.Min(900,SystemParameters.WorkArea.Height); MinWidth = 620; MinHeight = 320;
+        desktopSettingsStore=settingsStore;
+        DesktopScrollbars.Install();
+        Title = "iAMP Desktop · Presets"; Width = Math.Min(1280,SystemParameters.WorkArea.Width); Height = Math.Min(900,SystemParameters.WorkArea.Height); MinWidth = 620; MinHeight = 320;
         Icon = BitmapFrame.Create(new Uri("pack://application:,,,/Iamp.Desktop;component/assets/app/iamp.ico"));
         Background = BackgroundBrush; Foreground = Brushes.White; FontFamily = new FontFamily("Segoe UI"); FontSize = 14;
-        var root = new Grid(); root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(212) });
+        var root = new Grid {Background=BackgroundBrush}; root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(212) });
         root.ColumnDefinitions.Add(new ColumnDefinition()); Content = root;
+        root.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});root.RowDefinitions.Add(new RowDefinition());
+        sharedHeader=BuildConnection();Grid.SetColumn(sharedHeader,1);root.Children.Add(sharedHeader);
+        root.SizeChanged+=(_,_)=>sharedHeader.MaxHeight=Math.Max(90,root.ActualHeight*0.5);
         root.Children.Add(BuildSidebar());
+        Grid.SetRowSpan(root.Children[^1],2);
         var scroll = libraryScroll;
         Grid.SetColumn(scroll, 1); root.Children.Add(scroll);
         Grid.SetColumn(historyScroll,1);root.Children.Add(historyScroll);
@@ -72,68 +82,83 @@ public sealed partial class MainWindow : Window
         Grid.SetColumn(mixerScroll,1);root.Children.Add(mixerScroll);BuildMixerPage();
         Grid.SetColumn(tunerScroll,1);root.Children.Add(tunerScroll);BuildTunerPage();
         Grid.SetColumn(drumScroll,1);root.Children.Add(drumScroll);BuildDrumPage();
-        var page = new StackPanel { Margin = new Thickness(32, 20, 32, 24) }; scroll.Content = page;
+        Grid.SetColumn(snapshotsScroll,1);root.Children.Add(snapshotsScroll);BuildSnapshotsPage();
+        Grid.SetColumn(settingsScroll,1);root.Children.Add(settingsScroll);BuildSettingsPage();
+        foreach(var contentPage in new[]{libraryScroll,historyScroll,informationScroll,mixerScroll,tunerScroll,drumScroll,snapshotsScroll,settingsScroll})Grid.SetRow(contentPage,1);
+        var page = new StackPanel { Margin = new Thickness(32, 0, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
-        var titles = new StackPanel(); titles.Children.Add(Text("Amplifier Settings", 30));
-        titles.Children.Add(Text("Choose presets and adjust your amplifier’s effects.", 14, MutedBrush, new Thickness(0,7,0,0)));
+        var titles = new StackPanel(); titles.Children.Add(Text("Presets", 30));
         header.Children.Add(titles);
-        var badge = new Border { Background = Brush("#18304D"), CornerRadius = new CornerRadius(6), Padding = new Thickness(13,7,13,7), VerticalAlignment = VerticalAlignment.Top,
-            Child = sourceBadge }; Grid.SetColumn(badge,1); header.Children.Add(badge); page.Children.Add(header);
-        page.Children.Add(BuildConnection());
+        page.Children.Add(header);
         var cardGrid = new System.Windows.Controls.Primitives.UniformGrid { Columns=4, Margin = new Thickness(0,14,0,0) };
         var values = new[] { Card("FIRMWARE", firmware, "Reported by amplifier"), Card("PRESET SLOTS", presetCount, "Names read from your amp"),
             Card("GIR / GNR SLOTS", libraryCount, "Capture library capacity"), Card("DRUMS / LOOPER", rhythmCount, "Patterns and file slots") };
         for (var i=0;i<values.Length;i++) { values[i].Margin=new Thickness(0,0,12,12); cardGrid.Children.Add(values[i]); }
-        var informationPage=new StackPanel {Margin=new Thickness(32,20,32,24)};
+        var informationPage=new StackPanel {Margin=new Thickness(32,0,32,24)};
         informationPage.Children.Add(Text("Amplifier Information",30));
-        informationPage.Children.Add(Text("Firmware and capacities from the latest amplifier read. Connect or refresh from Amplifier Settings.",14,MutedBrush,new Thickness(0,7,0,12)));
+        informationPage.Children.Add(Text("Firmware and capacities from the latest amplifier read. Connect or refresh using the amplifier header above.",14,MutedBrush,new Thickness(0,7,0,12)));
         var informationStatus=Text("",13,MutedBrush);
         informationStatus.SetBinding(TextBlock.TextProperty,new Binding("Text") {Source=snapshot});informationPage.Children.Add(informationStatus);
         informationPage.Children.Add(batterySummary);
         informationPage.Children.Add(cardGrid);informationScroll.Content=informationPage;
         informationPage.SizeChanged+=(_,_)=>cardGrid.Columns=informationPage.ActualWidth<380?1:informationPage.ActualWidth<760?2:4;
         var currentPanel=new StackPanel();
-        currentPanel.Children.Add(Text("CURRENT PRESET",10,BlueBrush));
-        currentPreset.Margin=new Thickness(0,8,0,0);currentPanel.Children.Add(currentPreset);
-        savePreset.Margin=new Thickness(0,12,0,0);savePreset.HorizontalAlignment=HorizontalAlignment.Left;
+        currentPreset.Foreground=BlueBrush;
+        var currentPresetRow=new WrapPanel();
+        currentPreset.Margin=new Thickness(0,0,16,0);currentPreset.VerticalAlignment=VerticalAlignment.Center;currentPresetRow.Children.Add(currentPreset);
+        savePreset.Margin=new Thickness(0);savePreset.HorizontalAlignment=HorizontalAlignment.Left;
         savePreset.Click+=async(_,_)=>await SavePresetAsync();
-        var presetActions=new WrapPanel();presetActions.Children.Add(savePreset);showPresetJson.Margin=new Thickness(12,12,0,0);presetActions.Children.Add(showPresetJson);currentPanel.Children.Add(presetActions);
+        var presetActions=new WrapPanel{VerticalAlignment=VerticalAlignment.Center};presetActions.Children.Add(savePreset);showPresetJson.Margin=new Thickness(12,0,0,0);presetActions.Children.Add(showPresetJson);currentPresetRow.Children.Add(presetActions);currentPanel.Children.Add(currentPresetRow);
         showPresetJson.Click+=(_,_)=>ShowPresetJson();
+        foreach(var action in new[]{exportPreset,importPreset}){action.Margin=new Thickness(12,0,0,0);presetActions.Children.Add(action);}
+        exportPreset.Click+=async(_,_)=>await ChooseExportPresetAsync();importPreset.Click+=async(_,_)=>await ChooseImportPresetAsync();
         currentPanel.Children.Add(saveMessage);
+        BuildImportRecoveryPanel();currentPanel.Children.Add(importRecoveryPanel);
         page.Children.Add(new Border { Background=Brush("#1D2B3C"),CornerRadius=new CornerRadius(8),Padding=new Thickness(14),
             Margin=new Thickness(0,10,0,0),Child=currentPanel });
         var effects=new StackPanel();effects.Children.Add(Text("Preset effects",18));
-        effects.Children.Add(Text("Select an effect to view its snapshot. Supported parameters can be applied explicitly.",12,MutedBrush,new Thickness(0,5,0,12)));
         effects.Children.Add(Text("Drag effects to reorder, or use the move buttons. Use + to add an effect. Changes are live; nothing is saved automatically.",12,MutedBrush,new Thickness(0,0,0,10)));
-        effects.Children.Add(CreateChainDragSurface());effectDetails.Margin=new Thickness(0,15,0,0);effects.Children.Add(effectDetails);
+        effects.Children.Add(CreateChainDragSurface());effectSelectionDetails.Margin=new Thickness(0,15,0,0);effects.Children.Add(effectSelectionDetails);
+        effectParameterScroll.Content=effectDetails;effectSelectionDetails.Children.Add(effectParameterScroll);
+        effectParameterScroll.CanContentScroll=false;
+        effectParameterScroll.PreviewMouseWheel+=(_,e)=> {
+            if(e.Delta==0)return;
+            var lines=SystemParameters.WheelScrollLines;
+            var distance=e.Delta/120d*(lines<0?effectParameterScroll.ViewportHeight:lines*16);
+            effectParameterScroll.ScrollToVerticalOffset(effectParameterScroll.VerticalOffset-distance);e.Handled=true;
+        };
+        libraryScroll.LayoutUpdated+=(_,_)=> {
+            if(libraryScroll.Visibility!=Visibility.Visible||libraryScroll.ViewportHeight<=0||effectParameterScroll.Parent is null)return;
+            // Reserve the space actually occupied by the other page controls, rather than a percentage
+            // of the whole page. The complete inner viewport must fit below those controls.
+            var fixedHeight=page.DesiredSize.Height-effectParameterScroll.DesiredSize.Height;
+            var available=Math.Max(96,Math.Floor(libraryScroll.ViewportHeight-fixedHeight-2));
+            if(Math.Abs(effectParameterScroll.MaxHeight-available)>0.5)effectParameterScroll.MaxHeight=available;
+        };
         effectDetails.Children.Add(Text("Read the amplifier to see its preset effects.",13,MutedBrush));
         page.Children.Add(new Border { Background=PanelBrush,CornerRadius=new CornerRadius(8),Padding=new Thickness(14),Margin=new Thickness(0,10,0,0),Child=effects });
-        var library = new StackPanel { Margin = new Thickness(0,27,0,0) };
-        var bar = new Grid(); bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        bar.ColumnDefinitions.Add(new ColumnDefinition());bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        var library = new StackPanel();
+        var bar = new Grid();
         bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});bar.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
-        var label = new StackPanel(); label.Children.Add(Text("Preset", 22)); label.Children.Add(count); bar.Children.Add(label);
-        var searchPanel = new StackPanel(); searchPanel.Children.Add(Text("Search name or preset", 12, MutedBrush));
-        var searchField = new Grid(); searchField.Children.Add(search);
+        var searchLabel=Text("Search name or preset",12,MutedBrush);
+        var searchField = new Grid {MinHeight=42};search.VerticalAlignment=VerticalAlignment.Center;searchField.Children.Add(search);
         clearSearch.Width=24;clearSearch.Height=26;clearSearch.Padding=new Thickness(0);
         clearSearch.Margin=new Thickness(0,0,6,0);clearSearch.HorizontalAlignment=HorizontalAlignment.Right;
         clearSearch.VerticalAlignment=VerticalAlignment.Center;clearSearch.Background=Brushes.Transparent;
         clearSearch.Visibility=Visibility.Collapsed;clearSearch.ToolTip="Clear preset search";
         System.Windows.Automation.AutomationProperties.SetName(clearSearch,"Clear preset search");
         clearSearch.Click+=(_,_)=> {search.Clear();search.Focus();};searchField.Children.Add(clearSearch);
-        searchPanel.Children.Add(searchField);
-        var effectFilterPanel=new StackPanel();effectFilterPanel.Children.Add(Text("Effect",12,MutedBrush));effectFilterPanel.Children.Add(effectFilter);
-        var effectFilterActions=new WrapPanel {Margin=new Thickness(0,7,0,0)};
+        var effectFilterPanel=new WrapPanel();
+        var effectSelectorColumn=new StackPanel();effectSelectorColumn.Children.Add(Text("Presets using effect:",12,MutedBrush));effectSelectorColumn.Children.Add(effectFilter);effectFilterPanel.Children.Add(effectSelectorColumn);
+        var effectActionColumn=new StackPanel{Margin=new Thickness(8,0,0,0),VerticalAlignment=VerticalAlignment.Bottom};
+        effectCacheNote.TextWrapping=TextWrapping.Wrap;effectCacheNote.MaxWidth=240;effectCacheNote.Margin=new Thickness(12,0,0,0);effectCacheNote.VerticalAlignment=VerticalAlignment.Center;
+        var effectFilterActions=new WrapPanel();
         effectFilterActions.Children.Add(resetEffectFilter);refreshEffectNames.Margin=new Thickness(8,0,0,0);effectFilterActions.Children.Add(refreshEffectNames);
-        effectFilterPanel.Children.Add(effectFilterActions);effectCacheNote.TextWrapping=TextWrapping.Wrap;effectCacheNote.MaxWidth=280;
-        effectCacheNote.Margin=new Thickness(0,6,0,0);effectFilterPanel.Children.Add(effectCacheNote);
-        var filtersPanel=new WrapPanel();filtersPanel.Children.Add(searchPanel);filtersPanel.Children.Add(effectFilterPanel);
-        Grid.SetColumn(filtersPanel,2);bar.Children.Add(filtersPanel);library.Children.Add(bar);
-        var selectionActions=new WrapPanel {Margin=new Thickness(0,12,0,0)};
-        selectionActions.Children.Add(selectPreset);selectionMessage.Margin=new Thickness(12,8,0,0);selectionActions.Children.Add(selectionMessage);
-        library.Children.Add(selectionActions);
-        library.Children.Add(Text("Choose a preset from the dropdown to recall it. Recall replaces the live preset without saving; unsaved changes may be discarded.",12,MutedBrush,new Thickness(0,8,0,0)));
+        effectFilterActions.Children.Add(effectCacheNote);
+        effectActionColumn.Children.Add(effectFilterActions);effectFilterPanel.Children.Add(effectActionColumn);
+        var filtersPanel=new WrapPanel();filtersPanel.Children.Add(effectFilterPanel);
+        Grid.SetRow(filtersPanel,1);bar.Children.Add(filtersPanel);library.Children.Add(bar);
         presets.ItemTemplate = (DataTemplate)XamlReader.Parse("""
             <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
               <Grid Margin="2,5"><Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition Width="44"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
@@ -190,35 +215,32 @@ public sealed partial class MainWindow : Window
         InitializeEffectFilter();
         presets.MinHeight=42;presets.Width=440;presets.HorizontalAlignment=HorizontalAlignment.Left;
         presets.VerticalAlignment=VerticalAlignment.Center;presets.Margin=new Thickness(0);
-        var presetChooser=new Grid {HorizontalAlignment=HorizontalAlignment.Left,Margin=new Thickness(16,0,20,0)};
-        presetChooser.ColumnDefinitions.Add(new ColumnDefinition());presetChooser.ColumnDefinitions.Add(new ColumnDefinition {Width=GridLength.Auto});
-        presetChooser.Children.Add(presets);Grid.SetColumn(presetEffectDetails,1);presetChooser.Children.Add(presetEffectDetails);
+        var presetChooser=new Grid {HorizontalAlignment=HorizontalAlignment.Left};
+        presetChooser.ColumnDefinitions.Add(new ColumnDefinition());presetChooser.ColumnDefinitions.Add(new ColumnDefinition {Width=GridLength.Auto});presetChooser.ColumnDefinitions.Add(new ColumnDefinition {Width=GridLength.Auto});
+        presetChooser.RowDefinitions.Add(new RowDefinition{Height=GridLength.Auto});presetChooser.RowDefinitions.Add(new RowDefinition{Height=GridLength.Auto});presetChooser.RowDefinitions.Add(new RowDefinition{Height=GridLength.Auto});
+        Grid.SetRow(presets,1);presetChooser.Children.Add(presets);Grid.SetColumn(searchLabel,1);presetChooser.Children.Add(searchLabel);Grid.SetColumn(searchField,1);Grid.SetRow(searchField,1);presetChooser.Children.Add(searchField);Grid.SetColumn(presetEffectDetails,2);Grid.SetRow(presetEffectDetails,1);presetChooser.Children.Add(presetEffectDetails);
         presetEffectDetails.Width=180;presetEffectDetails.Margin=new Thickness(10,0,0,0);presetEffectDetails.VerticalAlignment=VerticalAlignment.Center;
         presetEffectDetails.Click+=(_,_)=> {var dialog=CreatePresetEffectDetailsDialog(CreatePresetEffectReport());dialog.Owner=this;dialog.ShowDialog();};
         System.Windows.Automation.AutomationProperties.SetName(presetEffectDetails,"Preset/Effect Details");
-        Grid.SetColumn(presetChooser,1);bar.Children.Add(presetChooser);
+        bar.Children.Add(presetChooser);
         System.Windows.Automation.AutomationProperties.SetName(presets,"Choose amplifier preset");
         page.SizeChanged+=(_,_)=> {
             var available=Math.Max(120,page.ActualWidth);
-            var compact=available<620;
-            devices.Width=Math.Min(360,Math.Max(120,available-36));search.Width=effectFilter.Width=Math.Min(280,available);
-            Grid.SetRow(badge,compact?1:0);Grid.SetColumn(badge,compact?0:1);Grid.SetColumnSpan(badge,compact?2:1);
-            badge.HorizontalAlignment=compact?HorizontalAlignment.Left:HorizontalAlignment.Right;
-            badge.Margin=new Thickness(0,compact?10:0,0,0);
-            var wrapSearch=available<1330;var wrapPreset=available<520;
-            Grid.SetRow(presetChooser,wrapPreset?1:0);Grid.SetColumn(presetChooser,wrapPreset?0:1);Grid.SetColumnSpan(presetChooser,wrapPreset?3:1);
-            presetChooser.Margin=new Thickness(wrapPreset?0:16,wrapPreset?10:0,wrapSearch?0:20,0);
-            presetChooser.Width=Math.Min(630,Math.Max(310,available-(wrapPreset?0:Math.Max(100,label.ActualWidth)+16)-(wrapSearch?0:612)));
-            presets.Width=presetChooser.Width-190;
-            Grid.SetRow(filtersPanel,wrapPreset?2:wrapSearch?1:0);Grid.SetColumn(filtersPanel,wrapSearch?0:2);Grid.SetColumnSpan(filtersPanel,wrapSearch?3:1);
-            filtersPanel.Width=wrapSearch?available:572;filtersPanel.Margin=new Thickness(0,wrapSearch?10:0,0,0);
-            filtersPanel.HorizontalAlignment=wrapSearch?HorizontalAlignment.Left:HorizontalAlignment.Right;
-            searchPanel.Margin=new Thickness(0,0,available>=572?12:0,available>=572?0:10);
+            var compact=available<600;presetChooser.Width=Math.Min(924,available);
+            search.Width=compact?Math.Min(280,available):Math.Min(280,Math.Max(180,(available-204)*0.4));
+            Grid.SetRow(presets,compact?0:1);Grid.SetRow(presetEffectDetails,compact?0:1);Grid.SetColumnSpan(presets,compact?2:1);
+            Grid.SetRow(searchLabel,compact?1:0);Grid.SetColumn(searchLabel,compact?0:1);Grid.SetColumnSpan(searchLabel,compact?3:1);
+            Grid.SetRow(searchField,compact?2:1);Grid.SetColumn(searchField,compact?0:1);Grid.SetColumnSpan(searchField,compact?3:1);
+            searchLabel.Margin=compact?new Thickness(0,10,0,0):new Thickness(12,0,12,0);
+            searchField.HorizontalAlignment=HorizontalAlignment.Left;searchField.Margin=compact?new Thickness(0):new Thickness(12,0,12,0);
+            presetEffectDetails.Margin=new Thickness(compact?10:0,0,0,0);
+            presets.Width=compact?Math.Max(120,available-190):presetChooser.Width-search.Width-204;
+            effectFilter.Width=Math.Min(280,available);
+            filtersPanel.Width=effectFilterPanel.Width=available;filtersPanel.Margin=new Thickness(0,10,0,0);filtersPanel.HorizontalAlignment=HorizontalAlignment.Left;
+            effectActionColumn.Margin=new Thickness(available<800?0:8,available<800?7:0,0,0);
 
         };
-        library.Children.Add(Text("Preset banks match iAMP: 0A–0D, 1A–1D … 19A–19D. A blue check on the left marks the active amplifier preset.",12,MutedBrush,new Thickness(0,10,0,0)));
-        page.Children.Insert(2,library);
-        page.Children.Add(Text("V1.1.9: preset recall and saving across 0A–19D. All built-in Dyna, Filter, EQ, Amp, OD, Delay, Reverb and Mod models support parameter editing and on/off. Save or rename a supported preset, or save a copy to another slot, with explicit overwrite confirmation. Names currently support up to 20 printable ASCII characters.",13,MutedBrush,new Thickness(0,24,0,0)));
+        page.Children.Insert(1,library);
         thresholdSlider=CreateParameterSlider(thresholdInput,"Noise Killer threshold",0,100,ApplyThresholdAsync);
         toneSlider=CreateParameterSlider(toneInput,"OD Tone",0,100,ApplyToneAsync);
         InitializeAdditionalEditors();InitializeSnapshotArchive();InitializeDiagnostics();InitializeComparison();StyleInputs(); cancel.IsEnabled=false;
@@ -252,6 +274,7 @@ public sealed partial class MainWindow : Window
         Closed += (_,_) => operation?.Cancel();
         if (preview) SetDemo();else LoadCachedPresetNames();
         UpdatePresetSelectionState();
+        InitializeWindowSettings();
     }
 
     private UIElement BuildSidebar()
@@ -268,35 +291,30 @@ public sealed partial class MainWindow : Window
         toolsSection.Children.Add(tunerNavigation);
         toolsSection.Children.Add(drumNavigation);side.Children.Add(toolsSection);
         side.Children.Add(historyNavigation);
-        side.Children.Add(Text("F15i Li",17,Brush("#D5DCE8"),new Thickness(14,30,0,5)));
-        side.Children.Add(Text("Bluetooth connection",12,MutedBrush,new Thickness(14,0,0,0)));
-        side.Children.Add(Text("Snapshot viewer",12,MutedBrush,new Thickness(14,22,0,0)));
+        side.Children.Add(snapshotsNavigation);
         exportDiagnostics.Margin=new Thickness(0,18,0,0);
         exportDiagnostics.HorizontalAlignment=HorizontalAlignment.Stretch;
         side.Children.Add(exportDiagnostics);
+        settingsNavigation.Margin=new Thickness(0,8,0,2);side.Children.Add(settingsNavigation);
         return new Border { Background=Brush("#1A1D22"), BorderBrush=Brush("#30353D"), BorderThickness=new Thickness(0,0,1,0), Child=new ScrollViewer {Content=side,VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled} };
     }
 
-    private UIElement BuildConnection()
+    private FrameworkElement BuildConnection()
     {
         var panel = new StackPanel();
-        panel.Children.Add(Text("Connect your amplifier",18));
-        panel.Children.Add(Text("Turn on the amp and disconnect phone iAMP before connecting. Use one control app at a time.",13,MutedBrush,new Thickness(0,4,0,10)));
-        var row = new WrapPanel(); row.Children.Add(devices); scan.Margin=new Thickness(12,0,0,0); row.Children.Add(scan); panel.Children.Add(row);
+        amplifierHeading.FontWeight=FontWeights.Bold;panel.Children.Add(amplifierHeading);panel.Children.Add(amplifierPreset);
+        read.Background=BlueBrush; read.Foreground=Brush("#101C2B");
+        var row = new WrapPanel {Margin=new Thickness(0,8,0,0)};row.Children.Add(devices);
+        foreach(var button in new[]{scan,disconnect,read,cancel}){button.Height=36;button.Margin=new Thickness(8,0,0,4);row.Children.Add(button);}
+        devices.Height=36;devices.VerticalAlignment=VerticalAlignment.Top;devices.Margin=new Thickness(0,0,0,4);
+        scan.ToolTip="Turn on the amp and disconnect phone iAMP before connecting. Use one control app at a time.";panel.Children.Add(row);
         var manual = new WrapPanel { Margin=new Thickness(0,7,0,0) }; manual.Children.Add(Text("Bluetooth address",12,MutedBrush,new Thickness(0,8,12,0)));
         manual.Children.Add(address); address.ToolTip="12 hexadecimal digits, with optional colons or hyphens";
         manual.Children.Add(Text("Optional · overrides selection",12,MutedBrush,new Thickness(12,8,0,0)));
-        panel.Children.Add(new Expander {Header="Manual Bluetooth address",Foreground=MutedBrush,Margin=new Thickness(0,8,0,0),Content=manual});
-        var actions = new WrapPanel { Margin=new Thickness(0,12,0,0) }; read.Background=BlueBrush; read.Foreground=Brush("#101C2B");
-        actions.Children.Add(disconnect);
-        actions.Children.Add(read); cancel.Margin=new Thickness(10,0,0,0); actions.Children.Add(cancel);
-        exportSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(exportSnapshot);
-        openSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(openSnapshot);
-        compareSnapshot.Margin=new Thickness(10,0,0,0);actions.Children.Add(compareSnapshot);
-        foreach(var button in actions.Children.OfType<Button>())button.Margin=new Thickness(button==read?0:10,4,0,4);
-        status.Margin=new Thickness(17,8,0,0); actions.Children.Add(status); panel.Children.Add(actions);
-        snapshot.Margin=new Thickness(0,8,0,0); panel.Children.Add(snapshot);
-        return new Border { Background=PanelBrush, CornerRadius=new CornerRadius(10), Padding=new Thickness(18), Margin=new Thickness(0,20,0,0), Child=panel };
+        amplifierDiscovery.Content=manual;panel.Children.Add(amplifierDiscovery);
+        panel.SizeChanged+=(_,_)=>devices.Width=Math.Min(360,Math.Max(100,panel.ActualWidth-8));
+        return new ScrollViewer {VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,
+            Content=new Border { Background=PanelBrush, CornerRadius=new CornerRadius(10), Padding=new Thickness(14), Margin=new Thickness(32,12,32,0), Child=panel }};
     }
 
     private static Border Card(string label,TextBlock value,string caption)
@@ -307,7 +325,32 @@ public sealed partial class MainWindow : Window
     private void StyleInputs()
     {
         foreach(var box in new[]{address,search,thresholdInput,toneInput}.Concat(AdditionalEditors.Select(e=>e.Input))) { box.Background=Brush("#15191F");box.Foreground=Brushes.White;box.BorderBrush=Brush("#46505E");box.Padding=new Thickness(9,7,9,7);box.CaretBrush=Brushes.White; }
-        devices.Padding=new Thickness(7); devices.Foreground=Brush("#15171B");
+        devices.Padding=new Thickness(7,2,7,2); devices.Foreground=Brush("#15171B");
+        devices.VerticalContentAlignment=VerticalAlignment.Center;devices.SnapsToDevicePixels=true;devices.UseLayoutRounding=true;
+        devices.Template=(ControlTemplate)XamlReader.Parse("""
+            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" TargetType="ComboBox">
+              <Grid>
+                <ToggleButton x:Name="SelectorToggle" BorderBrush="#ADADAD" Focusable="False" ClickMode="Press" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                  <ToggleButton.Template><ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="SelectorSurface" Background="#ECECEC" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                      <TextBlock Text="▾" Foreground="#333333" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    </Border>
+                    <ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="SelectorSurface" Property="Background" Value="#E0E8EF"/></Trigger></ControlTemplate.Triggers>
+                  </ControlTemplate></ToggleButton.Template>
+                </ToggleButton>
+                <ContentPresenter x:Name="SelectedAmplifierPresenter" ClipToBounds="True" Margin="8,0,28,0" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource TemplatedParent}}"/>
+                <Popup x:Name="PART_Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False">
+                  <Border Background="#F2F2F2" BorderBrush="#ADADAD" BorderThickness="1" MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" MaxHeight="280">
+                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><ItemsPresenter/></ScrollViewer>
+                  </Border>
+                </Popup>
+              </Grid>
+              <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.55"/></Trigger>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="SelectorToggle" Property="BorderBrush" Value="#4C9EFF"/></Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+            """);
     }
     private void Begin(string message)
     {
@@ -333,6 +376,7 @@ public sealed partial class MainWindow : Window
     private async Task ScanAsync()
     {
         if(tunerActive || tunerStarting || operation is not null || preview)return;
+        if(drumReady&&!await LeaveDrumAsync()){status.Text=drumNotice??"Leave Drum before changing the amplifier connection.";return;}
         Begin("Scanning Bluetooth…");
         try { await ReleaseConnectionAsync();editSnapshotValid=false;var found=await F15DeviceDiscovery.ScanAsync(operation!.Token); devices.ItemsSource=found; if(found.Count>0)devices.SelectedIndex=0;
             status.Text=found.Count>0?$"Found {found.Count} amplifier(s)":"No amplifier found. Scan again or enter an address."; }
@@ -352,6 +396,7 @@ public sealed partial class MainWindow : Window
             if(input.Length!=12||!ulong.TryParse(input,NumberStyles.HexNumber,CultureInfo.InvariantCulture,out selected)) {status.Text="Enter a Bluetooth address with 12 hexadecimal digits.";return;}
         } else if(devices.SelectedItem is F15DiscoveredDevice device) selected=device.Address;
         else {status.Text="Select an amplifier or enter its Bluetooth address.";return;}
+        if(drumReady&&!await LeaveDrumAsync()){status.Text=drumNotice??"Leave Drum before refreshing the amplifier.";return;}
         presetSaveNotice=null;Begin("Connecting…"); snapshot.Text=names.Count>0?"Previous snapshot · Reading new data…":"Reading amplifier…";
         batterySummary.Text="Battery · Not read";batteryReadAt=null;
         try {
@@ -380,14 +425,14 @@ public sealed partial class MainWindow : Window
                 currentSnapshot?.RawStatePayloadHex==current.RawStatePayloadHex && currentSnapshot.RawDetailPayloadHex==current.RawDetailPayloadHex;
             currentSnapshot=current;snapshotAddress=selected;snapshotFirmware=identity.Firmware;editSnapshotValid=true;
             UpdateMixerState(resetPending:!preservePending);
-            localSnapshotSource=false;sourceBadge.Text="EXPERIMENTAL EDIT";
+            localSnapshotSource=false;
             CacheLivePresetNames();
             if(preservePending)SetEffectsPreservingPending(current.Blocks);else SetEffects(current.Blocks);
             snapshotTime=DateTimeOffset.Now;snapshot.Text=SnapshotLabel();Filter();status.Text="Connected · Presets loaded";lastReadSucceeded=true;refreshTimer.Start();
         }
         catch(OperationCanceledException){status.Text="Read cancelled";snapshot.Text=SnapshotLabel();}
         catch(Exception ex){status.Text=ReadError(ex);snapshot.Text=SnapshotLabel();}
-        finally {if(!lastReadSucceeded)await ReleaseConnectionAsync();status.Foreground=MutedBrush;End();}
+        finally {if(!lastReadSucceeded)await ReleaseConnectionAsync();status.Foreground=MutedBrush;End();UpdateImportRecoveryAfterRead(lastReadSucceeded,selected);}
     }
     internal async Task<bool> ReadSnapshotPreviewAsync(string bluetoothAddress)
     {
@@ -451,7 +496,7 @@ public sealed partial class MainWindow : Window
         initializedParameterPositions.Clear();
         pendingParameterValues.Clear();parameterTargets.Clear();
         displayedEffect=null;
-        effectChain.Children.Clear();effectButtons.Clear();effectDetails.Children.Clear();
+        effectChain.Children.Clear();effectButtons.Clear();effectDetails.Children.Clear();effectSelectionDetails.Children.Clear();
         foreach(var block in blocks.Where(b=>b.TypeCode!=0)) {
             var effect=EffectPresentation.From(block);var button=Button(effect.Category);
             button.Content=EffectButtonContent(effect);
@@ -463,7 +508,7 @@ public sealed partial class MainWindow : Window
         }
         AddChainControls();
         if(effectButtons.Count>0)SelectEffect(effectButtons[0].Effect);
-        else effectDetails.Children.Add(Text("No preset effect details available.",13,MutedBrush));
+        else {effectSelectionDetails.Children.Add(effectParameterScroll);effectDetails.Children.Add(Text("No preset effect details available.",13,MutedBrush));}
     }
     private void SelectEffect(EffectPresentation effect)
     {
@@ -479,9 +524,12 @@ public sealed partial class MainWindow : Window
         if(applyTone.Parent is Panel oldToneApplyParent)oldToneApplyParent.Children.Remove(applyTone);
         DetachAdditionalEditorControls();
         foreach(var item in effectButtons)item.Button.BorderBrush=ReferenceEquals(item.Effect,effect)?Brushes.White:Brushes.Transparent;
-        effectDetails.Children.Clear();effectDetails.Children.Add(Text(effect.Title,22,effect.Enabled==false?MutedBrush:Brush(effect.Color)));
+        effectDetails.Children.Clear();effectSelectionDetails.Children.Clear();effectHeading.Children.Clear();
+        var effectTitle=Text(effect.Title,22,effect.Enabled==false?MutedBrush:Brush(effect.Color),new Thickness(0,0,16,4));effectTitle.VerticalAlignment=VerticalAlignment.Center;
+        effectHeading.Children.Add(effectTitle);effectSelectionDetails.Children.Add(effectHeading);
         AddEffectPowerControl(effect);
         AddChainSelectionActions();
+        effectSelectionDetails.Children.Add(effectParameterScroll);effectParameterScroll.ScrollToTop();
         if(effect.Parameters.Count==0) {effectDetails.Children.Add(Text("Parameter details not available in this version.",13,MutedBrush,new Thickness(0,8,0,0)));return;}
         if(effect.Source.TypeCode==4 && effect.Source.Values.Count==6 && effect.Source.Values[1]==2) {
             thresholdInput.Text=PendingParameterText(effect.Source,2);

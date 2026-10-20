@@ -17,7 +17,7 @@ public sealed partial class MainWindow
         HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Visibility=Visibility.Collapsed};
     private readonly Button tunerStart=Button("Start tuner"),tunerStop=Button("Stop tuner"),
         tunerLower=Button("−"),tunerHigher=Button("+"),tunerOutput=Button("");
-    private readonly TextBlock tunerSummary=Text("Connect the amplifier from Amplifier Settings to use the tuner.",13,MutedBrush),
+    private readonly TextBlock tunerSummary=Text("",13,MutedBrush),
         tunerNote=Text("—",72),tunerDeviation=Text("No signal",16,MutedBrush),tunerReference=Text("— Hz",22);
     private readonly Canvas tunerMeter=new() {Width=112,Height=280,HorizontalAlignment=HorizontalAlignment.Center};
     private readonly List<Polygon> tunerSegments=new();
@@ -33,9 +33,8 @@ public sealed partial class MainWindow
     private void BuildTunerPage()
     {
         if(tunerScroll.Content is not null)return;
-        var page=new StackPanel {Margin=new Thickness(32,20,32,24)};
+        var page=new StackPanel {Margin=new Thickness(32,0,32,24)};
         page.Children.Add(Text("Tuner",30));
-        page.Children.Add(Text("Tune your instrument using the amplifier’s input.",14,MutedBrush,new Thickness(0,7,0,16)));
         page.Children.Add(tunerSummary);
         var actions=new WrapPanel {Margin=new Thickness(0,14,0,18)};
         actions.Children.Add(tunerStart);tunerStop.Margin=new Thickness(10,0,0,0);actions.Children.Add(tunerStop);page.Children.Add(actions);
@@ -117,9 +116,10 @@ public sealed partial class MainWindow
         AutomationProperties.SetName(tunerOutput,muted?"Tuner output muted; switch to bypass":"Tuner output bypassed; switch to mute");
         tunerSummary.Text=preview?"Preview only · No amplifier commands":busy?"Tuner operation in progress…":tunerNotice is not null?tunerNotice:
             tunerActive?"Tuner active · Play a single note. Stop the tuner to return to normal amplifier operation.":
-            !connected?"Connect a supported F15i V1.1.9 amplifier from Amplifier Settings to use the tuner.":
+            !connected?"":
             !editSnapshotValid?"Refresh the amplifier before starting the tuner. Your pending inputs are preserved.":
             "Ready to tune · Reference pitch and output mode are read from the amplifier.";
+        tunerSummary.Visibility=string.IsNullOrWhiteSpace(tunerSummary.Text)?Visibility.Collapsed:Visibility.Visible;
     }
 
     private async Task StartTunerAsync()
