@@ -1,5 +1,11 @@
 [
   {
+    "version": "1.47.0",
+    "changedAt": "2026-10-20T03:34:54.988Z",
+    "summary": "Make snapshot comparisons readable and name exports after the preset.",
+    "details": "Replace the main raw-field table with independently scrollable preset columns showing code/name, capture time, firmware, effect count, actual chain order, model, enabled state and verified named parameters in desktop/mobile order. Retain Custom EQ sections, units, signed decimals and Off values. Match repeated models by occurrence across reordered chains and highlight differing comparable values. Explain unmatched models and unavailable named layouts; retain raw differences under collapsed Technical details. Export filenames default to Preset-0A-British-J800-Clean-snapshot.json with Windows-safe characters and legacy file compatibility. Archive format and read-only behavior remain unchanged. Focused offline WPF/layout/filename checks, 27 snapshot protocol cases and real-handler preservation/malformed-file checks pass. Inspect an own-dialog render and rebuild app/installer; no hardware changes."
+  },
+  {
     "version": "1.46.1",
     "changedAt": "2026-10-18T09:36:08.501Z",
     "summary": "Style report section headings and copy the report as Markdown.",

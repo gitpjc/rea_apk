@@ -20,6 +20,7 @@ internal static class Program
     {
         var app=new Application();var window=new MainWindow();
         try {
+            if(args.Contains("--snapshot-comparison")) {SnapshotComparisonChecks.Run();return 0;}
             if(args.Contains("--preset-name-cache")) {PresetNameCacheChecks.Run();return 0;}
             if(args.Contains("--preset-effect-report")) {PresetEffectReportChecks.Run();return 0;}
             if(args.Contains("--drum")) {DrumChecks.Run(args.Contains("--render")?System.IO.Path.GetFullPath("analysis/private/drum-desktop-preview.png"):null);return 0;}

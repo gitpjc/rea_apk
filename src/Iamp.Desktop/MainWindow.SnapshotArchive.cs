@@ -12,7 +12,7 @@ public sealed partial class MainWindow
     private readonly System.Windows.Controls.Button openSnapshot=Button("Open snapshot");
     private bool localSnapshotSource;
     private const int MaximumSnapshotFileBytes=64*1024;
-    private const string SnapshotFilter="iAMP local snapshot (*.iamp-snapshot.json)|*.iamp-snapshot.json";
+    private const string SnapshotFilter="iAMP snapshots (*-snapshot.json;*.iamp-snapshot.json)|*-snapshot.json;*.iamp-snapshot.json|JSON files (*.json)|*.json";
 
     private void InitializeSnapshotArchive()
     {
@@ -29,10 +29,22 @@ public sealed partial class MainWindow
     private async Task ChooseExportSnapshotAsync()
     {
         if(!exportSnapshot.IsEnabled || currentSnapshot is not {} current)return;
-        var dialog=new SaveFileDialog {Filter=SnapshotFilter,DefaultExt=".iamp-snapshot.json",AddExtension=true,OverwritePrompt=true,
-            FileName=$"preset-{current.SlotLabel}.iamp-snapshot.json",Title="Export local snapshot"};
+        var dialog=CreateSnapshotSavePicker(current);
         if(dialog.ShowDialog(this)!=true)return;
         await ExportSnapshotToPathAsync(dialog.FileName);
+    }
+    private static SaveFileDialog CreateSnapshotSavePicker(CurrentPresetSnapshot current)=>new()
+    {
+        Filter=SnapshotFilter,DefaultExt=".json",AddExtension=true,OverwritePrompt=true,Title="Export local snapshot",
+        FileName=CreateSnapshotFileName(current)
+    };
+    private static string CreateSnapshotFileName(CurrentPresetSnapshot current)
+    {
+        var name=System.Text.RegularExpressions.Regex.Replace(current.Name,@"[\s<>:""/\\|?*\x00-\x1F]+","-").Trim('-','.');
+        name=System.Text.RegularExpressions.Regex.Replace(name,"-{2,}","-");
+        if(name.Length>120)name=name[..120].TrimEnd('-','.');
+        if(string.IsNullOrWhiteSpace(name))name="Unnamed";
+        return $"Preset-{current.SlotLabel}-{name}-snapshot.json";
     }
     private async Task ExportSnapshotToPathAsync(string path)
     {

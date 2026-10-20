@@ -1,6 +1,16 @@
 # Read-only snapshot comparison
 
-This reference remains applicable to application 1.41.2. Version labels and test counts below identify the original implementation/evidence runs; they do not claim a new test run. See [Current-Status.md](Current-Status.md) for full delivered scope and open acceptance gates.
+Updated for **1.47.0**, 20 October 2026. The primary comparison now uses two independently scrollable columns, each showing its preset code/name, firmware, capture time, effect count and actual effect chain order. Cards show category, model, enabled state and all available mobile-verified named settings. Custom EQ retains its Low, Low Mid, High Mid and High sections; values retain units, signed decimals and Off labels.
+
+The left column identifies the selected file. The right says **Current preset · last read**, or **Displayed snapshot** when viewing a local file. Matching models are paired by category/model and occurrence order for duplicate instances, including reordered chains. Differing comparable values are blue and bold. Moved models identify their other position; unmatched models and unavailable named layouts are explicitly explained. Duplicate models are paired by occurrence rather than an inferred persistent identity.
+
+The former raw table is retained under a collapsed **Technical details** section. The main view shows readable musical settings rather than raw field numbers. Export filenames default to `Preset-0A-British-J800-Clean-snapshot.json`, using the actual preset code/name with whitespace and Windows-invalid characters replaced by hyphens. Legacy `.iamp-snapshot.json` files remain supported. Archive schema, integrity checks and read-only behavior are unchanged.
+
+Validation for 1.47.0: focused offline WPF checks pass for independent chains, duplicate/reordered models, highlighted values, grouped EQ, units/decimals/Off, scrolling, collapsed technical fields, two viewport sizes and safe filenames. All 27 affected snapshot protocol cases pass. The real comparison handler detects fixture differences, rejects malformed input and preserves displayed state, pending input and read-only guards. The application's own redesigned dialog was rendered and visually inspected. No phone/amplifier changes were made. Run `dotnet run --project tools/Iamp.Desktop.UiChecks -- --snapshot-comparison` for focused UI checks.
+
+## Original archive behavior and evidence
+
+The details below describe the original raw comparison and its evidence. In 1.47.0 that table is available within Technical details; the readable view described above is the default.
 
 
 Updated 14 October 2026; introduced in version 1.4.0.

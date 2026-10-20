@@ -1,33 +1,43 @@
 
- To the right of the Prests drop down please add a button called 'Preset/Effect Details'
+Currently the snapshot comparison dialog shows mameaningless information for me beside the Preset name
 
- When I press that button please provide a report that lists all the presets and Effects available, for example something llike this:
+Effect section should be like this for current preset effects and File Preset effects:
 
-Presets
+```text
+Amp
+  - Gain:          0        
+  - Bass:         47
+  - Mid:          44
+Dyna
+  - Sensitivity:  19
+  - Level:        71 
+  ```
 
-  0A-0D
-    - 0A British J800 Clean
-    - 0B British OverDrive
-    .....
+Should be relevant for current preset and what is in the file
 
-  1A-1D 
-    - etc...
-    - etc...
+Also the snapshot name should exactly reflect the preset name, for example:
 
-Effects
+Preset-0A-British-J800-Clean-snapshot.json 
+Preset-0A-British-OverDrive-snapshot.json 
 
-  Dyna 
-    - Red Comp
-    - Yellow Comp
-    .....
+Do you understand what I want?  
+Just respond  
 
-  Filter
-    = Touch Wah
-    = Auto Wah
+------------------------------------------------------------
 
-Also provide a copy icon so I can copy the report
+Ok I think the 'Open Snapshot' should be called 'Import Snapshot' and it should replace the current preset.
+What do you think?
 
-Do you understand what I want?
+When I select to import you should always provide a confirmation dialog that explains that the current preset what ever it is named (list its details) will be replaced with the snapshot preset (list its details)
+
+Whatever Preset is currently used in the iAMP desktop app should be replaced with the snapshot value
+
+So if the current Preset is '19C - New Patch' please explain what will happen if I restore aimport a Snapshot of say  
+a snpshot of 0A - Britsh J800 over it? Please explain how you see this working 
+
+The changes should also take effect on the amp at the same time as well
+
+
 
 ------------------------
 
