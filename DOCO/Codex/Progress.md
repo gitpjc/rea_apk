@@ -1,6 +1,6 @@
 # Implementation progress
 
-Updated 20 October 2026. Current published release: **1.50.5**. Shared header, Presets rename and independent Snapshots page are implemented. Readable snapshot comparison and descriptive export filenames are implemented; see [Snapshot-Comparison.md](Snapshot-Comparison.md). Subsequent core delivery includes Tuner, Drum, copyable preset/effect reports and offline preset-name caching. Older milestones below retain their original evidence dates. The core editor is implemented; broader reliability/usability/deployment acceptance remains open. [Current-Status.md](Current-Status.md) is the support summary, [Plan.md](Plan.md) the task ledger and [Feature-Matrix.md](Feature-Matrix.md) the acceptance matrix.
+Updated 21 October 2026. Current published release: **1.51.1**. Shared header, Presets rename and independent Snapshots page are implemented. Readable snapshot comparison and descriptive export filenames are implemented; see [Snapshot-Comparison.md](Snapshot-Comparison.md). Subsequent core delivery includes Tuner, Drum, copyable preset/effect reports and offline preset-name caching. Older milestones below retain their original evidence dates. The core editor is implemented; broader reliability/usability/deployment acceptance remains open. [Current-Status.md](Current-Status.md) is the support summary, [Plan.md](Plan.md) the task ledger and [Feature-Matrix.md](Feature-Matrix.md) the acceptance matrix.
 
 ## Completed core work
 

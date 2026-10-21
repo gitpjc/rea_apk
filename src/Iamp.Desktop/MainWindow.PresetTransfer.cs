@@ -137,6 +137,7 @@ public sealed partial class MainWindow
                     if(!outcome.Cancelled){importRecoveryPanel.Visibility=Visibility.Collapsed;importRecoveryTarget=null;}
                     currentSnapshot=restored;originalSnapshotDetail=outcome.Cancelled&&!outcome.Saved?previousOriginal:restored.RawDetailPayloadHex;
                     liveEditUnsaved=outcome.Cancelled&&!outcome.Saved&&previouslyUnsaved;editSnapshotValid=true;snapshotTime=DateTimeOffset.Now;
+                    if(!outcome.Cancelled||outcome.Saved)ResetPresetEntryBaseline(restored);
                     if(!outcome.Cancelled||outcome.Saved)UpdateSavedPresetLibrary(restored);
                     currentPreset.Text=$"{restored.SlotLabel} · {restored.Name}";SetEffects(restored.Blocks);
                     UpdateMixerState(resetPending:true);Filter();snapshot.Text=SnapshotLabel();

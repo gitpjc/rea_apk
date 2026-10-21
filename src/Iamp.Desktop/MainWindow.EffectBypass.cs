@@ -56,7 +56,7 @@ public sealed partial class MainWindow
         if(preview || operation is not null || !editSnapshotValid || snapshotFirmware!="V1.1.9" || snapshotAddress is not {} target ||
             currentSnapshot is not {} expected || HasPendingInputs() || position is <1 or >20 ||
             !EffectBypassCommand.TryGetEnabled(expected.Blocks[position-1],out var enabled))return;
-        Begin($"Checking amplifier before {(enabled?"disabling":"enabling")} effect…");
+        BeginSteadyOperation($"Checking amplifier before {(enabled?"disabling":"enabling")} effect…");
         try {
             var confirmed=await UseSessionAsync(target,s=>s.SetEffectEnabledAsync(expected,position,!enabled,operation!.Token));
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;

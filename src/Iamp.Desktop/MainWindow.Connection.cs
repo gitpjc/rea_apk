@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using Iamp.Transport.Windows;
 
@@ -6,6 +7,30 @@ namespace Iamp.Desktop;
 
 public sealed partial class MainWindow
 {
+    private readonly ProgressBar connectionProgress=new(){Width=120,Height=6,Foreground=BlueBrush,
+        Background=Brush("#343B46"),VerticalAlignment=VerticalAlignment.Center};
+    private readonly StackPanel connectionProgressNotice=new(){Orientation=Orientation.Horizontal,
+        VerticalAlignment=VerticalAlignment.Center,Margin=new Thickness(20,0,0,0),Visibility=Visibility.Collapsed};
+    private readonly TextBlock connectionProgressLabel=new(){Text="Connecting to amp…",FontSize=13,Foreground=BlueBrush,
+        TextWrapping=TextWrapping.NoWrap,VerticalAlignment=VerticalAlignment.Center,Margin=new Thickness(10,0,0,0)};
+    private bool connectionScanInProgress,connectionReadInProgress;
+    private void BeginConnectionScan()
+    {
+        connectionScanInProgress=true;connectionProgressLabel.Text="Scanning for Bluetooth devices…";
+        connectionProgress.IsIndeterminate=true;connectionProgressNotice.Visibility=Visibility.Visible;
+    }
+    private void FinishConnectionScan()
+    {
+        connectionScanInProgress=false;
+        connectionProgress.IsIndeterminate=false;connectionProgressNotice.Visibility=Visibility.Collapsed;
+    }
+    private void BeginConnectionRead()
+    {
+        connectionReadInProgress=true;
+        Begin("Connecting…");
+        connectionProgressLabel.Text="Connecting to amp…";
+        connectionProgress.IsIndeterminate=true;connectionProgressNotice.Visibility=Visibility.Visible;
+    }
     private F15ReadSession? connectedSession;
     private ulong? connectedAddress;
     private readonly System.Windows.Controls.Button disconnect=Button("Disconnect");
@@ -87,8 +112,13 @@ public sealed partial class MainWindow
     }
     private bool HasPendingInputs()
     {
+        var presetPending=HasPendingPresetInputs();
+        return HasPendingMixerInputs()||presetPending;
+    }
+    private bool HasPendingPresetInputs()
+    {
         CaptureParameterInputs();
-        return HasPendingMixerInputs() || pendingParameterValues.Any(p=>currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==p.Key.Position) is {} block &&
+        return pendingParameterValues.Any(p=>currentSnapshot?.Blocks.FirstOrDefault(b=>b.Position==p.Key.Position) is {} block &&
             (p.Key.Index>=block.Values.Count || !TryParseParameterText(block,p.Key.Index,p.Value,out var value) || value!=block.Values[p.Key.Index]));
     }
     private async Task PollCurrentPresetAsync()

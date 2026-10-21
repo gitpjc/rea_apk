@@ -22,7 +22,7 @@ public sealed partial class MainWindow
         public object ConvertBack(object value,Type targetType,object parameter,CultureInfo culture)=>Binding.DoNothing;
     }
     private static readonly ControlTemplate MobileSliderTemplate=(ControlTemplate)XamlReader.Parse("""
-        <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" TargetType="Slider">
+        <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Iamp.Desktop;assembly=Iamp.Desktop" TargetType="Slider">
           <Grid Background="Transparent">
             <Border Height="10" Margin="14,0" CornerRadius="5" Background="#3D4249" VerticalAlignment="Center"/>
             <Track x:Name="PART_Track" Height="28" VerticalAlignment="Center" Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}" Value="{Binding Value,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}" Orientation="{TemplateBinding Orientation}" IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
@@ -40,7 +40,7 @@ public sealed partial class MainWindow
             </Track>
           </Grid>
           <ControlTemplate.Triggers>
-            <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.65"/></Trigger>
+            <MultiTrigger><MultiTrigger.Conditions><Condition Property="IsEnabled" Value="False"/><Condition Property="local:SteadyControlAppearance.KeepEnabledAppearance" Value="False"/></MultiTrigger.Conditions><Setter Property="Opacity" Value="0.65"/></MultiTrigger>
             <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter Property="Opacity" Value="0.9"/></Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>
@@ -53,13 +53,13 @@ public sealed partial class MainWindow
             Minimum=minimum,Maximum=maximum,Value=minimum,
             TickFrequency=1,IsSnapToTickEnabled=true,SmallChange=1,LargeChange=10,
             MinHeight=32,Margin=new Thickness(0,0,0,7),IsMoveToPointEnabled=true,
-            HorizontalAlignment=HorizontalAlignment.Left,Template=MobileSliderTemplate,
+            HorizontalAlignment=HorizontalAlignment.Left,Template=MobileSliderTemplate,Focusable=true,IsTabStop=true,
             Foreground=Brushes.White,ToolTip=$"{label} · {minimum}–{maximum} · Drag or tap the track; release to apply. Arrow keys adjust by one."
         };
         slider.SetBinding(FrameworkElement.WidthProperty,new Binding("ActualWidth"){Source=effectDetails,Converter=new HalfWidthConverter()});
         sliderCommits.Add(slider,commit);
         slider.Tag=Brushes.White;
-        slider.IsEnabledChanged+=(_,_)=>slider.Foreground=slider.IsEnabled?(Brush)slider.Tag:MutedBrush;
+        slider.IsEnabledChanged+=(_,_)=>slider.Foreground=slider.IsEnabled||SteadyControlAppearance.GetKeepEnabledAppearance(slider)?(Brush)slider.Tag:MutedBrush;
         AutomationProperties.SetName(slider,$"Pending {label}, {minimum} to {maximum}");
         var synchronizing=false;
         slider.ValueChanged+=(_,_)=> {
@@ -94,6 +94,7 @@ public sealed partial class MainWindow
         }
         slider.PreviewMouseLeftButtonDown+=(_,e)=> {
             if(!slider.IsEnabled || !slider.CaptureMouse())return;
+            PrepareSteadyAppearance();
             pointerEditing=true;startingValue=slider.Value;startingSnapshot=currentSnapshot;
             slider.Focus();MovePointer(e);e.Handled=true;
         };
@@ -107,29 +108,57 @@ public sealed partial class MainWindow
             if(!pointerEditing)return;
             pointerEditing=false;
             if(ReferenceEquals(startingSnapshot,currentSnapshot) && editSnapshotValid && operation is null)slider.Value=startingValue;
+            if(operation is null)FinishSteadyAppearance();
         };
         bool AdjustmentKey(Key key)=>key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown;
         slider.PreviewKeyDown+=(_,e)=> {
             if(pointerEditing && e.Key==Key.Escape) {
                 pointerEditing=false;slider.ReleaseMouseCapture();
                 if(ReferenceEquals(startingSnapshot,currentSnapshot))slider.Value=startingValue;
+                if(operation is null)FinishSteadyAppearance();
                 e.Handled=true;return;
             }
             if(pointerEditing && AdjustmentKey(e.Key)){e.Handled=true;return;}
-            if(slider.IsEnabled && AdjustmentKey(e.Key))keyboardEditing=true;
+            if(slider.IsEnabled && AdjustmentKey(e.Key)){
+                PrepareSteadyAppearance();
+                keyboardEditing=true;
+                slider.Value=Math.Clamp(e.Key switch {
+                    Key.Left or Key.Down=>slider.Value-slider.SmallChange,
+                    Key.Right or Key.Up=>slider.Value+slider.SmallChange,
+                    Key.PageDown=>slider.Value-slider.LargeChange,
+                    Key.PageUp=>slider.Value+slider.LargeChange,
+                    Key.Home=>slider.Minimum,Key.End=>slider.Maximum,_=>slider.Value
+                },slider.Minimum,slider.Maximum);
+                e.Handled=true;
+            }
         };
         slider.PreviewKeyUp+=async(_,e)=> {
             if(!keyboardEditing || !AdjustmentKey(e.Key))return;
+            keyboardEditing=false;e.Handled=true;await CommitSliderValueAsync(slider);
+        };
+        slider.LostKeyboardFocus+=async(_,_)=>{
+            if(!keyboardEditing)return;
             keyboardEditing=false;await CommitSliderValueAsync(slider);
         };
-        slider.LostKeyboardFocus+=(_,_)=>keyboardEditing=false;
         return slider;
     }
 
     private async Task CommitSliderValueAsync(Slider slider)
     {
-        if(preview || operation is not null || !slider.IsEnabled || slider.Parent is null || !editSnapshotValid)return;
-        if(sliderCommits.TryGetValue(slider,out var commit))await commit();
+        if(preview || operation is not null || !slider.IsEnabled || slider.Parent is null || !editSnapshotValid){if(operation is null)FinishSteadyAppearance();return;}
+        if(sliderCommits.TryGetValue(slider,out var commit)){
+            var hadFocus=slider.IsKeyboardFocusWithin;var owner=Window.GetWindow(slider);
+            try {await commit();}
+            finally {
+                if(operation is null)FinishSteadyAppearance();
+                if(hadFocus)await slider.Dispatcher.InvokeAsync(()=>{
+                    // Re-enabling/rebuilding a live editor drops focus to its window.
+                    // Preserve an intentional move to another control or window.
+                    if(slider.IsEnabled&&slider.IsVisible&&owner?.IsActive==true&&
+                        (Keyboard.FocusedElement is null or Window||ReferenceEquals(Keyboard.FocusedElement,slider)))slider.Focus();
+                },System.Windows.Threading.DispatcherPriority.Input);
+            }
+        }
     }
 
     private void AddMobileParameterSlider(Slider slider,TextBox input,string label,string color,Panel? host=null,string? explicitUnit=null)

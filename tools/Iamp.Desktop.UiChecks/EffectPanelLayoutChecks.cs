@@ -69,8 +69,10 @@ internal static class EffectPanelLayoutChecks
             Require(wheel.Handled&&outer.VerticalOffset==outerBeforeWheel,"Wheel scrolling at the inner bottom moved the outer page");
             outer.ScrollToEnd();scroll.ScrollToEnd();root.UpdateLayout();
             IEnumerable<DependencyObject> Walk(DependencyObject node){yield return node;foreach(var child in LogicalTreeHelper.GetChildren(node).OfType<DependencyObject>())foreach(var item in Walk(child))yield return item;}
-            var lastInput=Walk(detail).OfType<TextBox>().Single(t=>t.Text=="62");var lastPoint=lastInput.TranslatePoint(new Point(),scroll);var outerPoint=lastInput.TranslatePoint(new Point(),outer);
-            Require(lastPoint.Y>=0&&lastPoint.Y+lastInput.ActualHeight<=scroll.ViewportHeight+1&&outerPoint.Y>=0&&outerPoint.Y+lastInput.ActualHeight<=outer.ViewportHeight+1,"Final Custom EQ Level input remains clipped at the bottom");
+            Require(!Walk(detail).OfType<TextBox>().Any()&&!Walk(detail).OfType<Button>().Any(),"Effect parameters still display manual inputs or Apply buttons");
+            Require(!Walk(detail).OfType<TextBlock>().Any(t=>t.Text.Contains("Matches confirmed")||t.Text.Contains("choose Apply")),"Effect parameters still display manual helper messages");
+            var lastSlider=Walk(detail).OfType<Slider>().Single(s=>s.Value==62);var lastPoint=lastSlider.TranslatePoint(new Point(),scroll);var outerPoint=lastSlider.TranslatePoint(new Point(),outer);
+            Require(lastPoint.Y>=0&&lastPoint.Y+lastSlider.ActualHeight<=scroll.ViewportHeight+1&&outerPoint.Y>=0&&outerPoint.Y+lastSlider.ActualHeight<=outer.ViewportHeight+1,"Final Custom EQ Level slider remains clipped at the bottom");
             IEnumerable<DependencyObject> Visuals(DependencyObject node){yield return node;for(var i=0;i<VisualTreeHelper.GetChildrenCount(node);i++)foreach(var item in Visuals(VisualTreeHelper.GetChild(node,i)))yield return item;}
             var scrollbar=Visuals(scroll).OfType<ScrollBar>().Single(b=>b.Orientation==Orientation.Vertical&&b.Visibility==Visibility.Visible);
             Require(scrollbar.ActualWidth==14&&((SolidColorBrush)scrollbar.Background).Color.ToString()=="#FF20242B","Parameter scrollbar does not use the compact dark theme");
@@ -91,10 +93,11 @@ internal static class EffectPanelLayoutChecks
             for(var pass=0;pass<8;pass++){root.Measure(fullSize);root.Arrange(new Rect(fullSize));root.UpdateLayout();}
             outer.ScrollToTop();scroll.ScrollToEnd();root.UpdateLayout();
             Require(outer.ScrollableHeight<1,"Normal window needs outer scrolling to reach effect parameters");
-            var finalPoint=lastInput.TranslatePoint(new Point(),outer);var finalMessage=detail.Children.OfType<TextBlock>().Last();var messagePoint=finalMessage.TranslatePoint(new Point(),outer);
-            Require(finalPoint.Y>=0&&finalPoint.Y+lastInput.ActualHeight<=outer.ViewportHeight+1&&messagePoint.Y+finalMessage.ActualHeight<=outer.ViewportHeight+1,"Last parameter/helper text is clipped without scrolling the outer page");
+            var finalPoint=lastSlider.TranslatePoint(new Point(),outer);
+            Require(finalPoint.Y>=0&&finalPoint.Y+lastSlider.ActualHeight<=outer.ViewportHeight+1,"Last parameter slider is clipped without scrolling the outer page");
             var fittedBitmap=new RenderTargetBitmap(1280,900,96,96,PixelFormats.Pbgra32);fittedBitmap.Render(root);var fittedEncoder=new PngBitmapEncoder();fittedEncoder.Frames.Add(BitmapFrame.Create(fittedBitmap));using(var output=File.Create("analysis/private/custom-eq-fitted-1.49.21.png"))fittedEncoder.Save(output);
             ((Button)buttons.Children[0]).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));root.UpdateLayout();
+            Require(!Walk(detail).OfType<TextBox>().Any()&&!Walk(detail).OfType<Button>().Any(),"Noise threshold still displays manual controls");
             Require(Field<TextBox>("thresholdInput").Text=="26"&&ReferenceEquals(original,Field<CurrentPresetSnapshot>("currentSnapshot")),"Changing effect panels discarded pending inputs or changed the preset");
             Field<TextBox>("thresholdInput").Text="25";
             var renderSize=new Size(1280,900);root.Width=renderSize.Width;root.Height=renderSize.Height;
@@ -102,7 +105,7 @@ internal static class EffectPanelLayoutChecks
             Field<ScrollViewer>("libraryScroll").ScrollToBottom();root.UpdateLayout();
             var bitmap=new RenderTargetBitmap(1280,900,96,96,PixelFormats.Pbgra32);bitmap.Render(root);var encoder=new PngBitmapEncoder();encoder.Frames.Add(BitmapFrame.Create(bitmap));Directory.CreateDirectory("analysis/private");using(var output=File.Create("analysis/private/effect-panel-1.49.15.png"))encoder.Save(output);
             Require(Field<F15ReadSession?>("connectedSession") is null&&Field<CancellationTokenSource?>("operation") is null,"Layout check started device work");
-            Console.WriteLine("PASS: fixed effect controls, independently sized parameters, Custom EQ final Level/helper visible without outer scrolling at normal size, no outer wheel movement at either boundary, dark scrollbar dragging, compact layouts and pending-input preservation. No hardware commands.");
+            Console.WriteLine("PASS: slider-only effect controls, Custom EQ final Level visible without outer scrolling, contained wheel input, dark scrollbar dragging, compact layouts and value preservation. No hardware commands.");
         }
         finally{window.Close();}
     }

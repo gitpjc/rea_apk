@@ -11,6 +11,26 @@ namespace Iamp.Desktop;
 public sealed partial class MainWindow
 {
     private sealed record PresetSaveChoice(byte Destination,string Name);
+    private Window CreatePresetRecallDialog(PresetName selected)
+    {
+        var dialog=new Window {Title="Recall preset",Owner=IsVisible?this:null,Width=540,Height=310,MinWidth=420,MinHeight=280,
+            WindowStartupLocation=WindowStartupLocation.CenterOwner,Background=BackgroundBrush,Foreground=Brushes.White,FontFamily=FontFamily,FontSize=14};
+        NameScope.SetNameScope(dialog,new NameScope());
+        var body=new StackPanel();body.Children.Add(Text("Recall preset",24));
+        body.Children.Add(Text("Discard live unsaved edits and pending inputs, and recall the selected preset?",14,MutedBrush,new Thickness(0,14,0,16)));
+        body.Children.Add(Text($"{selected.SlotLabel} · {selected.Name}",18));
+        var actions=new StackPanel {Orientation=Orientation.Horizontal,HorizontalAlignment=HorizontalAlignment.Right,Margin=new Thickness(0,18,0,0)};
+        var cancelButton=Button("Cancel");cancelButton.IsCancel=true;cancelButton.IsDefault=true;cancelButton.Click+=(_,_)=>dialog.DialogResult=false;
+        var recallButton=Button("Discard and recall");recallButton.Margin=new Thickness(10,0,0,0);recallButton.Background=BlueBrush;recallButton.Foreground=Brush("#101C2B");
+        recallButton.Click+=(_,_)=>dialog.DialogResult=true;
+        AutomationProperties.SetName(recallButton,"Discard unsaved changes and recall selected preset");
+        dialog.RegisterName("PresetRecallConfirm",recallButton);dialog.RegisterName("PresetRecallCancel",cancelButton);
+        actions.Children.Add(cancelButton);actions.Children.Add(recallButton);
+        var layout=new Grid();layout.RowDefinitions.Add(new RowDefinition());layout.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
+        layout.Children.Add(new ScrollViewer {Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled});
+        Grid.SetRow(actions,1);layout.Children.Add(actions);dialog.Content=new Border {Background=BackgroundBrush,Padding=new Thickness(24),Child=layout};
+        dialog.Loaded+=(_,_)=>cancelButton.Focus();return dialog;
+    }
     private sealed record SaveDestinationOption(byte WireIndex,string Name)
     {
         public string DisplayName=>$"{PresetAddress.FromWireIndex(WireIndex).Label} · {Name}";

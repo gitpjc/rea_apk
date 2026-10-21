@@ -88,7 +88,11 @@ public sealed partial class MainWindow : Window
         var page = new StackPanel { Margin = new Thickness(32, 0, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
-        var titles = new StackPanel(); titles.Children.Add(Text("Presets", 30));
+        var titles = new WrapPanel();
+        var presetsTitle=Text("Presets",30,margin:new Thickness(0,0,18,0));
+        presetsTitle.VerticalAlignment=VerticalAlignment.Center;
+        titles.Children.Add(presetsTitle);
+        InitializeUnsavedChangesNotice(titles);
         header.Children.Add(titles);
         page.Children.Add(header);
         var cardGrid = new System.Windows.Controls.Primitives.UniformGrid { Columns=4, Margin = new Thickness(0,14,0,0) };
@@ -170,7 +174,7 @@ public sealed partial class MainWindow : Window
             </DataTemplate>
             """);
         presets.Template = (ControlTemplate)XamlReader.Parse("""
-            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" TargetType="ComboBox">
+            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Iamp.Desktop;assembly=Iamp.Desktop" TargetType="ComboBox">
               <Grid>
                 <ToggleButton x:Name="DropdownToggle" Focusable="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press">
                   <ToggleButton.Template><ControlTemplate TargetType="ToggleButton">
@@ -198,7 +202,7 @@ public sealed partial class MainWindow : Window
               </Grid>
               <ControlTemplate.Triggers>
                 <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="DropdownToggle" Property="BorderBrush" Value="#4385ff"/></Trigger>
-                <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.55"/></Trigger>
+                <MultiTrigger><MultiTrigger.Conditions><Condition Property="IsEnabled" Value="False"/><Condition Property="local:SteadyControlAppearance.KeepEnabledAppearance" Value="False"/></MultiTrigger.Conditions><Setter Property="Opacity" Value="0.55"/></MultiTrigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
             """);
@@ -302,17 +306,43 @@ public sealed partial class MainWindow : Window
     private FrameworkElement BuildConnection()
     {
         var panel = new StackPanel();
-        amplifierHeading.FontWeight=FontWeights.Bold;panel.Children.Add(amplifierHeading);panel.Children.Add(amplifierPreset);
+        amplifierHeading.FontWeight=FontWeights.Bold;
+        var headingRow=new WrapPanel();headingRow.Children.Add(amplifierHeading);
+        connectionProgressNotice.Children.Add(connectionProgress);
+        connectionProgressNotice.Children.Add(connectionProgressLabel);
+        System.Windows.Automation.AutomationProperties.SetName(connectionProgress,"Scanning, connecting and loading amplifier");
+        headingRow.Children.Add(connectionProgressNotice);panel.Children.Add(headingRow);panel.Children.Add(amplifierPreset);
         read.Background=BlueBrush; read.Foreground=Brush("#101C2B");
-        var row = new WrapPanel {Margin=new Thickness(0,8,0,0)};row.Children.Add(devices);
-        foreach(var button in new[]{scan,disconnect,read,cancel}){button.Height=36;button.Margin=new Thickness(8,0,0,4);row.Children.Add(button);}
+        var row = new Grid {HorizontalAlignment=HorizontalAlignment.Left};
+        row.ColumnDefinitions.Add(new ColumnDefinition {Width=new GridLength(1,GridUnitType.Star),MinWidth=60,MaxWidth=360});row.Children.Add(devices);
+        foreach(var button in new[]{scan,disconnect,read,cancel}){
+            row.ColumnDefinitions.Add(new ColumnDefinition {Width=GridLength.Auto});Grid.SetColumn(button,row.ColumnDefinitions.Count-1);
+            button.Height=36;button.Margin=new Thickness(8,0,0,4);row.Children.Add(button);
+        }
+        devices.Width=double.NaN;
         devices.Height=36;devices.VerticalAlignment=VerticalAlignment.Top;devices.Margin=new Thickness(0,0,0,4);
-        scan.ToolTip="Turn on the amp and disconnect phone iAMP before connecting. Use one control app at a time.";panel.Children.Add(row);
+        scan.ToolTip="Turn on the amp and disconnect phone iAMP before connecting. Use one control app at a time.";
+        panel.Children.Add(new ScrollViewer {Content=row,Margin=new Thickness(0,8,0,0),HorizontalScrollBarVisibility=ScrollBarVisibility.Auto,VerticalScrollBarVisibility=ScrollBarVisibility.Disabled});
         var manual = new WrapPanel { Margin=new Thickness(0,7,0,0) }; manual.Children.Add(Text("Bluetooth address",12,MutedBrush,new Thickness(0,8,12,0)));
         manual.Children.Add(address); address.ToolTip="12 hexadecimal digits, with optional colons or hyphens";
         manual.Children.Add(Text("Optional · overrides selection",12,MutedBrush,new Thickness(12,8,0,0)));
         amplifierDiscovery.Content=manual;panel.Children.Add(amplifierDiscovery);
-        panel.SizeChanged+=(_,_)=>devices.Width=Math.Min(360,Math.Max(100,panel.ActualWidth-8));
+        void FitConnectionProgress()
+        {
+            connectionProgressLabel.Measure(new Size(double.PositiveInfinity,double.PositiveInfinity));
+            connectionProgress.Width=Math.Min(120,Math.Max(40,panel.ActualWidth-20-connectionProgressLabel.DesiredSize.Width));
+        }
+        void FitConnectionRow()
+        {
+            var actionWidth=0d;
+            foreach(var button in new[]{scan,disconnect,read,cancel}){
+                button.Measure(new Size(double.PositiveInfinity,double.PositiveInfinity));actionWidth+=button.DesiredSize.Width;
+            }
+            row.Width=Math.Max(panel.ActualWidth,60+actionWidth);
+        }
+        panel.SizeChanged+=(_,_)=>{FitConnectionRow();FitConnectionProgress();};
+        cancel.IsVisibleChanged+=(_,_)=>FitConnectionRow();read.SizeChanged+=(_,_)=>FitConnectionRow();
+        connectionProgressLabel.SizeChanged+=(_,_)=>FitConnectionProgress();
         return new ScrollViewer {VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,
             Content=new Border { Background=PanelBrush, CornerRadius=new CornerRadius(10), Padding=new Thickness(14), Margin=new Thickness(32,12,32,0), Child=panel }};
     }
@@ -328,7 +358,7 @@ public sealed partial class MainWindow : Window
         devices.Padding=new Thickness(7,2,7,2); devices.Foreground=Brush("#15171B");
         devices.VerticalContentAlignment=VerticalAlignment.Center;devices.SnapsToDevicePixels=true;devices.UseLayoutRounding=true;
         devices.Template=(ControlTemplate)XamlReader.Parse("""
-            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" TargetType="ComboBox">
+            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Iamp.Desktop;assembly=Iamp.Desktop" TargetType="ComboBox">
               <Grid>
                 <ToggleButton x:Name="SelectorToggle" BorderBrush="#ADADAD" Focusable="False" ClickMode="Press" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                   <ToggleButton.Template><ControlTemplate TargetType="ToggleButton">
@@ -346,7 +376,7 @@ public sealed partial class MainWindow : Window
                 </Popup>
               </Grid>
               <ControlTemplate.Triggers>
-                <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.55"/></Trigger>
+                <MultiTrigger><MultiTrigger.Conditions><Condition Property="IsEnabled" Value="False"/><Condition Property="local:SteadyControlAppearance.KeepEnabledAppearance" Value="False"/></MultiTrigger.Conditions><Setter Property="Opacity" Value="0.55"/></MultiTrigger>
                 <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="SelectorToggle" Property="BorderBrush" Value="#4C9EFF"/></Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
@@ -365,7 +395,10 @@ public sealed partial class MainWindow : Window
     }
     private void End()
     {
+        connectionReadInProgress=false;
+        if(!connectionScanInProgress){connectionProgress.IsIndeterminate=false;connectionProgressNotice.Visibility=Visibility.Collapsed;}
         operation?.Dispose(); operation=null; scan.IsEnabled=read.IsEnabled=devices.IsEnabled=address.IsEnabled=!preview;cancel.IsEnabled=false;
+        FinishSteadyOperation();
         UpdateDiagnosticsState();
         UpdateComparisonState();UpdateConnectionControls();
         UpdateThresholdState();
@@ -376,14 +409,19 @@ public sealed partial class MainWindow : Window
     private async Task ScanAsync()
     {
         if(tunerActive || tunerStarting || operation is not null || preview)return;
-        if(drumReady&&!await LeaveDrumAsync()){status.Text=drumNotice??"Leave Drum before changing the amplifier connection.";return;}
-        Begin("Scanning Bluetooth…");
-        try { await ReleaseConnectionAsync();editSnapshotValid=false;var found=await F15DeviceDiscovery.ScanAsync(operation!.Token); devices.ItemsSource=found; if(found.Count>0)devices.SelectedIndex=0;
-            status.Text=found.Count>0?$"Found {found.Count} amplifier(s)":"No amplifier found. Scan again or enter an address."; }
-        catch(OperationCanceledException){status.Text="Scan cancelled";}
-        catch(Exception ex){status.Text=$"Scan failed: {ex.Message}";}
-        finally { status.Foreground=MutedBrush; End(); }
-        if(!preview && devices.Items.Count==1 && string.IsNullOrWhiteSpace(address.Text))await ReadAsync();
+        BeginConnectionScan();
+        try {
+            if(drumReady&&!await LeaveDrumAsync()){status.Text=drumNotice??"Leave Drum before changing the amplifier connection.";return;}
+            Begin("Scanning Bluetooth…");var connectAfterScan=false;
+            try { await ReleaseConnectionAsync();editSnapshotValid=false;var found=await F15DeviceDiscovery.ScanAsync(operation!.Token); devices.ItemsSource=found; if(found.Count>0)devices.SelectedIndex=0;
+                status.Text=found.Count>0?$"Found {found.Count} amplifier(s)":"No amplifier found. Scan again or enter an address.";
+                connectAfterScan=found.Count==1&&string.IsNullOrWhiteSpace(address.Text); }
+            catch(OperationCanceledException){status.Text="Scan cancelled";}
+            catch(Exception ex){status.Text=$"Scan failed: {ex.Message}";}
+            finally { status.Foreground=MutedBrush; End(); }
+            if(connectAfterScan&&!preview)await ReadAsync();
+        }
+        finally {FinishConnectionScan();}
     }
     private async Task ReadAsync()
     {
@@ -397,7 +435,7 @@ public sealed partial class MainWindow : Window
         } else if(devices.SelectedItem is F15DiscoveredDevice device) selected=device.Address;
         else {status.Text="Select an amplifier or enter its Bluetooth address.";return;}
         if(drumReady&&!await LeaveDrumAsync()){status.Text=drumNotice??"Leave Drum before refreshing the amplifier.";return;}
-        presetSaveNotice=null;Begin("Connecting…"); snapshot.Text=names.Count>0?"Previous snapshot · Reading new data…":"Reading amplifier…";
+        presetSaveNotice=null;BeginConnectionRead(); snapshot.Text=names.Count>0?"Previous snapshot · Reading new data…":"Reading amplifier…";
         batterySummary.Text="Battery · Not read";batteryReadAt=null;
         try {
             await ReleaseConnectionAsync();
@@ -432,7 +470,10 @@ public sealed partial class MainWindow : Window
         }
         catch(OperationCanceledException){status.Text="Read cancelled";snapshot.Text=SnapshotLabel();}
         catch(Exception ex){status.Text=ReadError(ex);snapshot.Text=SnapshotLabel();}
-        finally {if(!lastReadSucceeded)await ReleaseConnectionAsync();status.Foreground=MutedBrush;End();UpdateImportRecoveryAfterRead(lastReadSucceeded,selected);}
+        finally {
+            try {if(!lastReadSucceeded)await ReleaseConnectionAsync();}
+            finally {status.Foreground=MutedBrush;End();UpdateImportRecoveryAfterRead(lastReadSucceeded,selected);}
+        }
     }
     internal async Task<bool> ReadSnapshotPreviewAsync(string bluetoothAddress)
     {
@@ -443,7 +484,7 @@ public sealed partial class MainWindow : Window
     }
     private string SnapshotLabel()=>snapshotTime is {} time ? localSnapshotSource?
         $"Local snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · Offline · No amplifier changes":
-        $"Snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · {(connectedSession is null?"Disconnected":"Connected")}{(liveEditUnsaved?" · Live edit verified; not saved":"")}" : "No snapshot · Disconnected";
+        $"Snapshot · {time:dd MMM yyyy, HH:mm:ss zzz} · {(connectedSession is null?"Disconnected":"Connected")}{(HasPresetStateChanges()?" · Live edit verified; not saved":"")}" : "No snapshot · Disconnected";
     private static string ReadError(Exception error)=>error switch {
         TransferStateChangedException => "The amplifier reported a transfer-state change. This session was stopped; reconnect only when the amplifier is stable.",
         CurrentPresetChangedException => "The amplifier kept changing while reading. Leave its controls still and try again.",
@@ -534,8 +575,6 @@ public sealed partial class MainWindow : Window
         if(effect.Source.TypeCode==4 && effect.Source.Values.Count==6 && effect.Source.Values[1]==2) {
             thresholdInput.Text=PendingParameterText(effect.Source,2);
             AddMobileParameterSlider(thresholdSlider,thresholdInput,"Threshold",effect.Color);
-            var actions=new WrapPanel();actions.Children.Add(thresholdInput);applyThreshold.Margin=new Thickness(12,0,0,0);actions.Children.Add(applyThreshold);
-            effectDetails.Children.Add(actions);thresholdMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(thresholdMessage);
             UpdateThresholdState();
         }
         AddAdditionalEditors(effect.Source,initializeInputs);
@@ -615,7 +654,7 @@ public sealed partial class MainWindow : Window
         lastMutationSucceeded=false;
         if(preview || operation is not null || !editSnapshotValid || snapshotFirmware!="V1.1.9" || snapshotAddress is not {} target ||
             currentSnapshot is not {} expected || Editable808Tone() is not {} block || !TryPendingTone(out var value) || value==block.Values[3])return;
-        Begin("Checking amplifier before applying OD Tone…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
+        BeginSteadyOperation("Checking amplifier before applying OD Tone…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
             confirmed=await UseSessionAsync(target,session=>session.SetParameterAtPositionAsync(expected,block.Position,ObservedParameter.OdTone,value,operation!.Token));
@@ -640,7 +679,7 @@ public sealed partial class MainWindow : Window
             snapshotFirmware=="V1.1.9" && currentSnapshot?.WireIndex is >=1 and <=80 && selected?.WireIndex is >=1 and <=80;
         selectPreset.IsEnabled=supported && selected!.WireIndex!=currentSnapshot!.WireIndex;
         selectionMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
-            liveEditUnsaved?"Recall will discard live unsaved edits only after confirmation.":
+            HasPresetStateChanges()?"Recall will discard live unsaved edits only after confirmation.":
             !editSnapshotValid||snapshotFirmware!="V1.1.9"?presetNamesAreCached?"Cached names · Connect to refresh names and recall a preset.":"Connect to load the presets first.":
             selected is null?"Choose a preset from the dropdown.":
             selected.WireIndex==currentSnapshot!.WireIndex?"Already the current preset.":$"Recall {selected.SlotLabel} · Nothing is saved.";
@@ -661,14 +700,15 @@ public sealed partial class MainWindow : Window
         if(preview || operation is not null || !editSnapshotValid || snapshotFirmware!="V1.1.9" ||
             snapshotAddress is not {} target || currentSnapshot is not {} expected ||
             presets.SelectedItem is not PresetName selected || selected.WireIndex==expected.WireIndex) return;
-        if((liveEditUnsaved || HasPendingInputs()) && MessageBox.Show(this,"Discard live unsaved edits and pending inputs, and recall the selected preset?","Recall preset",MessageBoxButton.YesNo,MessageBoxImage.Question,MessageBoxResult.No)!=MessageBoxResult.Yes)return;
-        Begin("Checking amplifier before explicit preset recall…");
+        if((HasPresetStateChanges() || HasPendingInputs()) && CreatePresetRecallDialog(selected).ShowDialog()!=true)return;
+        BeginSteadyOperation("Checking amplifier before explicit preset recall…",loadingPreset:true);
         snapshot.Text="Previous snapshot · Connecting for explicit preset recall…";
         try {
             CurrentPresetSnapshot confirmed;
             confirmed=await UseSessionAsync(target,session=>session.SelectPresetAsync(expected,(byte)selected.WireIndex,operation!.Token));
             if(confirmed.Name!=selected.Name)throw new System.IO.IOException("Preset name differs from the loaded list.");
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=false;originalSnapshotDetail=confirmed.RawDetailPayloadHex;snapshotTime=DateTimeOffset.Now;
+            ResetPresetEntryBaseline(confirmed);
             currentPreset.Text=$"{confirmed.SlotLabel} · {confirmed.Name}";SetEffects(confirmed.Blocks);
             Filter();snapshot.Text=SnapshotLabel();status.Text=$"Preset recall verified · {confirmed.SlotLabel} · Nothing saved";
             lastMutationSucceeded=true;
@@ -687,7 +727,7 @@ public sealed partial class MainWindow : Window
         if(preview || operation is not null || !editSnapshotValid || snapshotFirmware!="V1.1.9" ||
             snapshotAddress is not {} target || currentSnapshot is not {} expected || EditableNoiseKiller() is not {} block ||
             !TryPendingThreshold(out var value) || value==block.Values[2]) return;
-        Begin("Checking amplifier before applying threshold…");
+        BeginSteadyOperation("Checking amplifier before applying threshold…");
         snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
@@ -714,12 +754,12 @@ public sealed partial class MainWindow : Window
     {
         var button=new Button{Content=text,Padding=new Thickness(14,8,14,8),Background=Brush("#343B46"),Foreground=Brushes.White,BorderBrush=Brushes.Transparent,BorderThickness=new Thickness(2),Cursor=System.Windows.Input.Cursors.Hand,HorizontalContentAlignment=HorizontalAlignment.Center};
         button.Template=(ControlTemplate)XamlReader.Parse("""
-            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" TargetType="Button">
+            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:local="clr-namespace:Iamp.Desktop;assembly=Iamp.Desktop" TargetType="Button">
               <Border x:Name="Surface" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" Padding="{TemplateBinding Padding}">
                 <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
               </Border>
               <ControlTemplate.Triggers>
-                <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Surface" Property="Opacity" Value="0.45"/></Trigger>
+                <MultiTrigger><MultiTrigger.Conditions><Condition Property="IsEnabled" Value="False"/><Condition Property="local:SteadyControlAppearance.KeepEnabledAppearance" Value="False"/></MultiTrigger.Conditions><Setter TargetName="Surface" Property="Opacity" Value="0.45"/></MultiTrigger>
                 <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="Opacity" Value="0.8"/></Trigger>
                 <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Surface" Property="BorderBrush" Value="#4C9EFF"/><Setter TargetName="Surface" Property="BorderThickness" Value="2"/></Trigger>
               </ControlTemplate.Triggers>

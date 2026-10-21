@@ -1,5 +1,77 @@
 [
   {
+    "version": "1.51.1",
+    "changedAt": "2026-10-21T03:06:38.389Z",
+    "summary": "Keep controls visually steady while applying effect changes and loading presets.",
+    "details": "Preserve the appearance of available buttons, dropdowns and effect sliders during live parameter, power, model and chain changes and preset recall. Start preservation at the slider gesture so its pending-value phase does not grey other controls. Keep conflicting actions blocked and retain pre-existing unavailable styling. Show compact Applying or Loading preset feedback in the existing status area, reserving its height, and restore normal styling after completion or failure. Verify actual template opacity and slider colors, pending/active states, command locks, failure cleanup and keyboard/layout/unsaved regressions offline; rebuild app and installer."
+  },
+  {
+    "version": "1.51.0",
+    "changedAt": "2026-10-21T02:58:07.352Z",
+    "summary": "Simplify all effect parameters to sliders and displayed values.",
+    "details": "Remove effect parameter manual input fields, Apply buttons and pending/confirmed helper messages from Noise Threshold, OD Tone and every shared model editor, including grouped Custom EQ controls. Preserve verified wire formats, mobile ranges and supported steps, mouse-release and keyboard-release live application, and the state-based unsaved preset warning. Apply a keyboard adjustment when focus leaves before key release so a hidden manual action is never needed. Mixer controls are unchanged. Verify slider-only parameter layout, final-control scrolling, keyboard commits/focus and model editing regressions offline; rebuild app and installer."
+  },
+  {
+    "version": "1.50.15",
+    "changedAt": "2026-10-21T02:51:45.750Z",
+    "summary": "Keep connection Cancel on one row and hide it during effect and preset edits.",
+    "details": "Limit the shared-header Cancel button to Bluetooth scan and amplifier connection/refresh reads. Replace the wrapping connection controls with a single grid row, shrink the amplifier dropdown before the action buttons, and keep Cancel immediately after Refresh amplifier. Provide horizontal access only at very narrow widths where the buttons themselves cannot fit. Verify no effect-edit header height shift, connection Cancel visibility and same-row placement, compact action accessibility and keyboard focus regressions; rebuild app and installer."
+  },
+  {
+    "version": "1.50.14",
+    "changedAt": "2026-10-21T02:38:35.144Z",
+    "summary": "Keep effect sliders keyboard-accessible after live value changes.",
+    "details": "Restore slider keyboard focus after live apply temporarily disables and rebuilds the editor, while respecting focus moved to another control or window. Explicitly handle arrow keys by one supported step, Page Up/Down by ten and Home/End at bounds, applying once when the adjustment key is released. Retain manual inputs unchanged. Reproduce the focus-loss bug offline and verify focus retention, arrow direction, key release and bounds; run affected layout checks and rebuild app/installer."
+  },
+  {
+    "version": "1.50.13",
+    "changedAt": "2026-10-21T02:19:37.593Z",
+    "summary": "Use an app-styled confirmation for discarding edits and recalling a preset.",
+    "details": "Replace the Windows message box with a dark owned dialog matching the existing save/overwrite dialogs, including app typography, spacing and buttons. Show the selected destination and explicit Cancel and Discard and recall actions. Keep Cancel focused and the default; closing or cancelling leaves edits untouched. Verify modal confirm/cancel/close results and preset selection behavior offline; rebuild app and installer."
+  },
+  {
+    "version": "1.50.12",
+    "changedAt": "2026-10-21T02:12:35.339Z",
+    "summary": "Place the connection message to the right of the progress bar on one line.",
+    "details": "Move scanning/connecting text after the progress bar, remove its text wrapping and width cap, and shorten the bar only when needed to fit compact headers. Preserve immediate scan feedback and connection lifecycle cleanup. Verify message order, single-line text and compact header bounds; rebuild app and installer."
+  },
+  {
+    "version": "1.50.11",
+    "changedAt": "2026-10-21T02:09:29.272Z",
+    "summary": "Start amplifier progress immediately when Scan Bluetooth is pressed.",
+    "details": "Show Scanning Bluetooth and animated progress before the first scan await, retain the indicator through automatic connection and loading, then hide it at the end. Clear it when no amplifier is found, scan is cancelled or fails, or leaving Drum blocks the scan. Only auto-connect after a successful single-device discovery, avoiding stale results after cancellation or failure. Verify scan-to-connect continuity, terminal cleanup and header layout offline; rebuild app and installer."
+  },
+  {
+    "version": "1.50.10",
+    "changedAt": "2026-10-21T02:03:02.042Z",
+    "summary": "Show connection progress in the shared amplifier header.",
+    "details": "Display a blue indeterminate progress indicator and Connecting label beside the amplifier heading throughout connection and initial amplifier loading, including refresh reads. Hide it and stop its animation on completion, cancellation or failure. Keep unrelated operations separate and allow the header to wrap at compact widths. Verify connection lifecycle visibility and shared-header layout offline; rebuild desktop app and installer."
+  },
+  {
+    "version": "1.50.9",
+    "changedAt": "2026-10-21T01:57:53.761Z",
+    "summary": "Align the visible unsaved warning text with the Presets text.",
+    "details": "Use rendered font glyph bounds to move the warning box down to the visible centre of the Presets heading, keeping the warning text centred within its border. Account for different font sizes and weights rather than aligning their line boxes. Verify both visible text centres and text-to-border centring at normal and compact widths; rebuild app and installer."
+  },
+  {
+    "version": "1.50.8",
+    "changedAt": "2026-10-21T01:49:44.608Z",
+    "summary": "Vertically align the unsaved warning with the Presets heading.",
+    "details": "Centre the Presets heading vertically in its shared wrapping row so its centre matches the Unsaved changes exist badge. Preserve the warning animation and state comparison behavior. Verify aligned centres at desktop and compact widths, run the affected effect layout checks, and rebuild the desktop app and installer."
+  },
+  {
+    "version": "1.50.7",
+    "changedAt": "2026-10-21T01:41:10.584Z",
+    "summary": "Determine unsaved preset changes by comparing actual state with the entry baseline.",
+    "details": "Retain an immutable per-entry preset baseline across same-preset refreshes and compare the name, ordered models, enabled states, parameter words and other opaque preset data directly. Automatically clear the flashing warning when all edits are undone, including parameter changes, model/on-off changes, moves and added/removed effects. A re-added model with different values remains dirty. Ignore only the mobile-verified derived Boolean Amp companion word for UI equality; strict protocol write/readback checks remain unchanged. Reset the baseline on successful saving/importing and preset/device changes, preserve it on unsaved cancellation restoration, and keep navigation discard prompts consistent. Verify undo sequences, partial undo, frozen storage, device separation, refreshed/saved baselines, pending/mixer separation and affected UI regressions without hardware changes; rebuild app and installer."
+  },
+  {
+    "version": "1.50.6",
+    "changedAt": "2026-10-21T01:29:31.160Z",
+    "summary": "Show a prominent flashing warning for unsaved preset changes.",
+    "details": "Add the exact message Unsaved changes exist beside the Presets heading in a bold amber bordered badge with a repeating opacity animation. Show it for live unsaved preset edits and pending preset parameter values, retain it across effect browsing, and clear it when changes are saved, reverted or the active preset changes. Exclude mixer-only changes and local snapshot/preview data. Stop the animation when hidden or closed, and wrap the heading at narrow widths. Verify dirty/pending/clean transitions, save/switch behavior, mixer exclusion and affected save/transfer/layout checks offline; inspect the own-app render and rebuild app/installer."
+  },
+  {
     "version": "1.50.5",
     "changedAt": "2026-10-20T09:45:46.092Z",
     "summary": "Use hyphens instead of spaces in preset export filenames.",

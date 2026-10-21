@@ -106,8 +106,7 @@ public sealed partial class MainWindow
             if(OdParameters.IsKnownLayout(displayed) && setting.ValueIndex==3) {
                 toneInput.Text=PendingParameterText(displayed,3);
                 AddMobileParameterSlider(toneSlider,toneInput,"Tone",EffectPresentation.From(displayed).Color);
-                var toneActions=new WrapPanel();toneActions.Children.Add(toneInput);applyTone.Margin=new Thickness(12,0,0,0);toneActions.Children.Add(applyTone);
-                effectDetails.Children.Add(toneActions);toneMessage.Margin=new Thickness(0,9,0,0);effectDetails.Children.Add(toneMessage);UpdateToneState();continue;
+                UpdateToneState();continue;
             }
             var editor=AdditionalEditors.FirstOrDefault(e=>MatchesEditorProfile(e,displayed) && e.ParameterIndex==setting.ValueIndex);
             if(editor is null)continue;
@@ -124,8 +123,6 @@ public sealed partial class MainWindow
                 previousGroup=group;
             }
             AddMobileParameterSlider(editor.Slider,editor.Input,editor.Label,EffectPresentation.From(displayed).Color,host,editor.EqSpec?.Unit??editor.Unit);
-            var actions=new WrapPanel();actions.Children.Add(editor.Input);editor.Apply.Margin=new Thickness(12,0,0,0);actions.Children.Add(editor.Apply);
-            host.Children.Add(actions);editor.Message.Margin=new Thickness(0,7,0,0);host.Children.Add(editor.Message);
         }
         UpdateAdditionalEditorStates();
     }
@@ -170,7 +167,7 @@ public sealed partial class MainWindow
         lastMutationSucceeded=false;
         if(preview || operation is not null || !editSnapshotValid || snapshotFirmware!="V1.1.9" || snapshotAddress is not {} target ||
             currentSnapshot is not {} expected || EditableBlock(editor) is not {} block || !editor.TryValue(out var value) || value==block.Values[editor.ParameterIndex])return;
-        Begin($"Checking amplifier before applying {editor.Label}…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
+        BeginSteadyOperation($"Checking amplifier before applying {editor.Label}…");snapshot.Text="Previous snapshot · Connecting for explicit live edit…";
         try {
             CurrentPresetSnapshot confirmed;
             var parameter=Enum.GetValues<ObservedParameter>().Single(p=>ObservedParameterCommands.Definition(p).Position==editor.ProfilePosition && ObservedParameterCommands.Definition(p).ValueIndex==editor.ParameterIndex);

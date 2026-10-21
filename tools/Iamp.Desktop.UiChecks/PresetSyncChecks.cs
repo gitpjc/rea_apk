@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Windows;
 using System.Windows.Controls;
 using Iamp.Desktop;
 using Iamp.Protocol;
@@ -11,6 +12,23 @@ internal static class PresetSyncChecks
     {
         var window=new MainWindow();
         try {
+            foreach(var action in new[]{"Cancel","Recall","Close"}){
+                var dialog=(Window)typeof(MainWindow).GetMethod("CreatePresetRecallDialog",Flags)!.Invoke(window,[new PresetName(4,"British Lead Solo")])!;
+                var cancel=(Button)dialog.FindName("PresetRecallCancel");var recall=(Button)dialog.FindName("PresetRecallConfirm");
+                if(dialog.Background!=window.Background||!cancel.IsCancel||!cancel.IsDefault||recall.IsDefault)
+                    throw new InvalidOperationException("Recall confirmation styling or safe default differs");
+                dialog.Loaded+=(_,_)=>dialog.Dispatcher.BeginInvoke(()=>{
+                    if(action=="Cancel"){
+                        var content=(FrameworkElement)dialog.Content;content.UpdateLayout();
+                        var bitmap=new System.Windows.Media.Imaging.RenderTargetBitmap((int)Math.Ceiling(content.ActualWidth),(int)Math.Ceiling(content.ActualHeight),96,96,System.Windows.Media.PixelFormats.Pbgra32);bitmap.Render(content);
+                        var encoder=new System.Windows.Media.Imaging.PngBitmapEncoder();encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
+                        System.IO.Directory.CreateDirectory("analysis/private");using var output=System.IO.File.Create("analysis/private/recall-dialog-1.50.13.png");encoder.Save(output);
+                    }
+                    if(action=="Close")dialog.Close();
+                    else (action=="Recall"?recall:cancel).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                });
+                if((dialog.ShowDialog()==true)!=(action=="Recall"))throw new InvalidOperationException("Recall confirmation result differs for "+action);
+            }
             void Set(string n,object value)=>typeof(MainWindow).GetField(n,Flags)!.SetValue(window,value);
             T Field<T>(string n)=>(T)typeof(MainWindow).GetField(n,Flags)!.GetValue(window)!;
             void Filter()=>typeof(MainWindow).GetMethod("Filter",Flags)!.Invoke(window,null);
@@ -37,7 +55,7 @@ internal static class PresetSyncChecks
             Set("currentSnapshot",Current(4,"British Lead Solo"));Filter();
             Require((dropdown.SelectedItem as PresetName)?.WireIndex==4,"Return to original preset did not update the closed field");
             Require(dropdown.Items.OfType<PresetName>().Single(x=>x.IsCurrent).WireIndex==4,"Return check marker differs");
-            Console.WriteLine("Preset synchronization UI checks passed: external changes, active marker, filtering, popup browsing and return.");
+            Console.WriteLine("Preset synchronization UI checks passed: styled recall confirm/cancel/close and safe default; external changes, active marker, filtering, popup browsing and return.");
         }finally{window.Close();}
     }
 }

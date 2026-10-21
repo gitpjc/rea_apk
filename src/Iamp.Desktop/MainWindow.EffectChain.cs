@@ -197,7 +197,7 @@ public sealed partial class MainWindow
         if(!CanEditChain || currentSnapshot is not {} expected || snapshotAddress is not {} target)return;
         var original=expected.Blocks.FirstOrDefault(b=>b.Position==position && b.TypeCode!=0);
         if(original is null || (original.TypeCode==choice.TypeCode && original.Values[1]==choice.Model))return;
-        Begin("Changing effect model: checking the current amplifier chain…");
+        BeginSteadyOperation("Changing effect model: checking the current amplifier chain…");
         try {
             var confirmed=await UseSessionAsync(target,s=>s.ReplaceEffectAsync(expected,position,choice,operation!.Token));
             currentSnapshot=confirmed;editSnapshotValid=true;liveEditUnsaved=confirmed.RawDetailPayloadHex!=originalSnapshotDetail;snapshotTime=DateTimeOffset.Now;
@@ -214,7 +214,7 @@ public sealed partial class MainWindow
         lastMutationSucceeded=false;
         if(!CanEditChain || currentSnapshot is not {} expected || snapshotAddress is not {} target)return;
         if(destination==position)return;
-        Begin($"{action}: checking the current amplifier chain…");
+        BeginSteadyOperation($"{action}: checking the current amplifier chain…");
         try {
             var confirmed=await UseSessionAsync(target,s=>addition is not null?s.AddEffectAsync(expected,addition,operation!.Token):
                 destination is {} to?s.MoveEffectAsync(expected,position,to,operation!.Token):s.RemoveEffectAsync(expected,position,operation!.Token));

@@ -26,7 +26,7 @@ public sealed partial class MainWindow
             <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"><TextBlock Text="{Binding DisplayName}" Margin="8,6" TextTrimming="CharacterEllipsis"/></DataTemplate>
             """);
         effectFilter.Template=(ControlTemplate)XamlReader.Parse("""
-            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" TargetType="ComboBox">
+            <ControlTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Iamp.Desktop;assembly=Iamp.Desktop" TargetType="ComboBox">
               <Grid>
                 <ToggleButton Focusable="False" IsChecked="{Binding IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press">
                   <ToggleButton.Template><ControlTemplate TargetType="ToggleButton">
@@ -42,7 +42,7 @@ public sealed partial class MainWindow
                   </Border>
                 </Popup>
               </Grid>
-              <ControlTemplate.Triggers><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.55"/></Trigger></ControlTemplate.Triggers>
+              <ControlTemplate.Triggers><MultiTrigger><MultiTrigger.Conditions><Condition Property="IsEnabled" Value="False"/><Condition Property="local:SteadyControlAppearance.KeepEnabledAppearance" Value="False"/></MultiTrigger.Conditions><Setter Property="Opacity" Value="0.55"/></MultiTrigger></ControlTemplate.Triggers>
             </ControlTemplate>
             """);
         TextSearch.SetTextPath(effectFilter,"Name");

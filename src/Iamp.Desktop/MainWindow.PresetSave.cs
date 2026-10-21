@@ -25,10 +25,11 @@ public sealed partial class MainWindow
 
     private void UpdateSaveState()
     {
+        UpdateUnsavedChangesNotice();
         var supported=!preview && !localSnapshotSource && editSnapshotValid && snapshotAddress.HasValue && SupportedSaveSnapshot();
         savePreset.IsEnabled=supported && operation is null && !presetSaveDialogOpen && !HasPendingInputs();
         UpdatePresetTransferState();
-        saveMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?"Operation in progress…":
+        saveMessage.Text=preview?"Preview only · No amplifier commands":operation is not null?(steadyOperationMessage??"Operation in progress…"):
             !supported?(presetSaveNotice??(!editSnapshotValid && currentSnapshot is not null?
                 "Refresh amplifier to verify its current settings before saving or renaming.":
                 "Connect a supported V1.1.9 amplifier before saving or renaming a preset.")):
@@ -78,6 +79,7 @@ public sealed partial class MainWindow
             }
             currentSnapshot=confirmed;originalSnapshotDetail=confirmed.RawDetailPayloadHex;
             liveEditUnsaved=false;editSnapshotValid=sourceIndexConfirmed;snapshotTime=DateTimeOffset.Now;
+            ResetPresetEntryBaseline(confirmed);
             UpdateSavedPresetLibrary(confirmed,storedSource,sourceIndexConfirmed);
             if(!sourceIndexConfirmed) {
                 presetEffectIndex=presetEffectIndex.Where(p=>p.Key!=expected.WireIndex).ToDictionary(p=>p.Key,p=>p.Value);

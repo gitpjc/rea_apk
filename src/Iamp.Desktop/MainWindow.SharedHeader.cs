@@ -15,7 +15,7 @@ public sealed partial class MainWindow
     private void UpdateSharedHeader()
     {
         var connected=connectedSession is {IsAvailable:true};
-        cancel.Visibility=operation is null?Visibility.Collapsed:Visibility.Visible;
+        cancel.Visibility=operation is not null&&(connectionScanInProgress||connectionReadInProgress)?Visibility.Visible:Visibility.Collapsed;
         var name=devices.Items.OfType<F15DiscoveredDevice>().FirstOrDefault(d=>d.Address==connectedAddress)?.Name;
         amplifierHeading.Text=connected?$"{(string.IsNullOrWhiteSpace(name)?"Amplifier":name)} · Connected via Bluetooth":"Amplifier · Disconnected";
         if(preview){amplifierHeading.Text="Demo · No amplifier connected";amplifierDiscovery.IsExpanded=false;}
