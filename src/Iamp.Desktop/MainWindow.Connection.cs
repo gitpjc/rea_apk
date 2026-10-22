@@ -100,6 +100,7 @@ public sealed partial class MainWindow
         ResetTunerUiForDisconnect();
         refreshTimer.Stop();pollCancellation?.Cancel();
         var session=connectedSession;connectedSession=null;connectedAddress=null;
+        WatchFootswitchSession(null);
         if(session is not null)await session.DisposeAsync();
         UpdateConnectionControls();
     }

@@ -25,6 +25,8 @@ internal static class Program
                 try{codec.GetMethod("ParseImport",BindingFlags.NonPublic|BindingFlags.Static)!.Invoke(null,[System.IO.File.ReadAllText(args[1])]);Console.WriteLine("PASS: preset file validates completely; no amplifier commands.");return 0;}
                 catch(TargetInvocationException ex){Console.WriteLine($"Rejected: {ex.InnerException?.Message}\nCause: {ex.InnerException?.InnerException?.Message}");return 1;}
             }
+            if(args.Contains("--footswitch")) {FootswitchChecks.Run();return 0;}
+            if(args.Contains("--f4-diagram")) {F4PresetPanelChecks.Run();return 0;}
             if(args.Contains("--steady-operations")) {SteadyOperationChecks.Run();return 0;}
             if(args.Contains("--slider-keyboard")) {SliderKeyboardChecks.Run();return 0;}
             if(args.Contains("--effect-layout")) {EffectPanelLayoutChecks.Run();return 0;}

@@ -11,6 +11,16 @@ internal static class Program
     public static int Main(string[] args)
     {
         var app = new Application();
+        if(args.Length==3&&args[0] is "--footswitch-check" or "--footswitch-watch"){
+            if(System.Diagnostics.Process.GetProcessesByName("Iamp.Desktop").Any(p=>p.Id!=Environment.ProcessId))throw new InvalidOperationException("Close the existing desktop app before its single-window Footswitch check.");
+            app.ShutdownMode=ShutdownMode.OnExplicitShutdown;var window=new MainWindow();window.Show();
+            _=app.Dispatcher.InvokeAsync(async()=>{
+                var code=0;
+                try{await window.RunFootswitchCheckAsync(args[1],args[2],args[0]=="--footswitch-watch");}
+                catch(Exception error){Console.Error.WriteLine(error);code=2;}
+                finally{await window.ReleasePreviewConnectionAsync();window.Close();app.Shutdown(code);}
+            });return app.Run();
+        }
         if(args.Length==3 && args[0]=="--drum-check") {
             if(System.Diagnostics.Process.GetProcessesByName("Iamp.Desktop").Any(p=>p.Id!=Environment.ProcessId))
                 throw new InvalidOperationException("Close the existing iAMP Desktop before starting its single-window Drum check.");

@@ -12,6 +12,7 @@ public sealed partial class F15ReadSession
 
     private void OnUnsolicitedPayload(byte[] payload)
     {
+        ObserveFootswitchStatus(payload);
         if (DiagnosticJournal.TunerNotificationKind(payload) is {} kind)
             diagnostics?.Record(kind, DiagnosticOutcome.Completed);
         if (IsTunerActive && payload.Length > 0 && (payload[0] == 0x45 || payload.Length == 2 && payload[0] == 0x43 && payload[1] is 0 or 2))

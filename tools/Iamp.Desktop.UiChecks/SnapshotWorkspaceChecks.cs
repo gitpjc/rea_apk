@@ -92,7 +92,7 @@ internal static class SnapshotWorkspaceChecks
             Require(progressNotice.Visibility==Visibility.Collapsed&&Field<Button>("cancel").Visibility==Visibility.Collapsed,"Effect or preset operation shows connection progress/Cancel");Call("End");
             var status=Field<TextBlock>("status");status.Text="Tuner stopped";
             Require(status.Parent is null,"Dynamic status line is still part of the UI");
-            foreach(var pageName in new[]{"libraryScroll","informationScroll","mixerScroll","tunerScroll","drumScroll","historyScroll","snapshotsScroll","settingsScroll"})
+            foreach(var pageName in new[]{"libraryScroll","informationScroll","mixerScroll","tunerScroll","drumScroll","footswitchScroll","historyScroll","snapshotsScroll","settingsScroll"})
             {
                 var page=Field<ScrollViewer>(pageName);Finish((Task)Call("NavigateToPageAsync",page)!);
                 Require(page.Visibility==Visibility.Visible&&Grid.GetRow(page)==1,"Navigation hides wrong page");
@@ -164,7 +164,7 @@ internal static class SnapshotWorkspaceChecks
             var connectingEncoder=new PngBitmapEncoder();connectingEncoder.Frames.Add(BitmapFrame.Create(connectingBitmap));
             using(var output=File.Create(Path.Combine(directory,"connection-progress-1.50.10.png")))connectingEncoder.Save(output);
             Call("End");
-            Console.WriteLine("PASS: connection progress lifecycle/cleanup and header visibility/action order on all eight pages at three sizes; Presets rename; isolated offline snapshot open/export/compare; malformed-file preservation; fixed capture change notice; editor, target and pending inputs preserved. No device commands.");
+            Console.WriteLine("PASS: connection progress lifecycle/cleanup and header visibility/action order on all nine pages at three sizes; Presets rename; isolated offline snapshot open/export/compare; malformed-file preservation; fixed capture change notice; editor, target and pending inputs preserved. No device commands.");
         }
         finally{File.Delete(invalid);File.Delete(exported);window.Close();SynchronizationContext.SetSynchronizationContext(previousContext);}
     }

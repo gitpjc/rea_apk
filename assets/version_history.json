@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.53.0",
+    "changedAt": "2026-10-22T06:37:19.171Z",
+    "summary": "Recall presets from clickable F4 switches and browse banks on the Footswitch page.",
+    "details": "Make the A/B/C/D diagram switches keyboard-accessible buttons. Previous bank and Next bank browse banks 0–19 without changing the amplifier until a switch is selected. Show Selected bank while browsing and retain the actual active preset label/highlight. Keep browsing stable across unchanged polls and follow external patch changes. Reuse the existing verified preset recall workflow directly, independent of Presets search/effect filters, including unsaved-change confirmation, complete readback, baseline reset and failure handling. Guard offline, busy, unknown-name and current-patch actions. Verify slot targeting, bank limits, polling, external synchronization, compact bounds, recall confirmations and steady-operation regressions offline. No new hardware mutation acceptance is claimed."
+  },
+  {
+    "version": "1.52.0",
+    "changedAt": "2026-10-22T06:16:13.987Z",
+    "summary": "Add MOOER F4 pairing, live status and current-bank footswitch diagram.",
+    "details": "Add Footswitch below Drum with amplifier-reported connected/disconnected/unknown status. Pair F4 starts amplifier pairing after A+C instructions and confirmation; Forget F4 confirms the loss of footswitch control before removing pairing. Keep progress in the styled dialog and require actual status notification after ACK. Support either ACK/status order, duplicates, timeout/stop-waiting and connection loss without automatic retry or unpair cleanup. Preserve existing F4-triggered preset polling. Mobile code43/F15i V1.1.9 commands were captured during a user-authorized cycle and pairing was restored with user confirmation; add sanitized fixtures, focused protocol/UI checks and a read-only desktop status/preset-preservation check. Scope excludes unverified F4 assignments, external Tools-mode integration and looper control. Show a read-only F4 diagram with A/B/C/D preset names, current bank and active patch, with explicit retained/unknown states and compact layouts. Use the mobile-observed startup status read and actual delayed connection notifications. Normal Windows read-only checks report connected; the user-confirmed F4 B/A cycle updates 0A to 0B and back, with every original preset state/detail byte preserved. Windows pairing/unpairing hardware roundtrip is not claimed from mobile evidence alone."
+  },
+  {
     "version": "1.51.1",
     "changedAt": "2026-10-21T03:06:38.389Z",
     "summary": "Keep controls visually steady while applying effect changes and loading presets.",

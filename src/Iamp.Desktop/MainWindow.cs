@@ -82,9 +82,10 @@ public sealed partial class MainWindow : Window
         Grid.SetColumn(mixerScroll,1);root.Children.Add(mixerScroll);BuildMixerPage();
         Grid.SetColumn(tunerScroll,1);root.Children.Add(tunerScroll);BuildTunerPage();
         Grid.SetColumn(drumScroll,1);root.Children.Add(drumScroll);BuildDrumPage();
+        Grid.SetColumn(footswitchScroll,1);root.Children.Add(footswitchScroll);BuildFootswitchPage();
         Grid.SetColumn(snapshotsScroll,1);root.Children.Add(snapshotsScroll);BuildSnapshotsPage();
         Grid.SetColumn(settingsScroll,1);root.Children.Add(settingsScroll);BuildSettingsPage();
-        foreach(var contentPage in new[]{libraryScroll,historyScroll,informationScroll,mixerScroll,tunerScroll,drumScroll,snapshotsScroll,settingsScroll})Grid.SetRow(contentPage,1);
+        foreach(var contentPage in new[]{libraryScroll,historyScroll,informationScroll,mixerScroll,tunerScroll,drumScroll,footswitchScroll,snapshotsScroll,settingsScroll})Grid.SetRow(contentPage,1);
         var page = new StackPanel { Margin = new Thickness(32, 0, 32, 24) }; scroll.Content = page;
         var header = new Grid(); header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});header.RowDefinitions.Add(new RowDefinition {Height=GridLength.Auto});
@@ -291,9 +292,9 @@ public sealed partial class MainWindow : Window
         var toolsSection=new StackPanel {Margin=new Thickness(0,6,0,4)};
         System.Windows.Automation.AutomationProperties.SetName(toolsSection,"Tools");
         toolsSection.Children.Add(Text("Tools",13,MutedBrush,new Thickness(14,0,0,4)));
-        drumNavigation.Padding=tunerNavigation.Padding=new Thickness(28,7,14,7);
+        drumNavigation.Padding=tunerNavigation.Padding=footswitchNavigation.Padding=new Thickness(28,7,14,7);
         toolsSection.Children.Add(tunerNavigation);
-        toolsSection.Children.Add(drumNavigation);side.Children.Add(toolsSection);
+        toolsSection.Children.Add(drumNavigation);toolsSection.Children.Add(footswitchNavigation);side.Children.Add(toolsSection);
         side.Children.Add(historyNavigation);
         side.Children.Add(snapshotsNavigation);
         exportDiagnostics.Margin=new Thickness(0,18,0,0);
@@ -445,7 +446,11 @@ public sealed partial class MainWindow : Window
                 var session=await F15ReadSession.ConnectAsync(selected,operation!.Token,diagnostics);
                 if(closing){await session.DisposeAsync();throw new OperationCanceledException();}
                 connectedSession=session;connectedAddress=selected;
+                WatchFootswitchSession(session);
                 status.Text="Reading amplifier information…"; identity=await session.ReadIdentityAsync(operation.Token);
+                if(identity.Firmware=="V1.1.9"){
+                    status.Text="Reading footswitch status…";await session.ReadFootswitchStatusAsync(operation.Token);
+                }
                 status.Text="Reading preset names…"; loaded=await session.ReadPresetNamesAsync(operation.Token);
                 status.Text="Reading current preset…";current=await session.ReadCurrentPresetAsync(operation.Token);
                 if(identity.Firmware=="V1.1.9") {
@@ -694,12 +699,13 @@ public sealed partial class MainWindow : Window
         catch(NotSupportedException) {return false;}
         catch(FormatException) {return false;}
     }
-    private async Task SelectPresetAsync()
+    private Task SelectPresetAsync()=>RecallPresetAsync(presets.SelectedItem as PresetName);
+    private async Task RecallPresetAsync(PresetName? requested)
     {
         lastMutationSucceeded=false;
         if(preview || operation is not null || !editSnapshotValid || snapshotFirmware!="V1.1.9" ||
             snapshotAddress is not {} target || currentSnapshot is not {} expected ||
-            presets.SelectedItem is not PresetName selected || selected.WireIndex==expected.WireIndex) return;
+            requested is not PresetName selected || selected.WireIndex==expected.WireIndex) return;
         if((HasPresetStateChanges() || HasPendingInputs()) && CreatePresetRecallDialog(selected).ShowDialog()!=true)return;
         BeginSteadyOperation("Checking amplifier before explicit preset recall…",loadingPreset:true);
         snapshot.Text="Previous snapshot · Connecting for explicit preset recall…";
@@ -750,7 +756,7 @@ public sealed partial class MainWindow : Window
     }
     private static Brush Brush(string hex)=>new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
     private static TextBlock Text(string text,double size,Brush? color=null,Thickness? margin=null)=>new(){Text=text,FontSize=size,Foreground=color??Brushes.White,Margin=margin??new Thickness(0),TextWrapping=TextWrapping.Wrap};
-    private static Button Button(string text)
+    internal static Button Button(string text)
     {
         var button=new Button{Content=text,Padding=new Thickness(14,8,14,8),Background=Brush("#343B46"),Foreground=Brushes.White,BorderBrush=Brushes.Transparent,BorderThickness=new Thickness(2),Cursor=System.Windows.Input.Cursors.Hand,HorizontalContentAlignment=HorizontalAlignment.Center};
         button.Template=(ControlTemplate)XamlReader.Parse("""

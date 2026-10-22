@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "source": "Mobile iAMP V1.6.1, F15i V1.1.9; user-authorized unpair/re-pair capture analysis/private/f4-mobile-pair-btsnoop.log.frames.json. Original pairing was restored in the mobile app.",
+  "limitations": "Observed startup request 03, separate six-byte 04 reply and 97 00/01 notifications, plus 95 00/01 pairing commands and 96 01 acknowledgement. The startup 04 global fields are uninterpreted and do not imply F4 status. Connection is not stored pairing. No dedicated status query, cancellation command or additional acknowledgement values are inferred. Entries retain the relevant frames rather than the complete capture.",
+  "startupSource": "analysis/private/f4-mobile-restoring-btsnoop.log.frames.json; two observed mobile connections. Status 97 arrives independently of 04; unrelated intervening traffic is omitted.",
+  "startupDisconnected": [
+    { "direction": "outgoing", "record": 410, "frameHex": "AA55010003F8AC", "payloadHex": "03" },
+    { "direction": "incoming", "record": 412, "frameHex": "AA550200970093EB", "payloadHex": "9700" },
+    { "direction": "incoming", "record": 420, "frameHex": "AA550600040100000000D3C4", "payloadHex": "040100000000" }
+  ],
+  "startupConnected": [
+    { "direction": "outgoing", "record": 3197, "frameHex": "AA55010003F8AC", "payloadHex": "03" },
+    { "direction": "incoming", "record": 3199, "frameHex": "AA550200970183CA", "payloadHex": "9701" },
+    { "direction": "incoming", "record": 3204, "frameHex": "AA550600040100000000D3C4", "payloadHex": "040100000000" }
+  ],
+  "unpair": [
+    { "direction": "outgoing", "record": 3738, "frameHex": "AA5502009500F589", "payloadHex": "9500" },
+    { "direction": "incoming", "record": 3741, "frameHex": "AA550200970093EB", "payloadHex": "9700" },
+    { "direction": "incoming", "record": 3742, "frameHex": "AA550200970093EB", "payloadHex": "9700" },
+    { "direction": "incoming", "record": 3743, "frameHex": "AA5502009601B0FB", "payloadHex": "9601" },
+    { "direction": "incoming", "record": 3744, "frameHex": "AA550200970093EB", "payloadHex": "9700" }
+  ],
+  "pair": [
+    { "direction": "outgoing", "record": 3749, "frameHex": "AA5502009501E5A8", "payloadHex": "9501" },
+    { "direction": "incoming", "record": 3752, "frameHex": "AA5502009601B0FB", "payloadHex": "9601" },
+    { "direction": "incoming", "record": 3753, "frameHex": "AA550200970183CA", "payloadHex": "9701" },
+    { "direction": "incoming", "record": 3754, "frameHex": "AA550200970183CA", "payloadHex": "9701" },
+    { "direction": "incoming", "record": 3755, "frameHex": "AA550200970183CA", "payloadHex": "9701" }
+  ]
+}

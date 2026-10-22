@@ -28,5 +28,6 @@ public sealed partial class MainWindow
         if(connectedAddress is {} target)amplifierHeading.ToolTip=$"Bluetooth address · {target:X12}";
         else amplifierHeading.ToolTip=null;
         UpdateSnapshotContext();
+        UpdateFootswitchState();
     }
 }

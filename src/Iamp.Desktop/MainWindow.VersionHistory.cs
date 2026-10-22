@@ -13,7 +13,7 @@ public sealed partial class MainWindow
 
     private void ConfigureNavigation()
     {
-        foreach(var button in new[]{libraryNavigation,informationNavigation,mixerNavigation,drumNavigation,tunerNavigation,historyNavigation,snapshotsNavigation,settingsNavigation}) {
+        foreach(var button in new[]{libraryNavigation,informationNavigation,mixerNavigation,drumNavigation,tunerNavigation,footswitchNavigation,historyNavigation,snapshotsNavigation,settingsNavigation}) {
             button.HorizontalContentAlignment=HorizontalAlignment.Left;
             button.HorizontalAlignment=HorizontalAlignment.Stretch;
             button.Padding=new Thickness(14,7,14,7);button.Margin=new Thickness(0,0,0,2);
@@ -23,6 +23,7 @@ public sealed partial class MainWindow
         mixerNavigation.Click+=(_,_)=>NavigateToPage(mixerScroll);
         tunerNavigation.Click+=(_,_)=>NavigateToPage(tunerScroll);
         drumNavigation.Click+=(_,_)=>NavigateToPage(drumScroll);
+        footswitchNavigation.Click+=(_,_)=>NavigateToPage(footswitchScroll);
         historyNavigation.Click+=(_,_)=>NavigateToHistory(true);
         snapshotsNavigation.Click+=(_,_)=>NavigateToPage(snapshotsScroll);
         settingsNavigation.Click+=(_,_)=>NavigateToPage(settingsScroll);
@@ -31,7 +32,7 @@ public sealed partial class MainWindow
 
     private void SetNavigationColors(ScrollViewer selected)
     {
-        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(mixerNavigation,mixerScroll),(drumNavigation,drumScroll),(tunerNavigation,tunerScroll),(historyNavigation,historyScroll),(snapshotsNavigation,snapshotsScroll),(settingsNavigation,settingsScroll)}) {
+        foreach(var (button,page) in new[]{(libraryNavigation,libraryScroll),(informationNavigation,informationScroll),(mixerNavigation,mixerScroll),(drumNavigation,drumScroll),(tunerNavigation,tunerScroll),(footswitchNavigation,footswitchScroll),(historyNavigation,historyScroll),(snapshotsNavigation,snapshotsScroll),(settingsNavigation,settingsScroll)}) {
             button.Background=page==selected?Brush("#203B5C"):System.Windows.Media.Brushes.Transparent;
             button.Foreground=page==selected?BlueBrush:MutedBrush;
         }
@@ -49,13 +50,14 @@ public sealed partial class MainWindow
         if(selected!=tunerScroll && tunerActive && !await StopTunerAsync())return;
         if(selected==historyScroll && historyScroll.Content is null)BuildVersionHistory();
         sharedHeader.Visibility=selected==historyScroll||selected==settingsScroll?Visibility.Collapsed:Visibility.Visible;
-        foreach(var page in new[]{libraryScroll,informationScroll,mixerScroll,drumScroll,tunerScroll,historyScroll,snapshotsScroll,settingsScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
+        foreach(var page in new[]{libraryScroll,informationScroll,mixerScroll,drumScroll,tunerScroll,footswitchScroll,historyScroll,snapshotsScroll,settingsScroll})page.Visibility=page==selected?Visibility.Visible:Visibility.Collapsed;
         if(selected==mixerScroll)UpdateMixerState();
         if(selected==tunerScroll)UpdateTunerState();
         if(selected==drumScroll)UpdateDrumState();
+        if(selected==footswitchScroll)UpdateFootswitchState();
         if(selected==snapshotsScroll)UpdateSnapshotArchiveState();
         SetNavigationColors(selected);
-        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":selected==mixerScroll?"Mixer":selected==tunerScroll?"Tuner":selected==drumScroll?"Drum":selected==snapshotsScroll?"Snapshots":selected==settingsScroll?"Settings":"Presets");
+        Title="iAMP Desktop · "+(selected==historyScroll?"Version History":selected==informationScroll?"Amplifier Information":selected==mixerScroll?"Mixer":selected==tunerScroll?"Tuner":selected==drumScroll?"Drum":selected==footswitchScroll?"Footswitch":selected==snapshotsScroll?"Snapshots":selected==settingsScroll?"Settings":"Presets");
         if(selected==tunerScroll && tunerStart.IsEnabled)await StartTunerAsync();
         if(selected==drumScroll && drumRefresh.IsEnabled)await StartDrumAsync();
     }

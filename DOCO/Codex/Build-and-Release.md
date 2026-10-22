@@ -1,6 +1,6 @@
 # Windows build, focused checks and release packaging
 
-Updated 21 October 2026. Installer and usual desktop launch folder: **1.51.1**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
+Updated 22 October 2026. Installer and usual desktop launch folder: **1.53.0**. Run commands from the repository root in **Git Bash**. The selected local .NET SDK is pinned in global.json and packages use locked restores. No APK, REA, ADB, Python, phone or amplifier is needed for software-only builds.
 
 ## Routine changes
 

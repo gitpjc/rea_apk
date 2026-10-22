@@ -1,6 +1,6 @@
 # Documentation index
 
-Reconciled 21 October 2026 against application **1.51.1**. Start with [Current-Status.md](Current-Status.md), then [Plan.md](Plan.md) for checked tasks and remaining acceptance. Current behavior takes precedence over earlier milestone limits. Dates/version numbers, captured values and test counts in reports identify the original evidence, not newly rerun tests. The original documentation reconciliation performed no hardware work. Subsequent physical-panel checks and the 1.41.3 dropdown correction are recorded separately below.
+Reconciled 22 October 2026 against application **1.53.0**. Start with [Current-Status.md](Current-Status.md), then [Plan.md](Plan.md) for checked tasks and remaining acceptance. Current behavior takes precedence over earlier milestone limits. Dates/version numbers, captured values and test counts in reports identify the original evidence, not newly rerun tests. The original documentation reconciliation performed no hardware work. Subsequent physical-panel checks and the 1.41.3 dropdown correction are recorded separately below.
 
 ## Current guides and development status
 
@@ -109,3 +109,5 @@ Each document has a current scope note. Preserve the original observations, hash
 The vendor manuals under DOCO/MOOER are source material, not generated development status. GIR&IR is excluded by the user. Phase 6 remains deferred unless explicitly authorized.
 
 - [Preset-Import-Export.md](Preset-Import-Export.md): complete preset files, active-slot import and bounded validation.
+
+- [Footswitch.md](Footswitch.md) — F4 pairing, forgetting, live status and mobile/desktop evidence boundaries.
